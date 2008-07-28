@@ -4567,6 +4567,46 @@ prelude_io_t *pio
 prelude_io_t *pio, int error
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_message_set_value</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, idmef_value_t *value
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_get_value</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, idmef_value_t **value
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_set_string</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, const char *string
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_get_string</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, char **result
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_set_number</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, double number
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_get_number</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, double *result
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_set_data</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, const unsigned char *data, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_get_data</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *message, const char *path, unsigned char **data, size_t *size
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_thread_atfork</NAME>
 <RETURNS>int </RETURNS>
 void (*prepare)(void), void (*parent)(void), void (*child)(void)
@@ -4819,6 +4859,11 @@ prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_msg_get_datalen</NAME>
 <RETURNS>uint32_t </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_message_data</NAME>
+<RETURNS>const unsigned char *</RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
@@ -5202,6 +5247,11 @@ typedef struct prelude_connection prelude_connection_t;
 prelude_connection_t *conn
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_ref</NAME>
+<RETURNS>prelude_connection_t *</RETURNS>
+prelude_connection_t *conn
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_send</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_t *cnx, prelude_msg_t *msg
@@ -5210,6 +5260,11 @@ prelude_connection_t *cnx, prelude_msg_t *msg
 <NAME>prelude_connection_recv</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_t *cnx, prelude_msg_t **outmsg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_recv_idmef</NAME>
+<RETURNS>int </RETURNS>
+prelude_connection_t *con, idmef_message_t **idmef
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_connect</NAME>
@@ -5325,6 +5380,11 @@ prelude_connection_permission_t perm, prelude_string_t *out
 <NAME>prelude_connection_permission_new_from_string</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_permission_t *out, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_ref</NAME>
+<RETURNS>prelude_connection_t *</RETURNS>
+prelude_connection_t *conn
 </FUNCTION>
 <TYPEDEF>
 <NAME>prelude_string_t</NAME>
@@ -5483,12 +5543,12 @@ const prelude_string_t *str1, const prelude_string_t *str2
 <MACRO>
 <NAME>prelude_string_set_constant</NAME>
 #define prelude_string_set_constant(string, str)                         \
-        prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
+        prelude_string_set_ref_fast((string), (str), strlen((str)))
 </MACRO>
 <MACRO>
 <NAME>prelude_string_new_constant</NAME>
 #define prelude_string_new_constant(string, str)                         \
-        prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
+        prelude_string_new_ref_fast((string), (str), strlen((str)))
 </MACRO>
 <FUNCTION>
 <NAME>idmef_additional_data_print</NAME>
@@ -5951,6 +6011,11 @@ prelude_client_t *client
 prelude_client_t *client, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_client_recv_msg</NAME>
+<RETURNS>int </RETURNS>
+prelude_client_t *client, int timeout, prelude_msg_t **msg
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_client_set_heartbeat_cb</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb)
@@ -5959,6 +6024,11 @@ prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *
 <NAME>prelude_client_send_idmef</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_t *client, idmef_message_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_recv_idmef</NAME>
+<RETURNS>int </RETURNS>
+prelude_client_t *client, int timeout, idmef_message_t **idmef
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_destroy</NAME>
@@ -6462,6 +6532,11 @@ prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_pool_add_connection</NAME>
+<RETURNS>int </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_del_connection</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_pool_t *pool, prelude_connection_t *cnx
 </FUNCTION>
@@ -7037,7 +7112,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.18"
+#define LIBPRELUDE_VERSION "0.9.18.1"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7148,6 +7223,11 @@ idmef_criterion_t **criterion, idmef_path_t *path,idmef_criterion_value_t *value
 <NAME>idmef_criterion_destroy</NAME>
 <RETURNS>void </RETURNS>
 idmef_criterion_t *criterion
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criteria_ref</NAME>
+<RETURNS>idmef_criteria_t *</RETURNS>
+idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_clone</NAME>
@@ -8197,6 +8277,91 @@ idmef_value_t **value, idmef_class_id_t classid, const char *buf
 <NAME>idmef_value_new_enum_from_numeric</NAME>
 <RETURNS>int </RETURNS>
 idmef_value_t **value, idmef_class_id_t classid, int val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_int8</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, int8_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_uint8</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, uint8_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_int16</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, int16_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_uint16</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, uint16_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_int32</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, int32_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_uint32</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, uint32_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_int64</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, int64_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_uint64</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, uint64_t val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_float</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, float val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_double</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, double val
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_string</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, prelude_string_t *string
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_time</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_time_t *time
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_data</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_enum</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_class_id_t classid, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_enum_from_string</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_class_id_t classid, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_enum_from_numeric</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_class_id_t classid, int no
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_set_class</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, idmef_class_id_t classid, void *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new</NAME>
