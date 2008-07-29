@@ -320,12 +320,6 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
     }
 
     foreach my $field ( @{ $struct->{field_list} } ) {
-        if ( $field->{typename} eq "idmef_time_t" and $field->{name} eq "create_time" and ($struct->{short_typename} eq "alert" or $struct->{short_typename} eq "heartbeat") ) {
-                $self->output("
-        idmef_time_set_from_gettimeofday((*ret)->$field->{name});
-");
-        }
-
         my $prefix = "";
 
         if ( $field->{typename} ne "prelude_string_t" and !($field->{metatype} & (&METATYPE_PRIMITIVE)) ) {
@@ -350,6 +344,13 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
                 }
         }
 ");
+
+        if ( $field->{typename} eq "idmef_time_t" and $field->{name} eq "create_time" and ($struct->{short_typename} eq "alert" or $struct->{short_typename} eq "heartbeat") ) {
+                $self->output("
+        idmef_time_set_from_gettimeofday((*ret)->$field->{name});
+");
+        }
+
         }
 
     }

@@ -19844,8 +19844,6 @@ int idmef_alert_new(idmef_alert_t **ret)
         prelude_list_init(&(*ret)->additional_data_list);
 
 
-        idmef_time_set_from_gettimeofday((*ret)->create_time);
-
         {
                 int retval = idmef_time_new(&(*ret)->create_time);
 
@@ -19855,6 +19853,8 @@ int idmef_alert_new(idmef_alert_t **ret)
                         return retval;
                 }
         }
+
+        idmef_time_set_from_gettimeofday((*ret)->create_time);
 
         {
                 int retval = idmef_classification_new(&(*ret)->classification);
@@ -21770,8 +21770,6 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
         prelude_list_init(&(*ret)->additional_data_list);
 
 
-        idmef_time_set_from_gettimeofday((*ret)->create_time);
-
         {
                 int retval = idmef_time_new(&(*ret)->create_time);
 
@@ -21781,6 +21779,8 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
                         return retval;
                 }
         }
+
+        idmef_time_set_from_gettimeofday((*ret)->create_time);
 
         return 0;
 
