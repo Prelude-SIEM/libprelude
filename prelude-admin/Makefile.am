@@ -1,8 +1,7 @@
 AM_CPPFLAGS = @PCFLAGS@ -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing -I$(top_builddir)/src/libprelude-error @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @PRELUDE_ADMIN_CFLAGS@ 
 
 bin_PROGRAMS = prelude-admin
-
-dist_bin_SCRIPTS = prelude-adduser
+bin_SCRIPTS = prelude-adduser
 
 prelude_admin_LDADD = $(top_builddir)/src/config-engine.lo \
 			$(top_builddir)/src/variable.lo \
