@@ -17,7 +17,8 @@ libpreludecpp_la_SOURCES = \
 	prelude-connection.cxx	\
 	prelude-connection-pool.cxx
 
-libpreludecpp_la_LDFLAGS = -no-undefined $(top_builddir)/src/.libs/libprelude.la
+libpreludecpp_la_LDFLAGS = -no-undefined -version-info @LIBPRELUDECPP_SONAME@
+libpreludecpp_la_LIBADD  = $(top_builddir)/src/.libs/libprelude.la
 libpreludecpp_la_CPPFLAGS = -I$(top_builddir) -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/src/libprelude-error -I$(top_builddir)/bindings/c++/include -I$(top_srcdir)/bindings/c++/include 
 
 endif
