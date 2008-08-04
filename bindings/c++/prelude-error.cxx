@@ -32,6 +32,7 @@ using namespace Prelude;
 
 PreludeError::PreludeError(const std::string message) throw()
 {
+        _error = -1;
         _message = message;
 }
 
@@ -65,3 +66,4 @@ PreludeError::operator const std::string() const
 {
         return _message;
 }
+
