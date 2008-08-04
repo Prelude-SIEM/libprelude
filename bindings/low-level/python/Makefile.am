@@ -7,6 +7,7 @@ python_PYTHON = prelude.py
 pyexec_LTLIBRARIES = _prelude.la
 _prelude_la_CPPFLAGS = $(PYTHON_INCLUDES) -I@top_builddir@ -I$(top_srcdir)/src/include -I$(top_builddir)/src/include -I@top_builddir@/src/libprelude-error 
 _prelude_la_LDFLAGS = -module -avoid-version
+_PreludeEasy_la_LIBADD = $(top_builddir)/src/.libs/libprelude.la
 _prelude_la_LIBS = $(top_builddir)/src/.libs/libprelude.la
 _prelude_la_HEADERS: $(top_builddir)/config.h
 nodist__prelude_la_SOURCES = _prelude.c
