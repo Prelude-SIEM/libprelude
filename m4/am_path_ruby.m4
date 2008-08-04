@@ -15,7 +15,7 @@ AC_DEFUN([AM_PATH_RUBY],
  [
   dnl Find a Ruby interpreter.
   m4_define_default([_AM_RUBY_INTERPRETER_LIST],
-                    [ruby ruby1.8])
+                    [ruby ruby1.8 ruby1.7 ruby1.6])
 
   m4_if([$1],[],[
     dnl No version check is needed.
