@@ -25,6 +25,11 @@ libprelude_revision=1
 libprelude_age=13
 LIBPRELUDE_SONAME=$libprelude_current:$libprelude_revision:$libprelude_age
 
+libpreludecpp_current=0
+libpreludecpp_revision=0
+libpreludecpp_age=0
+LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
+
 
 AM_INIT_AUTOMAKE(libprelude, $libprelude_version)
 AC_CONFIG_HEADER(config.h)
@@ -646,6 +651,13 @@ AC_ARG_ENABLE(easy-bindings, AC_HELP_STRING(--enable-easy-bindings, Enable suppo
 
 AM_CONDITIONAL(HAVE_EASY_BINDINGS, test x$enable_easy_bindings = xyes)
 
+if test x$enable_easy_bindings = xyes; then
+        AC_PROG_CXX()
+        AC_CHECK_PROG(HAVE_CXX, $CXX, yes, no)
+        if test x$HAVE_CXX != xyes; then
+                AC_MSG_ERROR([Easybindings require a C++ compiler, but none were found.])
+        fi
+fi
 
 dnl **************************************************
 dnl * Check for missing function replacement         *
@@ -743,6 +755,7 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(BINDINGS_CC)
 AC_SUBST(LIBPRELUDE_SONAME)
+AC_SUBST(LIBPRELUDECPP_SONAME)
 AC_SUBST(LIBPRELUDE_LIBS)
 AC_SUBST(LIBPRELUDE_CFLAGS)
 AC_SUBST(PRELUDE_ADMIN_LIBS)
