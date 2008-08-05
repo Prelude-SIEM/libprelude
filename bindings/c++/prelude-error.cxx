@@ -44,12 +44,6 @@ PreludeError::PreludeError(int error) throw()
 }
 
 
-int PreludeError::GetErrorCode()
-{
-        return _error;
-}
-
-
 const char *PreludeError::what() const throw()
 {
         return _message.c_str();
@@ -66,4 +60,3 @@ PreludeError::operator const std::string() const
 {
         return _message;
 }
-
