@@ -1,3 +1,28 @@
+* 2008-08-04, libprelude-0.9.19:
+
+- EasyBindings inclusion! EasyBindings provide simple C++, Python,
+  Perl, Ruby, and Lua bindings for using libprelude. They are still
+  considered experimental, thus you need to use (--enable-easy-bindings)
+  to activate them. Thanks to Sebastien Tricaud <toady@inl.fr> and
+  Pierre Chifflier <p.chifflier@inl.fr> for their contribution to this
+  project!
+
+- Use automake/autoconf for building/installing Python extension.
+
+- Fix 0.9.18 regression (alert created with empty CreateTime).
+
+- Implement reference counting for the idmef-criteria and
+  prelude-connection API.
+
+- Automatic casting when setting IDMEF Value to a field that is of
+  different type. Until now, if an user tried to set a path of a
+  specific type with an idmef_value_t object containing another type,
+  idmef_path_set() would return an error.
+
+- Various bug fixes.
+
+
+
 * 2008-07-21, libprelude-0.9.18.1:
 
 - Temporarily disable mutex locking while calling event handler, since
@@ -5,9 +30,9 @@
 
 - Fix possible application compilation breakage when including prelude-timer.h:
   include time.h for time_t definition, fix #301.
-    
+
 - Fix compilation error with GnuTLS < 2.2.0 (fix #302).
-    
+
 
 
 * 2008-07-18, libprelude-0.9.18:
@@ -23,9 +48,9 @@
 
 - Allow IDMEF criteria with multiples values for a single path,
   as can be seen in the following example:
-    
+
   alert.classification.text = (A || B || C || D)
-    
+
   This will be internally translated to the original criteria language:
   alert.classification.text = A || alert.classification.text = B || alert.classification.text = C || alert.classification.text = D
 
@@ -33,14 +58,14 @@
   ! (alert.classification.text = A || alert.classification.text = B)
 
 - Fix an IDMEF-Criteria matching problem, where the match function would
-  not attempt to match a OR after multiple consecutive AND that failed. 
+  not attempt to match a OR after multiple consecutive AND that failed.
   Thanks Alexander Afonyashin <firm(at)iname.com> for pointing out the problem.
 
 - Never use non-pointer field, always use the "required" keyword. Fix
   API consistency issue, that could lead to unexpected behavior.
 
 - Fix multiples problem with prelude_read_multiline / prelude_read_multiline2,
-  (fix a problem with prelude-manager idmef-criteria that wouldn't read 
+  (fix a problem with prelude-manager idmef-criteria that wouldn't read
    external ruleset).
 
 - Error out if GnuTLS initialization fail.
@@ -48,7 +73,7 @@
 
 * 2008-05-06, libprelude-0.9.17.2:
 
-- Fix unresolved symbols on some architecture, thanks 
+- Fix unresolved symbols on some architecture, thanks
   Robin Gruyters <r.gruyters@yirdis.nl> for pointing out this issue.
 
 
@@ -68,7 +93,7 @@
   destroy existing value within an IDMEF message.
 
 - Unify memory handling of value retrieval through idmef_path_t. This
-  allow the user to retrieve and keep any values, even through the 
+  allow the user to retrieve and keep any values, even through the
   associated IDMEF message is freed.
 
 - Build system cleanup, enable RELRO when possible.
