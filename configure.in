@@ -547,14 +547,28 @@ dnl **************************************************
 dnl * Python support                                 *
 dnl **************************************************
 
-AM_CHECK_PYTHON_HEADERS(with_python=yes, with_python=no)
+AC_ARG_WITH(python, AC_HELP_STRING(--with-python@<:@=PATH@:>@, Enable support for python binding @<:@default=auto@:>@),
+            [python_required=true; if test x$withval = xyes; then with_python="python"; fi], with_python="python")
+
 if test x$with_python != xno; then
+
+   AC_PATH_PROG(PYTHON, `basename $with_python`, no, `dirname $with_python`:$PATH)
+   if test x$PYTHON = xno; then
+      if test x$python_required = xtrue; then
+         AC_MSG_ERROR([Could not find $with_python binary])
+      fi
+
+      with_python=no
+   else
       old_CPPFLAGS="$CPPFLAGS"
       CPPFLAGS="-I`$PYTHON -c 'from distutils.sysconfig import get_python_inc; print get_python_inc()'`"
+
       AC_CHECK_HEADER(Python.h, with_python=yes, with_python=no)
       CPPFLAGS="$old_CPPFLAGS"
+   fi
 fi
-AM_CONDITIONAL([HAVE_PYTHON], [test x$with_python = xyes])
+
+AM_CONDITIONAL(HAVE_PYTHON, test x$with_python = xyes)
 
 
 dnl **************************************************
@@ -802,12 +816,14 @@ bindings/Makefile
 bindings/low-level/Makefile
 bindings/low-level/perl/Makefile.PL
 bindings/low-level/python/Makefile
+bindings/low-level/python/setup.py
 
 bindings/c++/Makefile
 bindings/c++/include/Makefile
 bindings/lua/Makefile
 bindings/perl/Makefile.PL
 bindings/python/Makefile
+bindings/python/setup.py
 bindings/ruby/Makefile
 
 ])

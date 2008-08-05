@@ -7,7 +7,6 @@ rbexec_LTLIBRARIES = PreludeEasy.la
 PreludeEasy_la_CPPFLAGS = $(RUBY_INCLUDES) $(RUBY_CCFLAGS) -I@top_builddir@ -I$(top_srcdir)/src/include -I$(top_builddir)/src/include -I@top_builddir@/src/libprelude-error -I$(top_srcdir)/bindings/c++/include
 PreludeEasy_la_LDFLAGS = -module -avoid-version
 PreludeEasy_la_LIBADD = $(top_builddir)/bindings/c++/.libs/libpreludecpp.la $(RUBY_LIBS)
-PreludeEasy_la_HEADERS = $(top_builddir)/config.h
 nodist_PreludeEasy_la_SOURCES = PreludeEasy.cxx
 
 PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-ruby.i 

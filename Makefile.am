@@ -13,7 +13,7 @@ EXTRA_DIST = HACKING.README LICENSE.README tls.conf
 
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
-distuninstallcheck_listfiles = find . -type f -print | grep -v 'perl' | grep -v '3pm'
+distuninstallcheck_listfiles = find . -type f -print | $(GREP) -v 'perl' | $(GREP) -v '3pm' | $(GREP) -v 'egg-info'
 
 includedir = $(prefix)/include/libprelude
 include_HEADERS = prelude-config.h
