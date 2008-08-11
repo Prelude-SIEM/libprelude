@@ -1,4 +1,4 @@
-includedir = $(prefix)/include/libprelude
+includedir = $(prefix)/include/libpreludecpp
 
 include_HEADERS = \
 	prelude-error.hxx \
