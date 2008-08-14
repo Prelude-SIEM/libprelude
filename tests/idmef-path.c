@@ -10,6 +10,7 @@ static void set_value_check(idmef_message_t *idmef, const char *paths,
         idmef_path_t *path;
         idmef_value_t *value;
         prelude_string_t *str;
+        prelude_string_t *res;
 
         assert(idmef_path_new(&path, paths) == 0);
         assert(prelude_string_new_ref(&str, str_value) == 0);
@@ -17,9 +18,8 @@ static void set_value_check(idmef_message_t *idmef, const char *paths,
 
         if ( verify_get )
                 assert(idmef_path_set(path, idmef, value) == 0);
-        else {
+        else
                 assert(idmef_path_set(path, idmef, value) < 0);
-        }
 
         idmef_value_destroy(value);
 
@@ -29,11 +29,12 @@ static void set_value_check(idmef_message_t *idmef, const char *paths,
         }
 
         assert(idmef_path_get(path, idmef, &value) > 0);
-        assert(idmef_value_to_string(value, str) >= 0);
 
-        assert(strcmp(str_value, prelude_string_get_string(str)) == 0);
+        assert(prelude_string_new(&res) == 0);
+        assert(idmef_value_to_string(value, res) >= 0);
+        assert(strcmp(str_value, prelude_string_get_string(res)) == 0);
+        prelude_string_destroy(res);
 
-        prelude_string_destroy(str);
         idmef_value_destroy(value);
         idmef_path_destroy(path);
 }
