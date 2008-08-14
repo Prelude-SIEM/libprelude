@@ -796,6 +796,7 @@ idmef-client.conf
 libprelude-config
 
 libmissing/Makefile
+libmissing/tests/Makefile
 m4/Makefile
 
 src/Makefile
@@ -825,6 +826,7 @@ bindings/perl/Makefile.PL
 bindings/python/Makefile
 bindings/python/setup.py
 bindings/ruby/Makefile
+tests/Makefile
 
 ])
 AC_CONFIG_COMMANDS([default],[[ chmod +x libprelude-config ]],[[]])
