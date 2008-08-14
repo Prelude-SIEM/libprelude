@@ -845,7 +845,7 @@ void idmef_value_destroy(idmef_value_t *val)
         prelude_return_if_fail(val);
 
         if ( --val->refcount )
-                    return;
+                return;
 
         if ( val->list ) {
                 for ( i = 0; i < val->list_elems; i++ )
@@ -1160,6 +1160,7 @@ int _idmef_value_copy_internal(const idmef_value_t *val,
                 idmef_value_t copy;
 
                 memcpy(&copy, val, sizeof(copy));
+                idmef_value_dont_have_own_data(&copy);
 
                 ret = _idmef_value_cast(&copy, res_type, res_id);
                 if ( ret < 0 )
