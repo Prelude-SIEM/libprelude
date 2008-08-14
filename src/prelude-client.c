@@ -880,6 +880,8 @@ static void _prelude_client_destroy(prelude_client_t *client)
 
 static int handle_client_error(prelude_client_t *client, int error)
 {
+        char *tmp = NULL;
+
         prelude_error_code_t code;
         prelude_error_source_t source;
 
@@ -887,8 +889,10 @@ static int handle_client_error(prelude_client_t *client, int error)
         source = prelude_error_get_source(error);
 
         if ( error < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
-                char *tmp = strdup(_prelude_thread_get_error());
-                error = prelude_error_verbose(code, "%s\n%s", tmp, prelude_client_get_setup_error(client));
+                if ( _prelude_thread_get_error() )
+                        tmp = strdup(_prelude_thread_get_error());
+
+                error = prelude_error_verbose(PRELUDE_ERROR_PROFILE, "%s%s%s", tmp ? tmp : "", tmp ? "\n" : "", prelude_client_get_setup_error(client));
                 free(tmp);
         }
 
