@@ -168,7 +168,12 @@ AC_SUBST([LTALLOCA])
   m4_pushdef([gltests_LIBSOURCES_LIST], [])
   m4_pushdef([gltests_LIBSOURCES_DIR], [])
   gl_COMMON
-  gl_source_base='tests'
+  gl_source_base='libmissing/tests'
+  AC_CHECK_DECLS_ONCE([alarm])
+  gt_TYPE_WCHAR_T
+  gt_TYPE_WINT_T
+  AC_CHECK_DECLS_ONCE([alarm])
+  AC_CHECK_FUNCS([shutdown])
   m4_ifval(gltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gltests_LIBSOURCES_DIR])[ ||
       for gl_file in ]gltests_LIBSOURCES_LIST[ ; do
@@ -199,6 +204,8 @@ AC_SUBST([LTALLOCA])
     AC_SUBST([gltests_LIBOBJS], [$gltests_libobjs])
     AC_SUBST([gltests_LTLIBOBJS], [$gltests_ltlibobjs])
   ])
+  LIBTESTS_LIBDEPS="$gltests_libdeps"
+  AC_SUBST([LIBTESTS_LIBDEPS])
 ])
 
 # Like AC_LIBOBJ, except that the module name goes
@@ -249,7 +256,7 @@ AC_DEFUN([gltests_REPLACE_FUNCS], [
 AC_DEFUN([gltests_LIBSOURCES], [
   m4_foreach([_gl_NAME], [$1], [
     m4_if(_gl_NAME, [alloca.c], [], [
-      m4_define([gltests_LIBSOURCES_DIR], [tests])
+      m4_define([gltests_LIBSOURCES_DIR], [libmissing/tests])
       m4_append([gltests_LIBSOURCES_LIST], _gl_NAME, [ ])
     ])
   ])
@@ -408,4 +415,39 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/wctype.m4
   m4/wint_t.m4
   m4/xsize.m4
+  tests/test-EOVERFLOW.c
+  tests/test-alloca-opt.c
+  tests/test-arpa_inet.c
+  tests/test-fseeko.c
+  tests/test-fseeko.sh
+  tests/test-getaddrinfo.c
+  tests/test-getdelim.c
+  tests/test-getline.c
+  tests/test-gettimeofday.c
+  tests/test-lseek.c
+  tests/test-lseek.sh
+  tests/test-memchr.c
+  tests/test-memcmp.c
+  tests/test-memmem.c
+  tests/test-netinet_in.c
+  tests/test-snprintf.c
+  tests/test-stdbool.c
+  tests/test-stdint.c
+  tests/test-stdio.c
+  tests/test-stdlib.c
+  tests/test-strcasestr.c
+  tests/test-string.c
+  tests/test-strings.c
+  tests/test-sys_select.c
+  tests/test-sys_socket.c
+  tests/test-sys_time.c
+  tests/test-time.c
+  tests/test-unistd.c
+  tests/test-vasnprintf.c
+  tests/test-vsnprintf.c
+  tests/test-wchar.c
+  tests/test-wctype.c
+  tests=lib/dummy.c
+  tests=lib/intprops.h
+  tests=lib/verify.h
 ])
