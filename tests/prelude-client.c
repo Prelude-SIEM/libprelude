@@ -14,5 +14,8 @@ int main(int argc, char **argv)
         assert((ret = prelude_client_start(client)) < 0);
         assert(prelude_error_get_code(ret) == PRELUDE_ERROR_PROFILE);
 
+        prelude_client_destroy(client, PRELUDE_CLIENT_EXIT_STATUS_FAILURE);
+        prelude_deinit();
+
         return 0;
 }
