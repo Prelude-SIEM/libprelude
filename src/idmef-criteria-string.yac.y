@@ -108,8 +108,7 @@ err:
 %token <str> TOK_IDMEF_VALUE "<IDMEF-Value>"
 %token <str> TOK_IDMEF_PATH "<IDMEF-Path>"
 
-%destructor { free($$); } TOK_IDMEF_VALUE 
-%destructor { free($$); } TOK_IDMEF_PATH
+%destructor { free($$); } TOK_IDMEF_VALUE TOK_IDMEF_PATH
 %destructor { idmef_criteria_destroy($$); } criteria
 
 %token TOK_RELATION_SUBSTRING "<>"
