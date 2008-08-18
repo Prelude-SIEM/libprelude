@@ -3,6 +3,7 @@
 #include "prelude.h"
 
 #define TEST_STR "abcdefghijklmnopqrstuvwxyz"
+#define MAX_LAG_SEC 3
 
 
 int main(void)
@@ -19,7 +20,7 @@ int main(void)
         assert(ctime != NULL);
 
         now = time(NULL);
-        assert(idmef_time_get_sec(ctime) == now);
+        assert(now - idmef_time_get_sec(ctime) < MAX_LAG_SEC);
 
         exit(0);
 }
