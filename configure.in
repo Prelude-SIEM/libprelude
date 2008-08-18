@@ -673,6 +673,32 @@ if test x$enable_easy_bindings = xyes; then
         fi
 fi
 
+
+dnl **************************************************
+dnl * Valgrind support                               *
+dnl **************************************************
+
+AC_ARG_WITH(valgrind, AC_HELP_STRING(--with-python@<:@=PATH@:>@, Valgrind support for unit testing @<:@default=auto@:>@),
+            [valgrind_required=true; if test x$withval = xyes; then with_valgrind="valgrind"; fi], with_valgrind="valgrind")
+
+if test x$with_valgrind != xno; then
+
+   AC_PATH_PROG(VALGRIND, `basename $with_valgrind`, no, `dirname $with_valgrind`:$PATH)
+   if test x$VALGRIND = xno; then
+      if test x$valgrind_required = xtrue; then
+         AC_MSG_ERROR([Could not find $with_valgrind binary])
+      fi
+
+      with_valgrind=no
+   else
+      with_valgrind=yes
+   fi
+fi
+
+AM_CONDITIONAL(HAVE_VALGRIND, test x$with_valgrind = xyes)
+
+
+
 dnl **************************************************
 dnl * Check for missing function replacement         *
 dnl **************************************************
