@@ -56,27 +56,6 @@
 #include "prelude-async.h"
 
 
-
-/*
- * On POSIX systems where clock_gettime() is available, the symbol
- * _POSIX_TIMERS should be defined to a value greater than 0.
- *
- * However, some architecture (example True64), define it as:
- * #define _POSIX_TIMERS
- *
- * This explain the - 0 hack, since we need to test for the explicit
- * case where _POSIX_TIMERS is defined to a value higher than 0.
- *
- * If pthread_condattr_setclock and _POSIX_MONOTONIC_CLOCK are available,
- * CLOCK_MONOTONIC will be used. This avoid possible race problem when
- * calling pthread_cond_timedwait() if the system time is modified.
- *
- * If CLOCK_MONOTONIC is not available, revert to the standard CLOCK_REALTIME
- * way.
- *
- * If neither of the above are avaible, use gettimeofday().
- */
-
 static PRELUDE_LIST(joblist);
 
 static prelude_async_flags_t async_flags = 0;
@@ -108,23 +87,14 @@ static prelude_bool_t timespec_expired(struct timespec *end, struct timespec *st
 }
 
 
-static struct timespec *get_timespec(struct timespec *ts)
+static inline struct timespec *get_timespec(struct timespec *ts)
 {
-#if _POSIX_TIMERS - 0 > 0
-        int ret;
-
-        ret = clock_gettime(CLOCK_REALTIME, ts);
-        if ( ret < 0 )
-                prelude_log(PRELUDE_LOG_ERR, "clock_gettime: %s.\n", strerror(errno));
-
-#else
         struct timeval now;
 
         gettimeofday(&now, NULL);
 
         ts->tv_sec = now.tv_sec;
         ts->tv_nsec = now.tv_usec * 1000;
-#endif
 
         return ts;
 }
@@ -266,14 +236,14 @@ static void *async_thread(void *arg)
 
 static void prepare_fork_cb(void)
 {
-        pthread_mutex_lock(&mutex);
+        gl_lock_lock(mutex);
 }
 
 
 
 static void parent_fork_cb(void)
 {
-        pthread_mutex_unlock(&mutex);
+        gl_lock_unlock(mutex);
 }
 
 
