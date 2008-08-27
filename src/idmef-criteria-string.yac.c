@@ -145,7 +145,7 @@ static idmef_path_t *cur_path;
 static idmef_criteria_t *processed_criteria;
 static idmef_criterion_operator_t cur_operator;
 
-pthread_mutex_t _criteria_parse_mutex = PTHREAD_MUTEX_INITIALIZER;
+gl_lock_t _criteria_parse_mutex = gl_lock_initializer;
 
 
 #define operator_or 1
