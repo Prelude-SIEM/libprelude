@@ -68,6 +68,15 @@ EXTRA_DIST += test-arpa_inet.c
 
 ## end   gnulib module arpa_inet-tests
 
+## begin gnulib module cond-tests
+
+TESTS += test-cond
+check_PROGRAMS += test-cond
+test_cond_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
+EXTRA_DIST += test-cond.c
+
+## end   gnulib module cond-tests
+
 ## begin gnulib module fseeko-tests
 
 TESTS += test-fseeko.sh
@@ -120,6 +129,15 @@ EXTRA_DIST += test-gettimeofday.c
 EXTRA_DIST += intprops.h
 
 ## end   gnulib module intprops
+
+## begin gnulib module lock-tests
+
+TESTS += test-lock
+check_PROGRAMS += test-lock
+test_lock_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
+EXTRA_DIST += test-lock.c
+
+## end   gnulib module lock-tests
 
 ## begin gnulib module lseek-tests
 
@@ -272,6 +290,16 @@ EXTRA_DIST += test-time.c
 
 ## end   gnulib module time-tests
 
+## begin gnulib module tls-tests
+
+TESTS += test-tls
+check_PROGRAMS += test-tls
+test_tls_LDADD = $(LDADD) @LIBMULTITHREAD@ @LIBSCHED@
+
+EXTRA_DIST += test-tls.c
+
+## end   gnulib module tls-tests
+
 ## begin gnulib module unistd-tests
 
 TESTS += test-unistd
@@ -322,6 +350,12 @@ check_PROGRAMS += test-wctype
 EXTRA_DIST += test-wctype.c
 
 ## end   gnulib module wctype-tests
+
+## begin gnulib module yield
+
+libtests_a_SOURCES += glthread/yield.h 
+
+## end   gnulib module yield
 
 ## begin gnulib module dummy
 

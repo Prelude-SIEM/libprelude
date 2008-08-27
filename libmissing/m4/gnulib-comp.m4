@@ -25,8 +25,11 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
   AC_REQUIRE([AC_PROG_RANLIB])
+  AC_REQUIRE([AM_PROG_CC_C_O])
+  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_REQUIRE([AC_FUNC_FSEEKO])
+  gl_THREADLIB_EARLY
 ])
 
 # This macro should be invoked from ./configure.in, in the section
@@ -50,6 +53,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
+  gl_COND
   gl_FLOAT_H
   gl_FUNC_FSEEKO
   gl_STDIO_MODULE_INDICATOR([fseeko])
@@ -68,6 +72,7 @@ AC_SUBST([LTALLOCA])
   gl_LOCALCHARSET
   LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
+  gl_LOCK
   gl_FUNC_LSEEK
   gl_UNISTD_MODULE_INDICATOR([lseek])
   AC_FUNC_MALLOC
@@ -120,9 +125,12 @@ AC_SUBST([LTALLOCA])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_TIME_H
   AC_PROG_MKDIR_P
+  gl_THREAD
+  gl_THREADLIB
   gl_HEADER_TIME_H
   gl_TIME_R
   gl_FUNC_TIMEGM
+  gl_TLS
   gl_UNISTD_H
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
@@ -174,6 +182,17 @@ AC_SUBST([LTALLOCA])
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_FUNCS([shutdown])
+  dnl Checks for special libraries for the tests/test-tls test.
+  dnl On some systems, sched_yield is in librt, rather than in libpthread.
+  LIBSCHED=
+  if test $gl_threads_api = posix; then
+    dnl Solaris has sched_yield in librt, not in libpthread or libc.
+    AC_CHECK_LIB(rt, sched_yield, [LIBSCHED=-lrt],
+      [dnl Solaris 2.5.1, 2.6 has sched_yield in libposix4, not librt.
+       AC_CHECK_LIB(posix4, sched_yield, [LIBSCHED=-lposix4])])
+  fi
+  AC_SUBST([LIBSCHED])
+  gl_YIELD
   m4_ifval(gltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gltests_LIBSOURCES_DIR])[ ||
       for gl_file in ]gltests_LIBSOURCES_LIST[ ; do
@@ -265,6 +284,7 @@ AC_DEFUN([gltests_LIBSOURCES], [
 # This macro records the list of files which have been installed by
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
+  build-aux/config.rpath
   build-aux/link-warning.h
   lib/alloca.c
   lib/alloca.in.h
@@ -285,6 +305,15 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/getpass.h
   lib/gettext.h
   lib/gettimeofday.c
+  lib/glthread/cond.c
+  lib/glthread/cond.h
+  lib/glthread/lock.c
+  lib/glthread/lock.h
+  lib/glthread/thread.c
+  lib/glthread/thread.h
+  lib/glthread/threadlib.c
+  lib/glthread/tls.c
+  lib/glthread/tls.h
   lib/inet_ntop.c
   lib/localcharset.c
   lib/localcharset.h
@@ -347,6 +376,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/alloca.m4
   m4/arpa_inet_h.m4
   m4/codeset.m4
+  m4/cond.m4
   m4/eoverflow.m4
   m4/extensions.m4
   m4/float_h.m4
@@ -363,7 +393,11 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/inet_ntop.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
+  m4/lib-ld.m4
+  m4/lib-link.m4
+  m4/lib-prefix.m4
   m4/localcharset.m4
+  m4/lock.m4
   m4/longlong.m4
   m4/lseek.m4
   m4/malloc.m4
@@ -403,9 +437,12 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/sys_select_h.m4
   m4/sys_socket_h.m4
   m4/sys_time_h.m4
+  m4/thread.m4
+  m4/threadlib.m4
   m4/time_h.m4
   m4/time_r.m4
   m4/timegm.m4
+  m4/tls.m4
   m4/tm_gmtoff.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
@@ -415,15 +452,18 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/wctype.m4
   m4/wint_t.m4
   m4/xsize.m4
+  m4/yield.m4
   tests/test-EOVERFLOW.c
   tests/test-alloca-opt.c
   tests/test-arpa_inet.c
+  tests/test-cond.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
   tests/test-getaddrinfo.c
   tests/test-getdelim.c
   tests/test-getline.c
   tests/test-gettimeofday.c
+  tests/test-lock.c
   tests/test-lseek.c
   tests/test-lseek.sh
   tests/test-memchr.c
@@ -442,12 +482,14 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-sys_socket.c
   tests/test-sys_time.c
   tests/test-time.c
+  tests/test-tls.c
   tests/test-unistd.c
   tests/test-vasnprintf.c
   tests/test-vsnprintf.c
   tests/test-wchar.c
   tests/test-wctype.c
   tests=lib/dummy.c
+  tests=lib/glthread/yield.h
   tests=lib/intprops.h
   tests=lib/verify.h
 ])
