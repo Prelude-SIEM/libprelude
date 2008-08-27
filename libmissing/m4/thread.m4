@@ -10,6 +10,9 @@ AC_DEFUN([gl_THREAD],
   AC_REQUIRE([AC_C_INLINE])
 
   if test $gl_threads_api = posix; then
+    LIBS_bkp=$LIBS
+    LIBS="$LIBS $LIBMULTITHREAD"
     AC_CHECK_FUNCS([pthread_atfork])
+    LIBS=$LIBS_bkp
   fi
 ])
