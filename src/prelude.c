@@ -29,12 +29,14 @@
 #include <unistd.h>
 #include <gnutls/gnutls.h>
 
+#include "glthread/thread.h"
+#include "glthread/lock.h"
+
 #include "prelude.h"
 #include "idmef-path.h"
 #include "prelude-option.h"
 #include "prelude-log.h"
 #include "prelude-timer.h"
-#include "prelude-thread.h"
 #include "variable.h"
 #include "tls-auth.h"
 
@@ -45,7 +47,7 @@ char *_prelude_internal_argv[1024];
 char _prelude_init_cwd[PATH_MAX];
 static int libprelude_refcount = 0;
 extern prelude_option_t *_prelude_generic_optlist;
-extern pthread_mutex_t _criteria_parse_mutex;
+extern gl_lock_t _criteria_parse_mutex;
 
 
 
@@ -59,7 +61,7 @@ static void tls_log_func(int level, const char *data)
 static void prepare_fork_cb(void)
 {
         _idmef_path_cache_lock();
-        prelude_thread_mutex_lock(&_criteria_parse_mutex);
+        gl_lock_lock(_criteria_parse_mutex);
 }
 
 
@@ -67,7 +69,7 @@ static void prepare_fork_cb(void)
 static void parent_fork_cb(void)
 {
         _idmef_path_cache_unlock();
-        prelude_thread_mutex_unlock(&_criteria_parse_mutex);
+        gl_lock_unlock(_criteria_parse_mutex);
 }
 
 
@@ -75,7 +77,7 @@ static void parent_fork_cb(void)
 static void child_fork_cb(void)
 {
         _idmef_path_cache_reinit();
-        prelude_thread_mutex_init(&_criteria_parse_mutex, NULL);
+        gl_lock_init(_criteria_parse_mutex);
 }
 
 
@@ -176,7 +178,7 @@ int prelude_init(int *argc, char **argv)
                         _prelude_log_set_abort_level(PRELUDE_LOG_CRIT);
         }
 
-        _prelude_thread_in_use();
+        prelude_thread_init(NULL);
 
         if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
                 _prelude_init_cwd[0] = 0;
@@ -185,7 +187,7 @@ int prelude_init(int *argc, char **argv)
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_thread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        ret = glthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
 
