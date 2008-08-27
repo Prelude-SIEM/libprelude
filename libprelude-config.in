@@ -5,6 +5,9 @@ prelude_conf_prefix=@PRELUDE_CONFIG_DIR@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
 cpp_set=no
+thread_set=yes
+want_libs=no
+want_cflags=no
 
 usage="\
 Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--config-prefix] [--version] [--c++] [--libs] [--ldflags] [--cflags] [--pthread-cflags]"
@@ -49,22 +52,24 @@ while test $# -gt 0; do
       echo @VERSION@
       ;;
 
+    --no-thread)
+      thread_set=no
+      ;;
+
+    --thread)
+      thread_set=yes
+      ;;
+
     --cflags)
-      if test @includedir@ != /usr/include ; then
-        includes=-I@includedir@
-      fi
-      echo @LIBPRELUDE_CFLAGS@ $includes
+      want_cflags=yes
       ;;
 
     --pthread-cflags)
-      if test @includedir@ != /usr/include ; then
-        includes=-I@includedir@
-      fi
-      echo @PTHREAD_CFLAGS@ @LIBPRELUDE_CFLAGS@ $includes
+      thread_set=yes
+      want_cflags=yes
       ;;
 
     --ldflags)
-      echo @PTHREAD_CFLAGS@
       ;;
 
     --c++)
@@ -72,13 +77,7 @@ while test $# -gt 0; do
       ;;
 
     --libs)
-      libdirs=-L@libdir@
-      cpplibs=""
-      if test $cpp_set = yes; then
-	      cpplibs="-lpreludecpp"
-      fi
-
-      echo $libdirs $cpplibs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@
+      want_libs=yes
       ;;
 
     *)
@@ -89,5 +88,35 @@ while test $# -gt 0; do
   esac
   shift
 done
+
+
+if test $want_cflags = yes; then
+      flags=""
+      if test @includedir@ != /usr/include ; then
+        flags=-I@includedir@
+      fi
+      if test $thread_set = yes; then
+              flags=$flags @THREADCPPFLAGS@
+      fi
+
+      echo @LIBPRELUDE_CFLAGS@ $flags
+fi
+
+
+if test $want_libs = yes; then
+      libdirs=-L@libdir@
+      cpplibs=""
+      if test $cpp_set = yes; then
+              cpplibs="$libdirs -lpreludecpp"
+      fi
+
+      if test $thread_set = yes; then
+              thrlibs=@LTLIBMULTITHREAD@
+      else
+              thrlibs=@LTLIBTHREAD@
+      fi
+
+      echo $cpplibs $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ $thrlibs
+fi
 
 exit 0
