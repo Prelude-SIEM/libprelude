@@ -37,8 +37,6 @@
 
 
 static gl_tls_key_t thread_error_key;
-static prelude_bool_t use_thread = FALSE, need_init = TRUE;
-
 
 
 static void thread_error_key_destroy(void *value)
