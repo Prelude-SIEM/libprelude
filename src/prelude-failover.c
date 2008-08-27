@@ -38,8 +38,9 @@
 #include <assert.h>
 #include <gcrypt.h>
 
-#include "common.h"
+#include "glthread/thread.h"
 
+#include "common.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-msg.h"
@@ -84,13 +85,13 @@ static void mask_signal(sigset_t *oldmask)
         sigset_t newmask;
 
         prelude_return_if_fail( sigfillset(&newmask) == 0 );
-        prelude_return_if_fail( pthread_sigmask(SIG_BLOCK, &newmask, oldmask) == 0 );
+        prelude_return_if_fail( glthread_sigmask(SIG_BLOCK, &newmask, oldmask) == 0 );
 }
 
 
 static void unmask_signal(sigset_t *oldmask)
 {
-        prelude_return_if_fail( pthread_sigmask(SIG_SETMASK, oldmask, NULL) == 0 );
+        prelude_return_if_fail( glthread_sigmask(SIG_SETMASK, oldmask, NULL) == 0 );
 }
 
 
