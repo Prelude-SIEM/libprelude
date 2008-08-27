@@ -90,9 +90,13 @@ AC_SUBST([LTALLOCA])
   AC_PROG_MKDIR_P
   gl_PATHMAX
   gl_FUNC_POLL
+  AC_REPLACE_FUNCS(raise)
   gl_FUNC_REALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([realloc-posix])
   gl_REGEX
+  gl_SIGNAL_H
+  gl_SIGNALBLOCKING
+  gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
   gl_SIZE_MAX
   gl_FUNC_SNPRINTF
   gl_STDIO_MODULE_INDICATOR([snprintf])
@@ -332,6 +336,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-args.h
   lib/printf-parse.c
   lib/printf-parse.h
+  lib/raise.c
   lib/realloc.c
   lib/ref-add.sin
   lib/ref-del.sin
@@ -341,6 +346,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regex_internal.c
   lib/regex_internal.h
   lib/regexec.c
+  lib/signal.in.h
+  lib/sigprocmask.c
   lib/size_max.h
   lib/snprintf.c
   lib/stdbool.in.h
@@ -414,6 +421,8 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/printf.m4
   m4/realloc.m4
   m4/regex.m4
+  m4/signal_h.m4
+  m4/signalblocking.m4
   m4/size_max.m4
   m4/snprintf.m4
   m4/socklen.m4
