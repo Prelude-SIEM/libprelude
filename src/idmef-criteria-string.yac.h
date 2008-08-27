@@ -92,7 +92,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 98 "idmef-criteria-string.yac.y"
+#line 99 "idmef-criteria-string.yac.y"
 {
         char *str;
         int operator;

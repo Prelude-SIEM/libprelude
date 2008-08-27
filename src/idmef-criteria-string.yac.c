@@ -129,7 +129,8 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "prelude-thread.h"
+#include "glthread/lock.h"
+
 #include "prelude-log.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
@@ -212,7 +213,7 @@ err:
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 98 "idmef-criteria-string.yac.y"
+#line 99 "idmef-criteria-string.yac.y"
 {
         char *str;
         int operator;
@@ -221,7 +222,7 @@ typedef union YYSTYPE
         idmef_criterion_operator_t relation;
 }
 /* Line 187 of yacc.c.  */
-#line 225 "idmef-criteria-string.yac.c"
+#line 226 "idmef-criteria-string.yac.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -234,7 +235,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 238 "idmef-criteria-string.yac.c"
+#line 239 "idmef-criteria-string.yac.c"
 
 #ifdef short
 # undef short
@@ -529,10 +530,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   153,   153,   160,   164,   175,   179,   183,   191,   195,
-     199,   209,   222,   236,   257,   266,   270,   277,   278,   279,
-     280,   281,   282,   283,   284,   285,   286,   287,   288,   289,
-     290,   291,   292,   293,   294,   298,   299
+       0,   154,   154,   161,   165,   176,   180,   184,   192,   196,
+     200,   210,   223,   237,   258,   267,   271,   278,   279,   280,
+     281,   282,   283,   284,   285,   286,   287,   288,   289,   290,
+     291,   292,   293,   294,   295,   299,   300
 };
 #endif
 
@@ -1157,19 +1158,19 @@ yydestruct (yymsg, yytype, yyvaluep)
   switch (yytype)
     {
       case 3: /* "\"<IDMEF-Value>\"" */
-#line 111 "idmef-criteria-string.yac.y"
+#line 112 "idmef-criteria-string.yac.y"
 	{ free((yyvaluep->str)); };
-#line 1163 "idmef-criteria-string.yac.c"
+#line 1164 "idmef-criteria-string.yac.c"
 	break;
       case 4: /* "\"<IDMEF-Path>\"" */
-#line 111 "idmef-criteria-string.yac.y"
+#line 112 "idmef-criteria-string.yac.y"
 	{ free((yyvaluep->str)); };
-#line 1168 "idmef-criteria-string.yac.c"
+#line 1169 "idmef-criteria-string.yac.c"
 	break;
       case 29: /* "criteria" */
-#line 112 "idmef-criteria-string.yac.y"
+#line 113 "idmef-criteria-string.yac.y"
 	{ idmef_criteria_destroy((yyvaluep->criteria)); };
-#line 1173 "idmef-criteria-string.yac.c"
+#line 1174 "idmef-criteria-string.yac.c"
 	break;
 
       default:
@@ -1478,21 +1479,21 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 153 "idmef-criteria-string.yac.y"
+#line 154 "idmef-criteria-string.yac.y"
     {
                 processed_criteria = (yyvsp[(1) - (1)].criteria);
         }
     break;
 
   case 3:
-#line 160 "idmef-criteria-string.yac.y"
+#line 161 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(1) - (1)].criteria);
         }
     break;
 
   case 4:
-#line 164 "idmef-criteria-string.yac.y"
+#line 165 "idmef-criteria-string.yac.y"
     {
                 if ( (yyvsp[(2) - (3)].operator) == operator_or )
                         idmef_criteria_or_criteria((yyvsp[(1) - (3)].criteria), (yyvsp[(3) - (3)].criteria));
@@ -1504,21 +1505,21 @@ yyreduce:
     break;
 
   case 5:
-#line 175 "idmef-criteria-string.yac.y"
+#line 176 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(1) - (1)].criteria);
         }
     break;
 
   case 6:
-#line 179 "idmef-criteria-string.yac.y"
+#line 180 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(2) - (3)].criteria);
         }
     break;
 
   case 7:
-#line 183 "idmef-criteria-string.yac.y"
+#line 184 "idmef-criteria-string.yac.y"
     {
                 idmef_criteria_set_negation((yyvsp[(3) - (4)].criteria), TRUE);
                 (yyval.criteria) = (yyvsp[(3) - (4)].criteria);
@@ -1526,21 +1527,21 @@ yyreduce:
     break;
 
   case 8:
-#line 191 "idmef-criteria-string.yac.y"
+#line 192 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(4) - (5)].criteria);
         }
     break;
 
   case 9:
-#line 195 "idmef-criteria-string.yac.y"
+#line 196 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(3) - (3)].criteria);
         }
     break;
 
   case 10:
-#line 199 "idmef-criteria-string.yac.y"
+#line 200 "idmef-criteria-string.yac.y"
     {
                 idmef_criteria_t *criteria;
 
@@ -1553,7 +1554,7 @@ yyreduce:
     break;
 
   case 11:
-#line 209 "idmef-criteria-string.yac.y"
+#line 210 "idmef-criteria-string.yac.y"
     {
                 idmef_criteria_t *criteria;
 
@@ -1566,7 +1567,7 @@ yyreduce:
     break;
 
   case 12:
-#line 222 "idmef-criteria-string.yac.y"
+#line 223 "idmef-criteria-string.yac.y"
     {
                 real_ret = idmef_path_new_fast(&cur_path, (yyvsp[(1) - (1)].str));
                 free((yyvsp[(1) - (1)].str));
@@ -1580,7 +1581,7 @@ yyreduce:
     break;
 
   case 13:
-#line 236 "idmef-criteria-string.yac.y"
+#line 237 "idmef-criteria-string.yac.y"
     {
                 idmef_criteria_t *criteria;
                 idmef_criterion_value_t *value = NULL;
@@ -1600,7 +1601,7 @@ yyreduce:
     break;
 
   case 14:
-#line 257 "idmef-criteria-string.yac.y"
+#line 258 "idmef-criteria-string.yac.y"
     {
                 if ( (yyvsp[(2) - (3)].operator) == operator_or )
                         idmef_criteria_or_criteria((yyvsp[(1) - (3)].criteria), (yyvsp[(3) - (3)].criteria));
@@ -1612,123 +1613,123 @@ yyreduce:
     break;
 
   case 15:
-#line 266 "idmef-criteria-string.yac.y"
+#line 267 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(2) - (3)].criteria);
         }
     break;
 
   case 16:
-#line 270 "idmef-criteria-string.yac.y"
+#line 271 "idmef-criteria-string.yac.y"
     {
                 (yyval.criteria) = (yyvsp[(1) - (1)].criteria);
         }
     break;
 
   case 17:
-#line 277 "idmef-criteria-string.yac.y"
+#line 278 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR; }
     break;
 
   case 18:
-#line 278 "idmef-criteria-string.yac.y"
+#line 279 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE; }
     break;
 
   case 19:
-#line 279 "idmef-criteria-string.yac.y"
+#line 280 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOT; }
     break;
 
   case 20:
-#line 280 "idmef-criteria-string.yac.y"
+#line 281 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NOCASE; }
     break;
 
   case 21:
-#line 281 "idmef-criteria-string.yac.y"
+#line 282 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX; }
     break;
 
   case 22:
-#line 282 "idmef-criteria-string.yac.y"
+#line 283 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOCASE; }
     break;
 
   case 23:
-#line 283 "idmef-criteria-string.yac.y"
+#line 284 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOT; }
     break;
 
   case 24:
-#line 284 "idmef-criteria-string.yac.y"
+#line 285 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NOCASE; }
     break;
 
   case 25:
-#line 285 "idmef-criteria-string.yac.y"
+#line 286 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_GREATER; }
     break;
 
   case 26:
-#line 286 "idmef-criteria-string.yac.y"
+#line 287 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL; }
     break;
 
   case 27:
-#line 287 "idmef-criteria-string.yac.y"
+#line 288 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_LESSER; }
     break;
 
   case 28:
-#line 288 "idmef-criteria-string.yac.y"
+#line 289 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL; }
     break;
 
   case 29:
-#line 289 "idmef-criteria-string.yac.y"
+#line 290 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL; }
     break;
 
   case 30:
-#line 290 "idmef-criteria-string.yac.y"
+#line 291 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE; }
     break;
 
   case 31:
-#line 291 "idmef-criteria-string.yac.y"
+#line 292 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
     break;
 
   case 32:
-#line 292 "idmef-criteria-string.yac.y"
+#line 293 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
     break;
 
   case 33:
-#line 293 "idmef-criteria-string.yac.y"
+#line 294 "idmef-criteria-string.yac.y"
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_NULL; }
     break;
 
   case 34:
-#line 294 "idmef-criteria-string.yac.y"
+#line 295 "idmef-criteria-string.yac.y"
     { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
                                                                        "Criteria parser reported: Invalid operator found"); YYERROR; }
     break;
 
   case 35:
-#line 298 "idmef-criteria-string.yac.y"
+#line 299 "idmef-criteria-string.yac.y"
     { (yyval.operator) = operator_and; }
     break;
 
   case 36:
-#line 299 "idmef-criteria-string.yac.y"
+#line 300 "idmef-criteria-string.yac.y"
     { (yyval.operator) = operator_or; }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1732 "idmef-criteria-string.yac.c"
+#line 1733 "idmef-criteria-string.yac.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1942,7 +1943,7 @@ yyreturn:
 }
 
 
-#line 302 "idmef-criteria-string.yac.y"
+#line 303 "idmef-criteria-string.yac.y"
 
 
 static void yyerror(char *s)  /* Called by yyparse on error */
@@ -1960,7 +1961,7 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 
         prelude_return_val_if_fail(str, -1);
 
-        prelude_thread_mutex_lock(&_criteria_parse_mutex);
+        gl_lock_lock(_criteria_parse_mutex);
 
         real_ret = 0;
         processed_criteria = NULL;
@@ -1983,7 +1984,7 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 
         else *new_criteria = processed_criteria;
 
-        prelude_thread_mutex_unlock(&_criteria_parse_mutex);
+        gl_lock_unlock(_criteria_parse_mutex);
 
         return ret;
 }
