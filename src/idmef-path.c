@@ -32,7 +32,8 @@
 #include <limits.h>
 #include <assert.h>
 
-#include "prelude-thread.h"
+#include "glthread/lock.h"
+
 #include "prelude-hash.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
@@ -74,7 +75,7 @@ typedef struct idmef_path_element {
 
 struct idmef_path {
 
-        pthread_mutex_t mutex;
+        gl_lock_t mutex;
         char name[MAX_NAME_LEN];
         int refcount;
         unsigned int depth;
@@ -96,28 +97,28 @@ static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl);
 
 static prelude_bool_t flush_cache = FALSE;
 static prelude_hash_t *cached_path = NULL;
-static pthread_mutex_t cached_path_mutex = PTHREAD_MUTEX_INITIALIZER;
+static gl_lock_t cached_path_mutex = gl_lock_initializer;
 
 
 
 static void path_lock_cb(void *data)
 {
         idmef_path_t *path = data;
-        prelude_thread_mutex_lock(&path->mutex);
+        gl_lock_lock(path->mutex);
 }
 
 
 static void path_reinit_cb(void *data)
 {
         idmef_path_t *path = data;
-        prelude_thread_mutex_init(&path->mutex, NULL);
+        gl_lock_init(path->mutex);
 }
 
 
 static void path_unlock_cb(void *data)
 {
         idmef_path_t *path = data;
-        prelude_thread_mutex_unlock(&path->mutex);
+        gl_lock_unlock(path->mutex);
 }
 
 
@@ -151,7 +152,7 @@ static int build_name(idmef_path_t *path)
         idmef_class_id_t class;
 
         /*
-         * we don't need prelude_thread_mutex_{,un}lock since the path has no name
+         * we don't need gl_lock_{,un}lock since the path has no name
          * it means that it is not in the cache and thus, not shared
          */
         path->name[0] = '\0';
@@ -495,16 +496,16 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
 {
         int ret;
 
-        prelude_thread_mutex_lock(&cached_path_mutex);
+        gl_lock_lock(cached_path_mutex);
 
         ret = initialize_path_cache_if_needed();
         if ( ret < 0 ) {
-                prelude_thread_mutex_unlock(&cached_path_mutex);
+                gl_lock_unlock(cached_path_mutex);
                 return ret;
         }
 
         *path = prelude_hash_get(cached_path, buffer);
-        prelude_thread_mutex_unlock(&cached_path_mutex);
+        gl_lock_unlock(cached_path_mutex);
 
         if ( *path )
                 return 1;
@@ -514,7 +515,7 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
                 return prelude_error_from_errno(errno);
 
         (*path)->refcount = 1;
-        prelude_thread_mutex_init(&(*path)->mutex, NULL);
+        gl_lock_init((*path)->mutex);
 
         return 0;
 }
@@ -656,23 +657,23 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
         else {
                 ret = idmef_path_parse_new(*path, buffer);
                 if ( ret < 0 ) {
-                        prelude_thread_mutex_destroy(&(*path)->mutex);
+                        gl_lock_destroy((*path)->mutex);
                         free(*path);
                         return ret;
                 }
         }
 
-        prelude_thread_mutex_lock(&cached_path_mutex);
+        gl_lock_lock(cached_path_mutex);
 
         if ( prelude_hash_set(cached_path, (*path)->name, *path) < 0 ) {
 
-                prelude_thread_mutex_destroy(&(*path)->mutex);
+                gl_lock_destroy((*path)->mutex);
                 free(*path);
-                prelude_thread_mutex_unlock(&cached_path_mutex);
+                gl_lock_unlock(cached_path_mutex);
                 return ret;
         }
 
-        prelude_thread_mutex_unlock(&cached_path_mutex);
+        gl_lock_unlock(cached_path_mutex);
 
         idmef_path_ref(*path);
 
@@ -790,10 +791,10 @@ static inline int invalidate(idmef_path_t *path)
 {
         int ret;
 
-        prelude_thread_mutex_lock(&path->mutex);
+        gl_lock_lock(path->mutex);
 
         if ( path->refcount == 1 ) {
-                prelude_thread_mutex_unlock(&path->mutex);
+                gl_lock_unlock(path->mutex);
                 return 0; /* not cached */
         }
 
@@ -814,24 +815,24 @@ static inline int invalidate(idmef_path_t *path)
          */
 
         if ( path->refcount > 2 ) {
-                prelude_thread_mutex_unlock(&path->mutex);
+                gl_lock_unlock(path->mutex);
                 return -1;
         }
 
         if ( path->refcount == 2 ) {
-                prelude_thread_mutex_lock(&cached_path_mutex);
+                gl_lock_lock(cached_path_mutex);
                 ret = prelude_hash_elem_destroy(cached_path, path->name);
-                prelude_thread_mutex_unlock(&cached_path_mutex);
+                gl_lock_unlock(cached_path_mutex);
 
                 if ( ret == 0 )
                         path->refcount--;  /* path was present in a hash */
                 else {
-                        prelude_thread_mutex_unlock(&path->mutex);
+                        gl_lock_unlock(path->mutex);
                         return -1; /* path was not present in a hash and refcount != 1 */
                 }
         }
 
-        prelude_thread_mutex_unlock(&path->mutex);
+        gl_lock_unlock(path->mutex);
 
         return 0; /* successfully invalidated */
 }
@@ -1033,15 +1034,15 @@ void idmef_path_destroy(idmef_path_t *path)
 {
         prelude_return_if_fail(path);
 
-        prelude_thread_mutex_lock(&path->mutex);
+        gl_lock_lock(path->mutex);
 
         if ( --path->refcount ) {
-                prelude_thread_mutex_unlock(&path->mutex);
+                gl_lock_unlock(path->mutex);
                 return;
         }
 
-        prelude_thread_mutex_unlock(&path->mutex);
-        prelude_thread_mutex_destroy(&path->mutex);
+        gl_lock_unlock(path->mutex);
+        gl_lock_destroy(path->mutex);
         free(path);
 }
 
@@ -1124,7 +1125,7 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
         strncpy((*dst)->name, src->name, sizeof(src->name));
         memcpy((*dst)->elem, src->elem, src->depth * sizeof(idmef_path_element_t));
 
-        prelude_thread_mutex_init(&((*dst)->mutex), NULL);
+        gl_lock_init((*dst)->mutex);
 
         return 0;
 }
@@ -1146,9 +1147,9 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
 {
         prelude_return_val_if_fail(path, NULL);
 
-        prelude_thread_mutex_lock(&path->mutex);
+        gl_lock_lock(path->mutex);
         path->refcount++;
-        prelude_thread_mutex_unlock(&path->mutex);
+        gl_lock_unlock(path->mutex);
 
         return path;
 }
@@ -1266,7 +1267,7 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
 
 void _idmef_path_cache_lock(void)
 {
-        prelude_thread_mutex_lock(&cached_path_mutex);
+        gl_lock_lock(cached_path_mutex);
 
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_lock_cb);
@@ -1276,7 +1277,7 @@ void _idmef_path_cache_lock(void)
 
 void _idmef_path_cache_reinit(void)
 {
-        prelude_thread_mutex_init(&cached_path_mutex, NULL);
+        gl_lock_init(cached_path_mutex);
 
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_reinit_cb);
@@ -1290,7 +1291,7 @@ void _idmef_path_cache_unlock(void)
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_unlock_cb);
 
-        prelude_thread_mutex_unlock(&cached_path_mutex);
+        gl_lock_unlock(cached_path_mutex);
 }
 
 
