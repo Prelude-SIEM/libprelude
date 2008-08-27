@@ -43,11 +43,11 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#include "glthread/lock.h"
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
 #include "prelude-error.h"
 
-#include "prelude-thread.h"
 #include "idmef.h"
 #include "common.h"
 #include "prelude-log.h"
@@ -118,7 +118,7 @@ struct prelude_client {
 
 
         prelude_msgbuf_t *msgbuf;
-        pthread_mutex_t msgbuf_lock;
+        gl_lock_t msgbuf_lock;
 
         prelude_ident_t *unique_ident;
 
@@ -1052,7 +1052,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
-        prelude_thread_mutex_init(&new->msgbuf_lock, NULL);
+        gl_lock_init(new->msgbuf_lock);
         prelude_timer_init_list(&new->heartbeat_timer);
 
         new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT|PRELUDE_CLIENT_FLAGS_AUTOCONFIG;
@@ -1284,13 +1284,13 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
          */
-        prelude_thread_mutex_lock(&client->msgbuf_lock);
+        gl_lock_lock(client->msgbuf_lock);
 
         _idmef_message_assign_missing(client, msg);
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 
-        prelude_thread_mutex_unlock(&client->msgbuf_lock);
+        gl_lock_unlock(client->msgbuf_lock);
 }
 
 
@@ -1741,12 +1741,12 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
         /*
          * lock, handle the request, send reply.
          */
-        prelude_thread_mutex_lock(&client->msgbuf_lock);
+        gl_lock_lock(client->msgbuf_lock);
 
         ret = prelude_option_process_request(client, msg, msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 
-        prelude_thread_mutex_unlock(&client->msgbuf_lock);
+        gl_lock_unlock(client->msgbuf_lock);
 
         return ret;
 }
