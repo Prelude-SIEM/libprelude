@@ -33,6 +33,8 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#include "glthread/lock.h"
+
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION
 #include "prelude-error.h"
 
@@ -41,13 +43,9 @@
 #include "prelude-client.h"
 #include "prelude-message-id.h"
 #include "prelude-extract.h"
-#include "prelude-thread.h"
 
 #include "tls-util.h"
 #include "tls-auth.h"
-
-
-GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 
 
@@ -59,6 +57,53 @@ static gnutls_priority_t tls_priority;
 
 static prelude_bool_t priority_set = FALSE;
 static prelude_bool_t gnutls_initialized = FALSE;
+
+
+static int gcry_prelude_mutex_init(void **retval)
+{
+        int ret;
+        gl_lock_t *lock;
+
+        *retval = lock = malloc(sizeof(*lock));
+        if ( ! lock )
+                return ENOMEM;
+
+        ret = glthread_lock_init(lock);
+        if ( ret < 0 )
+                free(lock);
+
+        return ret;
+}
+
+
+static int gcry_prelude_mutex_destroy(void **lock)
+{
+        return glthread_lock_destroy(*lock);
+}
+
+
+
+static int gcry_prelude_mutex_lock(void **lock)
+{
+        return glthread_lock_lock((gl_lock_t *) *lock);
+}
+
+
+static int gcry_prelude_mutex_unlock(void **lock)
+{
+        return glthread_lock_unlock((gl_lock_t *) *lock);
+}
+
+
+static struct gcry_thread_cbs gcry_threads_prelude = {
+        GCRY_THREAD_OPTION_USER,
+        NULL,
+        gcry_prelude_mutex_init,
+        gcry_prelude_mutex_destroy,
+        gcry_prelude_mutex_lock,
+        gcry_prelude_mutex_unlock
+};
+
 
 
 static int read_auth_result(prelude_io_t *fd)
@@ -345,9 +390,7 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         char keyfile[PATH_MAX], certfile[PATH_MAX];
 
         *cred = NULL;
-
-        if ( _prelude_thread_in_use() )
-                gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+        gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_prelude);
 
         ret = init_gnutls();
         if ( ret < 0 )
