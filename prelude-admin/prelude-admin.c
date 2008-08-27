@@ -35,6 +35,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <signal.h>
 
 #ifndef WIN32
 # include <pwd.h>
