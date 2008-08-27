@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <assert.h>
 
+#include "glthread/lock.h"
+
 #include "common.h"
 #include "prelude-timer.h"
 #include "prelude-log.h"
@@ -101,7 +103,7 @@ typedef struct cnx {
 
 
 struct prelude_connection_pool {
-        pthread_mutex_t mutex;
+        gl_recursive_lock_t mutex;
 
         cnx_list_t *or_list;
         prelude_bool_t initialized;
@@ -275,10 +277,10 @@ again:
                         to.tv_sec = (timeout < 0) ? 1 : 0;
                 }
 
-                prelude_thread_mutex_lock(&pool->mutex);
+                gl_recursive_lock_lock(pool->mutex);
                 rfds = pool->fds;
                 nfd = pool->nfd;
-                prelude_thread_mutex_unlock(&pool->mutex);
+                gl_recursive_lock_unlock(pool->mutex);
 
                 ret = select(nfd, &rfds, NULL, NULL, &to);
                 if ( ret < 0 )
@@ -289,7 +291,7 @@ again:
         if ( ret == 0 )
                 return 0;
 
-        /* FIXME: prelude_thread_mutex_lock(&pool->mutex); */
+        gl_recursive_lock_lock(pool->mutex);
 
         for ( or = pool->or_list; or != NULL; or = or->or ) {
         for ( cnx = or->and; cnx != NULL; cnx = cnx->and ) {
@@ -311,7 +313,7 @@ again:
                         i--;
         }}
 
-        /* FIXME: prelude_thread_mutex_unlock(&pool->mutex); */
+        gl_recursive_lock_unlock(pool->mutex);
         global_event_handler(pool, global_event);
 
         if ( pool->connection_string_changed )
@@ -628,7 +630,7 @@ static void connection_timer_expire(void *data)
         cnx_t *cnx = data;
         prelude_connection_pool_t *pool = cnx->parent->parent;
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->permission);
         if ( ret >= 0 ) {
@@ -649,7 +651,7 @@ static void connection_timer_expire(void *data)
         prelude_timer_reset(&cnx->timer);
 
 out:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
 }
 
 
@@ -882,9 +884,9 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
         prelude_return_if_fail(pool);
         prelude_return_if_fail(msg);
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
         walk_manager_lists(pool, msg);
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
 }
 
 
@@ -902,9 +904,9 @@ void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, pr
         prelude_return_if_fail(pool);
         prelude_return_if_fail(msg);
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
         pool->refcount++;
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
 
         prelude_async_set_callback((prelude_async_object_t *) msg, &broadcast_async_cb);
         prelude_async_set_data((prelude_async_object_t *) msg, pool);
@@ -931,7 +933,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         int ret = 0, event = 0;
         char dirname[PATH_MAX], buf[PATH_MAX];
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
 
@@ -1002,7 +1004,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         pool->initialized = TRUE;
 
 err:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
         return ret;
 }
 
@@ -1038,7 +1040,7 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
 
         prelude_list_init(&new->all_cnx);
         prelude_timer_init_list(&new->timer);
-        prelude_thread_mutex_init(&new->mutex, NULL);
+        gl_recursive_lock_init(new->mutex);
 
         return 0;
 }
@@ -1054,10 +1056,10 @@ void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
 {
         prelude_return_if_fail(pool);
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         if ( --pool->refcount != 0 ) {
-                prelude_thread_mutex_unlock(&pool->mutex);
+                gl_recursive_lock_unlock(pool->mutex);
                 return;
         }
 
@@ -1071,8 +1073,8 @@ void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
         if ( pool->failover )
                 prelude_failover_destroy(pool->failover);
 
-        prelude_thread_mutex_unlock(&pool->mutex);
-        prelude_thread_mutex_destroy(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
+        gl_recursive_lock_destroy(pool->mutex);
 
         free(pool);
 }
@@ -1120,7 +1122,7 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
         prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         if ( ! pool->or_list ) {
                 ret = create_connection_list(&pool->or_list, pool);
@@ -1150,7 +1152,7 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
         }
 
 out:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
         return ret;
 }
 
@@ -1173,7 +1175,7 @@ int prelude_connection_pool_del_connection(prelude_connection_pool_t *pool, prel
         prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         c = search_cnx(pool, cnx);
         if ( ! c ) {
@@ -1184,7 +1186,7 @@ int prelude_connection_pool_del_connection(prelude_connection_pool_t *pool, prel
         destroy_connection_single(c);
 
 out:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
         return ret;
 }
 
@@ -1272,7 +1274,7 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
         prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         c = search_cnx(pool, cnx);
         if ( ! c ) {
@@ -1287,7 +1289,7 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
         set_state_dead(c, 0, FALSE, FALSE);
 
 out:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
         return ret;
 }
 
@@ -1316,7 +1318,7 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
         prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         c = search_cnx(pool, cnx);
         if ( ! c ) {
@@ -1330,7 +1332,7 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
         ret = set_state_alive(c, FALSE);
 
 out:
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
         return ret;
 }
 
@@ -1364,7 +1366,7 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        gl_recursive_lock_lock(pool->mutex);
 
         if ( pool->connection_string )
                 free(pool->connection_string);
@@ -1372,7 +1374,7 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
         pool->connection_string = new;
         pool->connection_string_changed = TRUE;
 
-        prelude_thread_mutex_unlock(&pool->mutex);
+        gl_recursive_lock_unlock(pool->mutex);
 
         return 0;
 }
