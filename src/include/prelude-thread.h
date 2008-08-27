@@ -28,67 +28,14 @@
 # include "config.h"
 #endif
 
-#include <signal.h>
-#include <pthread.h>
-#include "prelude-inttypes.h"
-
 #ifdef __cplusplus
  extern "C" {
 #endif
 
-
-int prelude_thread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void));
-
-
-/*
- * mutex
- */
-int prelude_thread_mutex_lock(pthread_mutex_t *mutex);
-
-int prelude_thread_mutex_unlock(pthread_mutex_t *mutex);
-
-int prelude_thread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
-
-int prelude_thread_mutex_destroy(pthread_mutex_t *mutex);
-
-
-/*
- * condition.
- */
-int prelude_thread_cond_init(pthread_cond_t *cond, pthread_condattr_t *attr);
-
-int prelude_thread_cond_signal(pthread_cond_t *cond);
-
-int prelude_thread_cond_broadcast(pthread_cond_t *cond);
-
-int prelude_thread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
-
-int prelude_thread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime);
-
-int prelude_thread_cond_destroy(pthread_cond_t *cond);
-
-/*
- * condition attribute
- */
-int prelude_thread_condattr_init(pthread_condattr_t *attr);
-
-
 /*
  *
  */
-int prelude_thread_sigmask(int how, const sigset_t *newmask, sigset_t *oldmask);
-
-int prelude_thread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
-
-void prelude_thread_exit(void *retval);
-
-int prelude_thread_join(pthread_t th, void **thread_return);
-
-
-/*
- *
- */
-prelude_bool_t _prelude_thread_in_use(void);
+int prelude_thread_init(void *nil);
 
 int _prelude_thread_set_error(const char *error);
 
