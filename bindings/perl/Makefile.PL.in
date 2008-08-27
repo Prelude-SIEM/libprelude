@@ -5,9 +5,9 @@ use File::Copy;
 use Cwd "abs_path";
 
 my %attributs = (NAME => 'PreludeEasy',
-		 INC => '-I@top_srcdir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include @PTHREAD_CFLAGS@',
-		 LIBS => ["-L@top_builddir@/src/.libs -lprelude -L@top_builddir@/bindings/c++/.libs -lpreludecpp", "-L$ENV{LIBDIR} -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@" ],
-		 LDDLFLAGS => "-L@top_builddir@/src/.libs @PTHREAD_CFLAGS@ $Config{lddlflags}");
+		 INC => '-I@top_srcdir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include',
+		 LIBS => ["-L@top_builddir@/src/.libs -lprelude -L@top_builddir@/bindings/c++/.libs -lpreludecpp", "-L$ENV{LIBDIR} -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @LTLIBTHREAD@" ],
+		 LDDLFLAGS => "-L@top_builddir@/src/.libs $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
     foreach my $filename ( qw/easy-idmef_wrap_perl.cxx PreludeEasy.pm/ ) {
