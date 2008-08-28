@@ -30,7 +30,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-         
+
 
 typedef enum {
         PRELUDE_ASYNC_FLAGS_TIMER   = 0x01
@@ -52,13 +52,13 @@ typedef struct {
 
 
 
-static inline void prelude_async_set_data(prelude_async_object_t *obj, void *data) 
+static inline void prelude_async_set_data(prelude_async_object_t *obj, void *data)
 {
         obj->_async_data = data;
 }
 
 
-static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelude_async_callback_t func) 
+static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelude_async_callback_t func)
 {
         obj->_async_func = func;
 }
@@ -74,6 +74,12 @@ void prelude_async_add(prelude_async_object_t *obj);
 void prelude_async_del(prelude_async_object_t *obj);
 
 void prelude_async_exit(void);
+
+
+void _prelude_async_fork_prepare(void);
+void _prelude_async_fork_parent(void);
+void _prelude_async_fork_child(void);
+
 
 #ifdef __cplusplus
  }

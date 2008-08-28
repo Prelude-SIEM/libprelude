@@ -64,7 +64,7 @@ static prelude_bool_t stop_processing = FALSE;
 
 static gl_thread_t thread;
 static gl_cond_t cond;
-static gl_lock_t mutex;
+static gl_lock_t mutex = gl_lock_initializer;
 
 static volatile sig_atomic_t is_initialized = FALSE;
 
@@ -234,47 +234,15 @@ static void *async_thread(void *arg)
 }
 
 
-static void prepare_fork_cb(void)
-{
-        gl_lock_lock(mutex);
-}
-
-
-
-static void parent_fork_cb(void)
-{
-        gl_lock_unlock(mutex);
-}
-
-
-
-static void child_fork_cb(void)
-{
-        is_initialized = FALSE;
-        prelude_list_init(&joblist);
-}
-
 
 static int do_init_async(void)
 {
         int ret;
-        static volatile sig_atomic_t fork_handler_registered = FALSE;
 
         ret = glthread_cond_init(&cond);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error creating condition: %s.\n", strerror(ret));
                 return ret;
-        }
-
-        ret = glthread_lock_init(&mutex);
-        if ( ret != 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "error creating mutex: %s.\n", strerror(ret));
-                return ret;
-        }
-
-        if ( ! fork_handler_registered ) {
-                fork_handler_registered = TRUE;
-                gl_thread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
         }
 
         ret = glthread_create(&thread, async_thread, NULL);
@@ -407,4 +375,26 @@ void prelude_async_exit(void)
         gl_lock_destroy(mutex);
 
         is_initialized = FALSE;
+}
+
+
+
+void _prelude_async_fork_prepare(void)
+{
+        gl_lock_lock(mutex);
+}
+
+
+
+void _prelude_async_fork_parent(void)
+{
+        gl_lock_unlock(mutex);
+}
+
+
+
+void _prelude_async_fork_child(void)
+{
+        is_initialized = FALSE;
+        prelude_list_init(&joblist);
 }

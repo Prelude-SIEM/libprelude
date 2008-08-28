@@ -42,14 +42,8 @@
 
 
 static PRELUDE_LIST(timer_list);
-static gl_lock_t mutex;
+static gl_lock_t mutex = gl_lock_initializer;
 
-
-static void child_fork_cb(void)
-{
-        prelude_list_init(&timer_list);
-        gl_lock_init(mutex);
-}
 
 
 inline static void timer_lock_list(void)
@@ -467,19 +461,25 @@ void prelude_timer_unlock_critical_region(void)
 
 int _prelude_timer_init(void)
 {
-        int ret;
-
-        ret = glthread_lock_init(&mutex);
-        if ( ret != 0 )
-                return prelude_error_from_errno(ret);
-
-        ret = glthread_atfork(prelude_timer_lock_critical_region,
-                              prelude_timer_unlock_critical_region, child_fork_cb);
-        if ( ret != 0 )
-                return prelude_error_from_errno(ret);
-
         return 0;
 }
 
 
 
+void _prelude_timer_fork_prepare(void)
+{
+        prelude_timer_lock_critical_region();
+}
+
+
+void _prelude_timer_fork_parent(void)
+{
+        prelude_timer_unlock_critical_region();
+}
+
+
+void _prelude_timer_fork_child(void)
+{
+        prelude_list_init(&timer_list);
+        gl_lock_init(mutex);
+}

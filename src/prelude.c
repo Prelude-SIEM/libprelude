@@ -58,30 +58,6 @@ static void tls_log_func(int level, const char *data)
 
 
 
-static void prepare_fork_cb(void)
-{
-        _idmef_path_cache_lock();
-        gl_lock_lock(_criteria_parse_mutex);
-}
-
-
-
-static void parent_fork_cb(void)
-{
-        _idmef_path_cache_unlock();
-        gl_lock_unlock(_criteria_parse_mutex);
-}
-
-
-
-static void child_fork_cb(void)
-{
-        _idmef_path_cache_reinit();
-        gl_lock_init(_criteria_parse_mutex);
-}
-
-
-
 static void slice_arguments(int *argc, char **argv)
 {
         int i;
@@ -187,7 +163,7 @@ int prelude_init(int *argc, char **argv)
         if ( ret < 0 )
                 return ret;
 
-        ret = glthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        ret = glthread_atfork(prelude_fork_prepare, prelude_fork_parent, prelude_fork_child);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
 
@@ -263,4 +239,47 @@ const char *prelude_check_version(const char *req_version)
         }
 
         return NULL;
+}
+
+
+
+void prelude_fork_prepare(void)
+{
+#ifdef HAVE_PTHREAD_ATFORK
+        return;
+#endif
+
+        _prelude_async_fork_prepare();
+        _prelude_timer_fork_prepare();
+
+        _idmef_path_cache_lock();
+        gl_lock_lock(_criteria_parse_mutex);
+}
+
+
+void prelude_fork_parent(void)
+{
+#ifdef HAVE_PTHREAD_ATFORK
+        return;
+#endif
+
+        _prelude_async_fork_parent();
+        _prelude_timer_fork_parent();
+
+        _idmef_path_cache_unlock();
+        gl_lock_unlock(_criteria_parse_mutex);
+}
+
+
+void prelude_fork_child(void)
+{
+#ifdef HAVE_PTHREAD_ATFORK
+        return;
+#endif
+
+        _prelude_async_fork_child();
+        _prelude_timer_fork_child();
+
+        _idmef_path_cache_reinit();
+        gl_lock_init(_criteria_parse_mutex);
 }

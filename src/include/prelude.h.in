@@ -61,6 +61,13 @@ const char *prelude_check_version(const char *req_version);
 
 int prelude_thread_init(void *future_use);
 
+void prelude_fork_prepare(void);
+
+void prelude_fork_parent(void);
+
+void prelude_fork_child(void);
+
+
 #ifdef __cplusplus
  }
 #endif

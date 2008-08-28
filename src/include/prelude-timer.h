@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -25,7 +25,7 @@
 #define _LIBPRELUDE_PRELUDE_TIMER_H
 
 #include "prelude-config.h"
- 
+
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
@@ -109,14 +109,19 @@ void prelude_timer_lock_critical_region(void);
  */
 void prelude_timer_unlock_critical_region(void);
 
-         
+
 /*
  *
  */
 int _prelude_timer_init(void);
-         
+
+
+void _prelude_timer_fork_prepare(void);
+void _prelude_timer_fork_parent(void);
+void _prelude_timer_fork_child(void);
+
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_PRELUDE_TIMER_H */
