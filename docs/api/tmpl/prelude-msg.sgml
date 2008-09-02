@@ -283,3 +283,12 @@ prelude-msgbuf
 @data: 
 
 
+<!-- ##### FUNCTION prelude_msg_get_message_data ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+

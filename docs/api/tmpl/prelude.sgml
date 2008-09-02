@@ -69,7 +69,28 @@ if ( ret &lt; 0 ) {
 
 </para>
 
-@future_use: 
+@nil: 
 @Returns: 
+
+
+<!-- ##### FUNCTION prelude_fork_child ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_fork_parent ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_fork_prepare ##### -->
+<para>
+
+</para>
+
 
 

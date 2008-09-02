@@ -145,6 +145,16 @@ idmef_message_read()
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_pool_del_connection ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnx: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_connection_pool_set_connection_dead ##### -->
 <para>
 

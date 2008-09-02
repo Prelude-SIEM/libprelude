@@ -68,6 +68,16 @@ prelude-connection
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_recv_idmef ##### -->
+<para>
+
+</para>
+
+@con: 
+@idmef: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_connection_connect ##### -->
 <para>
 
@@ -249,6 +259,15 @@ prelude-connection
 
 @ret: 
 @addr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_ref ##### -->
+<para>
+
+</para>
+
+@conn: 
 @Returns: 
 
 

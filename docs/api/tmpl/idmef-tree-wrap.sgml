@@ -108,6 +108,96 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 
 
+<!-- ##### FUNCTION idmef_message_get_data ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@data: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_get_number ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@result: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_get_string ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@result: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_get_value ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_set_data ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@data: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_set_number ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_set_string ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_set_value ##### -->
+<para>
+
+</para>
+
+@message: 
+@path: 
+@value: 
+@Returns: 
+
+
 <!-- ##### ENUM idmef_additional_data_type_t ##### -->
 <para>
 

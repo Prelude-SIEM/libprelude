@@ -239,6 +239,180 @@ idmef-value
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_value_set_class ##### -->
+<para>
+
+</para>
+
+@value: 
+@classid: 
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_data ##### -->
+<para>
+
+</para>
+
+@value: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_double ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_enum ##### -->
+<para>
+
+</para>
+
+@value: 
+@classid: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_enum_from_numeric ##### -->
+<para>
+
+</para>
+
+@value: 
+@classid: 
+@no: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_enum_from_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@classid: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_float ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_int16 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_int32 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_int64 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_int8 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_time ##### -->
+<para>
+
+</para>
+
+@value: 
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_uint16 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_uint32 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_uint64 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_set_uint8 ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_get_int8 ##### -->
 <para>
 

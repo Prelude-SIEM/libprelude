@@ -4579,7 +4579,7 @@ idmef_message_t *message, const char *path, idmef_value_t **value
 <FUNCTION>
 <NAME>idmef_message_set_string</NAME>
 <RETURNS>int </RETURNS>
-idmef_message_t *message, const char *path, const char *string
+idmef_message_t *message, const char *path, const char *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_string</NAME>
@@ -4607,84 +4607,9 @@ idmef_message_t *message, const char *path, const unsigned char *data, size_t si
 idmef_message_t *message, const char *path, unsigned char **data, size_t *size
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_thread_atfork</NAME>
+<NAME>prelude_thread_init</NAME>
 <RETURNS>int </RETURNS>
-void (*prepare)(void), void (*parent)(void), void (*child)(void)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_mutex_lock</NAME>
-<RETURNS>int </RETURNS>
-pthread_mutex_t *mutex
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_mutex_unlock</NAME>
-<RETURNS>int </RETURNS>
-pthread_mutex_t *mutex
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_mutex_init</NAME>
-<RETURNS>int </RETURNS>
-pthread_mutex_t *mutex, const pthread_mutexattr_t *attr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_mutex_destroy</NAME>
-<RETURNS>int </RETURNS>
-pthread_mutex_t *mutex
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_init</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond, pthread_condattr_t *attr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_signal</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_broadcast</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_wait</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond, pthread_mutex_t *mutex
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_timedwait</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_cond_destroy</NAME>
-<RETURNS>int </RETURNS>
-pthread_cond_t *cond
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_condattr_init</NAME>
-<RETURNS>int </RETURNS>
-pthread_condattr_t *attr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_sigmask</NAME>
-<RETURNS>int </RETURNS>
-int how, const sigset_t *newmask, sigset_t *oldmask
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_create</NAME>
-<RETURNS>int </RETURNS>
-pthread_t *thread, pthread_attr_t *attr, void *(*start_routine)(void *), void *arg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_exit</NAME>
-<RETURNS>void </RETURNS>
-void *retval
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_thread_join</NAME>
-<RETURNS>int </RETURNS>
-pthread_t th, void **thread_return
+void *nil
 </FUNCTION>
 <ENUM>
 <NAME>prelude_log_t</NAME>
@@ -7112,7 +7037,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.18.1"
+#define LIBPRELUDE_VERSION "0.9.20"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7133,6 +7058,21 @@ const char *req_version
 <NAME>prelude_thread_init</NAME>
 <RETURNS>int </RETURNS>
 void *future_use
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_fork_prepare</NAME>
+<RETURNS>void </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_fork_parent</NAME>
+<RETURNS>void </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_fork_child</NAME>
+<RETURNS>void </RETURNS>
+void
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_OPTION_REPLY_TYPE_SET</NAME>

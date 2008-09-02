@@ -160,6 +160,15 @@ idmef-criteria
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_criteria_ref ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_criteria_destroy ##### -->
 <para>
 

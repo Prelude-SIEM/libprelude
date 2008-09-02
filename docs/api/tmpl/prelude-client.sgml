@@ -281,6 +281,17 @@ is interrupted by a signal.
 @msg: 
 
 
+<!-- ##### FUNCTION prelude_client_recv_msg ##### -->
+<para>
+
+</para>
+
+@client: 
+@timeout: 
+@msg: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_client_set_heartbeat_cb ##### -->
 <para>
 
@@ -297,6 +308,17 @@ is interrupted by a signal.
 
 @client: 
 @msg: 
+
+
+<!-- ##### FUNCTION prelude_client_recv_idmef ##### -->
+<para>
+
+</para>
+
+@client: 
+@timeout: 
+@idmef: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_client_destroy ##### -->
