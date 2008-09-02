@@ -26,7 +26,7 @@ int idmef_message_set_value(idmef_message_t *message, const char *path, idmef_va
 
 int idmef_message_get_value(idmef_message_t *message, const char *path, idmef_value_t **value);
 
-int idmef_message_set_string(idmef_message_t *message, const char *path, const char *string);
+int idmef_message_set_string(idmef_message_t *message, const char *path, const char *value);
 
 int idmef_message_get_string(idmef_message_t *message, const char *path, char **result);
 

@@ -100,13 +100,13 @@ int idmef_message_get_value(idmef_message_t *message, const char *path, idmef_va
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_message_set_string(idmef_message_t *message, const char *path, const char *string)
+int idmef_message_set_string(idmef_message_t *message, const char *path, const char *value)
 {
         int ret;
         idmef_value_t *iv;
         prelude_string_t *str;
 
-        ret = prelude_string_new_dup(&str, string);
+        ret = prelude_string_new_dup(&str, value);
         if ( ret < 0 )
                 return ret;
 
