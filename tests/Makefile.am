@@ -5,12 +5,11 @@ AM_CPPFLAGS = -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_
 
 idmef_value_LDADD = $(top_builddir)/src/idmef-value.lo $(LDADD)
 
+if HAVE_VALGRIND
+
 check-local:
 	$(MAKE) valgrind
-	cd $(top_srcdir)/libmissing/tests && $(MAKE) check
 
-
-if HAVE_VALGRIND
 
 %.valgrind: %
 	libtool --mode=execute                                  \
