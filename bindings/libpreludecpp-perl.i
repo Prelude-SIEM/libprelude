@@ -88,7 +88,7 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
         else if ( ret == 0 )
                 ret = prelude_error(PRELUDE_ERROR_EOF);
 
-        return 0;
+        return ret;
 }
 %}
 
