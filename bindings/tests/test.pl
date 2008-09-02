@@ -42,4 +42,4 @@ print "\n*** Client ***";
 $client = new PreludeEasy::ClientEasy("prelude-lml");
 $client->Start();
 
-$client << $idmef;
+$client->SendIDMEF($idmef);
