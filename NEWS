@@ -1,3 +1,32 @@
+* 2008-09-03, libprelude-0.9.20:
+
+- Multithreading API independance: support for posix, solaris, pth,
+  and win32 backend.
+
+- Automatic Node name and address detection, if the user did not
+  provides custom parameters.
+
+- When copying the value prior doing the cast, set the copy to not own
+  the value data.
+
+- When casting an IDMEF-Value fail, return the un-modified IDMEF-Value.
+
+- Fixed non working uint32 and uint64 to time cast.
+
+- Honor 'own_data' boolean when casting from/to a string (possible
+  double free).
+
+- Include unit tests.
+
+- Correct C++ headers installation path.
+
+- Fix Perl EasyBindings IDMEF->Read() method infinite loop.
+
+- Handle new IDMEF value as new IDMEF object: return the old value if
+  one already exist.
+
+
+
 * 2008-08-04, libprelude-0.9.19:
 
 - EasyBindings inclusion! EasyBindings provide simple C++, Python,

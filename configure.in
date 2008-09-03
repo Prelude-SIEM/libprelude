@@ -11,7 +11,7 @@ dnl **********************************************************
 
 libprelude_major=0
 libprelude_minor=9
-libprelude_micro=19
+libprelude_micro=20
 libprelude_patchlevel=
 libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprelude_patchlevel
 
@@ -20,13 +20,13 @@ dnl **********************************************************
 dnl * Library soname (http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91)
 dnl **********************************************************
 
-libprelude_current=16
+libprelude_current=17
 libprelude_revision=0
-libprelude_age=14
+libprelude_age=15
 LIBPRELUDE_SONAME=$libprelude_current:$libprelude_revision:$libprelude_age
 
 libpreludecpp_current=0
-libpreludecpp_revision=0
+libpreludecpp_revision=1
 libpreludecpp_age=0
 LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
 
