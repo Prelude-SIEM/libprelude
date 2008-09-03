@@ -1343,27 +1343,11 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
                 $self->output("
         int retval;
 
-        if ( ptr->$field->{name} )
-                $field->{short_typename}_destroy(ptr->$field->{name});
-
-        retval = $field->{short_typename}_new(&ptr->$field->{name});
-        if ( retval < 0 )
-               return retval;
-");
-            } else {
-
-                $self->output("
-        $field->{short_typename}_destroy_internal(&ptr->$field->{name});
-");
-            }
-
-        } else {
-            if ( $field->{ptr} ) {
-                $self->output("
-        if ( ptr->$field->{name} )
-                free(ptr->$field->{name});
-
-        ptr->$field->{name} = calloc(1, sizeof (*ptr->$field->{name}));
+        if ( ! ptr->$field->{name} ) {
+                retval = $field->{short_typename}_new(&ptr->$field->{name});
+                if ( retval < 0 )
+                        return retval;
+        }
 ");
             }
         }

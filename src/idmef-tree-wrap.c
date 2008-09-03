@@ -2103,12 +2103,11 @@ int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_stri
 
         int retval;
 
-        if ( ptr->meaning )
-                prelude_string_destroy(ptr->meaning);
-
-        retval = prelude_string_new(&ptr->meaning);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->meaning ) {
+                retval = prelude_string_new(&ptr->meaning);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->meaning;
         return 0;
@@ -2166,12 +2165,11 @@ int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **
 
         int retval;
 
-        if ( ptr->data )
-                idmef_data_destroy(ptr->data);
-
-        retval = idmef_data_new(&ptr->data);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->data ) {
+                retval = idmef_data_new(&ptr->data);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->data;
         return 0;
@@ -2561,12 +2559,11 @@ int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -2624,12 +2621,11 @@ int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->url )
-                prelude_string_destroy(ptr->url);
-
-        retval = prelude_string_new(&ptr->url);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->url ) {
+                retval = prelude_string_new(&ptr->url);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->url;
         return 0;
@@ -2687,12 +2683,11 @@ int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->meaning )
-                prelude_string_destroy(ptr->meaning);
-
-        retval = prelude_string_new(&ptr->meaning);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->meaning ) {
+                retval = prelude_string_new(&ptr->meaning);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->meaning;
         return 0;
@@ -3079,12 +3074,11 @@ int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -3142,12 +3136,11 @@ int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t 
 
         int retval;
 
-        if ( ptr->text )
-                prelude_string_destroy(ptr->text);
-
-        retval = prelude_string_new(&ptr->text);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->text ) {
+                retval = prelude_string_new(&ptr->text);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->text;
         return 0;
@@ -3586,12 +3579,11 @@ int idmef_user_id_new_ident(idmef_user_id_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -3699,12 +3691,11 @@ int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->tty )
-                prelude_string_destroy(ptr->tty);
-
-        retval = prelude_string_new(&ptr->tty);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->tty ) {
+                retval = prelude_string_new(&ptr->tty);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->tty;
         return 0;
@@ -3762,12 +3753,11 @@ int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -4212,12 +4202,11 @@ int idmef_user_new_ident(idmef_user_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -4731,12 +4720,11 @@ int idmef_address_new_ident(idmef_address_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -4844,12 +4832,11 @@ int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->vlan_name )
-                prelude_string_destroy(ptr->vlan_name);
-
-        retval = prelude_string_new(&ptr->vlan_name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->vlan_name ) {
+                retval = prelude_string_new(&ptr->vlan_name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->vlan_name;
         return 0;
@@ -4968,12 +4955,11 @@ int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->address )
-                prelude_string_destroy(ptr->address);
-
-        retval = prelude_string_new(&ptr->address);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->address ) {
+                retval = prelude_string_new(&ptr->address);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->address;
         return 0;
@@ -5031,12 +5017,11 @@ int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->netmask )
-                prelude_string_destroy(ptr->netmask);
-
-        retval = prelude_string_new(&ptr->netmask);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->netmask ) {
+                retval = prelude_string_new(&ptr->netmask);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->netmask;
         return 0;
@@ -5556,12 +5541,11 @@ int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -5619,12 +5603,11 @@ int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -5743,12 +5726,11 @@ int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->path )
-                prelude_string_destroy(ptr->path);
-
-        retval = prelude_string_new(&ptr->path);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->path ) {
+                retval = prelude_string_new(&ptr->path);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->path;
         return 0;
@@ -6388,12 +6370,11 @@ int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->url )
-                prelude_string_destroy(ptr->url);
-
-        retval = prelude_string_new(&ptr->url);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->url ) {
+                retval = prelude_string_new(&ptr->url);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->url;
         return 0;
@@ -6451,12 +6432,11 @@ int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->cgi )
-                prelude_string_destroy(ptr->cgi);
-
-        retval = prelude_string_new(&ptr->cgi);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->cgi ) {
+                retval = prelude_string_new(&ptr->cgi);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->cgi;
         return 0;
@@ -6514,12 +6494,11 @@ int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t
 
         int retval;
 
-        if ( ptr->http_method )
-                prelude_string_destroy(ptr->http_method);
-
-        retval = prelude_string_new(&ptr->http_method);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->http_method ) {
+                retval = prelude_string_new(&ptr->http_method);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->http_method;
         return 0;
@@ -7026,12 +7005,11 @@ int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret
 
         int retval;
 
-        if ( ptr->oid )
-                prelude_string_destroy(ptr->oid);
-
-        retval = prelude_string_new(&ptr->oid);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->oid ) {
+                retval = prelude_string_new(&ptr->oid);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->oid;
         return 0;
@@ -7211,12 +7189,11 @@ int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_stri
 
         int retval;
 
-        if ( ptr->security_name )
-                prelude_string_destroy(ptr->security_name);
-
-        retval = prelude_string_new(&ptr->security_name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->security_name ) {
+                retval = prelude_string_new(&ptr->security_name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->security_name;
         return 0;
@@ -7335,12 +7312,11 @@ int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_strin
 
         int retval;
 
-        if ( ptr->context_name )
-                prelude_string_destroy(ptr->context_name);
-
-        retval = prelude_string_new(&ptr->context_name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->context_name ) {
+                retval = prelude_string_new(&ptr->context_name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->context_name;
         return 0;
@@ -7398,12 +7374,11 @@ int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_
 
         int retval;
 
-        if ( ptr->context_engine_id )
-                prelude_string_destroy(ptr->context_engine_id);
-
-        retval = prelude_string_new(&ptr->context_engine_id);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->context_engine_id ) {
+                retval = prelude_string_new(&ptr->context_engine_id);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->context_engine_id;
         return 0;
@@ -7461,12 +7436,11 @@ int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t *
 
         int retval;
 
-        if ( ptr->command )
-                prelude_string_destroy(ptr->command);
-
-        retval = prelude_string_new(&ptr->command);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->command ) {
+                retval = prelude_string_new(&ptr->command);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->command;
         return 0;
@@ -7524,12 +7498,11 @@ int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t
 
         int retval;
 
-        if ( ptr->community )
-                prelude_string_destroy(ptr->community);
-
-        retval = prelude_string_new(&ptr->community);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->community ) {
+                retval = prelude_string_new(&ptr->community);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->community;
         return 0;
@@ -8016,12 +7989,11 @@ int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -8201,12 +8173,11 @@ int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t 
 
         int retval;
 
-        if ( ptr->iana_protocol_name )
-                prelude_string_destroy(ptr->iana_protocol_name);
-
-        retval = prelude_string_new(&ptr->iana_protocol_name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->iana_protocol_name ) {
+                retval = prelude_string_new(&ptr->iana_protocol_name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->iana_protocol_name;
         return 0;
@@ -8264,12 +8235,11 @@ int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -8388,12 +8358,11 @@ int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->portlist )
-                prelude_string_destroy(ptr->portlist);
-
-        retval = prelude_string_new(&ptr->portlist);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->portlist ) {
+                retval = prelude_string_new(&ptr->portlist);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->portlist;
         return 0;
@@ -8451,12 +8420,11 @@ int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->protocol )
-                prelude_string_destroy(ptr->protocol);
-
-        retval = prelude_string_new(&ptr->protocol);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->protocol ) {
+                retval = prelude_string_new(&ptr->protocol);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->protocol;
         return 0;
@@ -9131,12 +9099,11 @@ int idmef_node_new_ident(idmef_node_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -9244,12 +9211,11 @@ int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->location )
-                prelude_string_destroy(ptr->location);
-
-        retval = prelude_string_new(&ptr->location);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->location ) {
+                retval = prelude_string_new(&ptr->location);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->location;
         return 0;
@@ -9307,12 +9273,11 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -9820,12 +9785,11 @@ int idmef_source_new_ident(idmef_source_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -9933,12 +9897,11 @@ int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->interface )
-                prelude_string_destroy(ptr->interface);
-
-        retval = prelude_string_new(&ptr->interface);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->interface ) {
+                retval = prelude_string_new(&ptr->interface);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->interface;
         return 0;
@@ -11017,12 +10980,11 @@ int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->change_time )
-                idmef_time_destroy(ptr->change_time);
-
-        retval = idmef_time_new(&ptr->change_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->change_time ) {
+                retval = idmef_time_new(&ptr->change_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->change_time;
         return 0;
@@ -11676,12 +11638,11 @@ int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->value )
-                prelude_string_destroy(ptr->value);
-
-        retval = prelude_string_new(&ptr->value);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->value ) {
+                retval = prelude_string_new(&ptr->value);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->value;
         return 0;
@@ -11739,12 +11700,11 @@ int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->key )
-                prelude_string_destroy(ptr->key);
-
-        retval = prelude_string_new(&ptr->key);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->key ) {
+                retval = prelude_string_new(&ptr->key);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->key;
         return 0;
@@ -12508,12 +12468,11 @@ int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -12571,12 +12530,11 @@ int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -12634,12 +12592,11 @@ int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->path )
-                prelude_string_destroy(ptr->path);
-
-        retval = prelude_string_new(&ptr->path);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->path ) {
+                retval = prelude_string_new(&ptr->path);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->path;
         return 0;
@@ -12697,12 +12654,11 @@ int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->create_time )
-                idmef_time_destroy(ptr->create_time);
-
-        retval = idmef_time_new(&ptr->create_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->create_time ) {
+                retval = idmef_time_new(&ptr->create_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->create_time;
         return 0;
@@ -12760,12 +12716,11 @@ int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->modify_time )
-                idmef_time_destroy(ptr->modify_time);
-
-        retval = idmef_time_new(&ptr->modify_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->modify_time ) {
+                retval = idmef_time_new(&ptr->modify_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->modify_time;
         return 0;
@@ -12823,12 +12778,11 @@ int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->access_time )
-                idmef_time_destroy(ptr->access_time);
-
-        retval = idmef_time_new(&ptr->access_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->access_time ) {
+                retval = idmef_time_new(&ptr->access_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->access_time;
         return 0;
@@ -13415,12 +13369,11 @@ int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->file_type )
-                prelude_string_destroy(ptr->file_type);
-
-        retval = prelude_string_new(&ptr->file_type);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->file_type ) {
+                retval = prelude_string_new(&ptr->file_type);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->file_type;
         return 0;
@@ -14018,12 +13971,11 @@ int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -14081,12 +14033,11 @@ int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->path )
-                prelude_string_destroy(ptr->path);
-
-        retval = prelude_string_new(&ptr->path);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->path ) {
+                retval = prelude_string_new(&ptr->path);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->path;
         return 0;
@@ -14619,12 +14570,11 @@ int idmef_target_new_ident(idmef_target_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ident )
-                prelude_string_destroy(ptr->ident);
-
-        retval = prelude_string_new(&ptr->ident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ident ) {
+                retval = prelude_string_new(&ptr->ident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ident;
         return 0;
@@ -14732,12 +14682,11 @@ int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->interface )
-                prelude_string_destroy(ptr->interface);
-
-        retval = prelude_string_new(&ptr->interface);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->interface ) {
+                retval = prelude_string_new(&ptr->interface);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->interface;
         return 0;
@@ -15580,12 +15529,11 @@ int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->analyzerid )
-                prelude_string_destroy(ptr->analyzerid);
-
-        retval = prelude_string_new(&ptr->analyzerid);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->analyzerid ) {
+                retval = prelude_string_new(&ptr->analyzerid);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->analyzerid;
         return 0;
@@ -15643,12 +15591,11 @@ int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -15706,12 +15653,11 @@ int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **re
 
         int retval;
 
-        if ( ptr->manufacturer )
-                prelude_string_destroy(ptr->manufacturer);
-
-        retval = prelude_string_new(&ptr->manufacturer);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->manufacturer ) {
+                retval = prelude_string_new(&ptr->manufacturer);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->manufacturer;
         return 0;
@@ -15769,12 +15715,11 @@ int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->model )
-                prelude_string_destroy(ptr->model);
-
-        retval = prelude_string_new(&ptr->model);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->model ) {
+                retval = prelude_string_new(&ptr->model);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->model;
         return 0;
@@ -15832,12 +15777,11 @@ int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->version )
-                prelude_string_destroy(ptr->version);
-
-        retval = prelude_string_new(&ptr->version);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->version ) {
+                retval = prelude_string_new(&ptr->version);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->version;
         return 0;
@@ -15895,12 +15839,11 @@ int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->class )
-                prelude_string_destroy(ptr->class);
-
-        retval = prelude_string_new(&ptr->class);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->class ) {
+                retval = prelude_string_new(&ptr->class);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->class;
         return 0;
@@ -15958,12 +15901,11 @@ int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->ostype )
-                prelude_string_destroy(ptr->ostype);
-
-        retval = prelude_string_new(&ptr->ostype);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->ostype ) {
+                retval = prelude_string_new(&ptr->ostype);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->ostype;
         return 0;
@@ -16021,12 +15963,11 @@ int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->osversion )
-                prelude_string_destroy(ptr->osversion);
-
-        retval = prelude_string_new(&ptr->osversion);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->osversion ) {
+                retval = prelude_string_new(&ptr->osversion);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->osversion;
         return 0;
@@ -16528,12 +16469,11 @@ int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **
 
         int retval;
 
-        if ( ptr->alertident )
-                prelude_string_destroy(ptr->alertident);
-
-        retval = prelude_string_new(&ptr->alertident);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->alertident ) {
+                retval = prelude_string_new(&ptr->alertident);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->alertident;
         return 0;
@@ -16591,12 +16531,11 @@ int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **
 
         int retval;
 
-        if ( ptr->analyzerid )
-                prelude_string_destroy(ptr->analyzerid);
-
-        retval = prelude_string_new(&ptr->analyzerid);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->analyzerid ) {
+                retval = prelude_string_new(&ptr->analyzerid);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->analyzerid;
         return 0;
@@ -17068,12 +17007,11 @@ int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->description )
-                prelude_string_destroy(ptr->description);
-
-        retval = prelude_string_new(&ptr->description);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->description ) {
+                retval = prelude_string_new(&ptr->description);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->description;
         return 0;
@@ -17419,12 +17357,11 @@ int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->description )
-                prelude_string_destroy(ptr->description);
-
-        retval = prelude_string_new(&ptr->description);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->description ) {
+                retval = prelude_string_new(&ptr->description);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->description;
         return 0;
@@ -18640,12 +18577,11 @@ int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -18703,12 +18639,11 @@ int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret
 
         int retval;
 
-        if ( ptr->command )
-                prelude_string_destroy(ptr->command);
-
-        retval = prelude_string_new(&ptr->command);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->command ) {
+                retval = prelude_string_new(&ptr->command);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->command;
         return 0;
@@ -19178,12 +19113,11 @@ int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_str
 
         int retval;
 
-        if ( ptr->name )
-                prelude_string_destroy(ptr->name);
-
-        retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->name ) {
+                retval = prelude_string_new(&ptr->name);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->name;
         return 0;
@@ -19588,12 +19522,11 @@ int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string
 
         int retval;
 
-        if ( ptr->program )
-                prelude_string_destroy(ptr->program);
-
-        retval = prelude_string_new(&ptr->program);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->program ) {
+                retval = prelude_string_new(&ptr->program);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->program;
         return 0;
@@ -19712,12 +19645,11 @@ int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **
 
         int retval;
 
-        if ( ptr->buffer )
-                idmef_data_destroy(ptr->buffer);
-
-        retval = idmef_data_new(&ptr->buffer);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->buffer ) {
+                retval = idmef_data_new(&ptr->buffer);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->buffer;
         return 0;
@@ -20510,12 +20442,11 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->messageid )
-                prelude_string_destroy(ptr->messageid);
-
-        retval = prelude_string_new(&ptr->messageid);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->messageid ) {
+                retval = prelude_string_new(&ptr->messageid);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->messageid;
         return 0;
@@ -20651,12 +20582,11 @@ int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->create_time )
-                idmef_time_destroy(ptr->create_time);
-
-        retval = idmef_time_new(&ptr->create_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->create_time ) {
+                retval = idmef_time_new(&ptr->create_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->create_time;
         return 0;
@@ -20776,12 +20706,11 @@ int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->detect_time )
-                idmef_time_destroy(ptr->detect_time);
-
-        retval = idmef_time_new(&ptr->detect_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->detect_time ) {
+                retval = idmef_time_new(&ptr->detect_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->detect_time;
         return 0;
@@ -20839,12 +20768,11 @@ int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->analyzer_time )
-                idmef_time_destroy(ptr->analyzer_time);
-
-        retval = idmef_time_new(&ptr->analyzer_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->analyzer_time ) {
+                retval = idmef_time_new(&ptr->analyzer_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->analyzer_time;
         return 0;
@@ -22146,12 +22074,11 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
 
         int retval;
 
-        if ( ptr->messageid )
-                prelude_string_destroy(ptr->messageid);
-
-        retval = prelude_string_new(&ptr->messageid);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->messageid ) {
+                retval = prelude_string_new(&ptr->messageid);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->messageid;
         return 0;
@@ -22287,12 +22214,11 @@ int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 
         int retval;
 
-        if ( ptr->create_time )
-                idmef_time_destroy(ptr->create_time);
-
-        retval = idmef_time_new(&ptr->create_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->create_time ) {
+                retval = idmef_time_new(&ptr->create_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->create_time;
         return 0;
@@ -22350,12 +22276,11 @@ int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret
 
         int retval;
 
-        if ( ptr->analyzer_time )
-                idmef_time_destroy(ptr->analyzer_time);
-
-        retval = idmef_time_new(&ptr->analyzer_time);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->analyzer_time ) {
+                retval = idmef_time_new(&ptr->analyzer_time);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->analyzer_time;
         return 0;
@@ -22890,12 +22815,11 @@ int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret)
 
         int retval;
 
-        if ( ptr->version )
-                prelude_string_destroy(ptr->version);
-
-        retval = prelude_string_new(&ptr->version);
-        if ( retval < 0 )
-               return retval;
+        if ( ! ptr->version ) {
+                retval = prelude_string_new(&ptr->version);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->version;
         return 0;
