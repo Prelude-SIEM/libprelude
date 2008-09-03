@@ -280,6 +280,115 @@ static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 }
 
 
+static prelude_bool_t is_loopback_ipv6(struct in6_addr *addr)
+{
+        struct in6_addr lo;
+
+        inet_pton(AF_INET6, "::1", &lo);
+
+        return (memcmp(addr, &lo, sizeof(lo)) == 0) ? TRUE : FALSE;
+}
+
+
+static prelude_bool_t is_loopback_ipv4(struct in_addr *addr)
+{
+        return (ntohl(addr->s_addr) >> 24) == 127 ? TRUE : FALSE;
+}
+
+
+static prelude_bool_t is_loopback(int family, void *addr)
+{
+        if ( family == AF_INET )
+                return is_loopback_ipv4(addr);
+
+        else if ( family == AF_INET6 )
+                return is_loopback_ipv6(addr);
+
+        else
+                return FALSE;
+}
+
+
+static int set_analyzer_host_info(idmef_analyzer_t *analyzer, const char *node_str, const char *addr_str)
+{
+        int ret;
+        idmef_node_t *node;
+        idmef_address_t *addr;
+        prelude_string_t *str;
+
+        ret = idmef_analyzer_new_node(analyzer, &node);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_node_new_name(node, &str);
+        if ( ret < 0 )
+                return ret;
+
+        if ( prelude_string_is_empty(str) )
+                prelude_string_set_dup(str, node_str);
+
+        if ( ! (addr = idmef_node_get_next_address(node, NULL)) ) {
+                ret = idmef_node_new_address(node, &addr, 0);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        ret = idmef_address_new_address(addr, &str);
+        if ( ret < 0 )
+                return ret;
+
+        if ( prelude_string_is_empty(str) )
+                prelude_string_set_dup(str, addr_str);
+
+        return 0;
+}
+
+
+static int get_fqdn(idmef_analyzer_t *analyzer, const char *nodename)
+{
+        int ret;
+        void *in_addr;
+        char addr[256], *addrp = NULL;
+        struct addrinfo hints, *ai, *ais;
+
+        prelude_log_debug(1, "Detected nodename: '%s'.\n", nodename);
+
+        memset(&hints, 0, sizeof(hints));
+        hints.ai_flags = AI_CANONNAME;
+
+        ret = getaddrinfo(nodename, NULL, &hints, &ai);
+        if ( ret < 0 )
+                return ret;
+
+        if ( ai->ai_canonname ) {
+                nodename = ai->ai_canonname;
+                prelude_log_debug(1, "Found canonical name: '%s'.\n", nodename);
+        }
+
+        for ( ais = ai; ai != NULL; ai = ai->ai_next ) {
+                in_addr = prelude_sockaddr_get_inaddr(ai->ai_addr);
+                if ( ! in_addr )
+                        continue;
+
+                if ( ! inet_ntop(ai->ai_family, in_addr, addr, sizeof(addr)) )
+                        continue;
+
+                if ( is_loopback(ai->ai_family, in_addr) )
+                        prelude_log_debug(1, "Ignoring loopback address: '%s'.\n", addr);
+                else {
+                        prelude_log_debug(1, "Found address: '%s'.\n", addr);
+                        addrp = addr;
+                        break;
+                }
+        }
+
+        ret = set_analyzer_host_info(analyzer, nodename, addrp);
+        freeaddrinfo(ais);
+
+        return ret;
+}
+
+
 #ifndef WIN32
 static int get_sys_info(idmef_analyzer_t *analyzer)
 {
@@ -289,6 +398,8 @@ static int get_sys_info(idmef_analyzer_t *analyzer)
 
         if ( uname(&uts) < 0 )
                 return prelude_error_from_errno(errno);
+
+        get_fqdn(analyzer, uts.nodename);
 
         ret = prelude_string_new_dup(&str, uts.sysname);
         if ( ret < 0 )
