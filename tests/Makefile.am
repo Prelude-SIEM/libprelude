@@ -1,9 +1,10 @@
-TESTS = idmef idmef-criteria idmef-message-helper idmef-path idmef-value prelude-client prelude-string
+TESTS = async-timer idmef idmef-criteria idmef-message-helper idmef-path idmef-value prelude-client prelude-string
 check_PROGRAMS = $(TESTS)
 LDADD = $(top_builddir)/src/libprelude.la
-AM_CPPFLAGS = -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/src/libprelude-error
+AM_CPPFLAGS = -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/src/libprelude-error -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing
 
 idmef_value_LDADD = $(top_builddir)/src/idmef-value.lo $(LDADD)
+async_timer_LDADD = @LTLIBMULTITHREAD@ $(LDADD)
 
 if HAVE_VALGRIND
 
