@@ -1,3 +1,11 @@
+* 2008-09-05, libprelude-0.9.20.1:
+
+- Fix endless loop in prelude-async, due to the glthread API changes.
+
+- Fix libtool usage for unit-testing.
+
+
+
 * 2008-09-03, libprelude-0.9.20:
 
 - Multithreading API independance: support for posix, solaris, pth,
