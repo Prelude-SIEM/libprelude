@@ -121,8 +121,7 @@ static int wait_timer_and_data(prelude_async_flags_t *flags)
 
                 while ( (no_job_available = prelude_list_is_empty(&joblist)) &&
                         ! stop_processing && async_flags == *flags && ret != ETIMEDOUT ) {
-
-                        ret = gl_cond_timedwait(cond, mutex, &ts);
+                        ret = glthread_cond_timedwait(&cond, &mutex, &ts);
                 }
 
                 if ( no_job_available && stop_processing ) {
@@ -397,4 +396,5 @@ void _prelude_async_fork_child(void)
 {
         is_initialized = FALSE;
         prelude_list_init(&joblist);
+        gl_lock_init(mutex);
 }
