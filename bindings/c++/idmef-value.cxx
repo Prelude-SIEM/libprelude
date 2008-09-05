@@ -321,7 +321,6 @@ IDMEFValue::operator uint64_t () const
 
 IDMEFValue::operator float () const
 {
-        float f;
         idmef_value_type_id_t vtype;
 
         prelude_except_if_fail(_value);
@@ -410,19 +409,13 @@ std::string IDMEFValue::convert_string() const
 }
 
 
-
 IDMEFValue &IDMEFValue::operator=(const IDMEFValue &p)
 {
-        idmef_value_t *v = NULL;
-
-        if ( this != &p ) {
-                if ( p._value )
-                        v = idmef_value_ref(p._value);
-
+        if ( this != &p && _value != p._value ) {
                 if ( _value )
                         idmef_value_destroy(_value);
 
-                _value = v;
+                _value = (p._value) ? idmef_value_ref(p._value) : NULL;
         }
 
         return *this;

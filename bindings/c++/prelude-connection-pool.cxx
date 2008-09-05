@@ -72,8 +72,6 @@ ConnectionPool::ConnectionPool(ClientProfile &cp, int permission)
 void ConnectionPool::Init()
 {
         int ret;
-        prelude_connection_t *con;
-        prelude_list_t *head, *tmp;
 
         ret = prelude_connection_pool_init(_pool);
         if ( ret < 0 )

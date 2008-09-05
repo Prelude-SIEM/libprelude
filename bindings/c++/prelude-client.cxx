@@ -148,6 +148,7 @@ void Client::SetConnectionPool(ConnectionPool pool)
 Client &Client::operator << (IDMEF &idmef)
 {
         SendIDMEF(idmef);
+        return *this;
 }
 
 
@@ -158,6 +159,8 @@ Client &Client::operator >> (IDMEF &idmef)
         ret = RecvIDMEF(idmef, _recv_timeout);
         if ( ret <= 0 )
                 throw PreludeError(ret);
+
+        return *this;
 }
 
 Client &Client::SetRecvTimeout(Client &c, int timeout)

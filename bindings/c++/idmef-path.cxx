@@ -348,4 +348,6 @@ IDMEFPath &IDMEFPath::operator=(const IDMEFPath &path)
 
                 _path = (path._path) ? idmef_path_ref(path._path) : NULL;
         }
+
+        return *this;
 }
