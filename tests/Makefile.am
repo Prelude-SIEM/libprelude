@@ -13,7 +13,7 @@ check-local:
 
 
 %.valgrind: %
-	libtool --mode=execute                                  \
+	$(LIBTOOL) --mode=execute                               \
 	$(VALGRIND) -q                                          \
 	--tool=memcheck --leak-check=full --trace-children=yes  \
 	--leak-resolution=high --num-callers=20                 \

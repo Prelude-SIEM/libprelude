@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 #include <assert.h>
 #include "prelude.h"
 
@@ -25,10 +26,13 @@ static void timer_cb(void *data)
 }
 
 
-static void async_func(prelude_async_object_t *obj)
+static void async_func(void *obj, void *data)
 {
+        struct asyncobj *ptr = obj;
+
         gl_lock_lock(lock);
         async_done = 1;
+        assert(ptr->myval == 10);
         gl_lock_unlock(lock);
 }
 
