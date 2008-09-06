@@ -90,7 +90,7 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
         list = object_data[class].children_list;
 
         if ( list ) {
-                for ( i = 0; list[i].name; i++ )
+                for ( i = 0; i < object_data[class].children_list_elem; i++ )
                         if ( strcasecmp(list[i].name, name) == 0)
                                 return i;
         }
