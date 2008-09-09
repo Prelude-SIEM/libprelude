@@ -1,3 +1,11 @@
+* 2008-09-09, libprelude-0.9.20.2:
+
+- Fix possible invalid read when looking up IDMEF path.
+
+- Fix error handling before library initialization.
+ 
+
+
 * 2008-09-05, libprelude-0.9.20.1:
 
 - Fix endless loop in prelude-async, due to the glthread API changes.
