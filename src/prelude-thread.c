@@ -29,6 +29,7 @@
 #include <signal.h>
 
 #include "glthread/tls.h"
+#include "glthread/lock.h"
 
 #include "prelude.h"
 #include "prelude-inttypes.h"
@@ -36,7 +37,9 @@
 #include "prelude-log.h"
 
 
+gl_once_define(static, init_once);
 static gl_tls_key_t thread_error_key;
+
 
 
 static void thread_error_key_destroy(void *value)
@@ -45,13 +48,23 @@ static void thread_error_key_destroy(void *value)
 }
 
 
+static void thread_init(void)
+{
+        gl_tls_key_init(thread_error_key, thread_error_key_destroy);
+}
+
 
 /*
  *
  */
 int prelude_thread_init(void *nil)
 {
-        gl_tls_key_init(thread_error_key, thread_error_key_destroy);
+        int ret;
+
+        ret = glthread_once(&init_once, thread_init);
+        if ( ret < 0 )
+                return prelude_error_from_errno(ret);
+
         return 0;
 }
 
@@ -76,6 +89,12 @@ void _prelude_thread_deinit(void)
 int _prelude_thread_set_error(const char *error)
 {
         char *previous;
+
+        /*
+         * Make sure prelude_thread_init() has been called before using
+         * thread local storage.
+         */
+        prelude_thread_init(NULL);
 
         previous = gl_tls_get(thread_error_key);
         if ( previous )
