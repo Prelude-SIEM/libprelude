@@ -127,6 +127,8 @@ AC_SUBST([LTALLOCA])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SOCKET
   AC_PROG_MKDIR_P
+  gl_HEADER_SYS_STAT_H
+  AC_PROG_MKDIR_P
   gl_HEADER_SYS_TIME_H
   AC_PROG_MKDIR_P
   gl_THREAD
@@ -369,6 +371,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strsep.c
   lib/sys_select.in.h
   lib/sys_socket.in.h
+  lib/sys_stat.in.h
   lib/sys_time.in.h
   lib/time.in.h
   lib/time_r.c
@@ -445,6 +448,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strsep.m4
   m4/sys_select_h.m4
   m4/sys_socket_h.m4
+  m4/sys_stat_h.m4
   m4/sys_time_h.m4
   m4/thread.m4
   m4/threadlib.m4
@@ -489,6 +493,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-strings.c
   tests/test-sys_select.c
   tests/test-sys_socket.c
+  tests/test-sys_stat.c
   tests/test-sys_time.c
   tests/test-time.c
   tests/test-tls.c
