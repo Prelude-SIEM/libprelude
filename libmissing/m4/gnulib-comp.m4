@@ -69,6 +69,8 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
   gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
+  gl_INET_PTON
+  gl_ARPA_INET_MODULE_INDICATOR([inet_pton])
   gl_LOCALCHARSET
   LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
@@ -296,6 +298,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/alloca.in.h
   lib/arpa_inet.in.h
   lib/asnprintf.c
+  lib/c-ctype.c
+  lib/c-ctype.h
   lib/config.charset
   lib/float+.h
   lib/float.in.h
@@ -321,6 +325,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/glthread/tls.c
   lib/glthread/tls.h
   lib/inet_ntop.c
+  lib/inet_pton.c
   lib/localcharset.c
   lib/localcharset.h
   lib/lseek.c
@@ -401,6 +406,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gnulib-common.m4
   m4/include_next.m4
   m4/inet_ntop.m4
+  m4/inet_pton.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
   m4/lib-ld.m4
@@ -469,6 +475,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-EOVERFLOW.c
   tests/test-alloca-opt.c
   tests/test-arpa_inet.c
+  tests/test-c-ctype.c
   tests/test-cond.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
