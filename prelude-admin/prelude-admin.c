@@ -1,4 +1,4 @@
-			/*****
+                        /*****
 *
 * Copyright (C) 2001, 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
@@ -72,7 +72,6 @@
 # define fchown(x, y, z) (0)
 # define getuid(x) (0)
 # define getgid(x) (0)
-# define mkdir(x, y) mkdir(x)
 #endif
 
 #define TLS_CONFIG PRELUDE_CONFIG_DIR "/default/tls.conf"
@@ -1980,14 +1979,16 @@ static int list_cmd(int argc, char **argv)
         size_t size;
         struct stat st;
         struct dirent *dh;
+#ifndef WIN32
         struct group *gr;
         struct passwd *pw;
+#endif
         gnutls_datum data;
         prelude_string_t *str;
         unsigned int cert_max;
         int ret, i, permission;
         gnutls_x509_crt certs[1024];
-        char buf[1024], analyzerid[128], uidbuf[128], gidbuf[128];
+        char buf[1024], analyzerid[128], uidbuf[128] = { 0 }, gidbuf[128] = { 0 };
 
         setup_list_options();
         i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &str, NULL);
@@ -2017,6 +2018,7 @@ static int list_cmd(int argc, char **argv)
                         continue;
                 }
 
+#ifndef WIN32
                 pw = getpwuid(st.st_uid);
                 if ( ! pw )
                         snprintf(uidbuf, sizeof(uidbuf), "%d", (int) st.st_uid);
@@ -2028,6 +2030,7 @@ static int list_cmd(int argc, char **argv)
                         snprintf(gidbuf, sizeof(gidbuf), "%d", (int) st.st_gid);
                 else
                         snprintf(gidbuf, sizeof(gidbuf), "%s", gr->gr_name);
+#endif
 
                 snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s/analyzerid", dh->d_name);
                 fd = fopen(buf, "r");
