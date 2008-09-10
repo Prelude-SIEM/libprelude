@@ -26,16 +26,18 @@ AC_ARG_WITH(libprelude-prefix, AC_HELP_STRING(--with-libprelude-prefix=PFX,
   fi
 
   AC_PATH_PROG(LIBPRELUDE_CONFIG, libprelude-config, no)
-  if $($LIBPRELUDE_CONFIG --thread > /dev/null 2>&1); then
-        LIBPRELUDE_PTHREAD_CFLAGS=`$LIBPRELUDE_CONFIG --thread --cflags`
+  if test "$LIBPRELUDE_CONFIG" != "no"; then
+  	if $($LIBPRELUDE_CONFIG --thread > /dev/null 2>&1); then
+        	LIBPRELUDE_PTHREAD_CFLAGS=`$LIBPRELUDE_CONFIG --thread --cflags`
 
-        if test x$4 = xtrue || test x$4 = xyes; then
-                libprelude_config_args="--thread"
-        else
-                libprelude_config_args="--no-thread"
-        fi
-  else
-        LIBPRELUDE_PTHREAD_CFLAGS=`$LIBPRELUDE_CONFIG --pthread-cflags`
+        	if test x$4 = xtrue || test x$4 = xyes; then
+                	libprelude_config_args="--thread"
+        	else
+                	libprelude_config_args="--no-thread"
+        	fi
+  	else
+        	LIBPRELUDE_PTHREAD_CFLAGS=`$LIBPRELUDE_CONFIG --pthread-cflags`
+  	fi
   fi
 
   min_libprelude_version=ifelse([$1], ,0.1.0,$1)
