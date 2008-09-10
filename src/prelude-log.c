@@ -74,6 +74,12 @@ static void (*external_log_cb)(prelude_log_t level, const char *str) = NULL;
 
 
 #ifdef WIN32
+#define LOG_CRIT     EVENTLOG_WARNING_TYPE
+#define LOG_ERR      EVENTLOG_ERROR_TYPE
+#define LOG_WARNING  EVENTLOG_WARNING_TYPE
+#define LOG_INFO     EVENTLOG_INFORMATION_TYPE
+#define LOG_DEBUG    EVENTLOG_INFORMATION_TYPE
+
 static void syslog_win32(int priority, const char *log)
 {
         static HANDLE event_source = NULL;
