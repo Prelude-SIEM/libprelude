@@ -50,10 +50,6 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_FAILOVER
 #include "prelude-error.h"
 
-#ifdef WIN32
-# define mkdir(x, y) mkdir(x)
-#endif
-
 
 #define FAILOVER_CHECKSUM_SIZE       4
 #define FAILOVER_JOURNAL_ENTRY_SIZE 20
@@ -332,6 +328,7 @@ static int journal_initialize(prelude_failover_t *failover, const char *filename
 }
 
 
+#ifndef WIN32
 static int lock_cmd(const char *filename, int fd, int cmd, int type)
 {
         int ret;
@@ -353,20 +350,23 @@ static int lock_cmd(const char *filename, int fd, int cmd, int type)
 
         return 1;
 }
+#endif
 
 
 
 static int open_exclusive(const char *filename, int flags, int *fd)
 {
-        int ret;
+        int ret = 0;
 
         *fd = open(filename, flags, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
         if ( *fd < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error opening '%s': %s", filename, strerror(errno));
 
+#ifndef WIN32
         ret = lock_cmd(filename, *fd, F_SETLK, F_RDLCK|F_WRLCK);
         if ( ret <= 0 )
                 close(*fd);
+#endif
 
         return ret;
 }
