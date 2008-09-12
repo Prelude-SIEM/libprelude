@@ -356,7 +356,7 @@ static int lock_cmd(const char *filename, int fd, int cmd, int type)
 
 static int open_exclusive(const char *filename, int flags, int *fd)
 {
-        int ret = 0;
+        int ret = 1;
 
         *fd = open(filename, flags, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
         if ( *fd < 0 )
