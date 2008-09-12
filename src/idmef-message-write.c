@@ -31,12 +31,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef WIN32
-# include <winsock2.h>
-#else
-# include <netinet/in.h>
-#endif
-
 #include "prelude-inttypes.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
