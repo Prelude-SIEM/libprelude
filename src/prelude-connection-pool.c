@@ -46,6 +46,11 @@
 #include "prelude-option-wide.h"
 #include "prelude-failover.h"
 
+#ifdef WIN32
+# undef  FD_SETSIZE
+# define FD_SETSIZE 1024
+#endif
+
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION_POOL
 #include "prelude-error.h"
 
