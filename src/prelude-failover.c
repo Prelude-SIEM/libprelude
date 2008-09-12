@@ -294,6 +294,10 @@ static int journal_initialize(prelude_failover_t *failover, const char *filename
         if ( failover->jfd < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s': %s", filename, strerror(errno));
 
+#ifndef WIN32
+        fcntl(failover->jfd, F_SETFD, fcntl(failover->jfd, F_GETFD) | FD_CLOEXEC);
+#endif
+
         ret = fstat(failover->jfd, &jst);
         if ( ret < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not stat failover journal: %s", strerror(errno));
@@ -521,12 +525,20 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
                 return wfd;
         }
 
+#ifndef WIN32
+        fcntl(wfd, F_SETFD, fcntl(wfd, F_GETFD) | FD_CLOEXEC);
+#endif
+
         rfd = open(filename, O_RDONLY);
         if ( rfd < 0 ) {
                 umask(mode);
                 close(wfd);
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s' for reading: %s", filename, strerror(errno));
         }
+
+#ifndef WIN32
+        fcntl(rfd, F_SETFD, fcntl(rfd, F_GETFD) | FD_CLOEXEC);
+#endif
 
         new = calloc(1, sizeof(*new));
         if ( ! new ) {
