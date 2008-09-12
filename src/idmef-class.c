@@ -2,7 +2,7 @@
 *
 * Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
-* Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+* Author: Krzysztof Zaraska
 *
 * This file is part of the Prelude library.
 *

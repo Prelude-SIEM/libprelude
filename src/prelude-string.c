@@ -23,8 +23,7 @@
 
 /*
  * This code include an heavily modified version of the prelude-strbuf
- * API made by Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>, that
- * is now part of prelude-string.
+ * API made by Krzysztof Zaraska, that is now part of prelude-string.
  */
 
 #include "config.h"
