@@ -203,7 +203,6 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
 
 
 
-#ifndef WIN32
 static void set_single_socket_option(int sock, const char *name, int level, int option, int value)
 {
         int ret;
@@ -244,8 +243,6 @@ static void set_inet_socket_option(int sock, struct sockaddr *sa)
 # endif
 }
 
-#endif
-
 
 
 /*
@@ -268,11 +265,11 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
                 close(sock);
                 return prelude_error_from_errno(errno);
         }
+#endif
 
         set_single_socket_option(sock, "SO_KEEPALIVE", SOL_SOCKET, SO_KEEPALIVE, 1);
         if ( sa->sa_family != AF_UNIX )
                 set_inet_socket_option(sock, sa);
-#endif
 
         ret = connect(sock, sa, salen);
         if ( ret < 0 ) {
