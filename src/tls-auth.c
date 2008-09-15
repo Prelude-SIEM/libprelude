@@ -24,12 +24,13 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
-#include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
@@ -56,53 +57,6 @@ static gnutls_priority_t tls_priority;
 #endif
 
 static prelude_bool_t priority_set = FALSE;
-static prelude_bool_t gnutls_initialized = FALSE;
-
-
-static int gcry_prelude_mutex_init(void **retval)
-{
-        int ret;
-        gl_lock_t *lock;
-
-        *retval = lock = malloc(sizeof(*lock));
-        if ( ! lock )
-                return ENOMEM;
-
-        ret = glthread_lock_init(lock);
-        if ( ret < 0 )
-                free(lock);
-
-        return ret;
-}
-
-
-static int gcry_prelude_mutex_destroy(void **lock)
-{
-        return glthread_lock_destroy(*lock);
-}
-
-
-
-static int gcry_prelude_mutex_lock(void **lock)
-{
-        return glthread_lock_lock((gl_lock_t *) *lock);
-}
-
-
-static int gcry_prelude_mutex_unlock(void **lock)
-{
-        return glthread_lock_unlock((gl_lock_t *) *lock);
-}
-
-
-static struct gcry_thread_cbs gcry_threads_prelude = {
-        GCRY_THREAD_OPTION_USER,
-        NULL,
-        gcry_prelude_mutex_init,
-        gcry_prelude_mutex_destroy,
-        gcry_prelude_mutex_lock,
-        gcry_prelude_mutex_unlock
-};
 
 
 
@@ -259,35 +213,11 @@ static void set_default_priority(gnutls_session session)
 }
 
 
-
-static int init_gnutls(void)
-{
-        int ret;
-
-        if ( gnutls_initialized )
-                return 0;
-
-        ret = gnutls_global_init();
-        if ( ret < 0 )
-                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
-                                                  "TLS initialization failed: %s", gnutls_strerror(ret));
-
-        gnutls_initialized = TRUE;
-
-        return 0;
-}
-
-
 int tls_auth_init_priority(const char *tlsopts)
 {
-        int ret;
-
-        ret = init_gnutls();
-        if ( ret < 0 )
-                return ret;
-
 #ifdef HAVE_GNUTLS_STRING_PRIORITY
         {
+                int ret;
                 const char *errptr;
 
                 ret = gnutls_priority_init(&tls_priority, (tlsopts) ? tlsopts : "NORMAL", &errptr);
@@ -390,11 +320,6 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         char keyfile[PATH_MAX], certfile[PATH_MAX];
 
         *cred = NULL;
-        gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_prelude);
-
-        ret = init_gnutls();
-        if ( ret < 0 )
-                return ret;
 
         prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
         ret = access(keyfile, F_OK);
@@ -463,9 +388,4 @@ void tls_auth_deinit(void)
                 priority_set = FALSE;
         }
 #endif
-
-        if ( gnutls_initialized ) {
-                gnutls_global_deinit();
-                gnutls_initialized = FALSE;
-        }
 }

@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <gnutls/gnutls.h>
+#include <gcrypt.h>
 
 #include "glthread/thread.h"
 #include "glthread/lock.h"
@@ -56,6 +57,50 @@ static void tls_log_func(int level, const char *data)
         prelude_log(PRELUDE_LOG_INFO, "%s", data);
 }
 
+static int gcry_prelude_mutex_init(void **retval)
+{
+        int ret;
+        gl_lock_t *lock;
+
+        *retval = lock = malloc(sizeof(*lock));
+        if ( ! lock )
+                return ENOMEM;
+
+        ret = glthread_lock_init(lock);
+        if ( ret < 0 )
+                free(lock);
+
+        return ret;
+}
+
+
+static int gcry_prelude_mutex_destroy(void **lock)
+{
+        return glthread_lock_destroy(*lock);
+}
+
+
+
+static int gcry_prelude_mutex_lock(void **lock)
+{
+        return glthread_lock_lock((gl_lock_t *) *lock);
+}
+
+
+static int gcry_prelude_mutex_unlock(void **lock)
+{
+        return glthread_lock_unlock((gl_lock_t *) *lock);
+}
+
+
+static struct gcry_thread_cbs gcry_threads_prelude = {
+        GCRY_THREAD_OPTION_USER,
+        NULL,
+        gcry_prelude_mutex_init,
+        gcry_prelude_mutex_destroy,
+        gcry_prelude_mutex_lock,
+        gcry_prelude_mutex_unlock
+};
 
 
 static void slice_arguments(int *argc, char **argv)
@@ -109,7 +154,6 @@ static void slice_arguments(int *argc, char **argv)
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i + 1];
         }
 }
-
 
 
 /**
@@ -168,6 +212,16 @@ int prelude_init(int *argc, char **argv)
                 return prelude_error_from_errno(ret);
 
         slice_arguments(argc, argv);
+
+        ret = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_prelude);
+        if ( ret < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_TLS,
+                                             "gcrypt initialization failed: %s", gcry_strerror(ret));
+
+        ret = gnutls_global_init();
+        if ( ret < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_TLS,
+                                             "TLS initialization failed: %s", gnutls_strerror(ret));
 
         return 0;
 }
