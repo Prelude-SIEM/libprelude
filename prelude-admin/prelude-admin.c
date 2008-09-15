@@ -74,8 +74,6 @@
 # define getgid(x) (0)
 #endif
 
-#define TLS_CONFIG PRELUDE_CONFIG_DIR "/default/tls.conf"
-
 
 struct rm_dir_s {
         prelude_list_t list;
@@ -106,6 +104,22 @@ prelude_bool_t server_confirm = TRUE;
 int authority_certificate_lifetime = 0;
 int generated_certificate_lifetime = 0;
 static int64_t offset = -1, count = -1;
+
+
+static const char *get_tls_config(void)
+{
+        static char buf[PATH_MAX];
+        static int initialized = 0;
+
+        if ( initialized )
+                return buf;
+
+        prelude_client_profile_get_default_config_dirname(NULL, buf, sizeof(buf));
+        snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), "/tls.conf");
+        initialized = 1;
+
+        return buf;
+}
 
 
 static int chown_cb(const char *filename, const struct stat *st, int flag)
@@ -205,12 +219,12 @@ static void print_tls_settings(void)
 
 fprintf(stderr,
 
-"TLS Options (from: " TLS_CONFIG "):\n"
+"TLS Options (from: %s):\n"
 "  --key-len=LEN           : Profile private key length (default: %d bits).\n"
 "  --cert-lifetime=DAYS    : Profile certificate lifetime (default: %s).\n"
 "  --ca-cert-lifetime=DAYS : Authority certificate lifetime (default: %s).\n"
 
-"\n", generated_key_size, buf1, buf2);
+"\n", get_tls_config(), generated_key_size, buf1, buf2);
 }
 
 
@@ -599,16 +613,16 @@ static int read_tls_setting(void)
         config_t *cfg;
         unsigned int line;
 
-        ret = _config_open(&cfg, TLS_CONFIG);
+        ret = _config_open(&cfg, get_tls_config());
         if ( ret < 0 ) {
-                prelude_perror(ret, "could not open %s", TLS_CONFIG);
+                prelude_perror(ret, "could not open %s", get_tls_config());
                 return -1;
         }
 
         line = 0;
         ptr = _config_get(cfg, NULL, "generated-key-size", &line);
         if ( ! ptr ) {
-                fprintf(stderr, "%s: couldn't find \"generated-key-size\" setting.\n", TLS_CONFIG);
+                fprintf(stderr, "%s: couldn't find \"generated-key-size\" setting.\n", get_tls_config());
                 goto err;
         }
 
@@ -618,7 +632,7 @@ static int read_tls_setting(void)
         line = 0;
         ptr = _config_get(cfg, NULL, "authority-certificate-lifetime", &line);
         if ( ! ptr ) {
-                fprintf(stderr, "%s: couldn't find \"authority-certificate-lifetime\" setting.\n", TLS_CONFIG);
+                fprintf(stderr, "%s: couldn't find \"authority-certificate-lifetime\" setting.\n", get_tls_config());
                 goto err;
         }
 
@@ -628,7 +642,7 @@ static int read_tls_setting(void)
         line = 0;
         ptr = _config_get(cfg, NULL, "generated-certificate-lifetime", &line);
         if ( ! ptr ) {
-                fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", TLS_CONFIG);
+                fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", get_tls_config());
                 goto err;
         }
 
@@ -645,7 +659,11 @@ static int read_tls_setting(void)
 
 static void setup_tls_options(void)
 {
-        read_tls_setting();
+        int ret;
+
+        ret = read_tls_setting();
+        if ( ret < 0 )
+                exit(1);
 
         prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "key-len",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_key_len, NULL);
@@ -688,7 +706,10 @@ static int create_template_config_file(prelude_client_profile_t *profile)
         int ret;
         FILE *fd, *tfd;
         size_t len, wlen;
-        char filename[PATH_MAX], buf[8192];
+        char dirname[PATH_MAX], filename[PATH_MAX], buf[8192];
+
+        prelude_client_profile_get_default_config_dirname(profile, dirname, sizeof(dirname));
+        snprintf(dirname + strlen(dirname), sizeof(dirname) - strlen(dirname), "/idmef-client.conf");
 
         prelude_client_profile_get_config_filename(profile, filename, sizeof(filename));
 
@@ -696,9 +717,9 @@ static int create_template_config_file(prelude_client_profile_t *profile)
         if ( ret == 0 )
                 return 0;
 
-        tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
+        tfd = fopen(dirname, "r");
         if ( ! tfd ) {
-                fprintf(stderr, "could not open '" PRELUDE_CONFIG_DIR "/default/idmef-client.conf' for reading: %s.\n", strerror(errno));
+                fprintf(stderr, "could not open '%s' for reading: %s.\n", dirname, strerror(errno));
                 return -1;
         }
 
@@ -1988,14 +2009,17 @@ static int list_cmd(int argc, char **argv)
         unsigned int cert_max;
         int ret, i, permission;
         gnutls_x509_crt certs[1024];
+        char dirname[PATH_MAX];
         char buf[1024], analyzerid[128], uidbuf[128] = { 0 }, gidbuf[128] = { 0 };
 
         setup_list_options();
         i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &str, NULL);
 
-        dir = opendir(PRELUDE_CONFIG_DIR "/profile");
+        prelude_client_profile_get_profile_dirname(NULL, dirname, sizeof(dirname));
+
+        dir = opendir(dirname);
         if ( ! dir ) {
-                fprintf(stderr, "could not open '%s': %s.\n", PRELUDE_CONFIG_DIR "/profile", strerror(errno));
+                fprintf(stderr, "could not open '%s': %s.\n", dirname, strerror(errno));
                 return -1;
         }
 
@@ -2009,7 +2033,7 @@ static int list_cmd(int argc, char **argv)
                 if ( strcmp(dh->d_name, ".") == 0 || strcmp(dh->d_name, "..") == 0 )
                         continue;
 
-                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s", dh->d_name);
+                snprintf(buf, sizeof(buf), "%s/%s", dirname, dh->d_name);
 
                 ret = stat(buf, &st);
                 if ( ret < 0 ) {
@@ -2032,7 +2056,7 @@ static int list_cmd(int argc, char **argv)
                         snprintf(gidbuf, sizeof(gidbuf), "%s", gr->gr_name);
 #endif
 
-                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s/analyzerid", dh->d_name);
+                snprintf(buf, sizeof(buf), "%s/%s/analyzerid", dirname, dh->d_name);
                 fd = fopen(buf, "r");
                 if ( ! fd )
                         snprintf(analyzerid, sizeof(analyzerid), "n/a");
@@ -2046,7 +2070,7 @@ static int list_cmd(int argc, char **argv)
                         analyzerid[size - 1] = 0;
                 }
 
-                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s/client.keycrt", dh->d_name);
+                snprintf(buf, sizeof(buf), "%s/%s/client.keycrt", dirname, dh->d_name);
                 ret = _prelude_load_file(buf, &data.data, &size);
                 if ( ret < 0 ) {
                         print_add(0, dh->d_name, uidbuf, gidbuf, analyzerid, "n/a", "n/a");

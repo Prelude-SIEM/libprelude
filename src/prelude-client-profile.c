@@ -31,6 +31,9 @@
 
 #include <gnutls/gnutls.h>
 
+#include "relocatable.h"
+#include "glthread/lock.h"
+
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT_PROFILE
 
 #include "prelude-error.h"
@@ -45,6 +48,8 @@
 
 
 #define PRELUDE_PROFILE_DIR PRELUDE_CONFIG_DIR "/profile"
+#define PRELUDE_CONFIG_DEFAULT_DIR PRELUDE_CONFIG_DIR "/default"
+#define TLS_CONFIG PRELUDE_CONFIG_DEFAULT_DIR "/tls.conf"
 
 
 /*
@@ -72,6 +77,38 @@ struct prelude_client_profile {
         gnutls_certificate_credentials credentials;
 };
 
+
+static char *user_prefix = NULL;
+static const char *relocated_prefix;
+static const char *relative_spool_dir;
+static const char *relative_config_default_dir;
+static const char *relative_profile_dir;
+
+
+gl_lock_t lock = gl_lock_initializer;
+gl_once_define(static, relocate_once);
+
+
+static void _get_dir_once(void)
+{
+        relocated_prefix = relocate(INSTALLPREFIX);
+        relative_spool_dir = PRELUDE_SPOOL_DIR + sizeof(INSTALLPREFIX);
+        relative_profile_dir = PRELUDE_PROFILE_DIR + sizeof(INSTALLPREFIX);
+        relative_config_default_dir = PRELUDE_CONFIG_DEFAULT_DIR + sizeof(INSTALLPREFIX);
+
+        prelude_log_debug(2, "install   prefix=%s", INSTALLPREFIX);
+        prelude_log_debug(2, "relocated prefix=%s\n", relocated_prefix);
+        prelude_log_debug(2, "relative   spool=%s\n", relative_spool_dir);
+        prelude_log_debug(2, "relative  config=%s\n", relative_config_default_dir);
+        prelude_log_debug(2, "relative profile=%s\n", relative_profile_dir);
+}
+
+
+static const char *get_prefix(void)
+{
+        gl_once(relocate_once, _get_dir_once);
+        return (user_prefix) ? user_prefix : relocated_prefix;
+}
 
 
 static int get_profile_analyzerid(prelude_client_profile_t *cp)
@@ -109,6 +146,59 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
 }
 
 
+/**
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @prefix: Prefix to use for various libprelude files.
+ *
+ * This function allow to dynamically change the prefix used to acess
+ * libprelude related file. This is particularly usefull in case of
+ * application running under certain condition (chroot).
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_client_profile_set_prefix(prelude_client_profile_t *cp, const char *prefix)
+{
+        char *n;
+
+        n = strdup(prefix);
+
+        gl_lock_lock(lock);
+
+        if ( user_prefix )
+                free(user_prefix);
+
+        user_prefix = n;
+
+        gl_lock_unlock(lock);
+
+        return (n) ? 0 : prelude_error_from_errno(errno);
+}
+
+
+
+/**
+ * prelude_client_profile_get_analyzerid_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Writes the filename used to store @cp unique and permanent analyzer ident.
+ */
+void prelude_client_profile_get_default_config_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
+{
+        const char *prefix;
+
+        prelude_return_if_fail(buf);
+
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s", prefix, relative_config_default_dir);
+
+        gl_lock_unlock(lock);
+}
+
+
 
 /**
  * prelude_client_profile_get_analyzerid_filename:
@@ -120,10 +210,17 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
  */
 void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
-        
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/analyzerid", cp->name);
+
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/analyzerid", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -138,10 +235,17 @@ void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile
  */
 void prelude_client_profile_get_config_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/config", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/config", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -156,10 +260,17 @@ void prelude_client_profile_get_config_filename(const prelude_client_profile_t *
  */
 void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/key", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/key", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -175,10 +286,17 @@ void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t 
  */
 void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.ca", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/server.ca", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -194,10 +312,17 @@ void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client
  */
 void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.keycrt", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/server.keycrt", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -213,10 +338,17 @@ void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client
  */
 void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.crl", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/server.crl", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -232,10 +364,17 @@ void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_pro
  */
 void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.trusted", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/client.trusted", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -252,10 +391,17 @@ void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_c
  */
 void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.keycrt", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s/client.keycrt", prefix, relative_profile_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -271,10 +417,17 @@ void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client
  */
 void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        const char *prefix;
+
         prelude_return_if_fail(cp);
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", cp->name);
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s/%s/%s", prefix, relative_spool_dir, cp->name);
+
+        gl_lock_unlock(lock);
 }
 
 
@@ -284,14 +437,25 @@ void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *c
  * @buf: buffer to write the returned filename to.
  * @size: size of @buf.
  *
- * Writes the directory name where the profile for @client is stored.
+ * Writes the directory name where the profile for @cp is stored. If
+ * @cp is NULL or has no name, then this function will provide the main
+ * profile directory.
  */
 void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
-        prelude_return_if_fail(cp);
+        const char *prefix;
+
         prelude_return_if_fail(buf);
 
-        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s", cp->name);
+        gl_lock_lock(lock);
+        prefix = get_prefix();
+
+        if ( cp && cp->name )
+                snprintf(buf, size, "%s/%s/%s", prefix, relative_profile_dir, cp->name);
+        else
+                snprintf(buf, size, "%s/%s", prefix, relative_profile_dir);
+
+        gl_lock_unlock(lock);
 }
 
 
