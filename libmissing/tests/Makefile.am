@@ -42,14 +42,6 @@ libtests_a_DEPENDENCIES = $(gltests_LIBOBJS)
 EXTRA_libtests_a_SOURCES =
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 
-## begin gnulib module EOVERFLOW-tests
-
-TESTS += test-EOVERFLOW
-check_PROGRAMS += test-EOVERFLOW
-EXTRA_DIST += test-EOVERFLOW.c
-
-## end   gnulib module EOVERFLOW-tests
-
 ## begin gnulib module alloca-opt-tests
 
 TESTS += test-alloca-opt
@@ -85,6 +77,15 @@ test_cond_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
 EXTRA_DIST += test-cond.c
 
 ## end   gnulib module cond-tests
+
+## begin gnulib module errno-tests
+
+TESTS += test-errno
+check_PROGRAMS += test-errno
+
+EXTRA_DIST += test-errno.c
+
+## end   gnulib module errno-tests
 
 ## begin gnulib module fseeko-tests
 
@@ -191,6 +192,14 @@ EXTRA_DIST += test-netinet_in.c
 
 ## end   gnulib module netinet_in-tests
 
+## begin gnulib module poll-tests
+
+TESTS += test-poll
+check_PROGRAMS += test-poll
+EXTRA_DIST += test-poll.c
+
+## end   gnulib module poll-tests
+
 ## begin gnulib module snprintf-tests
 
 TESTS += test-snprintf
@@ -199,6 +208,20 @@ check_PROGRAMS += test-snprintf
 EXTRA_DIST += test-snprintf.c
 
 ## end   gnulib module snprintf-tests
+
+## begin gnulib module sockets
+
+libtests_a_SOURCES += sockets.h sockets.c
+
+## end   gnulib module sockets
+
+## begin gnulib module sockets-tests
+
+TESTS += test-sockets
+check_PROGRAMS += test-sockets
+EXTRA_DIST += test-sockets.c
+
+## end   gnulib module sockets-tests
 
 ## begin gnulib module stdbool-tests
 
@@ -312,7 +335,7 @@ EXTRA_DIST += test-time.c
 
 TESTS += test-tls
 check_PROGRAMS += test-tls
-test_tls_LDADD = $(LDADD) @LIBMULTITHREAD@ @LIBSCHED@
+test_tls_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
 
 EXTRA_DIST += test-tls.c
 
@@ -374,12 +397,6 @@ EXTRA_DIST += test-wctype.c
 libtests_a_SOURCES += glthread/yield.h 
 
 ## end   gnulib module yield
-
-## begin gnulib module dummy
-
-libtests_a_SOURCES += dummy.c
-
-## end   gnulib module dummy
 
 # Clean up after Solaris cc.
 clean-local:

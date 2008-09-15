@@ -1,4 +1,5 @@
-/* Test of EOVERFLOW macro.
+/* sockets.h - wrappers for Windows socket functions
+
    Copyright (C) 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -14,19 +15,18 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#include <config.h>
+/* Written by Simon Josefsson */
 
-#include <errno.h>
+#ifndef SOCKETS_H
+# define SOCKETS_H 1
 
-/* Check that it can be used as an initializer outside of a function.  */
-static int err = EOVERFLOW;
+#define SOCKETS_1_0 0x100
+#define SOCKETS_1_1 0x101
+#define SOCKETS_2_0 0x200
+#define SOCKETS_2_1 0x201
+#define SOCKETS_2_2 0x202
 
-int
-main ()
-{
-  /* snprintf() callers want to distinguish EINVAL and EOVERFLOW.  */
-  if (err == EINVAL)
-    return 1;
+int gl_sockets_startup (int version);
+int gl_sockets_cleanup (void);
 
-  return 0;
-}
+#endif

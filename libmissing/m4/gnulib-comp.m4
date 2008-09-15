@@ -45,7 +45,6 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([gl_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='libmissing'
-  gl_EOVERFLOW
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
@@ -54,6 +53,7 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
   gl_COND
+  gl_HEADER_ERRNO_H
   gl_FLOAT_H
   gl_FUNC_FSEEKO
   gl_STDIO_MODULE_INDICATOR([fseeko])
@@ -96,6 +96,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_REALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([realloc-posix])
   gl_REGEX
+  gl_RELOCATABLE_LIBRARY
   gl_SIGNAL_H
   gl_SIGNALBLOCKING
   gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
@@ -186,20 +187,12 @@ AC_SUBST([LTALLOCA])
   gl_COMMON
   gl_source_base='libmissing/tests'
   AC_CHECK_DECLS_ONCE([alarm])
+  AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
+  gl_SOCKETS
   gt_TYPE_WCHAR_T
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_FUNCS([shutdown])
-  dnl Checks for special libraries for the tests/test-tls test.
-  dnl On some systems, sched_yield is in librt, rather than in libpthread.
-  LIBSCHED=
-  if test $gl_threads_api = posix; then
-    dnl Solaris has sched_yield in librt, not in libpthread or libc.
-    AC_CHECK_LIB(rt, sched_yield, [LIBSCHED=-lrt],
-      [dnl Solaris 2.5.1, 2.6 has sched_yield in libposix4, not librt.
-       AC_CHECK_LIB(posix4, sched_yield, [LIBSCHED=-lposix4])])
-  fi
-  AC_SUBST([LIBSCHED])
   gl_YIELD
   m4_ifval(gltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gltests_LIBSOURCES_DIR])[ ||
@@ -294,6 +287,7 @@ AC_DEFUN([gltests_LIBSOURCES], [
 AC_DEFUN([gl_FILE_LIST], [
   build-aux/config.rpath
   build-aux/link-warning.h
+  doc/relocatable.texi
   lib/alloca.c
   lib/alloca.in.h
   lib/arpa_inet.in.h
@@ -301,6 +295,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/c-ctype.c
   lib/c-ctype.h
   lib/config.charset
+  lib/errno.in.h
   lib/float+.h
   lib/float.in.h
   lib/fseeko.c
@@ -353,6 +348,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regex_internal.c
   lib/regex_internal.h
   lib/regexec.c
+  lib/relocatable.c
+  lib/relocatable.h
   lib/signal.in.h
   lib/sigprocmask.c
   lib/size_max.h
@@ -392,7 +389,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/arpa_inet_h.m4
   m4/codeset.m4
   m4/cond.m4
-  m4/eoverflow.m4
+  m4/errno_h.m4
   m4/extensions.m4
   m4/float_h.m4
   m4/fseeko.m4
@@ -430,10 +427,12 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/printf.m4
   m4/realloc.m4
   m4/regex.m4
+  m4/relocatable-lib.m4
   m4/signal_h.m4
   m4/signalblocking.m4
   m4/size_max.m4
   m4/snprintf.m4
+  m4/sockets.m4
   m4/socklen.m4
   m4/sockpfaf.m4
   m4/ssize_t.m4
@@ -472,11 +471,11 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/wint_t.m4
   m4/xsize.m4
   m4/yield.m4
-  tests/test-EOVERFLOW.c
   tests/test-alloca-opt.c
   tests/test-arpa_inet.c
   tests/test-c-ctype.c
   tests/test-cond.c
+  tests/test-errno.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
   tests/test-getaddrinfo.c
@@ -490,7 +489,9 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-memcmp.c
   tests/test-memmem.c
   tests/test-netinet_in.c
+  tests/test-poll.c
   tests/test-snprintf.c
+  tests/test-sockets.c
   tests/test-stdbool.c
   tests/test-stdint.c
   tests/test-stdio.c
@@ -509,8 +510,9 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-vsnprintf.c
   tests/test-wchar.c
   tests/test-wctype.c
-  tests=lib/dummy.c
   tests=lib/glthread/yield.h
   tests=lib/intprops.h
+  tests=lib/sockets.c
+  tests=lib/sockets.h
   tests=lib/verify.h
 ])
