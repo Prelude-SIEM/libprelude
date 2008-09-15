@@ -66,6 +66,13 @@ static int get_absolute_filename(const char *lockfile)
 }
 
 
+#ifndef WIN32
+static void fclose_if_tty(FILE *fd)
+{
+        if ( isatty(fileno(fd)) )
+                fclose(fd);
+}
+#endif
 
 
 static int lockfile_get_exclusive(const char *lockfile)
@@ -134,7 +141,6 @@ static int lockfile_write_pid(int fd, pid_t pid)
 
 
 
-
 /**
  * prelude_daemonize:
  * @lockfile: Filename to a lockfile.
@@ -159,14 +165,7 @@ int prelude_daemonize(const char *lockfile)
 
 #ifdef WIN32
         prelude_log(PRELUDE_LOG_ERR, "Daemonize call unsupported in this environment.\n");
-
-        if ( lockfile ) {
-                pid = getpid();
-
-                ret = lockfile_write_pid(fd, pid);
-                if ( ret < 0 )
-                        return ret;
-        }
+        pid = getpid();
 #else
         pid = fork();
         if ( pid < 0 )
@@ -174,6 +173,7 @@ int prelude_daemonize(const char *lockfile)
 
         else if ( pid )
                 _exit(0);
+#endif
 
         if ( lockfile ) {
                 fd = lockfile_get_exclusive(slockfile);
@@ -185,6 +185,7 @@ int prelude_daemonize(const char *lockfile)
                         return ret;
         }
 
+#ifndef WIN32
         setsid();
 
         ret = chdir("/");
@@ -193,9 +194,9 @@ int prelude_daemonize(const char *lockfile)
 
         umask(0);
 
-        fclose(stdin);
-        fclose(stdout);
-        fclose(stderr);
+        fclose_if_tty(stdin);
+        fclose_if_tty(stdout);
+        fclose_if_tty(stderr);
 #endif
 
         return 0;
