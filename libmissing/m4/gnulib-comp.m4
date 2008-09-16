@@ -53,6 +53,8 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
   gl_COND
+  gl_FUNC_DUP2
+  gl_UNISTD_MODULE_INDICATOR([dup2])
   gl_HEADER_ERRNO_H
   gl_FLOAT_H
   gl_FUNC_FSEEKO
@@ -295,6 +297,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/c-ctype.c
   lib/c-ctype.h
   lib/config.charset
+  lib/dup2.c
   lib/errno.in.h
   lib/float+.h
   lib/float.in.h
@@ -389,6 +392,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/arpa_inet_h.m4
   m4/codeset.m4
   m4/cond.m4
+  m4/dup2.m4
   m4/errno_h.m4
   m4/extensions.m4
   m4/float_h.m4
