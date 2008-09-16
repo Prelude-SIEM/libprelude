@@ -66,15 +66,6 @@ static int get_absolute_filename(const char *lockfile)
 }
 
 
-#ifndef WIN32
-static void fclose_if_tty(FILE *fd)
-{
-        if ( isatty(fileno(fd)) )
-                fclose(fd);
-}
-#endif
-
-
 static int lockfile_get_exclusive(const char *lockfile)
 {
         int fd;
@@ -155,7 +146,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
 int prelude_daemonize(const char *lockfile)
 {
         pid_t pid;
-        int fd = 0, ret;
+        int fd = 0, ret, i;
 
         if ( lockfile ) {
                 ret = get_absolute_filename(lockfile);
@@ -194,9 +185,16 @@ int prelude_daemonize(const char *lockfile)
 
         umask(0);
 
-        fclose_if_tty(stdin);
-        fclose_if_tty(stdout);
-        fclose_if_tty(stderr);
+        fd = open("/dev/null", O_RDWR);
+        if ( fd < 0 )
+                return prelude_error_from_errno(errno);
+
+        for ( i = 0; i <= 2; i++ ) {
+                close(i);
+                dup2(fd, i);
+        }
+
+        close(fd);
 #endif
 
         return 0;
