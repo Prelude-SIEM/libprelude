@@ -189,10 +189,8 @@ int prelude_daemonize(const char *lockfile)
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
 
-        for ( i = 0; i <= 2; i++ ) {
-                close(i);
+        for ( i = 0; i <= 2; i++ )
                 dup2(fd, i);
-        }
 
         close(fd);
 #endif
