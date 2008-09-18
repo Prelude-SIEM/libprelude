@@ -147,6 +147,7 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
 
 
 /**
+ * prelude_client_profile_set_prefix:
  * @cp: pointer on a #prelude_client_profile_t object.
  * @prefix: Prefix to use for various libprelude files.
  *
