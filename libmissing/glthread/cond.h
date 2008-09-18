@@ -52,6 +52,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "glthread/lock.h"
 
@@ -266,13 +267,67 @@ extern int glthread_cond_timedwait_multithreaded (gl_cond_t *cond, gl_lock_t *lo
 
 #endif
 
+
 /* ========================================================================= */
 
-#if !(USE_POSIX_THREADS || USE_PTH_THREADS || USE_SOLARIS_THREADS)
+#if USE_WIN32_THREADS
+
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+/* -------------------------- gl_cond_t datatype -------------------------- */
+
+typedef struct {
+  gl_spinlock_t guard;
+  CRITICAL_SECTION lock;
+
+  int waiters_count;
+  int release_count;
+  int wait_generation_count;
+  HANDLE event;
+} gl_cond_t;
+
+# define gl_cond_define(STORAGECLASS, NAME) \
+    STORAGECLASS gl_cond_t NAME;
+# define gl_cond_define_initialized(STORAGECLASS, NAME) \
+    STORAGECLASS gl_cond_t NAME = gl_cond_initializer;
+# define gl_cond_initializer \
+    { { 0, -1 } }
+# define glthread_cond_init(COND) \
+    glthread_cond_init_func (COND)
+# define glthread_cond_wait(COND, LOCK) \
+    glthread_cond_wait_func (COND, LOCK)
+# define glthread_cond_timedwait(COND, LOCK, ABSTIME) \
+    glthread_cond_timedwait_func (COND, LOCK, ABSTIME)
+# define glthread_cond_signal(COND) \
+    glthread_cond_signal_func (COND)
+# define glthread_cond_broadcast(COND) \
+    glthread_cond_broadcast_func (COND)
+# define glthread_cond_destroy(COND) \
+    glthread_cond_destroy_func (COND)
+
+int glthread_cond_init_func(gl_cond_t *cv);
+int glthread_cond_signal_func(gl_cond_t *cv);
+int glthread_cond_broadcast_func(gl_cond_t *cv);
+int glthread_cond_wait_func(gl_cond_t *cv, gl_lock_t *external_mutex);
+int glthread_cond_timedwait_func(gl_cond_t *cv, gl_lock_t *external_mutex, struct timespec *ts);
+int glthread_cond_destroy_func(gl_cond_t *cv);
+
+# ifdef __cplusplus
+}
+# endif
+
+#endif
+
+/* ========================================================================= */
+
+#if !(USE_POSIX_THREADS || USE_PTH_THREADS || USE_SOLARIS_THREADS || USE_WIN32_THREADS)
 
 /* Provide dummy implementation if threads are not supported.  */
 
 typedef int gl_cond_t;
+# define gl_cond_initializer 0
 # define gl_cond_define(STORAGECLASS, NAME)
 # define gl_cond_define_initialized(STORAGECLASS, NAME)
 # define glthread_cond_init(COND) 0

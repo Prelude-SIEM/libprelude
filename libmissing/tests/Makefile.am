@@ -200,6 +200,15 @@ EXTRA_DIST += test-poll.c
 
 ## end   gnulib module poll-tests
 
+## begin gnulib module sleep-tests
+
+TESTS += test-sleep
+check_PROGRAMS += test-sleep
+
+EXTRA_DIST += test-sleep.c
+
+## end   gnulib module sleep-tests
+
 ## begin gnulib module snprintf-tests
 
 TESTS += test-snprintf

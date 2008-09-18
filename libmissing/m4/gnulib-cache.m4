@@ -15,7 +15,7 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files cond dup2 ftw getaddrinfo getpass gettimeofday inet_ntop inet_pton lock lseek memmem minmax pathmax poll regex relocatable-lib-lgpl sigprocmask snprintf socklen strcase strcasestr strdup strndup strptime strsep sys_stat thread time_r timegm tls vsnprintf
+#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files cond dup2 ftw getaddrinfo getpass gettimeofday inet_ntop inet_pton lock lseek memmem minmax pathmax poll regex relocatable-lib-lgpl sigprocmask sleep snprintf socklen strcase strcasestr strdup strndup strptime strsep sys_stat thread time_r timegm tls vsnprintf
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
@@ -37,6 +37,7 @@ gl_MODULES([
   regex
   relocatable-lib-lgpl
   sigprocmask
+  sleep
   snprintf
   socklen
   strcase

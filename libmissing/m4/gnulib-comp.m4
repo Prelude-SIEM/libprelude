@@ -103,6 +103,8 @@ AC_SUBST([LTALLOCA])
   gl_SIGNALBLOCKING
   gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
   gl_SIZE_MAX
+  gl_FUNC_SLEEP
+  gl_UNISTD_MODULE_INDICATOR([sleep])
   gl_FUNC_SNPRINTF
   gl_STDIO_MODULE_INDICATOR([snprintf])
   gl_TYPE_SOCKLEN_T
@@ -356,6 +358,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/signal.in.h
   lib/sigprocmask.c
   lib/size_max.h
+  lib/sleep.c
   lib/snprintf.c
   lib/stdbool.in.h
   lib/stdint.in.h
@@ -435,6 +438,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/signal_h.m4
   m4/signalblocking.m4
   m4/size_max.m4
+  m4/sleep.m4
   m4/snprintf.m4
   m4/sockets.m4
   m4/socklen.m4
@@ -494,6 +498,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-memmem.c
   tests/test-netinet_in.c
   tests/test-poll.c
+  tests/test-sleep.c
   tests/test-snprintf.c
   tests/test-sockets.c
   tests/test-stdbool.c
