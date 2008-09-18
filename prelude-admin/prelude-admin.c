@@ -165,6 +165,7 @@ static int do_chown(const char *name)
 
 static void permission_warning(void)
 {
+#ifndef WIN32
         fprintf(stderr,
 "* WARNING: no --uid or --gid command line options were provided.\n*\n"
 
@@ -177,6 +178,7 @@ static void permission_warning(void)
                 (int) prelude_client_profile_get_uid(profile), (int) prelude_client_profile_get_gid(profile));
 
         while ( getchar() != '\n' );
+#endif
 }
 
 
