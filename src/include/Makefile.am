@@ -2,7 +2,6 @@ includedir = $(prefix)/include/libprelude
 
 include_HEADERS = common.h			\
 		  daemonize.h			\
-		  variable.h			\
 		  idmef.h			\
 		  idmef-additional-data.h	\
 		  idmef-class.h			\
@@ -46,4 +45,4 @@ include_HEADERS = common.h			\
 
 nodist_include_HEADERS = prelude.h prelude-inttypes.h
 
-noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h
+noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h variable.h
