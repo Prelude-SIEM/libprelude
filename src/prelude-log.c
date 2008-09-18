@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <time.h>
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 # include <syslog.h>
 #else
 # include <windows.h>
@@ -73,7 +73,7 @@ static int (*global_log_cb)(prelude_log_t level, const char *str) = do_log_print
 static void (*external_log_cb)(prelude_log_t level, const char *str) = NULL;
 
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 #define LOG_CRIT     EVENTLOG_WARNING_TYPE
 #define LOG_ERR      EVENTLOG_ERROR_TYPE
 #define LOG_WARNING  EVENTLOG_WARNING_TYPE
@@ -121,7 +121,7 @@ static int do_log_syslog(prelude_log_t level, const char *str)
 
         while (*str == '\n' ) str++;
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         syslog(slevel, "%s", str);
 #else
         syslog_win32(slevel, str);

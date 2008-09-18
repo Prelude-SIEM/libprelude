@@ -46,7 +46,7 @@
 #include "prelude-option-wide.h"
 #include "prelude-failover.h"
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # undef  FD_SETSIZE
 # define FD_SETSIZE 1024
 #endif

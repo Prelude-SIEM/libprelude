@@ -294,7 +294,7 @@ static int journal_initialize(prelude_failover_t *failover, const char *filename
         if ( failover->jfd < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s': %s", filename, strerror(errno));
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fcntl(failover->jfd, F_SETFD, fcntl(failover->jfd, F_GETFD) | FD_CLOEXEC);
 #endif
 
@@ -332,7 +332,7 @@ static int journal_initialize(prelude_failover_t *failover, const char *filename
 }
 
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 static int lock_cmd(const char *filename, int fd, int cmd, int type)
 {
         int ret;
@@ -366,7 +366,7 @@ static int open_exclusive(const char *filename, int flags, int *fd)
         if ( *fd < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error opening '%s': %s", filename, strerror(errno));
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         ret = lock_cmd(filename, *fd, F_SETLK, F_RDLCK|F_WRLCK);
         if ( ret <= 0 )
                 close(*fd);
@@ -525,7 +525,7 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
                 return wfd;
         }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fcntl(wfd, F_SETFD, fcntl(wfd, F_GETFD) | FD_CLOEXEC);
 #endif
 
@@ -536,7 +536,7 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s' for reading: %s", filename, strerror(errno));
         }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fcntl(rfd, F_SETFD, fcntl(rfd, F_GETFD) | FD_CLOEXEC);
 #endif
 

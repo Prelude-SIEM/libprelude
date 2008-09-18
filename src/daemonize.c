@@ -69,7 +69,7 @@ static int get_absolute_filename(const char *lockfile)
 static int lockfile_get_exclusive(const char *lockfile)
 {
         int fd;
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         int ret;
         struct flock lock;
 #endif
@@ -78,7 +78,7 @@ static int lockfile_get_exclusive(const char *lockfile)
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
 
         lock.l_type = F_WRLCK;    /* write lock */
@@ -154,7 +154,7 @@ int prelude_daemonize(const char *lockfile)
                         return ret;
         }
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
         prelude_log(PRELUDE_LOG_ERR, "Daemonize call unsupported in this environment.\n");
         pid = getpid();
 #else
@@ -176,7 +176,7 @@ int prelude_daemonize(const char *lockfile)
                         return ret;
         }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         setsid();
 
         ret = chdir("/");

@@ -59,7 +59,7 @@
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # define ioctl ioctlsocket
 #endif
 

@@ -257,7 +257,7 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
         if ( sock < 0 )
                 return prelude_error_from_errno(errno);
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fcntl(sock, F_SETFD, fcntl(sock, F_GETFD) | FD_CLOEXEC);
 
         ret = fcntl(sock, F_SETOWN, getpid());
@@ -381,7 +381,7 @@ static int start_inet_connection(prelude_connection_t *cnx,
 
 
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 static int start_unix_connection(prelude_connection_t *cnx,
                                  prelude_connection_permission_t reqperms, prelude_client_profile_t *profile)
 {
@@ -415,7 +415,7 @@ static int do_connect(prelude_connection_t *cnx,
                 ret = start_inet_connection(cnx, reqperms, profile);
         }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         else {
                 prelude_log(PRELUDE_LOG_INFO, "Connecting to %s (UNIX) prelude Manager server.\n",
                             ((struct sockaddr_un *) cnx->sa)->sun_path);
@@ -540,12 +540,12 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 {
         struct addrinfo *ai;
         int ret, ai_family, ai_addrlen;
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         struct sockaddr_un *un;
 #endif
 
         if ( is_unix_addr(cnx, addr) ) {
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "UNIX socket are not supported under this environment");
 #else
                 ai_family = AF_UNIX;
@@ -576,7 +576,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
                 freeaddrinfo(ai);
         }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         else {
                 un = (struct sockaddr_un *) cnx->sa;
                 strncpy(un->sun_path, cnx->daddr, sizeof(un->sun_path));
@@ -622,7 +622,7 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
 
         prelude_return_val_if_fail(addr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         signal(SIGPIPE, SIG_IGN);
 #endif
 

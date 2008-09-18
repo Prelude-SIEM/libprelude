@@ -34,7 +34,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 # include <sys/mman.h>
 #endif
 
@@ -567,7 +567,7 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 
         *outsize = st.st_size;
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         dataptr = *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
         if ( dataptr == MAP_FAILED ) {
                 close(fd);
@@ -609,7 +609,7 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 
 void _prelude_unload_file(unsigned char *fdata, size_t size)
 {
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         munmap(fdata, size);
 #else
         free(fdata);

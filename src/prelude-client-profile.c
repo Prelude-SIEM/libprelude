@@ -41,7 +41,7 @@
 #include "tls-auth.h"
 #include "common.h"
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # define geteuid(x) (0)
 # define getegid(x) (0)
 #endif
