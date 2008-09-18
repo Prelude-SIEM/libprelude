@@ -43,6 +43,7 @@
 
 
 int _prelude_internal_argc = 0;
+char *_prelude_prefix = NULL;
 char *_prelude_internal_argv[1024];
 
 char _prelude_init_cwd[PATH_MAX];
@@ -189,6 +190,10 @@ int prelude_init(int *argc, char **argv)
         env = getenv("LIBPRELUDE_LOGFILE");
         if ( env )
                 prelude_log_set_logfile(env);
+
+        env = getenv("LIBPRELUDE_PREFIX");
+        if ( env )
+                _prelude_prefix = strdup(env);
 
         env = getenv("LIBPRELUDE_ABORT");
         if ( env ) {

@@ -78,6 +78,7 @@ struct prelude_client_profile {
 };
 
 
+extern char *_prelude_prefix;
 static char *user_prefix = NULL;
 static const char *relocated_prefix;
 static const char *relative_spool_dir;
@@ -91,7 +92,7 @@ gl_once_define(static, relocate_once);
 
 static void _get_dir_once(void)
 {
-        relocated_prefix = relocate(INSTALLPREFIX);
+        relocated_prefix = (_prelude_prefix) ? _prelude_prefix : relocate(INSTALLPREFIX);
         relative_spool_dir = PRELUDE_SPOOL_DIR + sizeof(INSTALLPREFIX);
         relative_profile_dir = PRELUDE_PROFILE_DIR + sizeof(INSTALLPREFIX);
         relative_config_default_dir = PRELUDE_CONFIG_DEFAULT_DIR + sizeof(INSTALLPREFIX);
