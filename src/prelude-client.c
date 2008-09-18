@@ -918,7 +918,7 @@ static int get_heartbeat_interval(prelude_option_t *opt, prelude_string_t *out, 
 static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
-        char buf[512];
+        char buf[PATH_MAX];
         prelude_client_t *client = context;
 
         ret = prelude_client_profile_set_name(client->profile, optarg);
