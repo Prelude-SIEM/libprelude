@@ -1,6 +1,6 @@
 TESTS = async-timer idmef idmef-criteria idmef-message-helper idmef-path idmef-value prelude-client prelude-string
 check_PROGRAMS = $(TESTS)
-LDADD = $(top_builddir)/src/libprelude.la
+LDADD = $(top_builddir)/src/libprelude.la ../libmissing/libmissing.la
 AM_CPPFLAGS = -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/src/libprelude-error -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing
 
 idmef_value_LDADD = $(top_builddir)/src/idmef-value.lo $(LDADD)
