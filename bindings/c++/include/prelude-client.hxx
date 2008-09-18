@@ -1,7 +1,6 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_HXX
 #define _LIBPRELUDE_PRELUDE_CLIENT_HXX
 
-#include "prelude.h"
 #include "idmef.hxx"
 #include "prelude-connection-pool.hxx"
 #include "prelude-client-profile.hxx"

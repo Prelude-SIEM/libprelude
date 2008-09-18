@@ -21,11 +21,12 @@
 *
 *****/
 
-#include <prelude.h>
 #include <string>
 #include <iostream>
 
 #include "prelude-error.hxx"
+#include <prelude.h>
+
 
 using namespace Prelude;
 

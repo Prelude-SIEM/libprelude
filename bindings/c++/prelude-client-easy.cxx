@@ -1,12 +1,7 @@
-#include <string.h>
-#include <prelude.h>
-#include <prelude-message-id.h>
-#include <idmef-message-print.h>
-
+#include "idmef.hxx"
 #include "prelude-client-profile.hxx"
 #include "prelude-client-easy.hxx"
 #include "prelude-error.hxx"
-#include "idmef.hxx"
 
 using namespace Prelude;
 
