@@ -42,7 +42,7 @@
 #include "common.h"
 
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # define fchown(x, y, z) (0)
 #endif
 
@@ -257,7 +257,7 @@ static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned c
         ssize_t sret;
         int fd, ret, flags = 0;
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         flags |= S_IRGRP;
 #endif
 

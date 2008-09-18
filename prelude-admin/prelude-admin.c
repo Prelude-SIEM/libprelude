@@ -37,7 +37,7 @@
 #include <dirent.h>
 #include <signal.h>
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 # include <pwd.h>
 # include <grp.h>
 #endif
@@ -67,7 +67,7 @@
 #include "tls-register.h"
 
 
-#ifdef WIN32
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # define chown(x, y, z) (0)
 # define fchown(x, y, z) (0)
 # define getuid(x) (0)
@@ -165,7 +165,7 @@ static int do_chown(const char *name)
 
 static void permission_warning(void)
 {
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         fprintf(stderr,
 "* WARNING: no --uid or --gid command line options were provided.\n*\n"
 
@@ -261,7 +261,7 @@ static void print_registration_server_help(void)
 "to communicate with Prelude-Manager instance using this profile.\n\n"
 
 "Options:\n"
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 "  --uid=UID            : UID or user used to create the analyzer profile.\n"
 "  --gid=GID            : GID or group used to create the analyzer profile.\n"
 #endif
@@ -287,7 +287,7 @@ static void print_register_help(void)
 "registration server. The analyzer profile will be created if it does not exist.\n\n"
 
 "Options:\n"
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 "  --uid=UID             : UID or user used to create analyzer profile.\n"
 "  --gid=GID             : GID or group used to create analyzer profile.\n"
 #endif
@@ -307,7 +307,7 @@ static void print_add_help(void)
 
 "This command will create the specified analyzer profile.\n\n"
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 "Options:\n"
 "  --uid=UID: UID or user used to create analyzer profile.\n"
 "  --gid=GID: GID or group used to create analyzer profile.\n"
@@ -326,7 +326,7 @@ static void print_chown_help(void)
 "Usage  : chown <analyzer profile> <--uid|--gid>\n"
 "Example: chown prelude-lml --uid lmluser --gid lmlgroup\n\n"
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 "Options:\n"
 "  --uid=UID : UID or user used as new profile permission.\n"
 "  --gid=GID : GID to group used as new profile permission.\n"
@@ -400,7 +400,7 @@ static void print_send_help(void)
 }
 
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         uid_t uid;
@@ -581,7 +581,7 @@ static int set_long_listing(prelude_option_t *opt, const char *optarg, prelude_s
 
 static void setup_permission_options(void)
 {
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'u', "uid",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
 
@@ -2002,7 +2002,7 @@ static int list_cmd(int argc, char **argv)
         size_t size;
         struct stat st;
         struct dirent *dh;
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         struct group *gr;
         struct passwd *pw;
 #endif
@@ -2044,7 +2044,7 @@ static int list_cmd(int argc, char **argv)
                         continue;
                 }
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
                 pw = getpwuid(st.st_uid);
                 if ( ! pw )
                         snprintf(uidbuf, sizeof(uidbuf), "%d", (int) st.st_uid);
@@ -2199,7 +2199,7 @@ int main(int argc, char **argv)
         gnutls_global_init_extra();
 #endif
 
-#ifndef WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         signal(SIGPIPE, SIG_IGN);
 #endif
 
