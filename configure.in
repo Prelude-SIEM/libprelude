@@ -755,13 +755,25 @@ AC_SUBST(PRELUDE_CONFIG_DIR)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AS_AC_EXPAND(LIBDIR, $libdir)
+AS_AC_EXPAND(BINDIR, $bindir)
 
 PRELUDE_SPOOL_DIR=$LOCALSTATEDIR/spool/prelude
 PRELUDE_CONFIG_DIR=$SYSCONFDIR/prelude
 
 AC_DEFINE_UNQUOTED(PRELUDE_SPOOL_DIR, "$PRELUDE_SPOOL_DIR", Prelude spool directory)
 AC_DEFINE_UNQUOTED(PRELUDE_CONFIG_DIR, "$PRELUDE_CONFIG_DIR", Prelude config directory)
-AC_DEFINE_UNQUOTED(INSTALLDIR, "$LIBDIR", Prelude library install directory)
+
+case "${host}" in
+        i[[3456789]]86-*-mingw32*) WIN32="yes" ;;
+        *cygwin*) WIN32="yes" ;;
+        *) WIN32="no" ;;
+esac
+
+if test x$WIN32 = xyes; then
+	AC_DEFINE_UNQUOTED(INSTALLDIR, "$BINDIR", Prelude library install directory)
+else
+	AC_DEFINE_UNQUOTED(INSTALLDIR, "$LIBDIR", Prelude library install directory)
+fi
 
 
 AC_CONFIG_FILES([
