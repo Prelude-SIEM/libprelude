@@ -35,14 +35,11 @@
 #include <assert.h>
 #include <errno.h>
 
-#ifndef WIN32
-# include <sys/utsname.h>
-#endif
-
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#include "uname.h"
 #include "glthread/lock.h"
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
@@ -389,7 +386,6 @@ static int get_fqdn(idmef_analyzer_t *analyzer, const char *nodename)
 }
 
 
-#ifndef WIN32
 static int get_sys_info(idmef_analyzer_t *analyzer)
 {
         int ret;
@@ -416,22 +412,6 @@ static int get_sys_info(idmef_analyzer_t *analyzer)
         return 0;
 }
 
-#else
-
-static int get_sys_info(idmef_analyzer_t *analyzer)
-{
-        int ret;
-        prelude_string_t *str;
-
-        ret = prelude_string_new_constant(&str, "Windows");
-        if ( ret < 0 )
-                return ret;
-
-        idmef_analyzer_set_ostype(analyzer, str);
-
-        return 0;
-}
-#endif
 
 static int fill_client_infos(prelude_client_t *client, const char *program)
 {

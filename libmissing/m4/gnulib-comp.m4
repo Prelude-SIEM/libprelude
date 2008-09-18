@@ -57,6 +57,8 @@ AC_SUBST([LTALLOCA])
   gl_UNISTD_MODULE_INDICATOR([dup2])
   gl_HEADER_ERRNO_H
   gl_FLOAT_H
+  gl_FUNC_FOPEN
+  gl_STDIO_MODULE_INDICATOR([fopen])
   gl_FUNC_FSEEKO
   gl_STDIO_MODULE_INDICATOR([fseeko])
   gl_FUNC_FTW
@@ -144,6 +146,7 @@ AC_SUBST([LTALLOCA])
   gl_TIME_R
   gl_FUNC_TIMEGM
   gl_TLS
+  gl_FUNC_UNAME
   gl_UNISTD_H
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
@@ -303,6 +306,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/errno.in.h
   lib/float+.h
   lib/float.in.h
+  lib/fopen.c
   lib/fseeko.c
   lib/ftw.c
   lib/ftw_.h
@@ -384,6 +388,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/time.in.h
   lib/time_r.c
   lib/timegm.c
+  lib/uname.c
+  lib/uname.h
   lib/unistd.in.h
   lib/vasnprintf.c
   lib/vasnprintf.h
@@ -399,6 +405,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/errno_h.m4
   m4/extensions.m4
   m4/float_h.m4
+  m4/fopen.m4
   m4/fseeko.m4
   m4/ftw.m4
   m4/getaddrinfo.m4
@@ -470,6 +477,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/timegm.m4
   m4/tls.m4
   m4/tm_gmtoff.m4
+  m4/uname.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
@@ -484,6 +492,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-c-ctype.c
   tests/test-cond.c
   tests/test-errno.c
+  tests/test-fopen.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
   tests/test-getaddrinfo.c

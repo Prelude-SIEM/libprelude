@@ -87,6 +87,15 @@ EXTRA_DIST += test-errno.c
 
 ## end   gnulib module errno-tests
 
+## begin gnulib module fopen-tests
+
+TESTS += test-fopen
+check_PROGRAMS += test-fopen
+
+EXTRA_DIST += test-fopen.c
+
+## end   gnulib module fopen-tests
+
 ## begin gnulib module fseeko-tests
 
 TESTS += test-fseeko.sh
