@@ -46,13 +46,6 @@ AC_PROG_MAKE_SET
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PATH_PROG(GREP, grep, no) # for prelude-config.h generation
-
-if test x"$GCC" != xyes; then
-        AC_CHECK_PROGS(CC, xlc_r cc_r, ${CC})
-else
-        CC="$CC"
-fi
-
 BINDINGS_CC="$CC"
 
 
