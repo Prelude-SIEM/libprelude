@@ -1,3 +1,23 @@
+* 2008-09-19, libprelude-0.9.21:
+
+- libprelude now compile and run under Win32 native!
+
+- Fix file descriptor closure problem after daemonizing (#311).
+
+- New API functions allowing to specify the libprelude working prefix,
+  the prefix can be set using the LIBPRELUDE_PREFIX environment variable
+  as well (#255).
+
+- libprelude is now relocatable (use --enable-relocatable configure option).
+
+- libgcrypt initialization fixes.
+
+- Complete WIN32 glthread backend.
+
+- Various bug fixes.
+
+
+
 * 2008-09-09, libprelude-0.9.20.2:
 
 - Fix possible invalid read when looking up IDMEF path.

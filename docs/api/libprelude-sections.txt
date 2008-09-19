@@ -1193,6 +1193,8 @@ prelude_client_print_setup_error
 
 <SECTION>
 <FILE>prelude-client-profile</FILE>
+prelude_gid_t
+prelude_uid_t
 prelude_client_profile_t
 prelude_client_profile_new
 prelude_client_profile_destroy
