@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+#include "prelude-config.h"
 #include "prelude-inttypes.h"
 
 #ifdef __cplusplus
@@ -89,6 +90,8 @@ void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_
 int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **credentials);
 
 int prelude_client_profile_set_prefix(prelude_client_profile_t *cp, const char *prefix);
+
+void prelude_client_profile_get_prefix(const prelude_client_profile_t *cp, char *buf, size_t size);
 
 #ifdef __cplusplus
  }

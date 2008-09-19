@@ -177,6 +177,29 @@ int prelude_client_profile_set_prefix(prelude_client_profile_t *cp, const char *
 }
 
 
+/**
+ * prelude_client_profile_get_prefix:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Retrieve current prefix used with this profile.
+ */
+void prelude_client_profile_get_prefix(const prelude_client_profile_t *cp, char *buf, size_t size)
+{
+        const char *prefix;
+
+        prelude_return_if_fail(buf);
+
+        gl_lock_lock(lock);
+
+        prefix = get_prefix();
+        snprintf(buf, size, "%s", prefix);
+
+        gl_lock_unlock(lock);
+}
+
+
 
 /**
  * prelude_client_profile_get_analyzerid_filename:
