@@ -6025,6 +6025,11 @@ prelude_client_profile_t *cp
 const prelude_client_profile_t *cp, char *buf, size_t size
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_client_profile_get_default_config_dirname</NAME>
+<RETURNS>void </RETURNS>
+const prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_client_profile_get_analyzerid_filename</NAME>
 <RETURNS>void </RETURNS>
 const prelude_client_profile_t *cp, char *buf, size_t size
@@ -6113,6 +6118,11 @@ prelude_client_profile_t *cp, uint64_t analyzerid
 <NAME>prelude_client_profile_get_credentials</NAME>
 <RETURNS>int </RETURNS>
 prelude_client_profile_t *cp, void **credentials
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_set_prefix</NAME>
+<RETURNS>int </RETURNS>
+prelude_client_profile_t *cp, const char *prefix
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_PLUGIN_API_VERSION</NAME>
@@ -7037,7 +7047,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.20"
+#define LIBPRELUDE_VERSION "0.9.20.2"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
