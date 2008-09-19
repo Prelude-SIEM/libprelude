@@ -63,7 +63,7 @@ static prelude_bool_t stop_processing = FALSE;
 
 
 static gl_thread_t thread;
-static gl_cond_t cond;
+static gl_cond_t cond = gl_cond_initializer;
 static gl_lock_t mutex = gl_lock_initializer;
 
 static volatile sig_atomic_t is_initialized = FALSE;
@@ -238,12 +238,6 @@ static int do_init_async(void)
 {
         int ret;
 
-        ret = glthread_cond_init(&cond);
-        if ( ret != 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "error creating condition: %s.\n", strerror(ret));
-                return ret;
-        }
-
         ret = glthread_create(&thread, async_thread, NULL);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error creating asynchronous thread: %s.\n", strerror(ret));
@@ -397,4 +391,5 @@ void _prelude_async_fork_child(void)
         is_initialized = FALSE;
         prelude_list_init(&joblist);
         gl_lock_init(mutex);
+        gl_cond_init(cond);
 }
