@@ -39,6 +39,9 @@ namespace Prelude {
                 char * GetBackupDirname();
                 char * GetProfileDirname();
 
+                void SetPrefix(const char *prefix);
+                char *GetPrefix();
+
                 operator prelude_client_profile_t *() const;
         };
 };

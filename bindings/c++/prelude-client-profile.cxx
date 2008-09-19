@@ -100,6 +100,21 @@ char * ClientProfile::GetProfileDirname()
 }
 
 
+void ClientProfile::SetPrefix(const char *prefix)
+{
+        int ret;
+
+        ret = prelude_client_profile_set_prefix(_profile, prefix);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
+char * ClientProfile::GetPrefix()
+{
+        _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_prefix);
+}
+
 ClientProfile::operator prelude_client_profile_t *() const
 {
         return _profile;
