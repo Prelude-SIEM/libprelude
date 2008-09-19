@@ -70,8 +70,8 @@
 
 
 struct prelude_client_profile {
-        uid_t uid;
-        gid_t gid;
+        prelude_uid_t uid;
+        prelude_gid_t gid;
         char *name;
         uint64_t analyzerid;
         gnutls_certificate_credentials credentials;
@@ -580,7 +580,7 @@ void prelude_client_profile_destroy(prelude_client_profile_t *cp)
  *
  * Returns: the UID associated used by @cp.
  */
-uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
+prelude_uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
 {
         prelude_return_val_if_fail(cp, 0);
         return cp->uid;
@@ -595,7 +595,7 @@ uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
  *
  * Sets the UID used by @cp to @uid.
  */
-void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
+void prelude_client_profile_set_uid(prelude_client_profile_t *cp, prelude_uid_t uid)
 {
         prelude_return_if_fail(cp);
         cp->uid = uid;
@@ -611,7 +611,7 @@ void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
  *
  * Returns: the GID associated used by @cp.
  */
-gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
+prelude_gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
 {
         prelude_return_val_if_fail(cp, 0);
         return cp->gid;
@@ -626,7 +626,7 @@ gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
  *
  * Sets the GID used by @cp to @gid.
  */
-void prelude_client_profile_set_gid(prelude_client_profile_t *cp, gid_t gid)
+void prelude_client_profile_set_gid(prelude_client_profile_t *cp, prelude_gid_t gid)
 {
         prelude_return_if_fail(cp);
         cp->gid = gid;

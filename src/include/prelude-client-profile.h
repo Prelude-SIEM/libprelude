@@ -39,6 +39,20 @@
  extern "C" {
 #endif
 
+
+#ifdef HAVE_UID_T
+typedef uid_t prelude_uid_t;
+#else
+typedef int prelude_uid_t;
+#endif
+
+#ifdef HAVE_GID_T
+typedef gid_t prelude_gid_t;
+#else
+typedef int prelude_gid_t;
+#endif
+
+
 typedef struct prelude_client_profile prelude_client_profile_t;
 
 int _prelude_client_profile_init(prelude_client_profile_t *cp);
@@ -71,13 +85,13 @@ void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *c
 
 void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid);
+void prelude_client_profile_set_uid(prelude_client_profile_t *cp, prelude_uid_t uid);
 
-uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp);
+prelude_uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp);
 
-void prelude_client_profile_set_gid(prelude_client_profile_t *cp, uid_t gid);
+void prelude_client_profile_set_gid(prelude_client_profile_t *cp, prelude_uid_t gid);
 
-gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp);
+prelude_gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp);
 
 int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *name);
 

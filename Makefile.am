@@ -25,10 +25,20 @@ prelude-config.h: $(top_builddir)/config.h
 	rm -f prelude-config.h
 	echo "/* Used from libprelude headers */" >> prelude-config.h
 	$(GREP) "HAVE_VARIADIC_MACROS"          < $(top_builddir)/config.h >> prelude-config.h
-	$(GREP) "TIME_WITH_SYS_TIME"            < $(top_builddir)/config.h >> prelude-config.h
 	$(GREP) "PRELUDE_ALIGNED_ACCESS"        < $(top_builddir)/config.h >> prelude-config.h
 	$(GREP) "PRELUDE_WORDS_BIGENDIAN"       < $(top_builddir)/config.h >> prelude-config.h
 	$(GREP) "__PRELUDE_FUNC__"              < $(top_builddir)/config.h >> prelude-config.h
+	@echo "#ifndef TIME_WITH_SYS_TIME"      >> prelude-config.h
+	$(GREP) "TIME_WITH_SYS_TIME"            < $(top_builddir)/config.h >> prelude-config.h
+	@echo "#endif"                          >> prelude-config.h
+	@echo "#ifndef HAVE_UID_T"              >> prelude-config.h
+	$(GREP) "HAVE_UID_T"                    < $(top_builddir)/config.h >> prelude-config.h
+	@echo "#endif"                          >> prelude-config.h
+	@echo "#ifndef HAVE_GID_T"              >> prelude-config.h
+	$(GREP) "HAVE_GID_T"                    < $(top_builddir)/config.h >> prelude-config.h
+	@echo "#endif"                          >> prelude-config.h
+
+
 
 #
 # Install default sensors configuration with mode 644
