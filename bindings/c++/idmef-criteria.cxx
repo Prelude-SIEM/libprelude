@@ -76,7 +76,7 @@ IDMEFCriteria::IDMEFCriteria()
 }
 
 
-IDMEFCriteria *IDMEFCriteria::Clone()
+IDMEFCriteria IDMEFCriteria::Clone()
 {
         int ret;
         idmef_criteria_t *cl;
@@ -85,19 +85,19 @@ IDMEFCriteria *IDMEFCriteria::Clone()
         if ( ret < 0 )
                 throw PreludeError(ret);
 
-        return new IDMEFCriteria(cl);
+        return IDMEFCriteria(cl);
 }
 
 
-void IDMEFCriteria::ANDCriteria(IDMEFCriteria *criteria)
+void IDMEFCriteria::ANDCriteria(const IDMEFCriteria &criteria)
 {
-        idmef_criteria_and_criteria(this->_criteria, criteria->_criteria);
+        idmef_criteria_and_criteria(this->_criteria, criteria._criteria);
 }
 
 
-void IDMEFCriteria::ORCriteria(IDMEFCriteria *criteria)
+void IDMEFCriteria::ORCriteria(const IDMEFCriteria &criteria)
 {
-        idmef_criteria_or_criteria(this->_criteria, criteria->_criteria);
+        idmef_criteria_or_criteria(this->_criteria, criteria._criteria);
 }
 
 
