@@ -65,6 +65,8 @@ int prelude_client_init(prelude_client_t *client);
 
 int prelude_client_new(prelude_client_t **client, const char *profile);
 
+prelude_client_t *prelude_client_ref(prelude_client_t *client);
+
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
 
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client);

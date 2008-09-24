@@ -90,6 +90,7 @@
 
 struct prelude_client {
 
+        int refcount;
         int flags;
         int status;
 
@@ -1151,6 +1152,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         gl_lock_init(new->msgbuf_lock);
         prelude_timer_init_list(&new->heartbeat_timer);
 
+        new->refcount = 1;
         new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT|PRELUDE_CLIENT_FLAGS_AUTOCONFIG;
         new->permission = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE;
 
@@ -1198,6 +1200,16 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         *client = new;
 
         return 0;
+}
+
+
+
+prelude_client_t *prelude_client_ref(prelude_client_t *client)
+{
+        prelude_return_val_if_fail(client, NULL);
+
+        client->refcount++;
+        return client;
 }
 
 
@@ -1556,6 +1568,9 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client,
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
         prelude_return_if_fail(client);
+
+        if ( --client->refcount )
+                return;
 
         prelude_timer_destroy(&client->heartbeat_timer);
 
