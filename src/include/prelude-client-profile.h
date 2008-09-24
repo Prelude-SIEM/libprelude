@@ -61,6 +61,8 @@ int _prelude_client_profile_new(prelude_client_profile_t **ret);
 
 int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name);
 
+prelude_client_profile_t *prelude_client_profile_ref(prelude_client_profile_t *cp);
+
 void prelude_client_profile_destroy(prelude_client_profile_t *cp);
 
 void prelude_client_profile_get_config_filename(const prelude_client_profile_t *cp, char *buf, size_t size);

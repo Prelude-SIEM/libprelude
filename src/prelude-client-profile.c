@@ -70,6 +70,7 @@
 
 
 struct prelude_client_profile {
+        int refcount;
         prelude_uid_t uid;
         prelude_gid_t gid;
         char *name;
@@ -490,6 +491,7 @@ int _prelude_client_profile_new(prelude_client_profile_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->refcount = 1;
         (*ret)->uid = geteuid();
         (*ret)->gid = getegid();
 
@@ -560,6 +562,9 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
 void prelude_client_profile_destroy(prelude_client_profile_t *cp)
 {
         prelude_return_if_fail(cp);
+
+        if ( --cp->refcount )
+                return;
 
         if ( cp->credentials )
                 gnutls_certificate_free_credentials(cp->credentials);
@@ -733,4 +738,13 @@ int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **
         *credentials = cp->credentials;
 
         return 0;
+}
+
+
+prelude_client_profile_t *prelude_client_profile_ref(prelude_client_profile_t *cp)
+{
+        prelude_return_val_if_fail(cp, NULL);
+
+        cp->refcount++;
+        return cp;
 }
