@@ -313,6 +313,9 @@ static int set_analyzer_host_info(idmef_analyzer_t *analyzer, const char *node_s
         idmef_address_t *addr;
         prelude_string_t *str;
 
+        if ( ! node_str && ! addr_str )
+                return 0;
+
         ret = idmef_analyzer_new_node(analyzer, &node);
         if ( ret < 0 )
                 return ret;
@@ -321,21 +324,23 @@ static int set_analyzer_host_info(idmef_analyzer_t *analyzer, const char *node_s
         if ( ret < 0 )
                 return ret;
 
-        if ( prelude_string_is_empty(str) )
+        if ( node_str && prelude_string_is_empty(str) )
                 prelude_string_set_dup(str, node_str);
 
-        if ( ! (addr = idmef_node_get_next_address(node, NULL)) ) {
-                ret = idmef_node_new_address(node, &addr, 0);
+        if ( addr_str ) {
+                if ( ! (addr = idmef_node_get_next_address(node, NULL)) ) {
+                        ret = idmef_node_new_address(node, &addr, 0);
+                        if ( ret < 0 )
+                                return ret;
+                }
+
+                ret = idmef_address_new_address(addr, &str);
                 if ( ret < 0 )
                         return ret;
+
+                if ( prelude_string_is_empty(str) )
+                        prelude_string_set_dup(str, addr_str);
         }
-
-        ret = idmef_address_new_address(addr, &str);
-        if ( ret < 0 )
-                return ret;
-
-        if ( prelude_string_is_empty(str) )
-                prelude_string_set_dup(str, addr_str);
 
         return 0;
 }
