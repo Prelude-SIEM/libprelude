@@ -6,27 +6,25 @@
 using namespace Prelude;
 
 
-#define _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(function) \
-        do { \
-                char  *buf; \
-                size_t s = 1024; \
-                buf = new char[1024]; \
-                (function)(_profile,buf,s); \
-                return buf; \
-        } while(0)
+
+#define _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(function) do {    \
+                char buf[PATH_MAX];                                   \
+                                                                      \
+                (function)(_profile, buf, sizeof(buf));               \
+                                                                      \
+                return std::string(buf);                              \
+} while(0)
 
 
 ClientProfile::ClientProfile()
 {
         _profile = NULL;
-        _own_data = FALSE;
 }
 
 
 ClientProfile::ClientProfile(prelude_client_profile_t *profile) : _profile(profile)
 {
         _profile = profile;
-        _own_data = FALSE;
 }
 
 
@@ -37,64 +35,67 @@ ClientProfile::ClientProfile(const char *profile)
         ret = prelude_client_profile_new(&_profile, profile);
         if ( ret < 0 )
                 throw PreludeError(ret);
+}
 
-        _own_data = TRUE;
+ClientProfile::ClientProfile(const ClientProfile &p)
+{
+        _profile = (p._profile) ? prelude_client_profile_ref(p._profile) : NULL;
 }
 
 
 ClientProfile::~ClientProfile()
 {
-        if ( _own_data )
+        if ( _profile )
                 prelude_client_profile_destroy(_profile);
 }
 
 
-char * ClientProfile::GetConfigFilename()
+const std::string ClientProfile::GetConfigFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_config_filename);
 }
 
-char * ClientProfile::GetAnalyzeridFilename()
+const std::string ClientProfile::GetAnalyzeridFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_analyzerid_filename);
 }
 
-char * ClientProfile::GetTlsKeyFilename()
+const std::string ClientProfile::GetTlsKeyFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_key_filename);
 }
 
-char * ClientProfile::GetTlsServerCaCertFilename()
+const std::string ClientProfile::GetTlsServerCaCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_ca_cert_filename);
 }
 
-char * ClientProfile::GetTlsServerKeyCertFilename()
+const std::string ClientProfile::GetTlsServerKeyCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_keycert_filename);
 }
 
-char * ClientProfile::GetTlsServerCrlFilename()
+const std::string ClientProfile::GetTlsServerCrlFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_crl_filename);
 }
 
-char * ClientProfile::GetTlsClientKeyCertFilename()
+const std::string ClientProfile::GetTlsClientKeyCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_client_keycert_filename);
 }
 
-char * ClientProfile::GetTlsClientTrustedCertFilename()
+const std::string ClientProfile::GetTlsClientTrustedCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_client_trusted_cert_filename);
 }
 
-char * ClientProfile::GetBackupDirname()
+const std::string ClientProfile::GetBackupDirname()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_backup_dirname);
 }
 
-char * ClientProfile::GetProfileDirname()
+const std::string ClientProfile::GetProfileDirname()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_profile_dirname);
 }
@@ -110,12 +111,27 @@ void ClientProfile::SetPrefix(const char *prefix)
 }
 
 
-char * ClientProfile::GetPrefix()
+const std::string ClientProfile::GetPrefix()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_prefix);
 }
 
+
+
 ClientProfile::operator prelude_client_profile_t *() const
 {
         return _profile;
+}
+
+
+ClientProfile &ClientProfile::operator=(const ClientProfile &p)
+{
+        if ( this != &p && _profile != p._profile ) {
+                if ( _profile )
+                        prelude_client_profile_destroy(_profile);
+
+                _profile = (p._profile) ? prelude_client_profile_ref(p._profile) : NULL;
+        }
+
+        return *this;
 }

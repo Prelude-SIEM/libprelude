@@ -35,6 +35,7 @@ namespace Prelude {
 
                 ~Client();
                 Client(const char *profile);
+                Client(const Client &client);
 
                 void Start();
                 void Init();
@@ -58,15 +59,9 @@ namespace Prelude {
 
                 Client &operator << (Prelude::IDMEF &idmef);
                 Client &operator >> (Prelude::IDMEF &idmef);
+                Client &operator=(const Client &p);
 
                 static Client &SetRecvTimeout(Client &c, int timeout);
-
-                //prelude_ident_t *GetUniqueIdent();
-                //idmef_analyzer_t *GetAnalyzer();
-                //void SendMsg(prelude_msg_t *msg);
-                //void SetHeartbeatCb(void (*cb)(Client &client, idmef_heartbeat_t *heartbeat);
-                //MsgBuf NewMsgBuf();
-                //void HandleMsgDefault(prelude_msg_t *msg, prelude_msgbuf_t *msgbuf);
         };
 };
 

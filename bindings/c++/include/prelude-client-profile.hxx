@@ -13,6 +13,7 @@ namespace Prelude {
                 ClientProfile();
                 ClientProfile(const char *profile);
                 ClientProfile(prelude_client_profile_t * profile);
+                ClientProfile(const ClientProfile &p);
                 ~ClientProfile();
 
                 int GetUid() { return (int)prelude_client_profile_get_uid(_profile); }
@@ -25,24 +26,25 @@ namespace Prelude {
                 uint64_t GetAnalyzerId() { return prelude_client_profile_get_analyzerid(_profile); }
                 void GetAnalyzerId(uint64_t id) { prelude_client_profile_set_analyzerid(_profile,id); }
 
-                char * GetConfigFilename();
-                char * GetAnalyzeridFilename();
+                const std::string GetConfigFilename();
+                const std::string GetAnalyzeridFilename();
 
-                char * GetTlsKeyFilename();
-                char * GetTlsServerCaCertFilename();
-                char * GetTlsServerKeyCertFilename();
-                char * GetTlsServerCrlFilename();
+                const std::string GetTlsKeyFilename();
+                const std::string GetTlsServerCaCertFilename();
+                const std::string GetTlsServerKeyCertFilename();
+                const std::string GetTlsServerCrlFilename();
 
-                char * GetTlsClientKeyCertFilename();
-                char * GetTlsClientTrustedCertFilename();
+                const std::string GetTlsClientKeyCertFilename();
+                const std::string GetTlsClientTrustedCertFilename();
 
-                char * GetBackupDirname();
-                char * GetProfileDirname();
+                const std::string GetBackupDirname();
+                const std::string GetProfileDirname();
 
                 void SetPrefix(const char *prefix);
-                char *GetPrefix();
+                const std::string GetPrefix();
 
                 operator prelude_client_profile_t *() const;
+                ClientProfile &operator=(const ClientProfile &p);
         };
 };
 

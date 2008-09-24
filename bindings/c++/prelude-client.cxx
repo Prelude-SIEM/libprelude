@@ -17,14 +17,19 @@ Client::Client(const char *profile)
                 throw PreludeError(ret);
 
         _profile = prelude_client_get_profile(_client);
-        _own_data = FALSE;
-
         _pool = ConnectionPool(prelude_connection_pool_ref(prelude_client_get_connection_pool(_client)));
+}
+
+
+Client::Client(const Client &client)
+{
+        _client = (client._client) ? prelude_client_ref(client._client) : NULL;
 }
 
 
 Client::~Client()
 {
+        _profile = NULL;
         prelude_client_destroy(_client, PRELUDE_CLIENT_EXIT_STATUS_SUCCESS);
 }
 
@@ -49,7 +54,6 @@ void Client::Init()
         if ( ret < 0 )
                 throw PreludeError(ret);
 
-        _own_data = FALSE;
         _profile = prelude_client_get_profile(_client);
 }
 
@@ -163,4 +167,17 @@ Client &Client::SetRecvTimeout(Client &c, int timeout)
 {
         c._recv_timeout = timeout;
         return c;
+}
+
+
+Client &Client::operator=(const Client &c)
+{
+        if ( this != &c && _client != c._client ) {
+                if ( _client )
+                        prelude_client_destroy(_client, PRELUDE_CLIENT_EXIT_STATUS_SUCCESS);
+
+                _client = (c._client) ? prelude_client_ref(c._client) : NULL;
+        }
+
+        return *this;
 }

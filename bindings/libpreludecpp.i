@@ -140,18 +140,6 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 }
 }
 
-
-%newobject ClientProfile::GetConfigFilename;
-%newobject ClientProfile::GetAnalyzeridFilename;
-%newobject ClientProfile::GetTlsKeyFilename;
-%newobject ClientProfile::GetTlsServerCaCertFilename;
-%newobject ClientProfile::GetTlsServerKeyCertFilename;
-%newobject ClientProfile::GetTlsServerCrlFilename;
-%newobject ClientProfile::GetTlsClientKeyCertFilename;
-%newobject ClientProfile::GetTlsClientTrustedCertFilename;
-%newobject ClientProfile::GetBackupDirname;
-%newobject ClientProfile::GetProfileDirname;
-
 %ignore Prelude::IDMEFValue::operator int8_t() const;
 %ignore Prelude::IDMEFValue::operator uint8_t() const;
 %ignore Prelude::IDMEFValue::operator int16_t() const;
