@@ -1,4 +1,4 @@
-Prelude Library (http://www.prelude-ids.org)
+Prelude Library (http://www.prelude-ids.com)
 The Prelude Library is brought to you by PreludeIDS Technologies (http://www.prelude-ids.com).
 
 
@@ -55,7 +55,7 @@ Get Support
 
 
 Prelude-user mailing list archives can be accessed at:
-	http://www.prelude-ids.org/mailman/listinfo
+	http://lists.prelude-ids.org
 
 
 Commercial Support is available through the PreludeIDS Technologies company:
@@ -167,7 +167,7 @@ on the Manager host:
   You now need to start "prelude-adduser" on the server host where
   you need to register to:
 
-  use: "prelude-adduser registration-server <analyzer-name>"
+  use: "prelude-admin registration-server <analyzer-name>"
 "
 
 "analyzer-name" should be substituted by the name of your Manager
