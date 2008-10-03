@@ -82,31 +82,39 @@ struct prelude_client_profile {
 extern char *_prelude_prefix;
 static char *user_prefix = NULL;
 static const char *relocated_prefix;
-static const char *relative_spool_dir;
-static const char *relative_config_default_dir;
-static const char *relative_profile_dir;
-
+static const char *relative_spool_dir = NULL;
+static const char *relative_config_default_dir = NULL;
+static const char *relative_profile_dir = NULL;
 
 gl_lock_t lock = gl_lock_initializer;
 gl_once_define(static, relocate_once);
 
 
-static void _get_dir_once(void)
-{
-        relocated_prefix = (_prelude_prefix) ? _prelude_prefix : relocate(INSTALLPREFIX);
-        relative_spool_dir = PRELUDE_SPOOL_DIR + sizeof(INSTALLPREFIX);
-        relative_profile_dir = PRELUDE_PROFILE_DIR + sizeof(INSTALLPREFIX);
-        relative_config_default_dir = PRELUDE_CONFIG_DEFAULT_DIR + sizeof(INSTALLPREFIX);
 
-        prelude_log_debug(2, "install   prefix=%s", INSTALLPREFIX);
-        prelude_log_debug(2, "relocated prefix=%s\n", relocated_prefix);
-        prelude_log_debug(2, "relative   spool=%s\n", relative_spool_dir);
-        prelude_log_debug(2, "relative  config=%s\n", relative_config_default_dir);
-        prelude_log_debug(2, "relative profile=%s\n", relative_profile_dir);
+static const char *get_relpath(const char *path)
+{
+        return ( strstr(path, INSTALLPREFIX) ) ? path + sizeof(INSTALLPREFIX) : NULL;
 }
 
 
-static const char *get_prefix(void)
+
+static void _get_dir_once(void)
+{
+        relocated_prefix = (_prelude_prefix) ? _prelude_prefix : relocate(INSTALLPREFIX);
+
+        relative_spool_dir = get_relpath(PRELUDE_SPOOL_DIR);
+        relative_profile_dir = get_relpath(PRELUDE_PROFILE_DIR);
+        relative_config_default_dir = get_relpath(PRELUDE_CONFIG_DEFAULT_DIR);
+
+        prelude_log_debug(2, "install   prefix=%s", INSTALLPREFIX);
+        prelude_log_debug(2, "relocated prefix=%s\n", relocated_prefix);
+        prelude_log_debug(2, "relative   spool=%s\n", relative_spool_dir ? relative_spool_dir : PRELUDE_SPOOL_DIR);
+        prelude_log_debug(2, "relative  config=%s\n", relative_config_default_dir ? relative_config_default_dir : PRELUDE_CONFIG_DEFAULT_DIR);
+        prelude_log_debug(2, "relative profile=%s\n", relative_profile_dir ? relative_profile_dir : PRELUDE_PROFILE_DIR);
+}
+
+
+static const char *init_once_and_get_prefix(void)
 {
         gl_once(relocate_once, _get_dir_once);
         return (user_prefix) ? user_prefix : relocated_prefix;
@@ -194,7 +202,7 @@ void prelude_client_profile_get_prefix(const prelude_client_profile_t *cp, char 
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
+        prefix = init_once_and_get_prefix();
         snprintf(buf, size, "%s", prefix);
 
         gl_lock_unlock(lock);
@@ -218,8 +226,11 @@ void prelude_client_profile_get_default_config_dirname(const prelude_client_prof
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s", prefix, relative_config_default_dir);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_config_default_dir )
+                snprintf(buf, size, "%s", PRELUDE_CONFIG_DEFAULT_DIR);
+        else
+                snprintf(buf, size, "%s/%s", prefix, relative_config_default_dir);
 
         gl_lock_unlock(lock);
 }
@@ -243,8 +254,11 @@ void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/analyzerid", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/analyzerid", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/analyzerid", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -268,12 +282,14 @@ void prelude_client_profile_get_config_filename(const prelude_client_profile_t *
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/config", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/config", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/config", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
-
 
 
 /**
@@ -293,8 +309,11 @@ void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t 
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/key", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/key", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/key", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -319,8 +338,11 @@ void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/server.ca", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/server.ca", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/server.ca", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -345,8 +367,11 @@ void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/server.keycrt", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/server.keycrt", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/server.keycrt", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -371,8 +396,11 @@ void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_pro
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/server.crl", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/server.crl", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/server.crl", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -397,8 +425,11 @@ void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_c
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/client.trusted", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/client.trusted", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/client.trusted", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -424,8 +455,11 @@ void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s/client.keycrt", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s/client.keycrt", PRELUDE_PROFILE_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s/client.keycrt", prefix, relative_profile_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -450,8 +484,11 @@ void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *c
 
         gl_lock_lock(lock);
 
-        prefix = get_prefix();
-        snprintf(buf, size, "%s/%s/%s", prefix, relative_spool_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_spool_dir )
+                snprintf(buf, size, "%s/%s", PRELUDE_SPOOL_DIR, cp->name);
+        else
+                snprintf(buf, size, "%s/%s/%s", prefix, relative_spool_dir, cp->name);
 
         gl_lock_unlock(lock);
 }
@@ -474,12 +511,12 @@ void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *
         prelude_return_if_fail(buf);
 
         gl_lock_lock(lock);
-        prefix = get_prefix();
 
-        if ( cp && cp->name )
-                snprintf(buf, size, "%s/%s/%s", prefix, relative_profile_dir, cp->name);
+        prefix = init_once_and_get_prefix();
+        if ( ! relative_profile_dir )
+                snprintf(buf, size, "%s/%s%s", PRELUDE_PROFILE_DIR, (cp->name) ? "/" : "", (cp->name) ? cp->name : "");
         else
-                snprintf(buf, size, "%s/%s", prefix, relative_profile_dir);
+                snprintf(buf, size, "%s/%s%s%s", prefix, relative_profile_dir, (cp->name) ? "/" : "", (cp->name) ? cp->name : "");
 
         gl_lock_unlock(lock);
 }
