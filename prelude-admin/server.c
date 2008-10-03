@@ -219,7 +219,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
                 active_fd = poll(pfd, size, -1);
                 if ( active_fd < 0 ) {
                         if ( errno != EINTR )
-                                perror("poll");
+                                fprintf(stderr, "poll error : %s.\n", strerror(errno));
                         return -1;
                 }
 
