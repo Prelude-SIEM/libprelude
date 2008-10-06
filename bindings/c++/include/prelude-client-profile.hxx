@@ -1,6 +1,7 @@
 #ifndef __PRELUDE_CLIENT_PROFILE__
 #define __PRELUDE_CLIENT_PROFILE__
 
+#include <string>
 #include "prelude.h"
 
 namespace Prelude {
