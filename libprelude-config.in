@@ -96,7 +96,7 @@ if test $want_cflags = yes; then
         flags=-I@includedir@
       fi
       if test $thread_set = yes; then
-              flags=$flags @THREADCPPFLAGS@
+              flags=$flags
       fi
 
       echo @LIBPRELUDE_CFLAGS@ $flags

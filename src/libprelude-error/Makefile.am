@@ -1,5 +1,5 @@
 includedir = $(prefix)/include/libprelude
-AM_CPPFLAGS = @THREADCPPFLAGS@ @PCFLAGS@ -I$(top_srcdir)/libmissing -I$(top_srcdir)/src/include -I$(top_builddir)/src/include
+AM_CPPFLAGS = @PCFLAGS@ -I$(top_srcdir)/libmissing -I$(top_srcdir)/src/include -I$(top_builddir)/src/include
 
 EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 	mkerrnos.awk errnos.in mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
