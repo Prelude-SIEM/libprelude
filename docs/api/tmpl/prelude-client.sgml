@@ -236,6 +236,15 @@ is interrupted by a signal.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_client_ref ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_client_get_analyzer ##### -->
 <para>
 

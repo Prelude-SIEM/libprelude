@@ -5911,6 +5911,11 @@ prelude_client_t *client
 prelude_client_t **client, const char *profile
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_client_ref</NAME>
+<RETURNS>prelude_client_t *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_client_get_analyzer</NAME>
 <RETURNS>idmef_analyzer_t *</RETURNS>
 prelude_client_t *client
@@ -6029,6 +6034,11 @@ typedef struct prelude_client_profile prelude_client_profile_t;
 <NAME>prelude_client_profile_new</NAME>
 <RETURNS>int </RETURNS>
 prelude_client_profile_t **ret, const char *name
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_ref</NAME>
+<RETURNS>prelude_client_profile_t *</RETURNS>
+prelude_client_profile_t *cp
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_profile_destroy</NAME>
@@ -7068,7 +7078,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.21"
+#define LIBPRELUDE_VERSION "0.9.21.1"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>

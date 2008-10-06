@@ -1170,6 +1170,7 @@ prelude_client_get_connection_pool
 prelude_client_start
 prelude_client_init
 prelude_client_new
+prelude_client_ref
 prelude_client_get_analyzer
 prelude_client_get_flags
 prelude_client_set_required_permission
@@ -1197,6 +1198,7 @@ prelude_gid_t
 prelude_uid_t
 prelude_client_profile_t
 prelude_client_profile_new
+prelude_client_profile_ref
 prelude_client_profile_destroy
 prelude_client_profile_get_config_filename
 prelude_client_profile_get_analyzerid_filename

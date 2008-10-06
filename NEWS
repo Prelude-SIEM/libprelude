@@ -1,3 +1,20 @@
+* 2008-10-06, libprelude-0.9.21.1:
+
+- Fix an assertion warning upon sensor start in case the address 
+  for the local machine could not be found.
+
+- Consistency rework of EasyBindings IDMEFCriteria API.
+
+- Add refcount support for prelude_client_t and prelude_client_profile_t,
+  and update EasyBindings destructor to use them.
+
+- Fix a bug where EasyBindings would be built although they were not enabled.
+
+- Fix path issue in case libprelude was configured with specific path
+  outside of $prefix (fix #319).
+
+
+
 * 2008-09-19, libprelude-0.9.21:
 
 - libprelude now compile and run under Win32 native!
