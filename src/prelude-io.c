@@ -59,10 +59,6 @@
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
-# define ioctl ioctlsocket
-#endif
-
 struct prelude_io {
 
         int fd;
