@@ -50,9 +50,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "glthread/tls.h"
 #include "glthread/thread.h"
 #include "glthread/yield.h"
-#include "glthread/tls.h"
 
 #if ENABLE_DEBUGGING
 # define dbgprintf printf
@@ -199,7 +199,7 @@ main ()
 int
 main ()
 {
-  fputs ("multithreading not enabled\n", stderr);
+  fputs ("Skipping test: multithreading not enabled\n", stderr);
   return 77;
 }
 

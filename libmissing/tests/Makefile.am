@@ -42,6 +42,15 @@ libtests_a_DEPENDENCIES = $(gltests_LIBOBJS)
 EXTRA_libtests_a_SOURCES =
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 
+## begin gnulib module accept
+
+
+EXTRA_DIST += winsock.c
+
+EXTRA_libtests_a_SOURCES += winsock.c
+
+## end   gnulib module accept
+
 ## begin gnulib module alloca-opt-tests
 
 TESTS += test-alloca-opt
@@ -59,6 +68,15 @@ check_PROGRAMS += test-arpa_inet
 EXTRA_DIST += test-arpa_inet.c
 
 ## end   gnulib module arpa_inet-tests
+
+## begin gnulib module bind
+
+
+EXTRA_DIST += winsock.c
+
+EXTRA_libtests_a_SOURCES += winsock.c
+
+## end   gnulib module bind
 
 ## begin gnulib module c-ctype-tests
 
@@ -142,12 +160,14 @@ EXTRA_DIST += test-gettimeofday.c
 
 ## end   gnulib module gettimeofday-tests
 
-## begin gnulib module intprops
+## begin gnulib module listen
 
 
-EXTRA_DIST += intprops.h
+EXTRA_DIST += winsock.c
 
-## end   gnulib module intprops
+EXTRA_libtests_a_SOURCES += winsock.c
+
+## end   gnulib module listen
 
 ## begin gnulib module lock-tests
 
@@ -201,13 +221,33 @@ EXTRA_DIST += test-netinet_in.c
 
 ## end   gnulib module netinet_in-tests
 
+## begin gnulib module perror-tests
+
+TESTS += test-perror.sh
+TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
+check_PROGRAMS += test-perror
+EXTRA_DIST += test-perror.c test-perror.sh
+
+## end   gnulib module perror-tests
+
 ## begin gnulib module poll-tests
 
 TESTS += test-poll
 check_PROGRAMS += test-poll
+test_poll_LDADD = $(LDADD) @LIBSOCKET@
 EXTRA_DIST += test-poll.c
 
 ## end   gnulib module poll-tests
+
+## begin gnulib module select-tests
+
+TESTS += test-select
+check_PROGRAMS += test-select
+test_select_LDADD = $(LDADD) @LIBSOCKET@
+
+EXTRA_DIST += test-select.c
+
+## end   gnulib module select-tests
 
 ## begin gnulib module sleep-tests
 
@@ -237,6 +277,7 @@ libtests_a_SOURCES += sockets.h sockets.c
 
 TESTS += test-sockets
 check_PROGRAMS += test-sockets
+test_sockets_LDADD = $(LDADD) @LIBSOCKET@
 EXTRA_DIST += test-sockets.c
 
 ## end   gnulib module sockets-tests
@@ -285,6 +326,14 @@ check_PROGRAMS += test-strcasestr
 EXTRA_DIST += test-strcasestr.c
 
 ## end   gnulib module strcasestr-tests
+
+## begin gnulib module strerror-tests
+
+TESTS += test-strerror
+check_PROGRAMS += test-strerror
+EXTRA_DIST += test-strerror.c
+
+## end   gnulib module strerror-tests
 
 ## begin gnulib module string-tests
 
@@ -412,7 +461,7 @@ EXTRA_DIST += test-wctype.c
 
 ## begin gnulib module yield
 
-libtests_a_SOURCES += glthread/yield.h 
+libtests_a_SOURCES += glthread/yield.h
 
 ## end   gnulib module yield
 

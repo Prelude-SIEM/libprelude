@@ -1,5 +1,5 @@
-/* Test of locking in multithreaded situations.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+/* Test of condition variables in multithreaded situations.
+   Copyright (C) 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,11 +17,6 @@
 #include <config.h>
 
 #if USE_POSIX_THREADS || USE_SOLARIS_THREADS || USE_PTH_THREADS || USE_WIN32_THREADS
-
-/* Whether to enable locking.
-   Uncomment this to get a test program without locking, to verify that
-   it crashes.  */
-#define ENABLE_LOCKING 1
 
 /* Which tests to perform.
    Uncomment some of these, to verify that all tests crash if no locking
@@ -42,16 +37,9 @@
 #include <string.h>
 #include <sys/time.h>
 
-#if !ENABLE_LOCKING
-# undef USE_POSIX_THREADS
-# undef USE_SOLARIS_THREADS
-# undef USE_PTH_THREADS
-# undef USE_WIN32_THREADS
-#endif
-
-#include "glthread/thread.h"
 #include "glthread/cond.h"
 #include "glthread/lock.h"
+#include "glthread/thread.h"
 #include "glthread/yield.h"
 
 #if ENABLE_DEBUGGING
@@ -72,17 +60,18 @@
  */
 #include <unistd.h>
 static int cond_value = 0;
-static gl_cond_t condtest = gl_cond_initializer;
-static gl_lock_t lockcond = gl_lock_initializer;
+gl_cond_define_initialized(static, condtest)
+gl_lock_define_initialized(static, lockcond)
 
 static void *
-cond_routine(void *arg)
+cond_routine (void *arg)
 {
-  gl_lock_lock(lockcond);
-  while ( ! cond_value ) {
-    gl_cond_wait(condtest, lockcond);
-  }
-  gl_lock_unlock(lockcond);
+  gl_lock_lock (lockcond);
+  while (!cond_value)
+    {
+      gl_cond_wait (condtest, lockcond);
+    }
+  gl_lock_unlock (lockcond);
 
   cond_value = 2;
 
@@ -90,29 +79,31 @@ cond_routine(void *arg)
 }
 
 void
-test_cond()
+test_cond ()
 {
   int remain = 2;
   gl_thread_t thread;
 
   cond_value = 0;
 
-  thread = gl_thread_create(cond_routine, NULL);
-  do {
-    yield();
-    remain = sleep(remain);
-  } while (remain);
+  thread = gl_thread_create (cond_routine, NULL);
+  do
+    {
+      yield ();
+      remain = sleep (remain);
+    }
+  while (remain);
 
   /* signal condition */
-  gl_lock_lock(lockcond);
+  gl_lock_lock (lockcond);
   cond_value = 1;
-  gl_cond_signal(condtest);
-  gl_lock_unlock(lockcond);
+  gl_cond_signal (condtest);
+  gl_lock_unlock (lockcond);
 
-  gl_thread_join(thread, NULL);
+  gl_thread_join (thread, NULL);
 
-  if ( cond_value != 2 )
-    abort();
+  if (cond_value != 2)
+    abort ();
 }
 
 
@@ -121,60 +112,64 @@ test_cond()
  */
 static int cond_timeout;
 
-static void get_ts(struct timespec *ts)
+static void
+get_ts (struct timespec *ts)
 {
   struct timeval now;
 
-  gettimeofday(&now, NULL);
+  gettimeofday (&now, NULL);
 
   ts->tv_sec = now.tv_sec + 1;
   ts->tv_nsec = now.tv_usec * 1000;
 }
 
 static void *
-timedcond_routine(void *arg)
+timedcond_routine (void *arg)
 {
   int ret;
   struct timespec ts;
 
-  gl_lock_lock(lockcond);
-  while ( ! cond_value ) {
-    get_ts(&ts);
-    ret = glthread_cond_timedwait(&condtest, &lockcond, &ts);
-    if ( ret == ETIMEDOUT )
+  gl_lock_lock (lockcond);
+  while (!cond_value)
+    {
+      get_ts (&ts);
+      ret = glthread_cond_timedwait (&condtest, &lockcond, &ts);
+      if (ret == ETIMEDOUT)
         cond_timeout = 1;
-  }
-  gl_lock_unlock(lockcond);
+    }
+  gl_lock_unlock (lockcond);
 
   return NULL;
 }
 
-void
-test_timedcond()
+static void
+test_timedcond (void)
 {
   int remain = 2;
   gl_thread_t thread;
 
   cond_value = cond_timeout = 0;
 
-  thread = gl_thread_create(timedcond_routine, NULL);
+  thread = gl_thread_create (timedcond_routine, NULL);
 
   remain = 2;
-  do {
-    yield();
-    remain = sleep(remain);
-  } while (remain);
+  do
+    {
+      yield ();
+      remain = sleep (remain);
+    }
+  while (remain);
 
   /* signal condition */
-  gl_lock_lock(lockcond);
+  gl_lock_lock (lockcond);
   cond_value = 1;
-  gl_cond_signal(condtest);
-  gl_lock_unlock(lockcond);
+  gl_cond_signal (condtest);
+  gl_lock_unlock (lockcond);
 
-  gl_thread_join(thread, NULL);
+  gl_thread_join (thread, NULL);
 
-  if ( ! cond_timeout )
-    abort();
+  if (!cond_timeout)
+    abort ();
 }
 
 int

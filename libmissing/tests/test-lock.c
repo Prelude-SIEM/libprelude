@@ -58,8 +58,24 @@
 # undef USE_PTH_THREADS
 # undef USE_WIN32_THREADS
 #endif
-#include "glthread/thread.h"
 #include "glthread/lock.h"
+
+#if !ENABLE_LOCKING
+# if TEST_POSIX_THREADS
+#  define USE_POSIX_THREADS 1
+# endif
+# if TEST_SOLARIS_THREADS
+#  define USE_SOLARIS_THREADS 1
+# endif
+# if TEST_PTH_THREADS
+#  define USE_PTH_THREADS 1
+# endif
+# if TEST_WIN32_THREADS
+#  define USE_WIN32_THREADS 1
+# endif
+#endif
+
+#include "glthread/thread.h"
 #include "glthread/yield.h"
 
 #if ENABLE_DEBUGGING
@@ -550,7 +566,7 @@ main ()
 int
 main ()
 {
-  fputs ("multithreading not enabled\n", stderr);
+  fputs ("Skipping test: multithreading not enabled\n", stderr);
   return 77;
 }
 

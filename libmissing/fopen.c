@@ -18,16 +18,33 @@
 
 #include <config.h>
 
+/* Get the original definition of fopen.  It might be defined as a macro.  */
+#define __need_FILE
+#include <stdio.h>
+#undef __need_FILE
+
+static inline FILE *
+orig_fopen (const char *filename, const char *mode)
+{
+  return fopen (filename, mode);
+}
+
 /* Specification.  */
 #include <stdio.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string.h>
+#include <unistd.h>
 
 FILE *
 rpl_fopen (const char *filename, const char *mode)
-#undef fopen
 {
+#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+  if (strcmp (filename, "/dev/null") == 0)
+    filename = "NUL";
+#endif
+
 #if FOPEN_TRAILING_SLASH_BUG
   /* If the filename ends in a slash and a mode that requires write access is
      specified, then fail.
@@ -45,21 +62,42 @@ rpl_fopen (const char *filename, const char *mode)
      fails with errno = EISDIR in this case.
      If the named file does not exist or does not name a directory, then
      fopen() must fail since the file does not contain a '.' directory.  */
-  if (mode[0] == 'w' || mode[0] == 'a')
-    {
-      size_t len = strlen (filename);
-      if (len > 0 && filename[len - 1] == '/')
-	{
-	  errno = EISDIR;
+  {
+    size_t len = strlen (filename);
+    if (len > 0 && filename[len - 1] == '/')
+      {
+	int fd;
+	struct stat statbuf;
+	FILE *fp;
+
+	if (mode[0] == 'w' || mode[0] == 'a')
+	  {
+	    errno = EISDIR;
+	    return NULL;
+	  }
+
+	fd = open (filename, O_RDONLY);
+	if (fd < 0)
 	  return NULL;
-	}
-    }
-#endif
 
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
-  if (strcmp (filename, "/dev/null") == 0)
-    filename = "NUL";
-#endif
+	if (fstat (fd, &statbuf) >= 0 && !S_ISDIR (statbuf.st_mode))
+	  {
+	    close (fd);
+	    errno = ENOTDIR;
+	    return NULL;
+	  }
 
-  return fopen (filename, mode);
+	fp = fdopen (fd, mode);
+	if (fp == NULL)
+	  {
+	    int saved_errno = errno;
+	    close (fd);
+	    errno = saved_errno;
+	  }
+	return fp;
+      }
+  }
+# endif
+
+  return orig_fopen (filename, mode);
 }

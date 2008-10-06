@@ -71,18 +71,16 @@ AC_HELP_STRING([--disable-threads], [build without multithread safety]),
         # 2. putting a flag into CPPFLAGS that has an effect on the linker
         # causes the AC_TRY_LINK test below to succeed unexpectedly,
         # leading to wrong values of LIBTHREAD and LTLIBTHREAD.
-        THREADCPPFLAGS="-D_REENTRANT"
+        CPPFLAGS="$CPPFLAGS -D_REENTRANT"
         ;;
     esac
     # Some systems optimize for single-threaded programs by default, and
     # need special flags to disable these optimizations. For example, the
     # definition of 'errno' in <errno.h>.
     case "$host_os" in
-      aix* | freebsd*) THREADCPPFLAGS="-D_THREAD_SAFE" ;;
-      solaris*) THREADCPPFLAGS="-D_REENTRANT" ;;
+      aix* | freebsd*) CPPFLAGS="$CPPFLAGS -D_THREAD_SAFE" ;;
+      solaris*) CPPFLAGS="$CPPFLAGS -D_REENTRANT" ;;
     esac
-    CPPFLAGS="$CPPFLAGS $THREADCPPFLAGS"
-    AC_SUBST(THREADCPPFLAGS)
   fi
 ])
 

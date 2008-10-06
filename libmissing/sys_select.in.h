@@ -25,6 +25,10 @@
    <sys/types.h>.  */
 # include <sys/types.h>
 
+/* On OSF/1 4.0, <sys/select.h> provides only a forward declaration
+   of 'struct timeval', and no definition of this type..  */
+# include <sys/time.h>
+
 /* The include_next requires a split double-inclusion guard.  */
 # @INCLUDE_NEXT@ @NEXT_SYS_SELECT_H@
 
@@ -38,6 +42,33 @@
 /* A platform that lacks <sys/select.h>.  */
 
 # include <sys/socket.h>
+
+/* The definition of GL_LINK_WARNING is copied here.  */
+
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+# if @GNULIB_SELECT@
+#  if @HAVE_WINSOCK2_H@
+#   undef select
+#   define select rpl_select
+extern int rpl_select (int, fd_set *, fd_set *, fd_set *, struct timeval *);
+#  endif
+# elif @HAVE_WINSOCK2_H@
+#  undef select
+#  define select select_used_without_requesting_gnulib_module_select
+# elif defined GNULIB_POSIXCHECK
+#  undef select
+#  define select(n,r,w,e,t) \
+     (GL_LINK_WARNING ("select is not always POSIX compliant - " \
+                       "use gnulib module select for portability"), \
+      select (n, r, w, e, t))
+# endif
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif
 

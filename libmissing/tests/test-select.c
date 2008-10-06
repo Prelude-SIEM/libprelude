@@ -1,10 +1,10 @@
-/* Test of poll() function.
+/* Test of select() substitute.
    Copyright (C) 2008 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
-   any later version.
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,24 +12,25 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Paolo Bonzini.  */
+/* Written by Paolo Bonzini, 2008.  */
 
 #include <config.h>
 
+#include <sys/select.h>
+
 #include <stdio.h>
 #include <string.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <poll.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
 #include "sockets.h"
+
+enum { SEL_IN = 1, SEL_OUT = 2, SEL_EXC = 4 };
 
 #if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
 # define WIN32_NATIVE
@@ -150,37 +151,53 @@ connect_to_socket (int blocking)
 }
 
 
-/* A slightly more convenient interface to poll(2).  */
+/* A slightly more convenient interface to select(2).  */
 
 static int
-poll1 (int fd, int ev, int time)
+do_select (int fd, int ev, struct timeval *tv)
 {
-  struct pollfd pfd;
-  int r;
+  fd_set rfds, wfds, xfds;
+  int r, rev;
 
-  pfd.fd = fd;
-  pfd.events = ev;
-  pfd.revents = 0;
-  r = poll (&pfd, 1, time);
+  FD_ZERO (&rfds);
+  FD_ZERO (&wfds);
+  FD_ZERO (&xfds);
+  if (ev & SEL_IN)
+    FD_SET (fd, &rfds);
+  if (ev & SEL_OUT)
+    FD_SET (fd, &wfds);
+  if (ev & SEL_EXC)
+    FD_SET (fd, &xfds);
+  r = select (fd + 1, &rfds, &wfds, &xfds, tv);
   if (r < 0)
     return r;
 
-  if (pfd.revents & ~(POLLHUP | POLLERR | POLLNVAL | ev))
-    failed ("invalid flag combination (unrequested events)");
+  rev = 0;
+  if (FD_ISSET (fd, &rfds))
+    rev |= SEL_IN;
+  if (FD_ISSET (fd, &wfds))
+    rev |= SEL_OUT;
+  if (FD_ISSET (fd, &xfds))
+    rev |= SEL_EXC;
+  if (rev && r == 0)
+    failed ("select returned 0");
+  if (rev & ~ev)
+    failed ("select returned unrequested events");
 
-  return pfd.revents;
+  return rev;
 }
 
 static int
-poll1_nowait (int fd, int ev)
+do_select_nowait (int fd, int ev)
 {
-  return poll1 (fd, ev, 0);
+  static struct timeval tv0;
+  return do_select (fd, ev, &tv0);
 }
 
 static int
-poll1_wait (int fd, int ev)
+do_select_wait (int fd, int ev)
 {
-  return poll1 (fd, ev, -1);
+  return do_select (fd, ev, NULL);
 }
 
 
@@ -190,16 +207,16 @@ poll1_wait (int fd, int ev)
 static void
 test_tty (void)
 {
-  if (poll1_nowait (0, POLLIN | POLLRDNORM) != 0)
+  if (do_select_nowait (0, SEL_IN) != 0)
     failed ("can read");
-  if (poll1_nowait (0, POLLOUT) == 0)
+  if (do_select_nowait (0, SEL_OUT) == 0)
     failed ("cannot write");
 
-  if (poll1_wait (0, POLLIN | POLLRDNORM) == 0)
+  if (do_select_wait (0, SEL_IN) == 0)
     failed ("return with infinite timeout");
 
   getchar ();
-  if (poll1_nowait (0, POLLIN | POLLRDNORM) != 0)
+  if (do_select_nowait (0, SEL_IN) != 0)
     failed ("can read after getc");
 }
 #endif
@@ -216,17 +233,15 @@ test_connect_first (void)
 
   int c1, c2;
 
-  if (poll1_nowait (s, POLLIN | POLLRDNORM | POLLRDBAND) != 0)
+  if (do_select_nowait (s, SEL_IN | SEL_EXC) != 0)
     failed ("can read, socket not connected");
 
   c1 = connect_to_socket (false);
 
-  if (poll1_wait (s, POLLIN | POLLRDNORM | POLLRDBAND) != (POLLIN | POLLRDNORM))
-    failed ("expecting POLLIN | POLLRDNORM on passive socket");
-  if (poll1_nowait (s, POLLIN | POLLRDBAND) != POLLIN)
-    failed ("expecting POLLIN on passive socket");
-  if (poll1_nowait (s, POLLRDNORM | POLLRDBAND) != POLLRDNORM)
-    failed ("expecting POLLRDNORM on passive socket");
+  if (do_select_wait (s, SEL_IN | SEL_EXC) != SEL_IN)
+    failed ("expecting readability on passive socket");
+  if (do_select_nowait (s, SEL_IN | SEL_EXC) != SEL_IN)
+    failed ("expecting readability on passive socket");
 
   addrlen = sizeof (ia);
   c2 = accept (s, (struct sockaddr *) &ia, &addrlen);
@@ -267,17 +282,14 @@ test_accept_first (void)
     {
       close (s);
       c = connect_to_socket (true);
-      if (poll1_nowait (c, POLLOUT | POLLWRNORM | POLLRDBAND)
-	  != (POLLOUT | POLLWRNORM))
+      if (do_select_nowait (c, SEL_OUT) != SEL_OUT)
         failed ("cannot write after blocking connect");
       write (c, "foo", 3);
       wait (&pid);
-      if (poll1_wait (c, POLLIN) != POLLIN)
+      if (do_select_wait (c, SEL_IN) != SEL_IN)
         failed ("cannot read data left in the socket by closed process");
       read (c, buf, 3);
       write (c, "foo", 3);
-      if ((poll1_wait (c, POLLIN | POLLOUT) & (POLLHUP | POLLERR)) == 0)
-        failed ("expecting POLLHUP after shutdown");
       close (c);
     }
 #endif
@@ -290,22 +302,16 @@ static void
 test_pair (int rd, int wd)
 {
   char buf[3];
-  if (poll1_wait (wd, POLLIN | POLLRDNORM | POLLOUT | POLLWRNORM | POLLRDBAND)
-      != (POLLOUT | POLLWRNORM))
-    failed ("expecting POLLOUT | POLLWRNORM before writing");
-  if (poll1_nowait (wd, POLLIN | POLLRDNORM | POLLOUT | POLLRDBAND) != POLLOUT)
-    failed ("expecting POLLOUT before writing");
-  if (poll1_nowait (wd, POLLIN | POLLRDNORM | POLLWRNORM | POLLRDBAND)
-      != POLLWRNORM)
-    failed ("expecting POLLWRNORM before writing");
+  if (do_select_wait (wd, SEL_IN | SEL_OUT | SEL_EXC) != SEL_OUT)
+    failed ("expecting writability before writing");
+  if (do_select_nowait (wd, SEL_IN | SEL_OUT | SEL_EXC) != SEL_OUT)
+    failed ("expecting writability before writing");
 
   write (wd, "foo", 3);
-  if (poll1_wait (rd, POLLIN | POLLRDNORM) != (POLLIN | POLLRDNORM))
-    failed ("expecting POLLIN | POLLRDNORM after writing");
-  if (poll1_nowait (rd, POLLIN) != POLLIN)
-    failed ("expecting POLLIN after writing");
-  if (poll1_nowait (rd, POLLRDNORM) != POLLRDNORM)
-    failed ("expecting POLLRDNORM after writing");
+  if (do_select_wait (rd, SEL_IN) != SEL_IN)
+    failed ("expecting readability after writing");
+  if (do_select_nowait (rd, SEL_IN) != SEL_IN)
+    failed ("expecting readability after writing");
 
   read (rd, buf, 3);
 }
@@ -328,9 +334,6 @@ test_socket_pair (void)
   test_pair (c1, c2);
   close (c1);
   write (c2, "foo", 3);
-  if ((poll1_nowait (c2, POLLIN | POLLOUT) & (POLLHUP | POLLERR)) == 0)
-    failed ("expecting POLLHUP after shutdown");
-
   close (c2);
 }
 
@@ -345,9 +348,6 @@ test_pipe (void)
   pipe (fd);
   test_pair (fd[0], fd[1]);
   close (fd[0]);
-  if ((poll1_wait (fd[1], POLLIN | POLLOUT) & (POLLHUP | POLLERR)) == 0)
-    failed ("expecting POLLHUP after shutdown");
-
   close (fd[1]);
 }
 
@@ -367,10 +367,8 @@ main ()
 #endif
 
   result = test (test_connect_first, "Unconnected socket test");
-#if ! defined(__OpenBSD__)
   result += test (test_socket_pair, "Connected sockets test");
   result += test (test_accept_first, "General socket test with fork");
-#endif
   result += test (test_pipe, "Pipe test");
 
   exit (result);

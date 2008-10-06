@@ -15,17 +15,19 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files cond dup2 fopen ftw getaddrinfo getpass gettimeofday inet_ntop inet_pton lock lseek memmem minmax pathmax poll regex relocatable-lib-lgpl sigprocmask sleep snprintf socklen strcase strcasestr strdup strndup strptime strsep sys_stat thread time_r timegm tls uname vsnprintf
+#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --tests-base=libmissing/tests --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files cond connect dup2 fopen ftw getaddrinfo getpass getsockname gettimeofday inet_ntop inet_pton lock lseek memmem minmax pathmax perror poll regex relocatable-lib-lgpl select setsockopt sigprocmask sleep snprintf socket socklen strcase strcasestr strdup strerror strndup strptime strsep sys_stat thread time_r timegm tls uname vsnprintf write
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
 gl_MODULES([
   cond
+  connect
   dup2
   fopen
   ftw
   getaddrinfo
   getpass
+  getsockname
   gettimeofday
   inet_ntop
   inet_pton
@@ -34,16 +36,21 @@ gl_MODULES([
   memmem
   minmax
   pathmax
+  perror
   poll
   regex
   relocatable-lib-lgpl
+  select
+  setsockopt
   sigprocmask
   sleep
   snprintf
+  socket
   socklen
   strcase
   strcasestr
   strdup
+  strerror
   strndup
   strptime
   strsep
@@ -54,6 +61,7 @@ gl_MODULES([
   tls
   uname
   vsnprintf
+  write
 ])
 gl_AVOID([])
 gl_SOURCE_BASE([libmissing])
