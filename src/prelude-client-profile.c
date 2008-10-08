@@ -506,17 +506,22 @@ void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *c
  */
 void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
-        const char *prefix;
+        const char *prefix, *name_sep = "", *name = "";
 
         prelude_return_if_fail(buf);
+
+        if ( cp && cp->name ) {
+                name_sep = "/";
+                name = cp->name;
+        }
 
         gl_lock_lock(lock);
 
         prefix = init_once_and_get_prefix();
         if ( ! relative_profile_dir )
-                snprintf(buf, size, "%s/%s%s", PRELUDE_PROFILE_DIR, (cp->name) ? "/" : "", (cp->name) ? cp->name : "");
+                snprintf(buf, size, "%s/%s%s", PRELUDE_PROFILE_DIR, name_sep, name);
         else
-                snprintf(buf, size, "%s/%s%s%s", prefix, relative_profile_dir, (cp->name) ? "/" : "", (cp->name) ? cp->name : "");
+                snprintf(buf, size, "%s/%s%s%s", prefix, relative_profile_dir, name_sep, name);
 
         gl_lock_unlock(lock);
 }
