@@ -212,6 +212,8 @@ static void gen_heartbeat(prelude_client_t *client)
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
 
+        prelude_log_debug(2, "running heartbeat callback.\n");
+
         ret = idmef_message_new(&message);
         if ( ret < 0 ) {
                 prelude_perror(ret, "error creating new IDMEF message");
