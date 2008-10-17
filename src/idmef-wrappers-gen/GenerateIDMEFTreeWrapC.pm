@@ -1326,12 +1326,13 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret)
-\{
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+\{");
+    my $need_check = 1;
 
-");
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
+        $need_check = 0;
         $self->output("
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
         ptr->$field->{name}_is_set = 1;
 ");
     } elsif ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
@@ -1339,9 +1340,12 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
         if ( $field->{metatype} & &METATYPE_STRUCT ) {
 
             if ( $field->{ptr} ) {
+                $need_check = 0;
 
                 $self->output("
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->$field->{name} ) {
                 retval = $field->{short_typename}_new(&ptr->$field->{name});
@@ -1351,12 +1355,15 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
 ");
             }
         }
-
     } else {
         if ( $field->{metatype} & &METATYPE_STRUCT ) {
             if ( $field->{ptr} ) {
+                $need_check = 0;
+
                 $self->output("
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->$field->{name} ) {
                 retval = idmef_$field->{short_typename}_new(&ptr->$field->{name});
@@ -1366,7 +1373,9 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
 ");
             } else {
                 if ( $tree->{objs}->{$field->{typename}}->{is_listed} ) {
+                     $need_check = 0;
                      $self->output("
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_list_init(&ptr->$field->{name}.list);");
                  }
             }
@@ -1374,6 +1383,12 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
     }
 
     $refer = $field->{ptr} ? "" : "&";
+
+    if ( $need_check ) {
+	$self->output("
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+");
+    }
 
     $self->output("
         *ret = ${refer}ptr->$field->{name};

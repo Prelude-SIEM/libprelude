@@ -2046,7 +2046,6 @@ int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additiona
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->type;
         return 0;
 }
@@ -2098,10 +2097,9 @@ void idmef_additional_data_set_meaning(idmef_additional_data_t *ptr, prelude_str
  */
 int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->meaning ) {
                 retval = prelude_string_new(&ptr->meaning);
@@ -2160,10 +2158,9 @@ void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *
  */
 int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->data ) {
                 retval = idmef_data_new(&ptr->data);
@@ -2502,7 +2499,6 @@ int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t 
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->origin;
         return 0;
 }
@@ -2554,10 +2550,9 @@ void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
  */
 int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -2616,10 +2611,9 @@ void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
  */
 int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->url ) {
                 retval = prelude_string_new(&ptr->url);
@@ -2678,10 +2672,9 @@ void idmef_reference_set_meaning(idmef_reference_t *ptr, prelude_string_t *meani
  */
 int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->meaning ) {
                 retval = prelude_string_new(&ptr->meaning);
@@ -3069,10 +3062,9 @@ void idmef_classification_set_ident(idmef_classification_t *ptr, prelude_string_
  */
 int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -3131,10 +3123,9 @@ void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t
  */
 int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->text ) {
                 retval = prelude_string_new(&ptr->text);
@@ -3574,10 +3565,9 @@ void idmef_user_id_set_ident(idmef_user_id_t *ptr, prelude_string_t *ident)
  */
 int idmef_user_id_new_ident(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -3634,7 +3624,6 @@ int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->type;
         return 0;
 }
@@ -3686,10 +3675,9 @@ void idmef_user_id_set_tty(idmef_user_id_t *ptr, prelude_string_t *tty)
  */
 int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->tty ) {
                 retval = prelude_string_new(&ptr->tty);
@@ -3748,10 +3736,9 @@ void idmef_user_id_set_name(idmef_user_id_t *ptr, prelude_string_t *name)
  */
 int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -3816,8 +3803,6 @@ void idmef_user_id_unset_number(idmef_user_id_t *ptr)
 int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->number_is_set = 1;
 
         *ret = &ptr->number;
@@ -4197,10 +4182,9 @@ void idmef_user_set_ident(idmef_user_t *ptr, prelude_string_t *ident)
  */
 int idmef_user_new_ident(idmef_user_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -4256,7 +4240,6 @@ void idmef_user_set_category(idmef_user_t *ptr, idmef_user_category_t category)
 int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
 
         *ret = &ptr->category;
         return 0;
@@ -4715,10 +4698,9 @@ void idmef_address_set_ident(idmef_address_t *ptr, prelude_string_t *ident)
  */
 int idmef_address_new_ident(idmef_address_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -4775,7 +4757,6 @@ int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->category;
         return 0;
 }
@@ -4827,10 +4808,9 @@ void idmef_address_set_vlan_name(idmef_address_t *ptr, prelude_string_t *vlan_na
  */
 int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->vlan_name ) {
                 retval = prelude_string_new(&ptr->vlan_name);
@@ -4895,8 +4875,6 @@ void idmef_address_unset_vlan_num(idmef_address_t *ptr)
 int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->vlan_num_is_set = 1;
 
         *ret = &ptr->vlan_num;
@@ -4950,10 +4928,9 @@ void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
  */
 int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->address ) {
                 retval = prelude_string_new(&ptr->address);
@@ -5012,10 +4989,9 @@ void idmef_address_set_netmask(idmef_address_t *ptr, prelude_string_t *netmask)
  */
 int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->netmask ) {
                 retval = prelude_string_new(&ptr->netmask);
@@ -5536,10 +5512,9 @@ void idmef_process_set_ident(idmef_process_t *ptr, prelude_string_t *ident)
  */
 int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -5598,10 +5573,9 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
  */
 int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -5666,8 +5640,6 @@ void idmef_process_unset_pid(idmef_process_t *ptr)
 int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->pid_is_set = 1;
 
         *ret = &ptr->pid;
@@ -5721,10 +5693,9 @@ void idmef_process_set_path(idmef_process_t *ptr, prelude_string_t *path)
  */
 int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->path ) {
                 retval = prelude_string_new(&ptr->path);
@@ -6365,10 +6336,9 @@ void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
  */
 int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->url ) {
                 retval = prelude_string_new(&ptr->url);
@@ -6427,10 +6397,9 @@ void idmef_web_service_set_cgi(idmef_web_service_t *ptr, prelude_string_t *cgi)
  */
 int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->cgi ) {
                 retval = prelude_string_new(&ptr->cgi);
@@ -6489,10 +6458,9 @@ void idmef_web_service_set_http_method(idmef_web_service_t *ptr, prelude_string_
  */
 int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->http_method ) {
                 retval = prelude_string_new(&ptr->http_method);
@@ -7000,10 +6968,9 @@ void idmef_snmp_service_set_oid(idmef_snmp_service_t *ptr, prelude_string_t *oid
  */
 int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->oid ) {
                 retval = prelude_string_new(&ptr->oid);
@@ -7068,8 +7035,6 @@ void idmef_snmp_service_unset_message_processing_model(idmef_snmp_service_t *ptr
 int idmef_snmp_service_new_message_processing_model(idmef_snmp_service_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->message_processing_model_is_set = 1;
 
         *ret = &ptr->message_processing_model;
@@ -7129,8 +7094,6 @@ void idmef_snmp_service_unset_security_model(idmef_snmp_service_t *ptr)
 int idmef_snmp_service_new_security_model(idmef_snmp_service_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->security_model_is_set = 1;
 
         *ret = &ptr->security_model;
@@ -7184,10 +7147,9 @@ void idmef_snmp_service_set_security_name(idmef_snmp_service_t *ptr, prelude_str
  */
 int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->security_name ) {
                 retval = prelude_string_new(&ptr->security_name);
@@ -7252,8 +7214,6 @@ void idmef_snmp_service_unset_security_level(idmef_snmp_service_t *ptr)
 int idmef_snmp_service_new_security_level(idmef_snmp_service_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->security_level_is_set = 1;
 
         *ret = &ptr->security_level;
@@ -7307,10 +7267,9 @@ void idmef_snmp_service_set_context_name(idmef_snmp_service_t *ptr, prelude_stri
  */
 int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->context_name ) {
                 retval = prelude_string_new(&ptr->context_name);
@@ -7369,10 +7328,9 @@ void idmef_snmp_service_set_context_engine_id(idmef_snmp_service_t *ptr, prelude
  */
 int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->context_engine_id ) {
                 retval = prelude_string_new(&ptr->context_engine_id);
@@ -7431,10 +7389,9 @@ void idmef_snmp_service_set_command(idmef_snmp_service_t *ptr, prelude_string_t 
  */
 int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->command ) {
                 retval = prelude_string_new(&ptr->command);
@@ -7493,10 +7450,9 @@ void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_
  */
 int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->community ) {
                 retval = prelude_string_new(&ptr->community);
@@ -7984,10 +7940,9 @@ void idmef_service_set_ident(idmef_service_t *ptr, prelude_string_t *ident)
  */
 int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -8052,8 +8007,6 @@ void idmef_service_unset_ip_version(idmef_service_t *ptr)
 int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->ip_version_is_set = 1;
 
         *ret = &ptr->ip_version;
@@ -8113,8 +8066,6 @@ void idmef_service_unset_iana_protocol_number(idmef_service_t *ptr)
 int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->iana_protocol_number_is_set = 1;
 
         *ret = &ptr->iana_protocol_number;
@@ -8168,10 +8119,9 @@ void idmef_service_set_iana_protocol_name(idmef_service_t *ptr, prelude_string_t
  */
 int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->iana_protocol_name ) {
                 retval = prelude_string_new(&ptr->iana_protocol_name);
@@ -8230,10 +8180,9 @@ void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name)
  */
 int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -8298,8 +8247,6 @@ void idmef_service_unset_port(idmef_service_t *ptr)
 int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->port_is_set = 1;
 
         *ret = &ptr->port;
@@ -8353,10 +8300,9 @@ void idmef_service_set_portlist(idmef_service_t *ptr, prelude_string_t *portlist
  */
 int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->portlist ) {
                 retval = prelude_string_new(&ptr->portlist);
@@ -8415,10 +8361,9 @@ void idmef_service_set_protocol(idmef_service_t *ptr, prelude_string_t *protocol
  */
 int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->protocol ) {
                 retval = prelude_string_new(&ptr->protocol);
@@ -9094,10 +9039,9 @@ void idmef_node_set_ident(idmef_node_t *ptr, prelude_string_t *ident)
  */
 int idmef_node_new_ident(idmef_node_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -9154,7 +9098,6 @@ int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->category;
         return 0;
 }
@@ -9206,10 +9149,9 @@ void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location)
  */
 int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->location ) {
                 retval = prelude_string_new(&ptr->location);
@@ -9268,10 +9210,9 @@ void idmef_node_set_name(idmef_node_t *ptr, prelude_string_t *name)
  */
 int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -9780,10 +9721,9 @@ void idmef_source_set_ident(idmef_source_t *ptr, prelude_string_t *ident)
  */
 int idmef_source_new_ident(idmef_source_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -9840,7 +9780,6 @@ int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->spoofed;
         return 0;
 }
@@ -9892,10 +9831,9 @@ void idmef_source_set_interface(idmef_source_t *ptr, prelude_string_t *interface
  */
 int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->interface ) {
                 retval = prelude_string_new(&ptr->interface);
@@ -9954,10 +9892,9 @@ void idmef_source_set_node(idmef_source_t *ptr, idmef_node_t *node)
  */
 int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
@@ -10016,10 +9953,9 @@ void idmef_source_set_user(idmef_source_t *ptr, idmef_user_t *user)
  */
 int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->user ) {
                 retval = idmef_user_new(&ptr->user);
@@ -10078,10 +10014,9 @@ void idmef_source_set_process(idmef_source_t *ptr, idmef_process_t *process)
  */
 int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
@@ -10140,10 +10075,9 @@ void idmef_source_set_service(idmef_source_t *ptr, idmef_service_t *service)
  */
 int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->service ) {
                 retval = idmef_service_new(&ptr->service);
@@ -10554,10 +10488,9 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
  */
 int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->user_id ) {
                 retval = idmef_user_id_new(&ptr->user_id);
@@ -10975,10 +10908,9 @@ void idmef_inode_set_change_time(idmef_inode_t *ptr, idmef_time_t *change_time)
  */
 int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->change_time ) {
                 retval = idmef_time_new(&ptr->change_time);
@@ -11043,8 +10975,6 @@ void idmef_inode_unset_number(idmef_inode_t *ptr)
 int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->number_is_set = 1;
 
         *ret = &ptr->number;
@@ -11104,8 +11034,6 @@ void idmef_inode_unset_major_device(idmef_inode_t *ptr)
 int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->major_device_is_set = 1;
 
         *ret = &ptr->major_device;
@@ -11165,8 +11093,6 @@ void idmef_inode_unset_minor_device(idmef_inode_t *ptr)
 int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->minor_device_is_set = 1;
 
         *ret = &ptr->minor_device;
@@ -11226,8 +11152,6 @@ void idmef_inode_unset_c_major_device(idmef_inode_t *ptr)
 int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->c_major_device_is_set = 1;
 
         *ret = &ptr->c_major_device;
@@ -11287,8 +11211,6 @@ void idmef_inode_unset_c_minor_device(idmef_inode_t *ptr)
 int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->c_minor_device_is_set = 1;
 
         *ret = &ptr->c_minor_device;
@@ -11633,10 +11555,9 @@ void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
  */
 int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->value ) {
                 retval = prelude_string_new(&ptr->value);
@@ -11695,10 +11616,9 @@ void idmef_checksum_set_key(idmef_checksum_t *ptr, prelude_string_t *key)
  */
 int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->key ) {
                 retval = prelude_string_new(&ptr->key);
@@ -11754,7 +11674,6 @@ void idmef_checksum_set_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorith
 int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
 
         *ret = &ptr->algorithm;
         return 0;
@@ -12463,10 +12382,9 @@ void idmef_file_set_ident(idmef_file_t *ptr, prelude_string_t *ident)
  */
 int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -12525,10 +12443,9 @@ void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
  */
 int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -12587,10 +12504,9 @@ void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
  */
 int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->path ) {
                 retval = prelude_string_new(&ptr->path);
@@ -12649,10 +12565,9 @@ void idmef_file_set_create_time(idmef_file_t *ptr, idmef_time_t *create_time)
  */
 int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->create_time ) {
                 retval = idmef_time_new(&ptr->create_time);
@@ -12711,10 +12626,9 @@ void idmef_file_set_modify_time(idmef_file_t *ptr, idmef_time_t *modify_time)
  */
 int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->modify_time ) {
                 retval = idmef_time_new(&ptr->modify_time);
@@ -12773,10 +12687,9 @@ void idmef_file_set_access_time(idmef_file_t *ptr, idmef_time_t *access_time)
  */
 int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->access_time ) {
                 retval = idmef_time_new(&ptr->access_time);
@@ -12841,8 +12754,6 @@ void idmef_file_unset_data_size(idmef_file_t *ptr)
 int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->data_size_is_set = 1;
 
         *ret = &ptr->data_size;
@@ -12902,8 +12813,6 @@ void idmef_file_unset_disk_size(idmef_file_t *ptr)
 int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->disk_size_is_set = 1;
 
         *ret = &ptr->disk_size;
@@ -13113,10 +13022,9 @@ void idmef_file_set_inode(idmef_file_t *ptr, idmef_inode_t *inode)
  */
 int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->inode ) {
                 retval = idmef_inode_new(&ptr->inode);
@@ -13251,7 +13159,6 @@ int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->category;
         return 0;
 }
@@ -13309,8 +13216,6 @@ void idmef_file_unset_fstype(idmef_file_t *ptr)
 int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->fstype_is_set = 1;
 
         *ret = &ptr->fstype;
@@ -13364,10 +13269,9 @@ void idmef_file_set_file_type(idmef_file_t *ptr, prelude_string_t *file_type)
  */
 int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->file_type ) {
                 retval = prelude_string_new(&ptr->file_type);
@@ -13914,7 +13818,6 @@ int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->category;
         return 0;
 }
@@ -13966,10 +13869,9 @@ void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
  */
 int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -14028,10 +13930,9 @@ void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
  */
 int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->path ) {
                 retval = prelude_string_new(&ptr->path);
@@ -14090,10 +13991,9 @@ void idmef_linkage_set_file(idmef_linkage_t *ptr, idmef_file_t *file)
  */
 int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->file ) {
                 retval = idmef_file_new(&ptr->file);
@@ -14565,10 +14465,9 @@ void idmef_target_set_ident(idmef_target_t *ptr, prelude_string_t *ident)
  */
 int idmef_target_new_ident(idmef_target_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ident ) {
                 retval = prelude_string_new(&ptr->ident);
@@ -14625,7 +14524,6 @@ int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->decoy;
         return 0;
 }
@@ -14677,10 +14575,9 @@ void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface
  */
 int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->interface ) {
                 retval = prelude_string_new(&ptr->interface);
@@ -14739,10 +14636,9 @@ void idmef_target_set_node(idmef_target_t *ptr, idmef_node_t *node)
  */
 int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
@@ -14801,10 +14697,9 @@ void idmef_target_set_user(idmef_target_t *ptr, idmef_user_t *user)
  */
 int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->user ) {
                 retval = idmef_user_new(&ptr->user);
@@ -14863,10 +14758,9 @@ void idmef_target_set_process(idmef_target_t *ptr, idmef_process_t *process)
  */
 int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
@@ -14925,10 +14819,9 @@ void idmef_target_set_service(idmef_target_t *ptr, idmef_service_t *service)
  */
 int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->service ) {
                 retval = idmef_service_new(&ptr->service);
@@ -15524,10 +15417,9 @@ void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, prelude_string_t *anal
  */
 int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->analyzerid ) {
                 retval = prelude_string_new(&ptr->analyzerid);
@@ -15586,10 +15478,9 @@ void idmef_analyzer_set_name(idmef_analyzer_t *ptr, prelude_string_t *name)
  */
 int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -15648,10 +15539,9 @@ void idmef_analyzer_set_manufacturer(idmef_analyzer_t *ptr, prelude_string_t *ma
  */
 int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->manufacturer ) {
                 retval = prelude_string_new(&ptr->manufacturer);
@@ -15710,10 +15600,9 @@ void idmef_analyzer_set_model(idmef_analyzer_t *ptr, prelude_string_t *model)
  */
 int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->model ) {
                 retval = prelude_string_new(&ptr->model);
@@ -15772,10 +15661,9 @@ void idmef_analyzer_set_version(idmef_analyzer_t *ptr, prelude_string_t *version
  */
 int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->version ) {
                 retval = prelude_string_new(&ptr->version);
@@ -15834,10 +15722,9 @@ void idmef_analyzer_set_class(idmef_analyzer_t *ptr, prelude_string_t *class_str
  */
 int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->class ) {
                 retval = prelude_string_new(&ptr->class);
@@ -15896,10 +15783,9 @@ void idmef_analyzer_set_ostype(idmef_analyzer_t *ptr, prelude_string_t *ostype)
  */
 int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->ostype ) {
                 retval = prelude_string_new(&ptr->ostype);
@@ -15958,10 +15844,9 @@ void idmef_analyzer_set_osversion(idmef_analyzer_t *ptr, prelude_string_t *osver
  */
 int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->osversion ) {
                 retval = prelude_string_new(&ptr->osversion);
@@ -16020,10 +15905,9 @@ void idmef_analyzer_set_node(idmef_analyzer_t *ptr, idmef_node_t *node)
  */
 int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
@@ -16082,10 +15966,9 @@ void idmef_analyzer_set_process(idmef_analyzer_t *ptr, idmef_process_t *process)
  */
 int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
@@ -16464,10 +16347,9 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *
  */
 int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->alertident ) {
                 retval = prelude_string_new(&ptr->alertident);
@@ -16526,10 +16408,9 @@ void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, prelude_string_t *
  */
 int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->analyzerid ) {
                 retval = prelude_string_new(&ptr->analyzerid);
@@ -16836,8 +16717,6 @@ void idmef_impact_unset_severity(idmef_impact_t *ptr)
 int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->severity_is_set = 1;
 
         *ret = &ptr->severity;
@@ -16897,8 +16776,6 @@ void idmef_impact_unset_completion(idmef_impact_t *ptr)
 int idmef_impact_new_completion(idmef_impact_t *ptr, idmef_impact_completion_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->completion_is_set = 1;
 
         *ret = &ptr->completion;
@@ -16949,7 +16826,6 @@ void idmef_impact_set_type(idmef_impact_t *ptr, idmef_impact_type_t type)
 int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
 
         *ret = &ptr->type;
         return 0;
@@ -17002,10 +16878,9 @@ void idmef_impact_set_description(idmef_impact_t *ptr, prelude_string_t *descrip
  */
 int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->description ) {
                 retval = prelude_string_new(&ptr->description);
@@ -17300,7 +17175,6 @@ int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->category;
         return 0;
 }
@@ -17352,10 +17226,9 @@ void idmef_action_set_description(idmef_action_t *ptr, prelude_string_t *descrip
  */
 int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->description ) {
                 retval = prelude_string_new(&ptr->description);
@@ -17612,7 +17485,6 @@ int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
         *ret = &ptr->rating;
         return 0;
 }
@@ -17661,7 +17533,6 @@ void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
 
         *ret = &ptr->confidence;
         return 0;
@@ -18016,10 +17887,9 @@ void idmef_assessment_set_impact(idmef_assessment_t *ptr, idmef_impact_t *impact
  */
 int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->impact ) {
                 retval = idmef_impact_new(&ptr->impact);
@@ -18156,10 +18026,9 @@ void idmef_assessment_set_confidence(idmef_assessment_t *ptr, idmef_confidence_t
  */
 int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->confidence ) {
                 retval = idmef_confidence_new(&ptr->confidence);
@@ -18572,10 +18441,9 @@ void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
  */
 int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -18634,10 +18502,9 @@ void idmef_tool_alert_set_command(idmef_tool_alert_t *ptr, prelude_string_t *com
  */
 int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->command ) {
                 retval = prelude_string_new(&ptr->command);
@@ -19108,10 +18975,9 @@ void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_st
  */
 int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->name ) {
                 retval = prelude_string_new(&ptr->name);
@@ -19517,10 +19383,9 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
  */
 int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->program ) {
                 retval = prelude_string_new(&ptr->program);
@@ -19585,8 +19450,6 @@ void idmef_overflow_alert_unset_size(idmef_overflow_alert_t *ptr)
 int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->size_is_set = 1;
 
         *ret = &ptr->size;
@@ -19640,10 +19503,9 @@ void idmef_overflow_alert_set_buffer(idmef_overflow_alert_t *ptr, idmef_data_t *
  */
 int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->buffer ) {
                 retval = idmef_data_new(&ptr->buffer);
@@ -20437,10 +20299,9 @@ void idmef_alert_set_messageid(idmef_alert_t *ptr, prelude_string_t *messageid)
  */
 int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->messageid ) {
                 retval = prelude_string_new(&ptr->messageid);
@@ -20577,10 +20438,9 @@ void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
  */
 int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->create_time ) {
                 retval = idmef_time_new(&ptr->create_time);
@@ -20639,10 +20499,9 @@ void idmef_alert_set_classification(idmef_alert_t *ptr, idmef_classification_t *
  */
 int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->classification ) {
                 retval = idmef_classification_new(&ptr->classification);
@@ -20701,10 +20560,9 @@ void idmef_alert_set_detect_time(idmef_alert_t *ptr, idmef_time_t *detect_time)
  */
 int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->detect_time ) {
                 retval = idmef_time_new(&ptr->detect_time);
@@ -20763,10 +20621,9 @@ void idmef_alert_set_analyzer_time(idmef_alert_t *ptr, idmef_time_t *analyzer_ti
  */
 int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->analyzer_time ) {
                 retval = idmef_time_new(&ptr->analyzer_time);
@@ -20981,10 +20838,9 @@ void idmef_alert_set_assessment(idmef_alert_t *ptr, idmef_assessment_t *assessme
  */
 int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->assessment ) {
                 retval = idmef_assessment_new(&ptr->assessment);
@@ -22069,10 +21925,9 @@ void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, prelude_string_t *mes
  */
 int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->messageid ) {
                 retval = prelude_string_new(&ptr->messageid);
@@ -22209,10 +22064,9 @@ void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *creat
  */
 int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->create_time ) {
                 retval = idmef_time_new(&ptr->create_time);
@@ -22271,10 +22125,9 @@ void idmef_heartbeat_set_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t *ana
  */
 int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->analyzer_time ) {
                 retval = idmef_time_new(&ptr->analyzer_time);
@@ -22339,8 +22192,6 @@ void idmef_heartbeat_unset_heartbeat_interval(idmef_heartbeat_t *ptr)
 int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         ptr->heartbeat_interval_is_set = 1;
 
         *ret = &ptr->heartbeat_interval;
@@ -22810,10 +22661,9 @@ void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
  */
 int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret)
 {
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-
         int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! ptr->version ) {
                 retval = prelude_string_new(&ptr->version);
