@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <poll.h>
 #include <gnutls/gnutls.h>
 
 #include "prelude-inttypes.h"

@@ -31,19 +31,9 @@
 
 #include "config.h"
 
-#include <arpa/inet.h>
-#include <poll.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <time.h>
 #include "ftw_.h"
-#include "getaddrinfo.h"
 #include "getpass.h"
 #include "minmax.h"
 #include "pathmax.h"
-#include "regex.h"
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */

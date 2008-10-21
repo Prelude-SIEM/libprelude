@@ -30,6 +30,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <regex.h>
 #include <stdarg.h>
 #include <errno.h>
 
@@ -41,7 +42,6 @@
 #include "idmef.h"
 #include "idmef-criterion-value.h"
 
-#include "regex.h"
 
 
 

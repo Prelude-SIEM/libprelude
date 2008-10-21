@@ -34,6 +34,8 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <errno.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>

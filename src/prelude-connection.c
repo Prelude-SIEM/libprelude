@@ -35,6 +35,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include <netdb.h>
+#include <poll.h>
+
 #include <gnutls/gnutls.h>
 
 #ifdef HAVE_SYS_UN_H
