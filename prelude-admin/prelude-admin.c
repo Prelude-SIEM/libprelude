@@ -36,6 +36,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <signal.h>
+#include <netdb.h>
 
 #if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 # include <pwd.h>

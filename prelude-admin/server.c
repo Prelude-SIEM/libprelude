@@ -31,8 +31,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <poll.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
