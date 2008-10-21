@@ -16,7 +16,9 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
+#if __GNUC__ >= 3
 @PRAGMA_SYSTEM_HEADER@
+#endif
 
 #if defined __need_FILE || defined __need___FILE
 /* Special invocation convention inside glibc header files.  */
@@ -371,6 +373,21 @@ extern long rpl_ftell (FILE *fp);
                      "use gnulib module fflush for portable " \
                      "POSIX compliance"), \
     fflush (f))
+#endif
+
+#if @GNULIB_FCLOSE@
+# if @REPLACE_FCLOSE@
+#  define fclose rpl_fclose
+  /* Close STREAM and its underlying file descriptor.  */
+extern int fclose (FILE *stream);
+# endif
+#elif defined GNULIB_POSIXCHECK
+# undef fclose
+# define fclose(f) \
+   (GL_LINK_WARNING ("fclose is not always POSIX compliant - " \
+                     "use gnulib module fclose for portable " \
+                     "POSIX compliance"), \
+    fclose (f))
 #endif
 
 #if @GNULIB_FPUTC@ && @REPLACE_STDIO_WRITE_FUNCS@ && @GNULIB_STDIO_H_SIGPIPE@

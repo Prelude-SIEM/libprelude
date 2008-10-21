@@ -18,14 +18,17 @@
 /* Written by Paolo Bonzini */
 
 #include <config.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <io.h>
 #include <sys/socket.h>
+#if GNULIB_IOCTL
+#include <sys/ioctl.h>
+#endif
 
-#undef close
 #undef socket
 #undef connect
 #undef accept
@@ -39,37 +42,11 @@
 #undef recvfrom
 #undef sendto
 #undef setsockopt
+#undef shutdown
 
-# define FD_TO_SOCKET(fd)   ((SOCKET) _get_osfhandle ((fd)))
-# define SOCKET_TO_FD(fh)   (_open_osfhandle ((long) (fh), O_RDWR | O_BINARY))
+#define FD_TO_SOCKET(fd)   ((SOCKET) _get_osfhandle ((fd)))
+#define SOCKET_TO_FD(fh)   (_open_osfhandle ((long) (fh), O_RDWR | O_BINARY))
 
-
-/* Wrappers for libc functions.  */
-
-int
-rpl_close (int fd)
-{
-  SOCKET sock = FD_TO_SOCKET (fd);
-  WSANETWORKEVENTS ev;
-
-  ev.lNetworkEvents = 0xDEADBEEF;
-  WSAEnumNetworkEvents (sock, NULL, &ev);
-  if (ev.lNetworkEvents != 0xDEADBEEF)
-    {
-      /* FIXME: other applications, like squid, use an undocumented
-	 _free_osfhnd free function.  Instead, here we just close twice
-	 the file descriptor.  I could not get the former to work
-	 (pb, Sep 22 2008).  */
-      int r = closesocket (sock);
-      _close (fd);
-      return r;
-    }
-  else
-    return _close (fd);
-}
-
-
-/* Wrappers for WinSock functions.  */
 
 static inline void
 set_winsock_errno (void)
@@ -103,6 +80,45 @@ set_winsock_errno (void)
       break;
     }
 }
+
+
+/* Hook for gnulib module close.  */
+
+#if HAVE__GL_CLOSE_FD_MAYBE_SOCKET
+int
+_gl_close_fd_maybe_socket (int fd)
+{
+  SOCKET sock = FD_TO_SOCKET (fd);
+  WSANETWORKEVENTS ev;
+
+  ev.lNetworkEvents = 0xDEADBEEF;
+  WSAEnumNetworkEvents (sock, NULL, &ev);
+  if (ev.lNetworkEvents != 0xDEADBEEF)
+    {
+      /* FIXME: other applications, like squid, use an undocumented
+	 _free_osfhnd free function.  But this is not enough: The 'osfile'
+	 flags for fd also needs to be cleared, but it is hard to access it.
+	 Instead, here we just close twice the file descriptor.  */
+      if (closesocket (sock))
+	{
+	  set_winsock_errno ();
+	  return -1;
+	}
+      else
+	{
+	  /* This call frees the file descriptor and does a
+	     CloseHandle ((HANDLE) _get_osfhandle (fd)), which fails.  */
+	  _close (fd);
+	  return 0;
+	}
+    }
+  else
+    return _close (fd);
+}
+#endif
+
+
+/* Wrappers for WinSock functions.  */
 
 #if GNULIB_SOCKET
 int
@@ -222,16 +238,27 @@ rpl_listen (int fd, int backlog)
 }
 #endif
 
+#if GNULIB_IOCTL
 int
-rpl_ioctl (int fd, unsigned long req, char *buf)
+rpl_ioctl (int fd, int req, ...)
 {
-  SOCKET sock = FD_TO_SOCKET (fd);
-  int r = ioctlsocket (sock, req, (void *) buf);
+  void *buf;
+  va_list args;
+  SOCKET sock;
+  int r;
+
+  va_start (args, req);
+  buf = va_arg (args, void *);
+  va_end (args);
+
+  sock = FD_TO_SOCKET (fd);
+  r = ioctlsocket (sock, req, buf);
   if (r < 0)
     set_winsock_errno ();
 
   return r;
 }
+#endif
 
 #if GNULIB_RECV
 int
@@ -300,6 +327,19 @@ rpl_setsockopt (int fd, int level, int optname, const void *optval, int optlen)
 {
   SOCKET sock = FD_TO_SOCKET (fd);
   int r = setsockopt (sock, level, optname, optval, optlen);
+  if (r < 0)
+    set_winsock_errno ();
+
+  return r;
+}
+#endif
+
+#if GNULIB_SHUTDOWN
+int
+rpl_shutdown (int fd, int how)
+{
+  SOCKET sock = FD_TO_SOCKET (fd);
+  int r = shutdown (sock, how);
   if (r < 0)
     set_winsock_errno ();
 

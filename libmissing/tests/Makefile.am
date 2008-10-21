@@ -87,6 +87,15 @@ EXTRA_DIST += test-c-ctype.c
 
 ## end   gnulib module c-ctype-tests
 
+## begin gnulib module close
+
+
+EXTRA_DIST += close.c
+
+EXTRA_libtests_a_SOURCES += close.c
+
+## end   gnulib module close
+
 ## begin gnulib module cond-tests
 
 TESTS += test-cond
@@ -104,6 +113,15 @@ check_PROGRAMS += test-errno
 EXTRA_DIST += test-errno.c
 
 ## end   gnulib module errno-tests
+
+## begin gnulib module fclose
+
+
+EXTRA_DIST += fclose.c
+
+EXTRA_libtests_a_SOURCES += fclose.c
+
+## end   gnulib module fclose
 
 ## begin gnulib module fopen-tests
 
@@ -211,6 +229,15 @@ check_PROGRAMS += test-memmem
 EXTRA_DIST += test-memmem.c
 
 ## end   gnulib module memmem-tests
+
+## begin gnulib module netdb-tests
+
+TESTS += test-netdb
+check_PROGRAMS += test-netdb
+
+EXTRA_DIST += test-netdb.c
+
+## end   gnulib module netdb-tests
 
 ## begin gnulib module netinet_in-tests
 

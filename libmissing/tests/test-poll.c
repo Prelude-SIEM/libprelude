@@ -28,6 +28,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/ioctl.h>
 #include <errno.h>
 #include "sockets.h"
 
@@ -367,10 +368,8 @@ main ()
 #endif
 
   result = test (test_connect_first, "Unconnected socket test");
-#if ! defined(__OpenBSD__)
   result += test (test_socket_pair, "Connected sockets test");
   result += test (test_accept_first, "General socket test with fork");
-#endif
   result += test (test_pipe, "Pipe test");
 
   exit (result);

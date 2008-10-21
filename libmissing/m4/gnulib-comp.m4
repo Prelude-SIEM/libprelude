@@ -68,6 +68,7 @@ AC_SUBST([LTALLOCA])
   gl_STDIO_MODULE_INDICATOR([fseeko])
   gl_FUNC_FTW
   gl_GETADDRINFO
+  gl_NETDB_MODULE_INDICATOR([getaddrinfo])
   gl_FUNC_GETDELIM
   gl_STDIO_MODULE_INDICATOR([getdelim])
   gl_FUNC_GETLINE
@@ -102,6 +103,7 @@ AC_SUBST([LTALLOCA])
   gl_STRING_MODULE_INDICATOR([memmem])
   gl_MINMAX
   gl_FUNC_MKTIME
+  gl_HEADER_NETDB
   gl_HEADER_NETINET_IN
   AC_PROG_MKDIR_P
   gl_PATHMAX
@@ -166,6 +168,7 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_SYS_SELECT
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SOCKET
+  gl_MODULE_INDICATOR([sys_socket])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_STAT_H
   AC_PROG_MKDIR_P
@@ -236,6 +239,10 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([winsock])
   fi
   gl_SYS_SOCKET_MODULE_INDICATOR([bind])
+  gl_FUNC_CLOSE
+  gl_UNISTD_MODULE_INDICATOR([close])
+  gl_FUNC_FCLOSE
+  gl_STDIO_MODULE_INDICATOR([fclose])
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([winsock])
@@ -360,7 +367,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/ftw_.h
   lib/gai_strerror.c
   lib/getaddrinfo.c
-  lib/getaddrinfo.h
   lib/getdelim.c
   lib/getline.c
   lib/getpass.c
@@ -388,6 +394,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/memmem.c
   lib/minmax.h
   lib/mktime.c
+  lib/netdb.in.h
   lib/netinet_in.in.h
   lib/pathmax.h
   lib/perror.c
@@ -454,11 +461,13 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xsize.h
   m4/alloca.m4
   m4/arpa_inet_h.m4
+  m4/close.m4
   m4/codeset.m4
   m4/cond.m4
   m4/dup2.m4
   m4/errno_h.m4
   m4/extensions.m4
+  m4/fclose.m4
   m4/float_h.m4
   m4/fopen.m4
   m4/fseeko.m4
@@ -489,6 +498,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/netdb_h.m4
   m4/netinet_in_h.m4
   m4/onceonly.m4
   m4/pathmax.m4
@@ -523,6 +533,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strpbrk.m4
   m4/strptime.m4
   m4/strsep.m4
+  m4/sys_ioctl_h.m4
   m4/sys_select_h.m4
   m4/sys_socket_h.m4
   m4/sys_stat_h.m4
@@ -563,6 +574,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-memchr.c
   tests/test-memcmp.c
   tests/test-memmem.c
+  tests/test-netdb.c
   tests/test-netinet_in.c
   tests/test-perror.c
   tests/test-perror.sh
@@ -590,6 +602,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-vsnprintf.c
   tests/test-wchar.c
   tests/test-wctype.c
+  tests=lib/close.c
+  tests=lib/fclose.c
   tests=lib/glthread/yield.h
   tests=lib/sockets.c
   tests=lib/sockets.h

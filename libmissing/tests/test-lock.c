@@ -20,6 +20,19 @@
 
 #if USE_POSIX_THREADS || USE_SOLARIS_THREADS || USE_PTH_THREADS || USE_WIN32_THREADS
 
+#if USE_POSIX_THREADS
+# define TEST_POSIX_THREADS 1
+#endif
+#if USE_SOLARIS_THREADS
+# define TEST_SOLARIS_THREADS 1
+#endif
+#if USE_PTH_THREADS
+# define TEST_PTH_THREADS 1
+#endif
+#if USE_WIN32_THREADS
+# define TEST_WIN32_THREADS 1
+#endif
+
 /* Whether to enable locking.
    Uncomment this to get a test program without locking, to verify that
    it crashes.  */

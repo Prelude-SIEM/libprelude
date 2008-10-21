@@ -680,6 +680,9 @@ glthread_lock_destroy_func (gl_lock_t *lock)
 
 /* ------------------------- gl_rwlock_t datatype ------------------------- */
 
+/* In this file, the waitqueues are implemented as circular arrays.  */
+#define gl_waitqueue_t gl_carray_waitqueue_t
+
 static inline void
 gl_waitqueue_init (gl_waitqueue_t *wq)
 {
@@ -726,6 +729,8 @@ gl_waitqueue_add (gl_waitqueue_t *wq)
       wq->array = new_array;
       wq->alloc = new_alloc;
     }
+  /* Whether the created event is a manual-reset one or an auto-reset one,
+     does not matter, since we will wait on it only once.  */
   event = CreateEvent (NULL, TRUE, FALSE, NULL);
   if (event == INVALID_HANDLE_VALUE)
     /* No way to allocate an event.  */
