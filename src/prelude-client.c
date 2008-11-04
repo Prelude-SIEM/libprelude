@@ -282,6 +282,7 @@ static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 }
 
 
+#ifdef HAVE_IPV6
 static prelude_bool_t is_loopback_ipv6(struct in6_addr *addr)
 {
         struct in6_addr lo;
@@ -290,6 +291,7 @@ static prelude_bool_t is_loopback_ipv6(struct in6_addr *addr)
 
         return (memcmp(addr, &lo, sizeof(lo)) == 0) ? TRUE : FALSE;
 }
+#endif
 
 
 static prelude_bool_t is_loopback_ipv4(struct in_addr *addr)
@@ -303,8 +305,10 @@ static prelude_bool_t is_loopback(int family, void *addr)
         if ( family == AF_INET )
                 return is_loopback_ipv4(addr);
 
+#ifdef HAVE_IPV6
         else if ( family == AF_INET6 )
                 return is_loopback_ipv6(addr);
+#endif
 
         else
                 return FALSE;
