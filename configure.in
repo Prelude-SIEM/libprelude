@@ -41,6 +41,7 @@ dnl * Check required program.
 dnl **********************************************************
 
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AM_PROG_LEX
@@ -609,7 +610,6 @@ AC_ARG_ENABLE(easy-bindings, AC_HELP_STRING(--enable-easy-bindings, Enable suppo
 AM_CONDITIONAL(HAVE_EASY_BINDINGS, test x$enable_easy_bindings = xyes)
 
 if test x$enable_easy_bindings = xyes; then
-        AC_PROG_CXX()
         AC_CHECK_PROG(HAVE_CXX, $CXX, yes, no)
         if test x$HAVE_CXX != xyes; then
                 AC_MSG_ERROR([Easybindings require a C++ compiler, but none were found.])
