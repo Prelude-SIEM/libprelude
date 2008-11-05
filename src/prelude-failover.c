@@ -388,7 +388,7 @@ static int get_failover_data_filename_and_fd(const char *dirname, char *filename
 
         while ( (de = readdir(dir)) && ret != 1 ) {
 
-                if ( de->d_reclen <= 4 || ! isdigit(de->d_name[4]) )
+                if ( strlen(de->d_name) <= 4 || ! isdigit(de->d_name[4]) )
                         continue;
 
                 if ( strncmp(de->d_name, "data", 4) != 0 || strchr(de->d_name, '.') )
