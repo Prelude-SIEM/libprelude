@@ -55,12 +55,10 @@ dnl * Setup GnuLib, libtool and libltdl.
 dnl **********************************************************
 
 gl_EARLY
-AC_LIBLTDL_CONVENIENCE
-AC_LIBTOOL_DLOPEN
-AC_LTDL_DLLIB
-AC_LIBTOOL_WIN32_DLL
-AM_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT([dlopen win32-dll disable-static])
+LTDL_INIT([recursive])
+
+
 
 
 dnl **********************************************************
@@ -162,45 +160,6 @@ LIBS=""
 AC_SEARCH_LIBS(socket, socket nsl resolv)
 COMMON_LIBS="$LIBS"
 LIBS=$LIBS_bkp
-
-
-
-dnl **************************************************
-dnl * System wide libltdl support                    *
-dnl **************************************************
-
-AC_ARG_WITH(system-ltdl, AC_HELP_STRING(--with-system-ltdl@<:@=PATH@:>@, Use system provided libtool dynamic loader @<:@default=auto@:>@),
-            [system_ltdl_required=true; if test x$withval = xyes; then with_system_ltdl="/usr"; fi])
-
-if test x$with_system_ltdl != xno; then
-        CPPFLAGS_bkp=$CPPFLAGS
-        LDFLAGS_bkp=$LIBS
-        CPPFLAGS="-I$with_system_ltdl/include"
-        LDFLAGS="-L$with_system_ltdl/lib"
-
-        AC_CHECK_HEADER(ltdl.h, AC_CHECK_LIB(ltdl, lt_dlopen, have_system_ltdl=yes))
-
-        CPPFLAGS=$CPPFLAGS_bkp
-        LDFLAGS=$LDFLAGS_bkp
-
-        if test x$have_system_ltdl != xyes && test x$system_ltdl_required = xtrue; then
-           AC_MSG_ERROR([Could not find system wide ltdl library])
-        fi
-fi
-
-if test x$have_system_ltdl != xyes; then
-        with_ltdl_type="Convenience"
-        AC_CONFIG_SUBDIRS(libltdl)
-else
-        with_ltdl_type="System"
-        INCLTDL="-I$with_system_ltdl/include"
-        LIBLTDL="-L$with_system_ltdl/lib -lltdl"
-fi
-
-AM_CONDITIONAL(HAVE_SYSTEM_LIBLTDL, test x$have_system_ltdl = xyes)
-AC_SUBST(INCLTDL)
-AC_SUBST(LIBLTDL)
-AC_SUBST(LIBADD_DL)
 
 
 
@@ -779,6 +738,8 @@ idmef-client.conf
 
 libprelude-config
 
+libltdl/Makefile
+
 libmissing/Makefile
 libmissing/tests/Makefile
 m4/Makefile
@@ -820,7 +781,6 @@ AC_OUTPUT
 echo
 echo "*** Dumping configuration ***"
 echo "    - Generate documentation   : $enable_gtk_doc"
-echo "    - Libtool dynamic loader   : $with_ltdl_type"
 echo "    - LUA binding              : $with_lua"
 echo "    - Perl binding             : $with_perl"
 echo "    - Python binding           : $with_python"
