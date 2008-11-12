@@ -847,7 +847,7 @@ void prelude_plugin_set_preloaded_symbols(void *symlist)
 {
         size_t len;
         lt_dlsymlist *s = symlist;
-        static lt_dlsymlist rpl_sym[25] = {
+        static lt_dlsymlist rpl_sym[65535] = {
                 { "@PROGNAME@", NULL },
                 { NULL, NULL         }
         };
