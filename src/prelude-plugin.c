@@ -419,7 +419,7 @@ static int plugin_load_single(prelude_list_t *head,
 
         handle = lt_dlopenext(filename);
         if ( ! handle ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s.\n", lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "%s: %s.\n", filename, lt_dlerror());
                 return -1;
         }
 
@@ -449,7 +449,7 @@ static int plugin_load_single(prelude_list_t *head,
 
         plugin_init = lt_dlsym(handle, buggy_libtool ? libtool_is_buggy(pname, symbol, buf, sizeof(buf)) : symbol);
         if ( ! plugin_init ) {
-                prelude_log(PRELUDE_LOG_WARN, "plugin initialization failed: '%s'.\n", lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "%s: plugin initialization failed: '%s'.\n", pname, lt_dlerror());
                 lt_dlclose(handle);
                 return -1;
         }
@@ -845,7 +845,34 @@ void prelude_plugin_entry_set_plugin(prelude_plugin_entry_t *pe, prelude_plugin_
 
 void prelude_plugin_set_preloaded_symbols(void *symlist)
 {
-        lt_dlpreload_default(symlist);
+        size_t len;
+        lt_dlsymlist *s = symlist;
+        static lt_dlsymlist rpl_sym[25] = {
+                { "@PROGNAME@", NULL },
+                { NULL, NULL         }
+        };
+
+        if ( s[0].name == NULL || strcmp(s[0].name, "@PROGNAME@") != 0 ) {
+                /*
+                 * Check size of the input symlist.
+                 */
+                for ( len = 0; s[len].name != NULL; len++ );
+
+                if ( len + 1 >= sizeof(rpl_sym) / sizeof(*rpl_sym) ) {
+                        prelude_log(PRELUDE_LOG_CRIT, "replacement symlist is not large enough (%lu entry).\n", len);
+                        len = (sizeof(rpl_sym) / sizeof(*rpl_sym)) - 2;
+                }
+
+                /*
+                 * Copy as many symbols as possible, and set the last entry to NULL.
+                 */
+                memcpy(&rpl_sym[1], s, len * sizeof(*rpl_sym));
+                rpl_sym[len + 1].name = NULL;
+
+                s = rpl_sym;
+        }
+
+        lt_dlpreload_default(s);
 }
 
 

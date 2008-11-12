@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_PLUGIN_H
 #define _LIBPRELUDE_PLUGIN_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include "prelude-list.h"
 #include "prelude-option.h"
@@ -45,7 +48,7 @@ typedef struct prelude_plugin_instance prelude_plugin_instance_t;
         char *name;                          \
         void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
 
-         
+
 typedef struct {
         PRELUDE_PLUGIN_GENERIC;
 } prelude_plugin_generic_t;
@@ -56,9 +59,13 @@ typedef struct {
  * Hack for plugin preloading,
  * without having the end program depend on ltdl.
  */
+#ifdef PRELUDE_APPLICATION_USE_LIBTOOL2
+# define lt_preloaded_symbols lt__PROGRAM__LTX_preloaded_symbols
+#endif
+
 extern const void *lt_preloaded_symbols[];
 
-#define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
+#define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()         \
         prelude_plugin_set_preloaded_symbols(lt_preloaded_symbols)
 
 
@@ -159,7 +166,7 @@ int prelude_plugin_load_from_dir(prelude_list_t *head,
 
 /*
  * Call this if you want to use this plugin.
- */ 
+ */
 int prelude_plugin_instance_add(prelude_plugin_instance_t *pi, prelude_list_t *h);
 
 void prelude_plugin_instance_del(prelude_plugin_instance_t *pi);
@@ -198,7 +205,7 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
         (((type *)prelude_plugin_instance_get_plugin(pi))->member(__VA_ARGS__))
 
 #ifdef __cplusplus
- } 
+ }
 #endif
 
 #endif /* _LIBPRELUDE_PLUGIN_H */

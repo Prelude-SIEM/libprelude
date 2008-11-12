@@ -179,6 +179,11 @@ main ()
   AC_SUBST(LIBPRELUDE_LIBS)
   AC_SUBST(LIBPRELUDE_PREFIX)
   AC_SUBST(LIBPRELUDE_CONFIG_PREFIX)
+
+  m4_ifdef([LT_INIT],
+           [AC_DEFINE([PRELUDE_APPLICATION_USE_LIBTOOL2], [], [Define whether application use libtool >= 2.0])],
+           [])
+
 ])
 
 dnl *-*wedit:notab*-*  Please keep this as the last line.
