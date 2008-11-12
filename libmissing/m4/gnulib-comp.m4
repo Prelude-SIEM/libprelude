@@ -252,6 +252,7 @@ AC_SUBST([LTALLOCA])
   gl_SYS_SOCKET_MODULE_INDICATOR([listen])
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
+  AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   gl_SOCKETS
   gt_TYPE_WCHAR_T
   gt_TYPE_WINT_T
@@ -578,6 +579,10 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-perror.c
   tests/test-perror.sh
   tests/test-poll.c
+  tests/test-select-fd.c
+  tests/test-select-in.sh
+  tests/test-select-out.sh
+  tests/test-select-stdin.c
   tests/test-select.c
   tests/test-sleep.c
   tests/test-snprintf.c

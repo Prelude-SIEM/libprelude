@@ -90,7 +90,7 @@ EXTRA_DIST += test-c-ctype.c
 ## begin gnulib module close
 
 
-EXTRA_DIST += close.c
+EXTRA_DIST += close.c w32sock.h
 
 EXTRA_libtests_a_SOURCES += close.c
 
@@ -261,11 +261,15 @@ EXTRA_DIST += test-poll.c
 
 ## begin gnulib module select-tests
 
-TESTS += test-select
-check_PROGRAMS += test-select
+TESTS += test-select test-select-in.sh test-select-out.sh
+# test-select-stdin has to be run by hand.
+TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@'
+check_PROGRAMS += test-select test-select-fd test-select-stdin
 test_select_LDADD = $(LDADD) @LIBSOCKET@
+test_select_fd_LDADD = $(LDADD) @LIBSOCKET@
+test_select_stdin_LDADD = $(LDADD) @LIBSOCKET@
 
-EXTRA_DIST += test-select.c
+EXTRA_DIST += test-select.c test-select-fd.c test-select-in.sh test-select-out.sh test-select-stdin.c
 
 ## end   gnulib module select-tests
 
