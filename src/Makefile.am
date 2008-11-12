@@ -1,13 +1,14 @@
 SUBDIRS = libprelude-error include
 
 AM_CPPFLAGS = @PCFLAGS@ -I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error \
--I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing @INCLTDL@ @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@ 
+-I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@ 
 
 
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @LIBPRELUDE_LIBS@ @LIBLTDL@ @LIBADD_DL@ @LTLIBTHREAD@ ../libmissing/libmissing.la libprelude-error/libprelude-error.la
+libprelude_la_LIBADD = @LIBPRELUDE_LIBS@ $(LIBLTDL) @LTLIBTHREAD@ ../libmissing/libmissing.la libprelude-error/libprelude-error.la
 libprelude_la_LDFLAGS = -no-undefined -version-info @LIBPRELUDE_SONAME@ -export-symbols-regex "^(idmef|_?prelude)_"
 lib_LTLIBRARIES = libprelude.la
+BUILT_SOURCES = $(LTDLDEPS)
 
 AM_YFLAGS = -d
 LEX_OUTPUT_ROOT = lex.yy
