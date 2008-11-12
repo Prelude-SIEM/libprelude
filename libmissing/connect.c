@@ -1,6 +1,6 @@
-/* Provide a non-threads replacement for the POSIX raise function.
+/* connect.c --- wrappers for Windows connect function
 
-   Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -15,16 +15,33 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* written by Jim Meyering */
+/* Written by Paolo Bonzini */
 
 #include <config.h>
 
-#include <sys/types.h>
-#include <signal.h>
-#include <unistd.h>
+#define WIN32_LEAN_AND_MEAN
+/* Get winsock2.h. */
+#include <sys/socket.h>
+
+/* Get set_winsock_errno, FD_TO_SOCKET etc. */
+#include "w32sock.h"
+
+#undef connect
 
 int
-raise (int sig)
+rpl_connect (int fd, struct sockaddr *sockaddr, int len)
 {
-  return kill (getpid (), sig);
+  SOCKET sock = FD_TO_SOCKET (fd);
+  int r = connect (sock, sockaddr, len);
+  if (r < 0)
+    {
+      /* EINPROGRESS is not returned by WinSock 2.0; for backwards
+	 compatibility, connect(2) uses EWOULDBLOCK.  */
+      if (WSAGetLastError () == WSAEWOULDBLOCK)
+	WSASetLastError (WSAEINPROGRESS);
+
+      set_winsock_errno ();
+    }
+
+  return r;
 }

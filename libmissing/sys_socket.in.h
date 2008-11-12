@@ -120,9 +120,9 @@ extern "C" {
 /* Re-define FD_ISSET to avoid a WSA call while we are not using
    network sockets.  */
 static inline int
-rpl_fd_isset (int fd, fd_set * set)
+rpl_fd_isset (SOCKET fd, fd_set * set)
 {
-  int i;
+  u_int i;
   if (set == NULL)
     return 0;
 
@@ -143,6 +143,11 @@ rpl_fd_isset (int fd, fd_set * set)
 # if @HAVE_WINSOCK2_H@ && !defined _GL_UNISTD_H
 #  undef close
 #  define close close_used_without_including_unistd_h
+# endif
+
+# if @HAVE_WINSOCK2_H@ && !defined _GL_UNISTD_H
+#  undef gethostname
+#  define gethostname gethostname_used_without_including_unistd_h
 # endif
 
 # if @GNULIB_SOCKET@
@@ -386,12 +391,6 @@ extern int rpl_shutdown (int, int);
 # if @HAVE_WINSOCK2_H@
 #  undef select
 #  define select		select_used_without_including_sys_select_h
-# endif
-
-# if @GNULIB_CLOSE@ && @HAVE_WINSOCK2_H@
-/* gnulib internal function.  */
-#  define HAVE__GL_CLOSE_FD_MAYBE_SOCKET 1
-extern int _gl_close_fd_maybe_socket (int fd);
 # endif
 
 # ifdef __cplusplus
