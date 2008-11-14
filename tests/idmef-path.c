@@ -14,7 +14,7 @@ static void set_value_check(idmef_message_t *idmef, const char *paths,
         prelude_string_t *str;
         prelude_string_t *res;
 
-        assert(idmef_path_new(&path, paths) == 0);
+        assert(idmef_path_new_fast(&path, paths) == 0);
         assert(prelude_string_new_ref(&str, str_value) == 0);
         assert(idmef_value_new_string(&value, str) == 0);
 
@@ -64,7 +64,7 @@ int main(void)
         assert(idmef_message_new(&idmef) == 0);
 
         for ( i = 0; i < sizeof(plist) / sizeof(*plist); i++ ) {
-                ret = idmef_path_new(&path, plist[i].path);
+                ret = idmef_path_new_fast(&path, plist[i].path);
                 assert((plist[i].successful == TRUE && ret == 0) || (plist[i].successful == FALSE && ret < 0));
 
                 if ( ret < 0 )
