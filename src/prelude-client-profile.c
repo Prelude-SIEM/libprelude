@@ -86,7 +86,7 @@ static const char *relative_spool_dir = NULL;
 static const char *relative_config_default_dir = NULL;
 static const char *relative_profile_dir = NULL;
 
-gl_lock_t lock = gl_lock_initializer;
+static gl_lock_t lock = gl_lock_initializer;
 gl_once_define(static, relocate_once);
 
 

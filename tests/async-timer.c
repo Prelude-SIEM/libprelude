@@ -16,7 +16,7 @@ struct asyncobj {
 
 static int async_done = 0;
 static int timer_count = 0;
-gl_lock_t lock = gl_lock_initializer;
+static gl_lock_t lock = gl_lock_initializer;
 
 
 static void timer_cb(void *data)
