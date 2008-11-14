@@ -638,7 +638,7 @@ dnl **************************************************
 
 dnl Needed for FIONREAD under solaris
 
-AC_CHECK_HEADERS_ONCE(sys/filio.h sys/ioctl.h sys/un.h netinet/tcp.h)
+AC_CHECK_HEADERS_ONCE(sys/filio.h sys/un.h netinet/tcp.h)
 AC_CHECK_FUNCS(ftruncate chsize)
 AX_CREATE_PRELUDE_INTTYPES_H(src/include/prelude-inttypes.h)
 

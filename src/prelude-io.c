@@ -31,13 +31,10 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <poll.h>
+#include <sys/ioctl.h>
 #include <gnutls/gnutls.h>
 
 #include "prelude-inttypes.h"
-
-#ifdef HAVE_SYS_IOCTL_H
-# include <sys/ioctl.h>
-#endif
 
 #ifdef HAVE_SYS_FILIO_H
 # include <sys/filio.h>
