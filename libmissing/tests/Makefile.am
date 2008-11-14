@@ -42,15 +42,6 @@ libtests_a_DEPENDENCIES = $(gltests_LIBOBJS)
 EXTRA_libtests_a_SOURCES =
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 
-## begin gnulib module accept
-
-
-EXTRA_DIST += accept.c w32sock.h
-
-EXTRA_libtests_a_SOURCES += accept.c
-
-## end   gnulib module accept
-
 ## begin gnulib module alloca-opt-tests
 
 TESTS += test-alloca-opt
@@ -69,15 +60,6 @@ EXTRA_DIST += test-arpa_inet.c
 
 ## end   gnulib module arpa_inet-tests
 
-## begin gnulib module bind
-
-
-EXTRA_DIST += bind.c w32sock.h
-
-EXTRA_libtests_a_SOURCES += bind.c
-
-## end   gnulib module bind
-
 ## begin gnulib module c-ctype-tests
 
 TESTS += test-c-ctype
@@ -86,15 +68,6 @@ check_PROGRAMS += test-c-ctype
 EXTRA_DIST += test-c-ctype.c
 
 ## end   gnulib module c-ctype-tests
-
-## begin gnulib module close
-
-
-EXTRA_DIST += close.c w32sock.h
-
-EXTRA_libtests_a_SOURCES += close.c
-
-## end   gnulib module close
 
 ## begin gnulib module cond-tests
 
@@ -113,15 +86,6 @@ check_PROGRAMS += test-errno
 EXTRA_DIST += test-errno.c
 
 ## end   gnulib module errno-tests
-
-## begin gnulib module fclose
-
-
-EXTRA_DIST += fclose.c
-
-EXTRA_libtests_a_SOURCES += fclose.c
-
-## end   gnulib module fclose
 
 ## begin gnulib module fopen-tests
 
@@ -177,24 +141,6 @@ check_PROGRAMS += test-gettimeofday
 EXTRA_DIST += test-gettimeofday.c
 
 ## end   gnulib module gettimeofday-tests
-
-## begin gnulib module ioctl
-
-
-EXTRA_DIST += ioctl.c w32sock.h
-
-EXTRA_libtests_a_SOURCES += ioctl.c
-
-## end   gnulib module ioctl
-
-## begin gnulib module listen
-
-
-EXTRA_DIST += listen.c w32sock.h
-
-EXTRA_libtests_a_SOURCES += listen.c
-
-## end   gnulib module listen
 
 ## begin gnulib module lock-tests
 
@@ -376,33 +322,6 @@ check_PROGRAMS += test-strings
 EXTRA_DIST += test-strings.c
 
 ## end   gnulib module strings-tests
-
-## begin gnulib module sys_ioctl
-
-BUILT_SOURCES += $(SYS_IOCTL_H)
-
-# We need the following in order to create <sys/ioctl.h> when the system
-# does not have a complete one.
-sys/ioctl.h: sys_ioctl.in.h
-	@MKDIR_P@ sys
-	rm -f $@-t $@
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's|@''HAVE_SYS_IOCTL_H''@|$(HAVE_SYS_IOCTL_H)|g' \
-	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
-	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
-	      -e 's|@''NEXT_SYS_IOCTL_H''@|$(NEXT_SYS_IOCTL_H)|g' \
-	      -e 's|@''GNULIB_IOCTL''@|$(GNULIB_IOCTL)|g' \
-	      -e 's|@''SYS_IOCTL_H_HAVE_WINSOCK2_H''@|$(SYS_IOCTL_H_HAVE_WINSOCK2_H)|g' \
-	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
-	      < $(srcdir)/sys_ioctl.in.h; \
-	} > $@-t
-	mv $@-t $@
-MOSTLYCLEANFILES += sys/ioctl.h sys/ioctl.h-t
-MOSTLYCLEANDIRS += sys
-
-EXTRA_DIST += sys_ioctl.in.h
-
-## end   gnulib module sys_ioctl
 
 ## begin gnulib module sys_select-tests
 

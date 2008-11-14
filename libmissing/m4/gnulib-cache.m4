@@ -15,14 +15,18 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --tests-base=libmissing/tests --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files cond connect dup2 fopen ftw getaddrinfo getpass getsockname gettimeofday inet_ntop inet_pton lock lseek memmem minmax pathmax perror poll regex relocatable-lib-lgpl select setsockopt sigprocmask sleep snprintf socket socklen strcase strcasestr strdup strerror strndup strptime strsep sys_stat thread time_r timegm tls uname vsnprintf write
+#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --tests-base=libmissing/tests --aux-dir=. --with-tests --lgpl --libtool --macro-prefix=gl --no-vc-files accept bind close cond connect dup2 fclose fopen ftw getaddrinfo getpass getsockname gettimeofday inet_ntop inet_pton ioctl listen lock lseek memmem minmax pathmax perror poll regex relocatable-lib-lgpl select setsockopt sigprocmask sleep snprintf socket socklen strcase strcasestr strdup strerror strndup strptime strsep sys_stat thread time_r timegm tls uname vsnprintf write
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
 gl_MODULES([
+  accept
+  bind
+  close
   cond
   connect
   dup2
+  fclose
   fopen
   ftw
   getaddrinfo
@@ -31,6 +35,8 @@ gl_MODULES([
   gettimeofday
   inet_ntop
   inet_pton
+  ioctl
+  listen
   lock
   lseek
   memmem

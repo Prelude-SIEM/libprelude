@@ -1,18 +1,18 @@
-/* accept.c --- wrappers for Windows accept function
+/* listen.c --- wrappers for Windows listen function
 
    Copyright (C) 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
+   it under the terms of the GNU Lesser General Public License as published by
    the Free Software Foundation; either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   GNU Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
+   You should have received a copy of the GNU Lesser General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Paolo Bonzini */
@@ -26,17 +26,15 @@
 /* Get set_winsock_errno, FD_TO_SOCKET etc. */
 #include "w32sock.h"
 
-#undef accept
+#undef listen
 
 int
-rpl_accept (int fd, struct sockaddr *addr, int *addrlen)
+rpl_listen (int fd, int backlog)
 {
-  SOCKET fh = accept (FD_TO_SOCKET (fd), addr, addrlen);
-  if (fh == INVALID_SOCKET)
-    {
-      set_winsock_errno ();
-      return -1;
-    }
-  else
-    return SOCKET_TO_FD (fh);
+  SOCKET sock = FD_TO_SOCKET (fd);
+  int r = listen (sock, backlog);
+  if (r < 0)
+    set_winsock_errno ();
+
+  return r;
 }

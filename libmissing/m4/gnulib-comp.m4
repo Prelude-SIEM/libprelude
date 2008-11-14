@@ -45,6 +45,11 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([gl_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='libmissing'
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  if test "$ac_cv_header_winsock2_h" = yes; then
+    AC_LIBOBJ([accept])
+  fi
+  gl_SYS_SOCKET_MODULE_INDICATOR([accept])
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
@@ -52,6 +57,13 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  if test "$ac_cv_header_winsock2_h" = yes; then
+    AC_LIBOBJ([bind])
+  fi
+  gl_SYS_SOCKET_MODULE_INDICATOR([bind])
+  gl_FUNC_CLOSE
+  gl_UNISTD_MODULE_INDICATOR([close])
   gl_COND
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
@@ -61,6 +73,8 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_DUP2
   gl_UNISTD_MODULE_INDICATOR([dup2])
   gl_HEADER_ERRNO_H
+  gl_FUNC_FCLOSE
+  gl_STDIO_MODULE_INDICATOR([fclose])
   gl_FLOAT_H
   gl_FUNC_FOPEN
   gl_STDIO_MODULE_INDICATOR([fopen])
@@ -86,6 +100,18 @@ AC_SUBST([LTALLOCA])
   gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
   gl_INET_PTON
   gl_ARPA_INET_MODULE_INDICATOR([inet_pton])
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  if test "$ac_cv_header_winsock2_h" = yes; then
+    AC_LIBOBJ([ioctl])
+    gl_REPLACE_SYS_IOCTL_H
+  fi
+  gl_SYS_IOCTL_MODULE_INDICATOR([ioctl])
+  gl_MODULE_INDICATOR([ioctl])
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  if test "$ac_cv_header_winsock2_h" = yes; then
+    AC_LIBOBJ([listen])
+  fi
+  gl_SYS_SOCKET_MODULE_INDICATOR([listen])
   gl_LOCALCHARSET
   LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
@@ -160,6 +186,8 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_STRPTIME
   gl_FUNC_STRSEP
   gl_STRING_MODULE_INDICATOR([strsep])
+  gl_SYS_IOCTL_H
+  AC_PROG_MKDIR_P
   gl_HEADER_SYS_SELECT
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SOCKET
@@ -224,32 +252,6 @@ AC_SUBST([LTALLOCA])
   m4_pushdef([gltests_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='libmissing/tests'
-  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
-  if test "$ac_cv_header_winsock2_h" = yes; then
-    AC_LIBOBJ([accept])
-  fi
-  gl_SYS_SOCKET_MODULE_INDICATOR([accept])
-  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
-  if test "$ac_cv_header_winsock2_h" = yes; then
-    AC_LIBOBJ([bind])
-  fi
-  gl_SYS_SOCKET_MODULE_INDICATOR([bind])
-  gl_FUNC_CLOSE
-  gl_UNISTD_MODULE_INDICATOR([close])
-  gl_FUNC_FCLOSE
-  gl_STDIO_MODULE_INDICATOR([fclose])
-  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
-  if test "$ac_cv_header_winsock2_h" = yes; then
-    AC_LIBOBJ([ioctl])
-    gl_REPLACE_SYS_IOCTL_H
-  fi
-  gl_SYS_IOCTL_MODULE_INDICATOR([ioctl])
-  gl_MODULE_INDICATOR([ioctl])
-  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
-  if test "$ac_cv_header_winsock2_h" = yes; then
-    AC_LIBOBJ([listen])
-  fi
-  gl_SYS_SOCKET_MODULE_INDICATOR([listen])
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
@@ -257,8 +259,6 @@ AC_SUBST([LTALLOCA])
   gt_TYPE_WCHAR_T
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
-  gl_SYS_IOCTL_H
-  AC_PROG_MKDIR_P
   AC_CHECK_FUNCS([shutdown])
   gl_YIELD
   m4_ifval(gltests_LIBSOURCES_LIST, [
@@ -355,16 +355,20 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/config.rpath
   build-aux/link-warning.h
   doc/relocatable.texi
+  lib/accept.c
   lib/alloca.c
   lib/alloca.in.h
   lib/arpa_inet.in.h
   lib/asnprintf.c
+  lib/bind.c
   lib/c-ctype.c
   lib/c-ctype.h
+  lib/close.c
   lib/config.charset
   lib/connect.c
   lib/dup2.c
   lib/errno.in.h
+  lib/fclose.c
   lib/float+.h
   lib/float.in.h
   lib/fopen.c
@@ -392,6 +396,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/inet_ntop.c
   lib/inet_pton.c
   lib/intprops.h
+  lib/ioctl.c
+  lib/listen.c
   lib/localcharset.c
   lib/localcharset.h
   lib/lseek.c
@@ -445,6 +451,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strnlen.c
   lib/strptime.c
   lib/strsep.c
+  lib/sys_ioctl.in.h
   lib/sys_select.in.h
   lib/sys_socket.in.h
   lib/sys_stat.in.h
@@ -606,16 +613,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-vsnprintf.c
   tests/test-wchar.c
   tests/test-wctype.c
-  tests=lib/accept.c
-  tests=lib/bind.c
-  tests=lib/close.c
-  tests=lib/fclose.c
   tests=lib/glthread/yield.h
-  tests=lib/ioctl.c
-  tests=lib/listen.c
   tests=lib/sockets.c
   tests=lib/sockets.h
-  tests=lib/sys_ioctl.in.h
   tests=lib/verify.h
-  tests=lib/w32sock.h
 ])
