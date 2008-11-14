@@ -1,3 +1,30 @@
+* 2008-11-14, libprelude-0.9.21.3:
+
+- Update to libtool / libltdl 2.2.x
+
+- Workaround libtool/libltdl 1.5 -> 2.x ABI compatibility issues. This
+  introduce two fixes:
+
+  Fix a crash when an application use a different libtool version than
+  the libtool/libltdl version used to compile libprelude. In order to
+  prevent this problem, we automatically rewrite the symbol table
+  provided by libtool 1.5 applications, and make it compatible with
+  libltdl 2.2 (we will now ship libtool/ltdl 2.2 as the default with
+  libprelude).
+
+  Automatic handling of symbol renaming between libtool 1.5 -> 2.x,
+  which solve application linking problem.
+
+  (fix #294).
+
+- Cygwin compilation fixes.
+
+- Fix compilation when IPv6 is not available.
+
+- Fix possible compilation problem with some GCC version (fix #325).
+
+
+
 * 2008-10-13, libprelude-0.9.21.2:
 
 - Fix regression introduced in 0.9.21.1, that would lead to a
@@ -7,7 +34,7 @@
 
 * 2008-10-06, libprelude-0.9.21.1:
 
-- Fix an assertion warning upon sensor start in case the address 
+- Fix an assertion warning upon sensor start in case the address
   for the local machine could not be found.
 
 - Consistency rework of EasyBindings IDMEFCriteria API.
@@ -47,7 +74,7 @@
 - Fix possible invalid read when looking up IDMEF path.
 
 - Fix error handling before library initialization.
- 
+
 
 
 * 2008-09-05, libprelude-0.9.20.1:

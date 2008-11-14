@@ -6181,8 +6181,12 @@ typedef struct {
 } prelude_plugin_generic_t;
 </STRUCT>
 <MACRO>
+<NAME>lt_preloaded_symbols</NAME>
+# define lt_preloaded_symbols lt__PROGRAM__LTX_preloaded_symbols
+</MACRO>
+<MACRO>
 <NAME>PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS</NAME>
-#define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
+#define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()         \
         prelude_plugin_set_preloaded_symbols(lt_preloaded_symbols)
 </MACRO>
 <MACRO>
@@ -7078,7 +7082,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.21.2"
+#define LIBPRELUDE_VERSION "0.9.21.3"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
