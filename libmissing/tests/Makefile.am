@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2008 Free Software Foundation, Inc.
+# Copyright (C) 2002-2009 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -60,6 +60,16 @@ EXTRA_DIST += test-arpa_inet.c
 
 ## end   gnulib module arpa_inet-tests
 
+## begin gnulib module btowc-tests
+
+TESTS += test-btowc1.sh test-btowc2.sh
+TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR='@LOCALE_FR@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
+check_PROGRAMS += test-btowc
+
+EXTRA_DIST += test-btowc1.sh test-btowc2.sh test-btowc.c
+
+## end   gnulib module btowc-tests
+
 ## begin gnulib module c-ctype-tests
 
 TESTS += test-c-ctype
@@ -98,10 +108,10 @@ EXTRA_DIST += test-fopen.c
 
 ## begin gnulib module fseeko-tests
 
-TESTS += test-fseeko.sh
+TESTS += test-fseeko.sh test-fseeko2.sh
 TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
 check_PROGRAMS += test-fseeko
-EXTRA_DIST += test-fseeko.c test-fseeko.sh
+EXTRA_DIST += test-fseeko.c test-fseeko.sh test-fseeko2.sh
 
 ## end   gnulib module fseeko-tests
 
@@ -109,7 +119,7 @@ EXTRA_DIST += test-fseeko.c test-fseeko.sh
 
 TESTS += test-getaddrinfo
 check_PROGRAMS += test-getaddrinfo
-test_getaddrinfo_LDADD = $(LDADD) @LIBINTL@
+test_getaddrinfo_LDADD = $(LDADD) @GETADDRINFO_LIB@ @LIBINTL@
 
 EXTRA_DIST += test-getaddrinfo.c
 
@@ -159,6 +169,31 @@ check_PROGRAMS += test-lseek
 EXTRA_DIST += test-lseek.c test-lseek.sh
 
 ## end   gnulib module lseek-tests
+
+## begin gnulib module mbrtowc-tests
+
+TESTS += test-mbrtowc1.sh test-mbrtowc2.sh test-mbrtowc3.sh test-mbrtowc4.sh
+TESTS_ENVIRONMENT += \
+  EXEEXT='@EXEEXT@' \
+  LOCALE_FR='@LOCALE_FR@' \
+  LOCALE_FR_UTF8='@LOCALE_FR_UTF8@' \
+  LOCALE_JA='@LOCALE_JA@' \
+  LOCALE_ZH_CN='@LOCALE_ZH_CN@'
+check_PROGRAMS += test-mbrtowc
+
+EXTRA_DIST += test-mbrtowc1.sh test-mbrtowc2.sh test-mbrtowc3.sh test-mbrtowc4.sh test-mbrtowc.c
+
+## end   gnulib module mbrtowc-tests
+
+## begin gnulib module mbsinit-tests
+
+TESTS += test-mbsinit.sh
+TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
+check_PROGRAMS += test-mbsinit
+
+EXTRA_DIST += test-mbsinit.sh test-mbsinit.c
+
+## end   gnulib module mbsinit-tests
 
 ## begin gnulib module memmem-tests
 
@@ -219,6 +254,15 @@ EXTRA_DIST += test-select.c test-select-fd.c test-select-in.sh test-select-out.s
 
 ## end   gnulib module select-tests
 
+## begin gnulib module signal-tests
+
+TESTS += test-signal
+check_PROGRAMS += test-signal
+
+EXTRA_DIST += test-signal.c
+
+## end   gnulib module signal-tests
+
 ## begin gnulib module sleep-tests
 
 TESTS += test-sleep
@@ -240,6 +284,8 @@ EXTRA_DIST += test-snprintf.c
 ## begin gnulib module sockets
 
 libtests_a_SOURCES += sockets.h sockets.c
+
+EXTRA_DIST += w32sock.h
 
 ## end   gnulib module sockets
 
@@ -396,12 +442,6 @@ EXTRA_DIST += test-vasnprintf.c
 
 ## end   gnulib module vasnprintf-tests
 
-## begin gnulib module verify
-
-libtests_a_SOURCES += verify.h
-
-## end   gnulib module verify
-
 ## begin gnulib module vsnprintf-tests
 
 TESTS += test-vsnprintf
@@ -419,6 +459,30 @@ check_PROGRAMS += test-wchar
 EXTRA_DIST += test-wchar.c
 
 ## end   gnulib module wchar-tests
+
+## begin gnulib module wcrtomb-tests
+
+TESTS += test-wcrtomb.sh
+TESTS_ENVIRONMENT += \
+  EXEEXT='@EXEEXT@' \
+  LOCALE_FR='@LOCALE_FR@' \
+  LOCALE_FR_UTF8='@LOCALE_FR_UTF8@' \
+  LOCALE_JA='@LOCALE_JA@' \
+  LOCALE_ZH_CN='@LOCALE_ZH_CN@'
+check_PROGRAMS += test-wcrtomb
+
+EXTRA_DIST += test-wcrtomb.sh test-wcrtomb.c
+
+## end   gnulib module wcrtomb-tests
+
+## begin gnulib module wctob
+
+
+EXTRA_DIST += wctob.c
+
+EXTRA_libtests_a_SOURCES += wctob.c
+
+## end   gnulib module wctob
 
 ## begin gnulib module wctype-tests
 

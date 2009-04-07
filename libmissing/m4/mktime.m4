@@ -1,5 +1,5 @@
-#serial 13
-dnl Copyright (C) 2002, 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+# serial 15
+dnl Copyright (C) 2002-2003, 2005-2007, 2009 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -13,9 +13,16 @@ dnl From Jim Meyering.
 # AC_FUNC_MKTIME
 # --------------
 AC_DEFUN([AC_FUNC_MKTIME],
-[AC_CHECK_HEADERS_ONCE(unistd.h)
-AC_CHECK_FUNCS_ONCE(alarm)
-AC_CACHE_CHECK([for working mktime], ac_cv_func_working_mktime,
+[AC_CHECK_HEADERS_ONCE([unistd.h])
+AC_CHECK_FUNCS_ONCE([alarm])
+AC_REQUIRE([gl_MULTIARCH])
+if test $APPLE_UNIVERSAL_BUILD = 1; then
+  # A universal build on Apple MacOS X platforms.
+  # The test result would be 'yes' in 32-bit mode and 'no' in 64-bit mode.
+  # But we need a configuration result that is valid in both modes.
+  ac_cv_func_working_mktime=no
+fi
+AC_CACHE_CHECK([for working mktime], [ac_cv_func_working_mktime],
 [AC_RUN_IFELSE([AC_LANG_SOURCE(
 [[/* Test program from Paul Eggert and Tony Leneis.  */
 #include <limits.h>
@@ -68,16 +75,14 @@ spring_forward_gap ()
 }
 
 static int
-mktime_test1 (now)
-     time_t now;
+mktime_test1 (time_t now)
 {
   struct tm *lt;
   return ! (lt = localtime (&now)) || mktime (lt) == now;
 }
 
 static int
-mktime_test (now)
-     time_t now;
+mktime_test (time_t now)
 {
   return (mktime_test1 (now)
 	  && mktime_test1 ((time_t) (time_t_max - now))
@@ -101,8 +106,7 @@ irix_6_4_bug ()
 }
 
 static int
-bigtime_test (j)
-     int j;
+bigtime_test (int j)
 {
   struct tm tm;
   time_t now;
@@ -212,9 +216,9 @@ fi
 AC_DEFUN([gl_FUNC_MKTIME],
 [
   AC_FUNC_MKTIME
-  dnl Note: AC_FUNC_MKTIME does AC_LIBOBJ(mktime).
+  dnl Note: AC_FUNC_MKTIME does AC_LIBOBJ([mktime]).
   if test $ac_cv_func_working_mktime = no; then
-    AC_DEFINE(mktime, rpl_mktime,
+    AC_DEFINE([mktime], [rpl_mktime],
       [Define to rpl_mktime if the replacement function should be used.])
     gl_PREREQ_MKTIME
   fi

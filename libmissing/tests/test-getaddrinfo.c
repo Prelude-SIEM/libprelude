@@ -1,6 +1,6 @@
 /* Test the getaddrinfo module.
 
-   Copyright (C) 2006-2008 Free Software Foundation, Inc.
+   Copyright (C) 2006-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 
 #include <config.h>
 #include <netdb.h>
+
 #include <arpa/inet.h>
+#include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
@@ -45,9 +47,15 @@
 int simple (char *host, char *service)
 {
   char buf[BUFSIZ];
+  static int skip = 0;
   struct addrinfo hints;
   struct addrinfo *ai0, *ai;
   int res;
+  int err;
+
+  /* Once we skipped the test, do not try anything else */
+  if (skip)
+    return 0;
 
   dbgprintf ("Finding %s service %s...\n", host, service);
 
@@ -59,23 +67,36 @@ int simple (char *host, char *service)
   hints.ai_socktype = SOCK_STREAM;
 
   res = getaddrinfo (host, service, 0, &ai0);
+  err = errno;
 
   dbgprintf ("res %d: %s\n", res, gai_strerror (res));
 
   if (res != 0)
     {
+      /* EAI_AGAIN is returned if no network is available. Don't fail
+	 the test merely because someone is down the country on their
+	 in-law's farm. */
+      if (res == EAI_AGAIN)
+	{
+	  skip++;
+	  fprintf (stderr, "skipping getaddrinfo test: no network?\n");
+	  return 77;
+	}
       /* IRIX reports EAI_NONAME for "https".  Don't fail the test
 	 merely because of this.  */
       if (res == EAI_NONAME)
 	return 0;
       /* Solaris reports EAI_SERVICE for "http" and "https".  Don't
-         fail the test merely because of this.  */
+	 fail the test merely because of this.  */
       if (res == EAI_SERVICE)
 	return 0;
       /* AIX reports EAI_NODATA for "https".  Don't fail the test
 	 merely because of this.  */
       if (res == EAI_NODATA)
 	return 0;
+      /* Provide details if errno was set.  */
+      if (res == EAI_SYSTEM)
+	dbgprintf ("system error: %s\n", strerror (err));
 
       return 1;
     }

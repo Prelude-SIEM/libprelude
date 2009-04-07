@@ -1,5 +1,6 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -84,7 +85,7 @@
 # define SIZE_MAX ((size_t) -1)
 #endif
 
-#if (defined MB_CUR_MAX && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_ISWCTYPE && HAVE_WCRTOMB && HAVE_MBRTOWC && HAVE_WCSCOLL) || _LIBC
+#if (defined MB_CUR_MAX && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_ISWCTYPE && HAVE_WCSCOLL) || _LIBC
 # define RE_ENABLE_I18N
 #endif
 
@@ -115,6 +116,7 @@
 # define __iswctype iswctype
 # define __btowc btowc
 # define __wcrtomb wcrtomb
+# define __mbrtowc mbrtowc
 # define __regfree regfree
 # define attribute_hidden
 #endif /* not _LIBC */
@@ -182,10 +184,6 @@ typedef unsigned long int bitset_word_t;
 # if BITSET_WORD_BITS <= SBC_MAX
 #  error "Invalid SBC_MAX"
 # endif
-#elif BITSET_WORD_MAX == (0xffffffff + 2) * 0xffffffff
-/* Work around a bug in 64-bit PGC (before version 6.1-2), where the
-   preprocessor mishandles large unsigned values as if they were signed.  */
-# define BITSET_WORD_BITS 64
 #else
 # error "Add case for new bitset_word_t size"
 #endif

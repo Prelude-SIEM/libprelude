@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2008 Free Software Foundation, Inc.
+# Copyright (C) 2002-2009 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -26,7 +26,6 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
   AC_REQUIRE([AC_PROG_RANLIB])
   AC_REQUIRE([AM_PROG_CC_C_O])
-  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_REQUIRE([AC_FUNC_FSEEKO])
   gl_THREADLIB_EARLY
@@ -62,6 +61,8 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([bind])
   fi
   gl_SYS_SOCKET_MODULE_INDICATOR([bind])
+  gl_FUNC_BTOWC
+  gl_WCHAR_MODULE_INDICATOR([btowc])
   gl_FUNC_CLOSE
   gl_UNISTD_MODULE_INDICATOR([close])
   gl_COND
@@ -72,7 +73,7 @@ AC_SUBST([LTALLOCA])
   gl_SYS_SOCKET_MODULE_INDICATOR([connect])
   gl_FUNC_DUP2
   gl_UNISTD_MODULE_INDICATOR([dup2])
-  gl_HEADER_ERRNO_H
+  AC_REQUIRE([gl_HEADER_ERRNO_H])
   gl_FUNC_FCLOSE
   gl_STDIO_MODULE_INDICATOR([fclose])
   gl_FLOAT_H
@@ -96,6 +97,7 @@ AC_SUBST([LTALLOCA])
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
+  gl_HOSTENT
   gl_INET_NTOP
   gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
   gl_INET_PTON
@@ -122,11 +124,16 @@ AC_SUBST([LTALLOCA])
   AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
   gl_FUNC_MALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+  gl_FUNC_MBRTOWC
+  gl_WCHAR_MODULE_INDICATOR([mbrtowc])
+  gl_FUNC_MBSINIT
+  gl_WCHAR_MODULE_INDICATOR([mbsinit])
   gl_FUNC_MEMMEM
   gl_FUNC_MEMMEM_SIMPLE
   gl_STRING_MODULE_INDICATOR([memmem])
   gl_MINMAX
   gl_FUNC_MKTIME
+  AC_REQUIRE([gl_MULTIARCH])
   gl_HEADER_NETDB
   gl_HEADER_NETINET_IN
   AC_PROG_MKDIR_P
@@ -138,11 +145,9 @@ AC_SUBST([LTALLOCA])
   gl_STDLIB_MODULE_INDICATOR([realloc-posix])
   gl_REGEX
   gl_RELOCATABLE_LIBRARY
-  AC_REQUIRE([gl_HEADER_SYS_SELECT])
-  if test "$ac_cv_header_winsock2_h" = yes; then
-    AC_LIBOBJ([winsock-select])
-  fi
+  gl_FUNC_SELECT
   gl_SYS_SELECT_MODULE_INDICATOR([select])
+  gl_SERVENT
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([setsockopt])
@@ -191,7 +196,6 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_SYS_SELECT
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SOCKET
-  gl_MODULE_INDICATOR([sys_socket])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_STAT_H
   AC_PROG_MKDIR_P
@@ -209,6 +213,8 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_VSNPRINTF
   gl_STDIO_MODULE_INDICATOR([vsnprintf])
   gl_WCHAR_H
+  gl_FUNC_WCRTOMB
+  gl_WCHAR_MODULE_INDICATOR([wcrtomb])
   gl_WCTYPE_H
   gl_FUNC_WRITE
   gl_UNISTD_MODULE_INDICATOR([write])
@@ -252,6 +258,14 @@ AC_SUBST([LTALLOCA])
   m4_pushdef([gltests_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='libmissing/tests'
+  gt_LOCALE_FR
+  gt_LOCALE_FR_UTF8
+  gl_FUNC_UNGETC_WORKS
+  gt_LOCALE_FR
+  gt_LOCALE_FR_UTF8
+  gt_LOCALE_JA
+  gt_LOCALE_ZH_CN
+  gt_LOCALE_FR_UTF8
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
@@ -260,6 +274,12 @@ AC_SUBST([LTALLOCA])
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_FUNCS([shutdown])
+  gt_LOCALE_FR
+  gt_LOCALE_FR_UTF8
+  gt_LOCALE_JA
+  gt_LOCALE_ZH_CN
+  gl_FUNC_WCTOB
+  gl_WCHAR_MODULE_INDICATOR([wctob])
   gl_YIELD
   m4_ifval(gltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gltests_LIBSOURCES_DIR])[ ||
@@ -361,8 +381,11 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/arpa_inet.in.h
   lib/asnprintf.c
   lib/bind.c
+  lib/btowc.c
   lib/c-ctype.c
   lib/c-ctype.h
+  lib/close-hook.c
+  lib/close-hook.h
   lib/close.c
   lib/config.charset
   lib/connect.c
@@ -402,6 +425,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/localcharset.h
   lib/lseek.c
   lib/malloc.c
+  lib/mbrtowc.c
+  lib/mbsinit.c
   lib/memmem.c
   lib/minmax.h
   lib/mktime.c
@@ -426,6 +451,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regexec.c
   lib/relocatable.c
   lib/relocatable.h
+  lib/select.c
   lib/setsockopt.c
   lib/signal.in.h
   lib/sigprocmask.c
@@ -443,6 +469,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strcasecmp.c
   lib/strcasestr.c
   lib/strdup.c
+  lib/streq.h
   lib/strerror.c
   lib/string.in.h
   lib/strings.in.h
@@ -464,15 +491,18 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/unistd.in.h
   lib/vasnprintf.c
   lib/vasnprintf.h
+  lib/verify.h
   lib/vsnprintf.c
   lib/w32sock.h
   lib/wchar.in.h
+  lib/wcrtomb.c
   lib/wctype.in.h
-  lib/winsock-select.c
   lib/write.c
   lib/xsize.h
+  m4/00gnulib.m4
   m4/alloca.m4
   m4/arpa_inet_h.m4
+  m4/btowc.m4
   m4/close.m4
   m4/codeset.m4
   m4/cond.m4
@@ -491,6 +521,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gettimeofday.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
+  m4/hostent.m4
   m4/include_next.m4
   m4/inet_ntop.m4
   m4/inet_pton.m4
@@ -500,14 +531,20 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/lib-link.m4
   m4/lib-prefix.m4
   m4/localcharset.m4
+  m4/locale-fr.m4
+  m4/locale-ja.m4
+  m4/locale-zh.m4
   m4/lock.m4
   m4/longlong.m4
   m4/lseek.m4
   m4/malloc.m4
+  m4/mbrtowc.m4
+  m4/mbsinit.m4
   m4/mbstate_t.m4
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/multiarch.m4
   m4/netdb_h.m4
   m4/netinet_in_h.m4
   m4/onceonly.m4
@@ -518,6 +555,8 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/realloc.m4
   m4/regex.m4
   m4/relocatable-lib.m4
+  m4/select.m4
+  m4/servent.m4
   m4/signal_h.m4
   m4/signalblocking.m4
   m4/size_max.m4
@@ -555,11 +594,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/tls.m4
   m4/tm_gmtoff.m4
   m4/uname.m4
+  m4/ungetc.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/wchar.m4
   m4/wchar_t.m4
+  m4/wcrtomb.m4
+  m4/wctob.m4
   m4/wctype.m4
   m4/wint_t.m4
   m4/write.m4
@@ -567,12 +609,16 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/yield.m4
   tests/test-alloca-opt.c
   tests/test-arpa_inet.c
+  tests/test-btowc.c
+  tests/test-btowc1.sh
+  tests/test-btowc2.sh
   tests/test-c-ctype.c
   tests/test-cond.c
   tests/test-errno.c
   tests/test-fopen.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
+  tests/test-fseeko2.sh
   tests/test-getaddrinfo.c
   tests/test-getdelim.c
   tests/test-getline.c
@@ -580,6 +626,13 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-lock.c
   tests/test-lseek.c
   tests/test-lseek.sh
+  tests/test-mbrtowc.c
+  tests/test-mbrtowc1.sh
+  tests/test-mbrtowc2.sh
+  tests/test-mbrtowc3.sh
+  tests/test-mbrtowc4.sh
+  tests/test-mbsinit.c
+  tests/test-mbsinit.sh
   tests/test-memmem.c
   tests/test-netdb.c
   tests/test-netinet_in.c
@@ -591,6 +644,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-select-out.sh
   tests/test-select-stdin.c
   tests/test-select.c
+  tests/test-signal.c
   tests/test-sleep.c
   tests/test-snprintf.c
   tests/test-sockets.c
@@ -612,9 +666,12 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-vasnprintf.c
   tests/test-vsnprintf.c
   tests/test-wchar.c
+  tests/test-wcrtomb.c
+  tests/test-wcrtomb.sh
   tests/test-wctype.c
   tests=lib/glthread/yield.h
   tests=lib/sockets.c
   tests=lib/sockets.h
-  tests=lib/verify.h
+  tests=lib/w32sock.h
+  tests=lib/wctob.c
 ])

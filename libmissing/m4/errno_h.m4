@@ -1,21 +1,15 @@
-# errno_h.m4 serial 1
-dnl Copyright (C) 2004, 2006, 2008 Free Software Foundation, Inc.
+# errno_h.m4 serial 4
+dnl Copyright (C) 2004, 2006, 2008, 2009 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
-AC_DEFUN([gl_HEADER_ERRNO_H],
-[
-  dnl Use AC_REQUIRE here, so that the default behavior below is expanded
-  dnl once only, before all statements that occur in other macros.
-  AC_REQUIRE([gl_HEADER_ERRNO_H_BODY])
-])
-
-AC_DEFUN([gl_HEADER_ERRNO_H_BODY],
+dnl This macro must pass through AC_REQUIRE (never directly invoke it).
+AC_DEFUN_ONCE([gl_HEADER_ERRNO_H],
 [
   AC_REQUIRE([AC_PROG_CC])
-  AC_CACHE_CHECK([for complete errno.h], gl_cv_header_errno_h_complete, [
-    AC_EGREP_CPP(booboo,[
+  AC_CACHE_CHECK([for complete errno.h], [gl_cv_header_errno_h_complete], [
+    AC_EGREP_CPP([booboo],[
 #include <errno.h>
 #if !defined ENOMSG
 booboo
@@ -70,7 +64,7 @@ AC_DEFUN([gl_REPLACE_ERRNO_VALUE],
 [
   if test -n "$ERRNO_H"; then
     AC_CACHE_CHECK([for ]$1[ value], [gl_cv_header_errno_h_]$1, [
-      AC_EGREP_CPP(yes,[
+      AC_EGREP_CPP([yes],[
 #include <errno.h>
 #ifdef ]$1[
 yes
@@ -79,7 +73,7 @@ yes
       [gl_cv_header_errno_h_]$1[=yes],
       [gl_cv_header_errno_h_]$1[=no])
       if test $gl_cv_header_errno_h_]$1[ = no; then
-        AC_EGREP_CPP(yes,[
+        AC_EGREP_CPP([yes],[
 #define _XOPEN_SOURCE_EXTENDED 1
 #include <errno.h>
 #ifdef ]$1[
@@ -110,4 +104,10 @@ yes
     AC_SUBST($1[_HIDDEN])
     AC_SUBST($1[_VALUE])
   fi
+])
+
+dnl Autoconf >= 2.61 has AC_COMPUTE_INT built-in.
+dnl Remove this when we can assume autoconf >= 2.61.
+m4_ifdef([AC_COMPUTE_INT], [], [
+  AC_DEFUN([AC_COMPUTE_INT], [_AC_COMPUTE_INT([$2],[$1],[$3],[$4])])
 ])
