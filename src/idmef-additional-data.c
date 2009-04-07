@@ -179,7 +179,7 @@ static const struct {
 
 static int check_type(idmef_additional_data_type_t type, const unsigned char *buf, size_t len)
 {
-        if ( type < 0 || type > sizeof(idmef_additional_data_type_table) / sizeof(idmef_additional_data_type_table[0]) )
+        if ( type < 0 || type >= sizeof(idmef_additional_data_type_table) / sizeof(*idmef_additional_data_type_table) )
                 return -1;
 
         if ( idmef_additional_data_type_table[type].len != 0 &&
@@ -199,7 +199,7 @@ static int check_type(idmef_additional_data_type_t type, const unsigned char *bu
 
 static idmef_data_type_t idmef_additional_data_type_to_data_type(idmef_additional_data_type_t type)
 {
-        if ( type < 0 || type > sizeof(idmef_additional_data_type_table) / sizeof(idmef_additional_data_type_table[0]) )
+        if ( type < 0 || type >= sizeof(idmef_additional_data_type_table) / sizeof(*idmef_additional_data_type_table) )
                 return IDMEF_DATA_TYPE_UNKNOWN;
 
         return idmef_additional_data_type_table[type].d_type;
