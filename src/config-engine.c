@@ -482,7 +482,7 @@ static int search_entry(config_t *cfg, const char *section,
 
         if ( section && ! index ) {
 
-                i = search_section(cfg, section, *index);
+                i = search_section(cfg, section, 0);
                 if ( i < 0 )
                         return -1;
 
