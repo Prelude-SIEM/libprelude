@@ -86,6 +86,42 @@
 
 #define idmef_data_copy idmef_data_copy_dup
 
+#ifndef ABS
+# define ABS(x) (((x) < 0) ? -(x) : (x))
+#endif
+
+
+/*
+ * If we subtract the integer representations of two floats then that
+ * will tell us how close they are. If the difference is zero, they are
+ * identical. If the difference is one, they are adjacent floats.
+ * In general, if the difference is n then there are n-1 floats between
+ * them.
+ *
+ * http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+ */
+static int float_compare(float a, float b)
+{
+        union {
+                float fval;
+                int32_t ival;
+        } au, bu;
+
+        au.fval = a;
+        bu.fval = b;
+
+        /* Make aInt lexicographically ordered as a twos-complement int */
+        if ( au.ival < 0 )
+                au.ival = 0x80000000 - au.ival;
+
+        /* Make bInt lexicographically ordered as a twos-complement int */
+        if ( bu.ival < 0 )
+                bu.ival = 0x80000000 - bu.ival;
+
+        return (ABS(au.ival - bu.ival) <= 0) ? 0 : -1;
+}
+
+
 
 static int prelude_string_copy(const prelude_string_t *src, prelude_string_t *dst)
 {
@@ -17607,8 +17643,7 @@ int idmef_confidence_compare(const idmef_confidence_t *obj1, const idmef_confide
         if ( obj1->rating != obj2->rating )
                 return -1;
 
-        if ( obj1->confidence != obj2->confidence )
-                return -1;
+        ret = float_compare(obj1->confidence, obj2->confidence);
 
         return ret;
 }
