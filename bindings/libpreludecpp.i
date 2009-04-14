@@ -134,6 +134,9 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
+        else if ( type == IDMEF_VALUE_TYPE_CLASS )
+                *ret = SWIG_NewPointerObj(new IDMEFValue(value), SWIGTYPE_p_Prelude__IDMEFValue, 1);
+        
         else return -1;
 
         return 0;
