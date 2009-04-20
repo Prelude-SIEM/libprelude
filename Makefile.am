@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --without-system-ltdl --enable-easy-bindings
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-easy-bindings
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 SUBDIRS = libltdl libmissing m4 src prelude-admin bindings docs tests
