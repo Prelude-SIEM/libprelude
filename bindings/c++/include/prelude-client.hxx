@@ -20,17 +20,26 @@ namespace Prelude {
             public:
                 enum ClientFlagsEnum {
                         ASYNC_SEND  = PRELUDE_CLIENT_FLAGS_ASYNC_SEND,
+                        FLAGS_ASYNC_SEND   = PRELUDE_CLIENT_FLAGS_ASYNC_SEND,
                         ASYNC_TIMER = PRELUDE_CLIENT_FLAGS_ASYNC_TIMER,
+                        FLAGS_ASYNC_TIMER  = PRELUDE_CLIENT_FLAGS_ASYNC_TIMER,
                         HEARTBEAT   = PRELUDE_CLIENT_FLAGS_HEARTBEAT,
+                        FLAGS_HEARTBEAT   = PRELUDE_CLIENT_FLAGS_HEARTBEAT,
                         CONNECT     = PRELUDE_CLIENT_FLAGS_CONNECT,
-                        AUTOCONFIG = PRELUDE_CLIENT_FLAGS_AUTOCONFIG
+                        FLAGS_CONNECT     = PRELUDE_CLIENT_FLAGS_CONNECT,
+                        AUTOCONFIG  = PRELUDE_CLIENT_FLAGS_AUTOCONFIG,
+                        FLAGS_AUTOCONFIG = PRELUDE_CLIENT_FLAGS_AUTOCONFIG,
                 };
 
                 enum ConnectionPermissionEnum {
                         IDMEF_READ  = PRELUDE_CONNECTION_PERMISSION_IDMEF_READ,
+                        PERMISSION_IDMEF_READ = PRELUDE_CONNECTION_PERMISSION_IDMEF_READ,
                         ADMIN_READ  = PRELUDE_CONNECTION_PERMISSION_ADMIN_READ,
+                        PERMISSION_ADMIN_READ  = PRELUDE_CONNECTION_PERMISSION_ADMIN_READ,
                         IDMEF_WRITE = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE,
-                        ADMIN_WRITE = PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE
+                        PERMISSION_IDMEF_WRITE  = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE,
+                        ADMIN_WRITE = PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE,
+                        PERMISSION_ADMIN_WRITE  = PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE,
                 };
 
                 ~Client();
