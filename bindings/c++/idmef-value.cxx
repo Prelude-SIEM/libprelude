@@ -189,6 +189,12 @@ IDMEFValue::IDMEFValue(idmef_value_t *value)
 }
 
 
+int IDMEFValue::Match(const IDMEFValue &value, int op)
+{
+        return idmef_value_match(this->_value, value._value, (idmef_criterion_operator_t) op);
+}
+
+
 IDMEFValue IDMEFValue::Clone() const
 {
         int ret;

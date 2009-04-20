@@ -59,6 +59,7 @@ namespace Prelude {
                 IDMEFValue(double value);
                 IDMEFValue(Prelude::IDMEFTime &time);
 
+                int Match(const IDMEFValue &value, int op);
                 IDMEFValue Clone() const;
 
                 operator int32_t() const;
