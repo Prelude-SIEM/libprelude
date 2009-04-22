@@ -846,7 +846,7 @@ static gnutls_session new_tls_session(int sock, char *passwd)
 
         const int kx_priority[] = {
                 GNUTLS_KX_ANON_DH,
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
                 GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
 #endif
                 0
@@ -861,7 +861,7 @@ static gnutls_session new_tls_session(int sock, char *passwd)
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
         {
                 gnutls_srp_client_credentials srpcred;
                 gnutls_srp_allocate_client_credentials(&srpcred);

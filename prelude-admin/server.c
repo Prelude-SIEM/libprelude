@@ -56,7 +56,7 @@ static const char *one_shot_passwd;
 static gnutls_anon_server_credentials anoncred;
 
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
  static gnutls_srp_server_credentials srpcred;
 #endif
 
@@ -104,7 +104,7 @@ static gnutls_session new_tls_session(int sock)
         gnutls_session session;
         const int kx_priority[] = {
                 GNUTLS_KX_ANON_DH,
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
                 GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
 #endif
                 0 };
@@ -118,7 +118,7 @@ static gnutls_session new_tls_session(int sock)
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
         gnutls_credentials_set(session, GNUTLS_CRD_SRP, srpcred);
         gnutls_certificate_server_set_request(session, GNUTLS_CERT_IGNORE);
 #endif
@@ -328,7 +328,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
 
 
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
 
 static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
 {
@@ -387,7 +387,7 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
         struct pollfd pfd[128];
         gnutls_dh_params dh_params;
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
         int ret;
 
         ret = gnutls_srp_allocate_server_credentials(&srpcred);
@@ -415,7 +415,7 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
 
         wait_connection(cp, sock, pfd, size, keepalive, key, cacrt, crt);
 
-#ifndef GNUTLS_SRP_DISABLED
+#ifdef GNUTLS_SRP_ENABLED
         gnutls_srp_free_server_credentials(srpcred);
 #endif
 
