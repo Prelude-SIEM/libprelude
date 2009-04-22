@@ -17,6 +17,13 @@ prelude-plugin
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### MACRO lt_preloaded_symbols ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO PRELUDE_PLUGIN_API_VERSION ##### -->
 <para>
 

@@ -1226,6 +1226,7 @@ prelude_client_profile_get_credentials
 
 <SECTION>
 <FILE>prelude-plugin</FILE>
+lt_preloaded_symbols
 PRELUDE_PLUGIN_API_VERSION
 prelude_plugin_entry_t
 prelude_plugin_instance_t

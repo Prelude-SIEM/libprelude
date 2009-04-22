@@ -1,3 +1,25 @@
+* 2009-04-22, libprelude-0.9.22:
+
+- Fix C++ headers installation.
+
+- Automatic, detailed ChangeLog generation (from http://live.gnome.org/Git/ChangeLog).
+
+- Prefix C++ enumeration, implement IDMEFValue::Match() method, 
+  and provide IDMEFCriterion operator to be used by this method.
+
+- Old behavior when returning an IDMEFValue was to map it's internal type
+  to a type understood by the target language. Preserve this behavior unless
+  the value contain an IDMEF class, in which case we now return the raw IDMEFValue
+  (IDMEF class object are not handled by higher level language, but the value
+  containing the class can be useful).
+
+- Use pkg-config for GnuTLS and GnuTLS extra detection, and provide our own
+  libprelude pkg-config file.
+
+- Various bug fixes.
+
+
+
 * 2008-11-14, libprelude-0.9.21.3:
 
 - Update to libtool / libltdl 2.2.x
