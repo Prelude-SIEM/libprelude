@@ -116,7 +116,7 @@ if test $want_libs = yes; then
               thrlibs=@LTLIBTHREAD@
       fi
 
-      echo $cpplibs $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ $thrlibs
+      echo $cpplibs $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ $thrlibs @GETADDRINFO_LIB@ @HOSTENT_LIB@ @LTLIBINTL@ @SERVENT_LIB@
 fi
 
 exit 0

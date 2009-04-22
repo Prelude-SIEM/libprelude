@@ -3,10 +3,9 @@ SUBDIRS = libprelude-error include
 AM_CPPFLAGS = @PCFLAGS@ -I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error \
 -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@ 
 
-
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @LIBPRELUDE_LIBS@ $(LIBLTDL) @LTLIBTHREAD@ $(top_builddir)/libmissing/libmissing.la libprelude-error/libprelude-error.la
-libprelude_la_LDFLAGS = -no-undefined -version-info @LIBPRELUDE_SONAME@ -export-symbols-regex "^(idmef|_?prelude)_"
+libprelude_la_LIBADD = @LIBPRELUDE_LIBS@ $(LIBLTDL) $(top_builddir)/libmissing/libmissing.la libprelude-error/libprelude-error.la
+libprelude_la_LDFLAGS = $(GETADDRINFO_LIB) $(HOSTENT_LIB) $(LTLIBINTL) $(LTLIBTHREAD) $(SERVENT_LIB) -no-undefined -version-info @LIBPRELUDE_SONAME@ -export-symbols-regex "^(idmef|_?prelude)_"
 lib_LTLIBRARIES = libprelude.la
 BUILT_SOURCES = $(LTDLDEPS) 
 

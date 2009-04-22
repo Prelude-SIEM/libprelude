@@ -7,7 +7,7 @@ prelude_admin_LDADD = $(top_builddir)/src/config-engine.lo \
 			$(top_builddir)/src/variable.lo \
 		        $(top_builddir)/src/libprelude.la \
 			@PRELUDE_ADMIN_LIBS@ \
-			../libmissing/libmissing.la
+			../libmissing/libmissing.la $(GETADDRINFO_LIB) $(HOSTENT_LIB) $(LTLIBINTL) $(LTLIBTHREAD) $(SERVENT_LIB)
 
 
 prelude_admin_SOURCES = 		\
