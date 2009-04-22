@@ -1,0 +1,14 @@
+prefix=/home/yoann/dev/prelude/bin
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+threadlib=-lpthread
+
+Name: LibPrelude
+Description: The Prelude Library provide communication between the PreludeIDS SIM components.
+Version: 0.9.21.3
+Libs: -L${libdir} -lprelude
+Libs.private:  -lgnutls   -lgcrypt -lgpg-error     
+Cflags: -I${includedir}
+

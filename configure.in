@@ -732,6 +732,7 @@ libmissing/tests/Makefile
 m4/Makefile
 
 src/Makefile
+src/libprelude.pc
 src/libprelude-error/Makefile
 src/include/Makefile
 
