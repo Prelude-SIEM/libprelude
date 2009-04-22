@@ -34,7 +34,7 @@ changequote(,)dnl
           *) gl_cv_func_wctob_works="guessing yes" ;;
         esac
 changequote([,])dnl
-        if test $LOCALE_FR != none; then
+        if test $LOCALE_FR != none && test $cross_compiling = no; then
           AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>

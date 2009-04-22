@@ -30,7 +30,7 @@ changequote(,)dnl
           *)     gl_cv_func_btowc_eof="guessing yes" ;;
         esac
 changequote([,])dnl
-        if test $LOCALE_FR != none; then
+        if test $LOCALE_FR != none && test $cross_compiling = no; then
           AC_TRY_RUN([
 #include <locale.h>
 #include <stdio.h>

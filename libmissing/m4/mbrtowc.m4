@@ -105,7 +105,7 @@ changequote(,)dnl
         *)    gl_cv_func_mbrtowc_incomplete_state="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_JA != none; then
+      if test $LOCALE_JA != none && test $cross_compiling = no; then
         AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>
@@ -153,7 +153,7 @@ changequote(,)dnl
         *)          gl_cv_func_mbrtowc_sanitycheck="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_ZH_CN != none; then
+      if test $LOCALE_ZH_CN != none && test $cross_compiling = no; then
         AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>
@@ -204,7 +204,7 @@ changequote(,)dnl
         *)    gl_cv_func_mbrtowc_null_arg="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_FR_UTF8 != none; then
+      if test $LOCALE_FR_UTF8 != none && test $cross_compiling = no; then
         AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>
@@ -254,7 +254,7 @@ changequote(,)dnl
         *)                gl_cv_func_mbrtowc_retval="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_FR_UTF8 != none || test $LOCALE_JA != none; then
+      if (test $LOCALE_FR_UTF8 != none || test $LOCALE_JA != none) && test $cross_compiling = no; then
         AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>
@@ -321,7 +321,7 @@ changequote(,)dnl
         *)             gl_cv_func_mbrtowc_nul_retval="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_ZH_CN != none; then
+      if test $LOCALE_ZH_CN != none && test $cross_compiling = no; then
         AC_TRY_RUN([
 #include <locale.h>
 #include <string.h>
