@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+threadlib=@LIBMULTITHREAD@
+
+Name: LibPrelude
+Description: The Prelude Library provide API for communicating with PreludeIDS SIM components.
+Version: @VERSION@
+Libs: -L${libdir} -lprelude
+Libs.private: @LIBPRELUDE_LIBS@ @GETADDRINFO_LIB@ @HOSTENT_LIB@ @LIBINTL@ @LIBMULTITHREAD@ @SERVENT_LIB@
+Cflags: @LIBPRELUDE_CFLAGS@
+
