@@ -35,7 +35,7 @@ changequote(,)dnl
           *)               gl_cv_func_wcrtomb_retval="guessing yes" ;;
         esac
 changequote([,])dnl
-        if (test $LOCALE_FR != none || test $LOCALE_FR_UTF8 != none || test $LOCALE_JA != none || test $LOCALE_ZH_CN != none) && test $cross_compiling = no; then
+        if test $LOCALE_FR != none || test $LOCALE_FR_UTF8 != none || test $LOCALE_JA != none || test $LOCALE_ZH_CN != none; then
           AC_TRY_RUN([
 #include <locale.h>
 #include <stdio.h>
@@ -67,7 +67,7 @@ int main ()
 }],
             [gl_cv_func_wcrtomb_retval=yes],
             [gl_cv_func_wcrtomb_retval=no],
-            [])
+            [gl_cv_func_wcrtomb_retval=yes])
         fi
       ])
     case "$gl_cv_func_wcrtomb_retval" in
