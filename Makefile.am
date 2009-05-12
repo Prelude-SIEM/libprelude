@@ -16,6 +16,27 @@ include_HEADERS = prelude-config.h
 MOSTLYCLEANFILES = prelude-config.h
 BUILT_SOURCES = prelude-config.h
 
+MAINTAINERCLEANFILES = \
+        $(srcdir)/INSTALL \
+        $(srcdir)/aclocal.m4 \
+        $(srcdir)/autoscan.log \
+        $(srcdir)/compile \
+        $(srcdir)/config.guess \
+        $(srcdir)/config.h.in \
+        $(srcdir)/config.sub \
+        $(srcdir)/configure.scan \
+        $(srcdir)/depcomp \
+        $(srcdir)/install-sh \
+        $(srcdir)/ltmain.sh \
+        $(srcdir)/missing \
+        $(srcdir)/mkinstalldirs \
+        $(srcdir)/omf.make \
+        $(srcdir)/xmldocs.make \
+	$(srcdir)/ylwrap \
+        $(srcdir)/gtk-doc.make \
+        $(srcdir)/ChangeLog \
+        `find "$(srcdir)" -type f -name Makefile.in -print`
+
 prelude-config.h: $(top_builddir)/config.h
 	rm -f prelude-config.h
 	echo "/* Used from libprelude headers */" >> prelude-config.h
@@ -122,3 +143,5 @@ dist-hook:
 	else \
 		echo A git clone is required to generate a ChangeLog >&2; \
 	fi
+
+-include $(top_srcdir)/git.mk

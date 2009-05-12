@@ -77,3 +77,5 @@ $(IDMEF_CRITERIA_STRING_YAC_O): idmef-criteria-string.yac.c
 IDMEF_CRITERIA_STRING_YAC_LO=idmef-criteria-string.yac.lo
 $(IDMEF_CRITERIA_STRING_YAC_LO): idmef-criteria-string.yac.c
 	$(MAKE) idmef-criteria-string.yac.lo CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_YAC_LO=dummy-idmef-criteria-string.yac.lo
+
+-include $(top_srcdir)/git.mk

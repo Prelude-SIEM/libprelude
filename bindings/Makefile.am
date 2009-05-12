@@ -1,7 +1,17 @@
 SUBDIRS = c++ low-level lua python ruby
 
-EXTRA_DIST = libpreludecpp.i libpreludecpp-perl.i \
-	     perl/Makefile.PL.in perl/PreludeEasy.cxx perl/PreludeEasy.pm 
+EXTRA_DIST = libpreludecpp.i libpreludecpp-perl.i perl/Makefile.PL.in
+
+CLEANFILES = perl/pm_to_blib perl/PreludeEasy.o perl/blib python/build
+MAINTAINERCLEANFILES =   \
+			lua/PreludeEasy.cxx	     \
+			perl/Makefile		     \
+                        perl/PreludeEasy.cxx         \
+			perl/PreludeEasy.pm	     \
+			perl/PreludeEasy.bs 	     \
+                        python/_PreludeEasy.cxx	     \
+			python/PreludeEasy.py	     \
+			ruby/PreludeEasy.cxx
 
 all-am: perl
 
@@ -39,3 +49,5 @@ endif
 else
 perl:
 endif
+
+-include $(top_srcdir)/git.mk

@@ -14,3 +14,5 @@ include_HEADERS = \
 	prelude-connection.hxx	\
 	prelude-connection-pool.hxx
 
+
+-include $(top_srcdir)/git.mk

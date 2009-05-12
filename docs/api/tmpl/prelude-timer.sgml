@@ -1,0 +1,141 @@
+<!-- ##### SECTION Title ##### -->
+prelude-timer
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT prelude_timer_t ##### -->
+<para>
+
+</para>
+
+@list: 
+@expire: 
+@start_time: 
+@data: 
+@function: 
+
+<!-- ##### MACRO prelude_timer_get_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO prelude_timer_get_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO prelude_timer_get_callback ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO prelude_timer_set_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### MACRO prelude_timer_set_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### MACRO prelude_timer_set_callback ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### FUNCTION prelude_timer_init ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION prelude_timer_init_list ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION prelude_timer_reset ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION prelude_timer_destroy ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION prelude_timer_wake_up ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_timer_flush ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_timer_lock_critical_region ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_timer_unlock_critical_region ##### -->
+<para>
+
+</para>
+
+
+

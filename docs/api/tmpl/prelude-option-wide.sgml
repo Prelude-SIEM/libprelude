@@ -1,0 +1,93 @@
+<!-- ##### SECTION Title ##### -->
+prelude-option-wide
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO PRELUDE_OPTION_REPLY_TYPE_SET ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_OPTION_REPLY_TYPE_GET ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_OPTION_REPLY_TYPE_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_OPTION_REPLY_TYPE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_option_push_request ##### -->
+<para>
+
+</para>
+
+@msg: 
+@type: 
+@request: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_new_request ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@request_id: 
+@target_id: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_process_request ##### -->
+<para>
+
+</para>
+
+@client: 
+@msg: 
+@reply: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_recv_reply ##### -->
+<para>
+
+</para>
+
+@msg: 
+@source_id: 
+@request_id: 
+@value: 
+@Returns: 
+
+

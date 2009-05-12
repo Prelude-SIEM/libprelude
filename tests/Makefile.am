@@ -43,3 +43,5 @@ valgrind: $(TESTS)
 else
 valgrind:
 endif
+
+-include $(top_srcdir)/git.mk

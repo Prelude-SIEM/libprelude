@@ -63,3 +63,5 @@ prelude-error.h: Makefile mkheader.awk err-sources.h.in err-codes.h.in errnos.in
 		$(srcdir)/errnos.in \
 		$(srcdir)/prelude-error.h.in > $@
 
+
+-include $(top_srcdir)/git.mk

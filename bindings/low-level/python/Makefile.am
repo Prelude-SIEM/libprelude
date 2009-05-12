@@ -22,3 +22,5 @@ if HAVE_SWIG
 endif
 
 endif
+
+-include $(top_srcdir)/git.mk

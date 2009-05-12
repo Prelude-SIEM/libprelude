@@ -4,6 +4,14 @@ SUBDIRS = python
 
 EXTRA_DIST = libprelude.i libprelude_perl.i idmef-value-class-mapping.i perl/Makefile.PL.in perl/Prelude.c perl/Prelude.pm 
 
+CLEANFILES = perl/pm_to_blib perl/Prelude.o perl/blib python/build
+MAINTAINERCLEANFILES =  perl/Makefile           \
+                        perl/Makefile.old       \
+                        perl/Prelude.bs       \
+                        perl/Prelude.c        \
+                        python/_prelude.c
+
+
 all-am: perl
 
 if HAVE_PERL
@@ -49,3 +57,5 @@ clean-local:
 if HAVE_PERL
 	cd perl && if test -f Makefile; then $(MAKE) clean; fi
 endif
+
+-include $(top_srcdir)/git.mk

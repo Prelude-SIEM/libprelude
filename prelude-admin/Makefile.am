@@ -16,3 +16,5 @@ prelude_admin_SOURCES = 		\
 	tls-register.c			
 
 noinst_HEADERS = tls-register.h server.h
+
+-include $(top_srcdir)/git.mk
