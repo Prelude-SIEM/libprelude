@@ -73,7 +73,7 @@ AC_SUBST([LTALLOCA])
   gl_SYS_SOCKET_MODULE_INDICATOR([connect])
   gl_FUNC_DUP2
   gl_UNISTD_MODULE_INDICATOR([dup2])
-  AC_REQUIRE([gl_HEADER_ERRNO_H])
+  gl_HEADER_ERRNO_H
   gl_FUNC_FCLOSE
   gl_STDIO_MODULE_INDICATOR([fclose])
   gl_FLOAT_H
@@ -133,7 +133,7 @@ AC_SUBST([LTALLOCA])
   gl_STRING_MODULE_INDICATOR([memmem])
   gl_MINMAX
   gl_FUNC_MKTIME
-  AC_REQUIRE([gl_MULTIARCH])
+  gl_MULTIARCH
   gl_HEADER_NETDB
   gl_HEADER_NETINET_IN
   AC_PROG_MKDIR_P
@@ -376,6 +376,7 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/link-warning.h
   doc/relocatable.texi
   lib/accept.c
+  lib/alignof.h
   lib/alloca.c
   lib/alloca.in.h
   lib/arpa_inet.in.h

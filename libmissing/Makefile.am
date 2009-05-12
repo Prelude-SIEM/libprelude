@@ -48,6 +48,13 @@ EXTRA_libmissing_la_SOURCES += accept.c
 
 ## end   gnulib module accept
 
+## begin gnulib module alignof
+
+
+EXTRA_DIST += alignof.h
+
+## end   gnulib module alignof
+
 ## begin gnulib module alloca
 
 
@@ -449,7 +456,8 @@ all-local: charset.alias ref-add.sed ref-del.sed
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
-install-exec-local: all-local
+install-exec-local: install-exec-localcharset
+install-exec-localcharset: all-local
 	if test $(GLIBC21) = no; then \
 	  case '$(host_os)' in \
 	    darwin[56]*) \
@@ -477,7 +485,8 @@ install-exec-local: all-local
 	  fi ; \
 	fi
 
-uninstall-local: all-local
+uninstall-local: uninstall-localcharset
+uninstall-localcharset: all-local
 	if test -f $(charset_alias); then \
 	  sed -f ref-del.sed $(charset_alias) > $(charset_tmp); \
 	  if grep '^# Packages using this file: $$' $(charset_tmp) \
@@ -1271,6 +1280,7 @@ sys/socket.h: sys_socket.in.h
 	      -e 's|@''GNULIB_SHUTDOWN''@|$(GNULIB_SHUTDOWN)|g' \
 	      -e 's|@''HAVE_WINSOCK2_H''@|$(HAVE_WINSOCK2_H)|g' \
 	      -e 's|@''HAVE_WS2TCPIP_H''@|$(HAVE_WS2TCPIP_H)|g' \
+	      -e 's|@''HAVE_STRUCT_SOCKADDR_STORAGE''@|$(HAVE_STRUCT_SOCKADDR_STORAGE)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      < $(srcdir)/sys_socket.in.h; \
 	} > $@-t
@@ -1550,6 +1560,7 @@ wchar.h: wchar.in.h
 	      -e 's|@''REPLACE_MBSNRTOWCS''@|$(REPLACE_MBSNRTOWCS)|g' \
 	      -e 's|@''REPLACE_WCRTOMB''@|$(REPLACE_WCRTOMB)|g' \
 	      -e 's|@''REPLACE_WCSRTOMBS''@|$(REPLACE_WCSRTOMBS)|g' \
+	      -e 's|@''REPLACE_WCSNRTOMBS''@|$(REPLACE_WCSNRTOMBS)|g' \
 	      -e 's|@''REPLACE_WCWIDTH''@|$(REPLACE_WCWIDTH)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	    < $(srcdir)/wchar.in.h; \
@@ -1618,5 +1629,3 @@ mostlyclean-local: mostlyclean-generic
 	  fi; \
 	done; \
 	:
-
--include $(top_srcdir)/git.mk

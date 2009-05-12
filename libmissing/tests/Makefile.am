@@ -510,5 +510,3 @@ mostlyclean-local: mostlyclean-generic
 	  fi; \
 	done; \
 	:
-
--include $(top_srcdir)/git.mk
