@@ -737,24 +737,22 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
         idmef_value_t *val;
         idmef_value_type_t type;
 
-        if ( idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_TIME ) {
+        type.id = idmef_path_get_value_type(path, -1);
+
+        if ( type.id == IDMEF_VALUE_TYPE_TIME ) {
                 ret = idmef_criterion_value_new_broken_down_time(cv, value, operator);
                 if ( ret == 0 )
                         return ret;
         }
 
         else if ( operator & IDMEF_CRITERION_OPERATOR_REGEX &&
-                  (idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_STRING ||
-                   idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_ENUM ||
-                   idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_DATA) )
+                  (type.id == IDMEF_VALUE_TYPE_STRING || type.id == IDMEF_VALUE_TYPE_ENUM || type.id == IDMEF_VALUE_TYPE_DATA) )
                 return idmef_criterion_value_new_regex(cv, value, operator);
 
         /*
          * It's more understandable for the user if we check the operator
          * prior to checking the value.
          */
-        type.id = idmef_path_get_value_type(path, -1);
-
         ret = idmef_value_type_check_operator(&type, operator);
         if ( ret < 0 )
                 return ret;
