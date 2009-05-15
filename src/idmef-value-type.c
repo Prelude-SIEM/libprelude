@@ -55,6 +55,8 @@
 #define INTEGER_OPERATOR IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER|\
                          IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT
 
+#define ENUM_OPERATOR    STRING_OPERATOR|INTEGER_OPERATOR
+
 
 #define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)               \
@@ -168,6 +170,28 @@ GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
 /*
  * generic functions.
  */
+static int charstring_compare(const char *s1, const char *s2, idmef_criterion_operator_t op)
+{
+        if ( ! s1 || ! s2 )
+                return (s1) ? 1 : -1;
+
+        if ( op == (IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasecmp(s1, s2) == 0 )
+                return 0;
+
+        else if ( op == IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
+                return 0;
+
+        else if ( op == (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasestr(s1, s2) )
+                return 0;
+
+        else if ( op == IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
+                return 0;
+
+        return -1;
+}
+
+
+
 static int generic_copy(const idmef_value_type_t *src, void *dst, size_t size)
 {
         memcpy(dst, &src->data, size);
@@ -238,6 +262,21 @@ static int enum_write(const idmef_value_type_t *src, prelude_string_t *out)
         return prelude_string_cat(out, str);
 }
 
+
+static int enum_compare(const idmef_value_type_t *src, const idmef_value_type_t *dst, size_t size, idmef_criterion_operator_t op)
+{
+        const char *s1;
+
+        if ( dst->id == IDMEF_VALUE_TYPE_STRING ) {
+                s1 = idmef_class_enum_to_string(src->data.enum_val.class_id, src->data.enum_val.value);
+                if ( ! s1 )
+                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, "Enumeration conversion from numeric to string failed");
+
+                return charstring_compare(s1, prelude_string_get_string(dst->data.string_val), op);
+        }
+
+        return generic_compare(src, dst, size, op);
+}
 
 
 /*
@@ -329,22 +368,7 @@ static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t
         if ( t2->data.string_val )
                 s2 = prelude_string_get_string(t2->data.string_val);
 
-        if ( ! s1 || ! s2 )
-                return (s1) ? 1 : -1;
-
-        if ( op == (IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasecmp(s1, s2) == 0 )
-                return 0;
-
-        else if ( op == IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
-                return 0;
-
-        else if ( op == (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasestr(s1, s2) )
-                return 0;
-
-        else if ( op == IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
-                return 0;
-
-        return -1;
+        return charstring_compare(s1, s2, op);
 }
 
 
@@ -536,8 +560,8 @@ static const idmef_value_type_operation_t ops_tbl[] = {
           time_ref, time_destroy, time_compare, time_read, time_write                   },
         { "data", 0, DATA_OPERATOR, data_copy, data_clone,
           data_ref, data_destroy, data_compare, data_read, data_write                   },
-        { "enum", sizeof(idmef_value_type_enum_t), INTEGER_OPERATOR, enum_copy,
-          generic_clone, NULL, NULL, generic_compare, enum_read, enum_write,            },
+        { "enum", sizeof(idmef_value_type_enum_t), ENUM_OPERATOR, enum_copy,
+          generic_clone, NULL, NULL, enum_compare, enum_read, enum_write,               },
         { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL                        },
         { "class", 0, CLASS_OPERATOR, class_copy, class_clone,
           class_ref, class_destroy, class_compare, NULL, NULL                   },
@@ -624,12 +648,14 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
 {
         int ret;
 
-        if ( type1->id != type2->id )
-                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
-
         ret = is_type_valid(type1->id);
         if ( ret < 0 )
                 return ret;
+
+        if ( type1->id != type2->id ) {
+                if ( type1->id != IDMEF_VALUE_TYPE_ENUM && type2->id != IDMEF_VALUE_TYPE_STRING )
+                        return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
+        }
 
         assert(op & ops_tbl[type1->id].operator);
 

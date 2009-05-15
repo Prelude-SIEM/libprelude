@@ -757,7 +757,11 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
         if ( ret < 0 )
                 return ret;
 
-        ret = idmef_value_new_from_path(&val, path, value);
+        if ( type.id == IDMEF_VALUE_TYPE_ENUM && operator & IDMEF_CRITERION_OPERATOR_SUBSTR )
+                ret = idmef_value_new_from_string(&val, IDMEF_VALUE_TYPE_STRING, value);
+        else
+                ret = idmef_value_new_from_path(&val, path, value);
+
         if ( ret < 0 )
                 return ret;
 
