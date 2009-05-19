@@ -121,7 +121,7 @@ static int byte_read(idmef_value_type_t *dst, const char *buf, unsigned int min,
         long int tmp;
 
         tmp = strtol(buf, &endptr, 0);
-        if ( tmp < min || tmp > max )
+        if ( buf == endptr || tmp < min || tmp > max )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,
                                              "Value out of range, required: [%u-%u], got %s",
                                              min, max, buf);
