@@ -747,3 +747,18 @@ int idmef_value_type_check_operator(idmef_value_type_id_t type, idmef_criterion_
                                      "Object type '%s' does not support operator '%s'",
                                      idmef_value_type_to_string(type), idmef_criterion_operator_to_string(op));
 }
+
+
+
+int idmef_value_type_get_applicable_operators(idmef_value_type_id_t type, idmef_criterion_operator_t *result)
+{
+        int ret;
+
+        ret = is_type_valid(type);
+        if ( ret < 0 )
+                return ret;
+
+        *result = ops_tbl[type].operator;
+
+        return 0;
+}

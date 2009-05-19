@@ -832,6 +832,25 @@ int idmef_value_check_operator(const idmef_value_t *value, idmef_criterion_opera
 
 
 /**
+ * idmef_value_get_applicable_operators:
+ * @value: Pointer to a #idmef_value_t object.
+ * @result: Pointer where the result will be stored.
+ *
+ * Store all operator supported by @value in @result.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+
+int idmef_value_get_applicable_operators(const idmef_value_t *value, idmef_criterion_operator_t *result)
+{
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        return idmef_value_type_get_applicable_operators(value->type.id, result);
+}
+
+
+
+/**
  * idmef_value_destroy:
  * @val: Pointer to a #idmef_value_t object.
  *

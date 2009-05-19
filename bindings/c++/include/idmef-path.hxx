@@ -70,6 +70,9 @@ namespace Prelude {
                 int Compare(IDMEFPath *path, int depth=-1);
                 IDMEFPath Clone();
 
+                int CheckOperator(idmef_criterion_operator_t op);
+                idmef_criterion_operator_t GetApplicableOperators();
+
                 //ref ?
                 const char *GetName(int depth=-1);
                 bool IsAmbiguous();

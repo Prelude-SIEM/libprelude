@@ -79,6 +79,25 @@ idmef_value_type_id_t IDMEFPath::GetValueType(int depth)
 }
 
 
+int IDMEFPath::CheckOperator(idmef_criterion_operator_t op)
+{
+        return idmef_path_check_operator(_path, op);
+}
+
+
+
+idmef_criterion_operator_t IDMEFPath::GetApplicableOperators()
+{
+        int ret;
+        idmef_criterion_operator_t res;
+
+        ret = idmef_path_get_applicable_operators(_path, &res);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        return res;
+}
+
 
 void IDMEFPath::Set(IDMEF &message, IDMEFValue *value)
 {

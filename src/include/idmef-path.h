@@ -59,10 +59,10 @@ int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_val
 
 int idmef_path_new(idmef_path_t **path, const char *format, ...)
                    __attribute__ ((__format__ (__printf__, 2, 3)));
-                   
+
 int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
                      __attribute__ ((__format__ (__printf__, 2, 0)));
-                     
+
 int idmef_path_new_fast(idmef_path_t **path, const char *buffer);
 
 idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth);
@@ -96,10 +96,14 @@ prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path);
 int idmef_path_has_lists(const idmef_path_t *path);
 
 prelude_bool_t idmef_path_is_list(const idmef_path_t *path, int depth);
-         
+
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
-#ifndef SWIG         
+int idmef_path_check_operator(const idmef_path_t *path, idmef_criterion_operator_t op);
+
+int idmef_path_get_applicable_operators(const idmef_path_t *path, idmef_criterion_operator_t *result);
+
+#ifndef SWIG
 void _idmef_path_cache_lock(void);
 
 void _idmef_path_cache_reinit(void);
@@ -112,5 +116,5 @@ void _idmef_path_cache_destroy(void);
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_IDMEF_PATH_H */
