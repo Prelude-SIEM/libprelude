@@ -732,18 +732,18 @@ void idmef_value_type_destroy(idmef_value_type_t *type)
 
 
 
-int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criterion_operator_t op)
+int idmef_value_type_check_operator(idmef_value_type_id_t type, idmef_criterion_operator_t op)
 {
         int ret;
 
-        ret = is_type_valid(type->id);
+        ret = is_type_valid(type);
         if ( ret < 0 )
                 return ret;
 
-        if ( (~ops_tbl[type->id].operator & op) == 0 )
+        if ( (~ops_tbl[type].operator & op) == 0 )
                 return 0;
 
         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR,
                                      "Object type '%s' does not support operator '%s'",
-                                     idmef_value_type_to_string(type->id), idmef_criterion_operator_to_string(op));
+                                     idmef_value_type_to_string(type), idmef_criterion_operator_to_string(op));
 }

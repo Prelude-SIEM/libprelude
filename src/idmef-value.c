@@ -826,8 +826,7 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
 int idmef_value_check_operator(const idmef_value_t *value, idmef_criterion_operator_t op)
 {
         prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        return idmef_value_type_check_operator(&value->type, op);
+        return idmef_value_type_check_operator(value->type.id, op);
 }
 
 

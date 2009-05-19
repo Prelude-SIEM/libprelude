@@ -735,29 +735,29 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
 {
         int ret;
         idmef_value_t *val;
-        idmef_value_type_t type;
+        idmef_value_type_id_t tid;
 
-        type.id = idmef_path_get_value_type(path, -1);
+        tid = idmef_path_get_value_type(path, -1);
 
-        if ( type.id == IDMEF_VALUE_TYPE_TIME ) {
+        if ( tid == IDMEF_VALUE_TYPE_TIME ) {
                 ret = idmef_criterion_value_new_broken_down_time(cv, value, operator);
                 if ( ret == 0 )
                         return ret;
         }
 
         else if ( operator & IDMEF_CRITERION_OPERATOR_REGEX &&
-                  (type.id == IDMEF_VALUE_TYPE_STRING || type.id == IDMEF_VALUE_TYPE_ENUM || type.id == IDMEF_VALUE_TYPE_DATA) )
+                  (tid == IDMEF_VALUE_TYPE_STRING || tid == IDMEF_VALUE_TYPE_ENUM || tid == IDMEF_VALUE_TYPE_DATA) )
                 return idmef_criterion_value_new_regex(cv, value, operator);
 
         /*
          * It's more understandable for the user if we check the operator
          * prior to checking the value.
          */
-        ret = idmef_value_type_check_operator(&type, operator);
+        ret = idmef_value_type_check_operator(tid, operator);
         if ( ret < 0 )
                 return ret;
 
-        if ( type.id == IDMEF_VALUE_TYPE_ENUM && operator & IDMEF_CRITERION_OPERATOR_SUBSTR )
+        if ( tid == IDMEF_VALUE_TYPE_ENUM && operator & IDMEF_CRITERION_OPERATOR_SUBSTR )
                 ret = idmef_value_new_from_string(&val, IDMEF_VALUE_TYPE_STRING, value);
         else
                 ret = idmef_value_new_from_path(&val, path, value);
