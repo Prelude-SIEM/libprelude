@@ -1,5 +1,6 @@
-/* Test of <sys/socket.h> substitute.
-   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* getpagesize emulation for systems where it cannot be done in a C macro.
+
+   Copyright (C) 2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,40 +15,25 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Bruno Haible <bruno@clisp.org>, 2007.  */
+/* Written by Bruno Haible and Martin Lambers.  */
 
 #include <config.h>
 
-#include <sys/socket.h>
+/* Specification. */
+#include <unistd.h>
 
-#include <errno.h>
+/* This implementation is only for native Win32 systems.  */
+#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
 
-#if HAVE_SHUTDOWN
-/* Check some integer constant expressions.  */
-int a[] = { SHUT_RD, SHUT_WR, SHUT_RDWR };
-#endif
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h>
 
 int
-main ()
+getpagesize (void)
 {
-  struct sockaddr_storage x;
-  sa_family_t i;
-
-  /* Check some errno values.  */
-  switch (0)
-    {
-    case ENOTSOCK:
-    case EADDRINUSE:
-    case ENETRESET:
-    case ECONNABORTED:
-    case ECONNRESET:
-    case ENOTCONN:
-    case ESHUTDOWN:
-      break;
-    }
-
-  x.ss_family = 42;
-  i = 4711;
-
-  return 0;
+  SYSTEM_INFO system_info;
+  GetSystemInfo (&system_info);
+  return system_info.dwPageSize;
 }
+
+#endif

@@ -261,11 +261,16 @@ AC_SUBST([LTALLOCA])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gl_FUNC_UNGETC_WORKS
+  gl_FUNC_GETPAGESIZE
+  gl_UNISTD_MODULE_INDICATOR([getpagesize])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
   gt_LOCALE_ZH_CN
   gt_LOCALE_FR_UTF8
+  gl_FUNC_MMAP_ANON
+  AC_CHECK_HEADERS_ONCE([sys/mman.h])
+  AC_CHECK_FUNCS_ONCE([mprotect])
   AC_CHECK_DECLS_ONCE([alarm])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
@@ -518,6 +523,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/getaddrinfo.m4
   m4/getdelim.m4
   m4/getline.m4
+  m4/getpagesize.m4
   m4/getpass.m4
   m4/gettimeofday.m4
   m4/glibc21.m4
@@ -545,6 +551,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/mmap-anon.m4
   m4/multiarch.m4
   m4/netdb_h.m4
   m4/netinet_in_h.m4
@@ -608,6 +615,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/write.m4
   m4/xsize.m4
   m4/yield.m4
+  tests/test-alignof.c
   tests/test-alloca-opt.c
   tests/test-arpa_inet.c
   tests/test-btowc.c
@@ -670,6 +678,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-wcrtomb.c
   tests/test-wcrtomb.sh
   tests/test-wctype.c
+  tests/zerosize-ptr.h
+  tests=lib/getpagesize.c
   tests=lib/glthread/yield.h
   tests=lib/sockets.c
   tests=lib/sockets.h

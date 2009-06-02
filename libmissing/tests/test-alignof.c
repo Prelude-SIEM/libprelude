@@ -1,5 +1,5 @@
-/* Test of <sys/socket.h> substitute.
-   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Test of <alignof.h>.
+   Copyright (C) 2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,40 +14,38 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Bruno Haible <bruno@clisp.org>, 2007.  */
+/* Written by Bruno Haible <bruno@clisp.org>, 2009.  */
 
 #include <config.h>
 
-#include <sys/socket.h>
+#include <alignof.h>
 
-#include <errno.h>
+#include <stddef.h>
 
-#if HAVE_SHUTDOWN
-/* Check some integer constant expressions.  */
-int a[] = { SHUT_RD, SHUT_WR, SHUT_RDWR };
-#endif
+#include "verify.h"
+
+typedef struct { char a[1]; } struct1;
+typedef struct { char a[2]; } struct2;
+typedef struct { char a[3]; } struct3;
+typedef struct { char a[4]; } struct4;
+
+#define CHECK(type) \
+  typedef struct { char slot1; type slot2; } type##_helper; \
+  verify (alignof (type) == offsetof (type##_helper, slot2));
+
+CHECK (char)
+CHECK (short)
+CHECK (int)
+CHECK (long)
+CHECK (float)
+CHECK (double)
+CHECK (struct1)
+CHECK (struct2)
+CHECK (struct3)
+CHECK (struct4)
 
 int
 main ()
 {
-  struct sockaddr_storage x;
-  sa_family_t i;
-
-  /* Check some errno values.  */
-  switch (0)
-    {
-    case ENOTSOCK:
-    case EADDRINUSE:
-    case ENETRESET:
-    case ECONNABORTED:
-    case ECONNRESET:
-    case ENOTCONN:
-    case ESHUTDOWN:
-      break;
-    }
-
-  x.ss_family = 42;
-  i = 4711;
-
   return 0;
 }
