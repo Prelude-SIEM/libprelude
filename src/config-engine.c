@@ -279,6 +279,8 @@ static int strip_value(char **out, const char *in, size_t tlen)
         size_t slen, elen;
         prelude_bool_t have_start_quote = FALSE;
 
+        *out = NULL;
+
         in += slen = strspn(in, " \t\r");
         if ( *in == '"' ) {
                 in++; slen++;
@@ -379,7 +381,9 @@ static int parse_buffer(const char *str, char **entry, char **value)
         if ( ret < 0 )
                 return ret;
 
-        ret = value_resolve_variable(val, value);
+        if ( val )
+                ret = value_resolve_variable(val, value);
+
         free_val(&val);
         if ( ret < 0 )
                 return ret;

@@ -80,11 +80,15 @@ static int create_entry(const char *variable, const char *value)
                 return prelude_error_from_errno(errno);
         }
 
-        item->value = strdup(value);
-        if ( ! item->value ) {
-                free(item->variable);
-                free(item);
-                return prelude_error_from_errno(errno);
+        if ( ! value )
+                item->value = NULL;
+        else {
+                item->value = strdup(value);
+                if ( ! item->value ) {
+                        free(item->variable);
+                        free(item);
+                        return prelude_error_from_errno(errno);
+                }
         }
 
         prelude_list_add_tail(&variable_list, &item->list);
@@ -98,7 +102,10 @@ static void destroy_variable(variable_t *item)
         prelude_list_del(&item->list);
 
         free(item->variable);
-        free(item->value);
+
+        if ( item->value )
+                free(item->value);
+
         free(item);
 }
 
@@ -145,7 +152,7 @@ int variable_set(const char *variable, const char *value)
                 if ( item->value )
                         free(item->value);
 
-                item->value = strdup(value);
+                item->value = (value) ? strdup(value) : NULL;
         }
 
         return ( ret == 0 || item ) ? 0 : -1;
