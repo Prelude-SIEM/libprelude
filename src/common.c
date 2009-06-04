@@ -522,6 +522,31 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
 
 
 
+static int add_analyzer(prelude_client_t *client, void *top,
+                        void *(*geta)(void *top, idmef_analyzer_t *analyzer),
+                        int (*insa)(void *top, idmef_analyzer_t *analyzer, int pos))
+{
+        prelude_string_t *str;
+        uint64_t wanted_analyzerid, analyzerid;
+        idmef_analyzer_t *analyzer = NULL, *canalyzer;
+
+        canalyzer = prelude_client_get_analyzer(client);
+        wanted_analyzerid = prelude_client_profile_get_analyzerid(prelude_client_get_profile(client));
+
+        while ( (analyzer = geta(top, analyzer)) && analyzer != canalyzer ) {
+                str = idmef_analyzer_get_analyzerid(analyzer);
+                if ( ! str )
+                        continue;
+
+                analyzerid = strtoull(prelude_string_get_string(str), NULL, 10);
+                if ( analyzerid == wanted_analyzerid )
+                        return 0;
+        }
+
+        return insa(top, idmef_analyzer_ref(prelude_client_get_analyzer(client)), IDMEF_LIST_PREPEND);
+}
+
+
 int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg)
 {
         idmef_alert_t *alert;
@@ -533,11 +558,15 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
 
                 if ( ! idmef_alert_get_messageid(alert) )
                         idmef_alert_set_messageid(alert, get_message_ident(ident));
+
+                add_analyzer(client, alert, (void *) idmef_alert_get_next_analyzer, (void *) idmef_alert_set_analyzer);
         } else {
                 heartbeat = idmef_message_get_heartbeat(msg);
 
                 if ( ! idmef_heartbeat_get_messageid(heartbeat) )
                         idmef_heartbeat_set_messageid(heartbeat, get_message_ident(ident));
+
+                add_analyzer(client, heartbeat, (void *) idmef_heartbeat_get_next_analyzer, (void *)idmef_heartbeat_set_analyzer);
         }
 
         return 0;
