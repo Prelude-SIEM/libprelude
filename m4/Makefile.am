@@ -1,7 +1,7 @@
 m4datadir = $(datadir)/aclocal
 dist_m4data_DATA = libprelude.m4
 
-GITIGNOREFILES = argz.m4	  \ 
+GITIGNOREFILES = argz.m4	  \
 		ltdl.m4		  \
 		libtool.m4	  \
 		ltoptions.m4	  \
