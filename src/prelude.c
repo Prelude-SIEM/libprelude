@@ -276,24 +276,24 @@ void prelude_deinit(void)
 const char *prelude_check_version(const char *req_version)
 {
         int ret;
-        int major, minor, micro;
-        int rq_major, rq_minor, rq_micro;
+        int major, minor, micro, patch = 0;
+        int rq_major, rq_minor, rq_micro, rq_patch = 0;
 
         if ( ! req_version )
                 return VERSION;
 
-        ret = sscanf(VERSION, "%d.%d.%d", &major, &minor, &micro);
-        if ( ret != 3 )
+        ret = sscanf(VERSION, "%d.%d.%d.%d", &major, &minor, &micro, &patch);
+        if ( ret < 3 )
                 return NULL;
 
-        ret = sscanf(req_version, "%d.%d.%d", &rq_major, &rq_minor, &rq_micro);
-        if ( ret != 3 )
+        ret = sscanf(req_version, "%d.%d.%d.%d", &rq_major, &rq_minor, &rq_micro, &rq_patch);
+        if ( ret < 3 )
                 return NULL;
 
         if ( major > rq_major
              || (major == rq_major && minor > rq_minor)
              || (major == rq_major && minor == rq_minor && micro > rq_micro)
-             || (major == rq_major && minor == rq_minor && micro == rq_micro) ) {
+             || (major == rq_major && minor == rq_minor && micro == rq_micro && patch >= rq_patch) ) {
                 return VERSION;
         }
 
