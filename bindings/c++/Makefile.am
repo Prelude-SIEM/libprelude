@@ -11,6 +11,7 @@ libpreludecpp_la_SOURCES = \
 	idmef-path.cxx \
 	idmef-time.cxx \
 	idmef-value.cxx \
+	prelude.cxx	\
 	prelude-client.cxx \
 	prelude-client-easy.cxx \
 	prelude-client-profile.cxx \

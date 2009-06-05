@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2008 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2009 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -21,21 +21,11 @@
 *
 *****/
 
-#include <stdio.h>
+#include <prelude.h>
+#include "prelude.hxx"
 
-#ifndef _LIBPRELUDE_PRELUDE_HXX
-#define _LIBPRELUDE_PRELUDE_HXX
+const char *CheckVersion(const char *version)
+{
+        return prelude_check_version(version);
+}
 
-#include "prelude-client.hxx"
-#include "prelude-client-easy.hxx"
-#include "prelude-connection.hxx"
-#include "prelude-connection-pool.hxx"
-
-#include "idmef.hxx"
-#include "idmef-path.hxx"
-#include "idmef-value.hxx"
-#include "idmef-criteria.hxx"
-
-const char *CheckVersion(const char *version = NULL);
-
-#endif
