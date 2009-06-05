@@ -44,7 +44,7 @@ namespace Prelude {
 
                 void SetConnectionString(const char *str);
                 const char *GetConnectionString();
-                std::list<Prelude::Connection> GetConnectionList();
+                std::vector<Prelude::Connection> GetConnectionList();
 
                 void SetFlags(int flags);
                 int GetFlags();

@@ -1,7 +1,3 @@
-%include std_list.i
-%template() std::list<Prelude::IDMEFValue>;
-%template() std::list<Prelude::Connection>;
-
 %rename (__str__) *::operator const std::string() const;
 %rename (__str__) *::operator const char *() const;
 %rename (__int__) *::operator int() const;
@@ -98,8 +94,8 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 {
         VALUE ary;
         int ret, j = 0;
-        std::list<Prelude::IDMEFValue> result = value;
-        std::list<Prelude::IDMEFValue>::const_iterator i;
+        std::vector<Prelude::IDMEFValue> result = value;
+        std::vector<Prelude::IDMEFValue>::const_iterator i;
 
         ary = rb_ary_new2(result.size());
 

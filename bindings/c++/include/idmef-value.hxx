@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_IDMEF_VALUE_HXX
 #define _LIBPRELUDE_IDMEF_VALUE_HXX
 
-#include <list>
+#include <vector>
 #include "idmef-time.hxx"
 
 namespace Prelude {
@@ -68,7 +68,7 @@ namespace Prelude {
                 operator uint64_t() const;
                 operator double() const;
                 //operator std::string();
-                operator std::list<IDMEFValue>() const;
+                operator std::vector<IDMEFValue>() const;
                 operator const char*() const;
                 operator float() const;
                 operator Prelude::IDMEFTime() const;

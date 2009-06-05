@@ -1,12 +1,14 @@
 %module PreludeEasy
 
 %include "std_string.i"
+%include "std_vector.i"
 %include "exception.i"
 
 %{
 #include <list>
 #include <sstream>
 
+#include "prelude.hxx"
 #include "prelude-error.hxx"
 #include "prelude-connection.hxx"
 #include "prelude-connection-pool.hxx"
@@ -60,6 +62,10 @@ typedef signed int prelude_error_t;
 %ignore operator <<(std::ostream &os, const Prelude::IDMEF &idmef);
 %ignore operator >>(std::istream &is, const Prelude::IDMEF &idmef);
 
+
+%template() std::vector<std::string>;
+%template() std::vector<Prelude::IDMEFValue>;
+%template() std::vector<Prelude::Connection>;
 
 
 %fragment("IDMEFValue_to_SWIG", "header", fragment="IDMEFValueList_to_SWIG", fragment="SWIG_From_float") {
@@ -177,7 +183,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore Prelude::IDMEFValue::operator float() const;
 %ignore Prelude::IDMEFValue::operator double() const;
 %ignore Prelude::IDMEFValue::operator const char*() const;
-%ignore Prelude::IDMEFValue::operator std::list<IDMEFValue>() const;
+%ignore Prelude::IDMEFValue::operator std::vector<IDMEFValue>() const;
 %ignore Prelude::IDMEFValue::operator Prelude::IDMEFTime() const;
 
 /*
@@ -200,6 +206,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore operator idmef_value_t *() const;
 %ignore operator prelude_client_profile_t *() const;
 
+%include prelude.hxx
 %include prelude-error.hxx
 %include prelude-connection.hxx
 %include prelude-connection-pool.hxx

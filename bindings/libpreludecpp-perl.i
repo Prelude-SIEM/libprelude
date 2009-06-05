@@ -1,7 +1,3 @@
-%include std_list.i
-%template() std::list<Prelude::IDMEFValue>;
-%template() std::list<Prelude::Connection>;
-
 # Exception map
 %typemap(throws) Prelude::PreludeError %{
         SWIG_exception(SWIG_RuntimeError, $1.what());
@@ -18,7 +14,6 @@
 %ignore *::operator uint64_t() const;
 %ignore *::operator float() const;
 %ignore *::operator double() const;
-%ignore *::operator std::list<IDMEFValue>() const;
 %ignore *::operator Prelude::IDMEFTime() const;
 %ignore *::operator const std::string() const;
 %ignore *::operator const char *() const;
@@ -33,8 +28,8 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 {
         int j = 0, ret;
-        std::list<Prelude::IDMEFValue> result = value;
-        std::list<Prelude::IDMEFValue>::const_iterator i;
+        std::vector<Prelude::IDMEFValue> result = value;
+        std::vector<Prelude::IDMEFValue>::const_iterator i;
 
         AV *myav;
         SV *svret, **svs = new SV*[result.size()];

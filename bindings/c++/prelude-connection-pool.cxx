@@ -21,7 +21,7 @@
 *
 *****/
 
-#include <list>
+#include <vector>
 
 #include "prelude.h"
 #include "prelude-connection-pool.h"
@@ -79,9 +79,9 @@ void ConnectionPool::Init()
 }
 
 
-std::list<Prelude::Connection> ConnectionPool::GetConnectionList()
+std::vector<Prelude::Connection> ConnectionPool::GetConnectionList()
 {
-        std::list<Prelude::Connection> clist;
+        std::vector<Prelude::Connection> clist;
         prelude_connection_t *con;
         prelude_list_t *head, *tmp;
 

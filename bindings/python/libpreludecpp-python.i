@@ -1,6 +1,4 @@
 %include std_list.i
-%template() std::list<Prelude::IDMEFValue>;
-%template() std::list<Prelude::Connection>;
 
 %rename (__str__) *::operator const std::string() const;
 %rename (__str__) *::operator const char *() const;
@@ -87,8 +85,8 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 {
         int j = 0, ret;
         PyObject *pytuple;
-        std::list<Prelude::IDMEFValue> result = value;
-        std::list<Prelude::IDMEFValue>::const_iterator i;
+        std::vector<Prelude::IDMEFValue> result = value;
+        std::vector<Prelude::IDMEFValue>::const_iterator i;
 
         pytuple = PyTuple_New(result.size());
 

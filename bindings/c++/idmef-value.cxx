@@ -210,7 +210,7 @@ IDMEFValue IDMEFValue::Clone() const
 
 static int iterate_cb(idmef_value_t *value, void *extra)
 {
-        std::list<IDMEFValue> *vlist = (std::list<IDMEFValue> *) extra;
+        std::vector<IDMEFValue> *vlist = (std::vector<IDMEFValue> *) extra;
 
         vlist->push_back(IDMEFValue(idmef_value_ref(value)));
 
@@ -218,9 +218,9 @@ static int iterate_cb(idmef_value_t *value, void *extra)
 }
 
 
-IDMEFValue::operator std::list<IDMEFValue> () const
+IDMEFValue::operator std::vector<IDMEFValue> () const
 {
-        std::list<IDMEFValue> vlist;
+        std::vector<IDMEFValue> vlist;
 
         if ( ! _value )
                 return vlist;

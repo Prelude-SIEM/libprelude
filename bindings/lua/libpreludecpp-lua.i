@@ -47,7 +47,6 @@
 %ignore *::operator uint64_t() const;
 %ignore *::operator float() const;
 %ignore *::operator double() const;
-%ignore *::operator std::list<IDMEFValue>() const;
 %ignore *::operator Prelude::IDMEFTime() const;
 %ignore operator <<;
 %ignore operator >>;
@@ -160,8 +159,8 @@ int IDMEFValueList_to_SWIG(lua_State *L, const Prelude::IDMEFValue &value)
 {
         bool is_list;
         int index = 0, ret;
-        std::list<Prelude::IDMEFValue> result = value;
-        std::list<Prelude::IDMEFValue>::const_iterator i;
+        std::vector<Prelude::IDMEFValue> result = value;
+        std::vector<Prelude::IDMEFValue>::const_iterator i;
 
         lua_newtable(L);
 
