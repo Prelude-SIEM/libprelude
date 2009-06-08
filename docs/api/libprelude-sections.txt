@@ -1603,6 +1603,8 @@ idmef_path_is_ambiguous
 idmef_path_has_lists
 idmef_path_is_list
 idmef_path_get_depth
+idmef_path_check_operator
+idmef_path_get_applicable_operators
 </SECTION>
 
 <SECTION>
@@ -1761,6 +1763,7 @@ idmef_value_to_string
 idmef_value_get
 idmef_value_match
 idmef_value_check_operator
+idmef_value_get_applicable_operators
 idmef_value_destroy
 </SECTION>
 

@@ -1,3 +1,19 @@
+* 2009-06-08, libprelude-0.9.23:
+
+- New API functions to retrieve operators applicable to a given idmef_path_t,
+  idmef_value_t or idmef_value_type_t.
+
+- Return an error when a character are provided as input for a 8 bit integer value.
+
+- Make it possible to compare an enumeration path with a string
+  by using the standard substring operator (<> or <>*).
+
+- Automatically set IDMEFAnalyzer before sending IDMEF messages.
+
+- Various bug fixes.
+
+
+
 * 2009-04-22, libprelude-0.9.22:
 
 - Fix C++ headers installation.

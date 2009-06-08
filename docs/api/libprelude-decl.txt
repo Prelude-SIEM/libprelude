@@ -1789,6 +1789,11 @@ idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op
 const idmef_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_value_get_applicable_operators</NAME>
+<RETURNS>int </RETURNS>
+const idmef_value_t *value, idmef_criterion_operator_t *result
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_value_destroy</NAME>
 <RETURNS>void </RETURNS>
 idmef_value_t *val
@@ -2511,7 +2516,7 @@ idmef_message_t *ptr, prelude_io_t *fd
 </FUNCTION>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.22"
+#define LIBPRELUDE_VERSION "0.9.23"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7225,6 +7230,16 @@ const idmef_path_t *path, int depth
 <NAME>idmef_path_get_depth</NAME>
 <RETURNS>unsigned int </RETURNS>
 const idmef_path_t *path
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_check_operator</NAME>
+<RETURNS>int </RETURNS>
+const idmef_path_t *path, idmef_criterion_operator_t op
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_applicable_operators</NAME>
+<RETURNS>int </RETURNS>
+const idmef_path_t *path, idmef_criterion_operator_t *result
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_PLUGIN_API_VERSION</NAME>

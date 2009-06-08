@@ -723,6 +723,16 @@ idmef-value
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_value_get_applicable_operators ##### -->
+<para>
+
+</para>
+
+@value: 
+@result: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_destroy ##### -->
 <para>
 
