@@ -55,6 +55,8 @@ dnl * Setup GnuLib, libtool and libltdl.
 dnl **********************************************************
 
 gl_EARLY
+LT_CONFIG_LTDL_DIR([libltdl])
+AC_CONFIG_MACRO_DIR([m4])
 LT_INIT([dlopen win32-dll disable-static])
 LTDL_INIT([recursive])
 
