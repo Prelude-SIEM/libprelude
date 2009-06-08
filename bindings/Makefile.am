@@ -3,6 +3,7 @@ SUBDIRS = c++ low-level lua python ruby
 EXTRA_DIST = libpreludecpp.i libpreludecpp-perl.i perl/Makefile.PL.in
 
 CLEANFILES = perl/pm_to_blib perl/PreludeEasy.o perl/blib python/build
+DISTCLEANFILES=perl/PreludeEasy.cxx
 MAINTAINERCLEANFILES =   \
 			lua/PreludeEasy.cxx	     \
 			perl/Makefile		     \
