@@ -69,13 +69,13 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
                 self->_genericRead(_cb_python_read, nocast_file_p);
         }
 
-        Prelude::IDMEF &operator >> (PyObject *o) {
-                self->_genericWrite(_cb_python_write, o);
+        Prelude::IDMEF &operator >> (void *nocast_file_p) {
+                self->_genericWrite(_cb_python_write, nocast_file_p);
                 return *self;
         }
 
-        Prelude::IDMEF &operator << (PyObject *o) {
-                self->_genericRead(_cb_python_read, o);
+        Prelude::IDMEF &operator << (void *nocast_file_p) {
+                self->_genericRead(_cb_python_read, nocast_file_p);
                 return *self;
         }
 }

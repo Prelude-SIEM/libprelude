@@ -30,7 +30,6 @@ static int _cb_ruby_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
         ssize_t ret;
         OpenFile *fptr;
         VALUE *io = (VALUE *) prelude_msgbuf_get_data(fd);
-        VALUE v = rb_tainted_str_new((const char *) prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
 
         GetOpenFile(*io, fptr);
         f = fptr->f;
@@ -77,13 +76,13 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
                 self->_genericRead(_cb_ruby_read, nocast_p);
         }
 
-        Prelude::IDMEF &operator >> (VALUE o) {
-                self->_genericWrite(_cb_ruby_write, &o);
+        Prelude::IDMEF &operator >> (void *nocast_p) {
+                self->_genericWrite(_cb_ruby_write, nocast_p);
                 return *self;
         }
 
-        Prelude::IDMEF &operator << (VALUE o) {
-                self->_genericRead(_cb_ruby_read, &o);
+        Prelude::IDMEF &operator << (void *nocast_p) {
+                self->_genericRead(_cb_ruby_read, nocast_p);
                 return *self;
         }
 }
