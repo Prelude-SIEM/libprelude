@@ -801,6 +801,10 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                 return 0;
         }
 
+        ret = fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+        if ( ret < 0 )
+                fprintf(stderr, "error changing '%s' ownership: %s.\n", filename, strerror(errno));
+
         fprintf(fd, "%" PRELUDE_PRIu64 "\n", *ident);
         fclose(fd);
 
