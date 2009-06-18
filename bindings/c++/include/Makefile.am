@@ -12,7 +12,8 @@ include_HEADERS = \
 	prelude-client-easy.hxx \
 	prelude-client-profile.hxx \
 	prelude-connection.hxx	\
-	prelude-connection-pool.hxx
+	prelude-connection-pool.hxx \
+	prelude-log.hxx
 
 
 -include $(top_srcdir)/git.mk

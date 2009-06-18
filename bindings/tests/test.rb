@@ -2,6 +2,7 @@
 
 require("PreludeEasy")
 
+PreludeEasy::PreludeLog::SetCallback(lambda{|level,str|print "log: " + str})
 idmef = PreludeEasy::IDMEF.new()
 
 print "*** IDMEF->Set() ***\n"

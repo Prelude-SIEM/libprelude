@@ -16,7 +16,8 @@ libpreludecpp_la_SOURCES = \
 	prelude-client-easy.cxx \
 	prelude-client-profile.cxx \
 	prelude-connection.cxx	\
-	prelude-connection-pool.cxx
+	prelude-connection-pool.cxx \
+	prelude-log.cxx
 
 libpreludecpp_la_LDFLAGS = -no-undefined -version-info @LIBPRELUDECPP_SONAME@
 libpreludecpp_la_LIBADD  = $(top_builddir)/src/.libs/libprelude.la

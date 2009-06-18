@@ -2,7 +2,16 @@
 
 use PreludeEasy;
 
+sub log_func {
+	($level, $str) = @_;
+	print("log: " . $str);
+}
+
+PreludeEasy::PreludeLog::SetCallback(\&log_func);
+
 $idmef = new PreludeEasy::IDMEF;
+$client = new PreludeEasy::ClientEasy("abc");
+$client->Start();
 
 print "*** IDMEF->Set() ***\n";
 $idmef->Set("alert.classification.text", "My Message");

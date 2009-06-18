@@ -55,7 +55,32 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         $1 = $input;
 }
 
-%{
+%fragment("TransitionFunc", "header") {
+static SV *__prelude_log_func;
+static gl_thread_t __initial_thread;
+
+
+static void _cb_perl_log(int level, const char *str)
+{
+        if ( (gl_thread_t) gl_thread_self() != __initial_thread )
+                return;
+
+        dSP;
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        XPUSHs(SWIG_From_int(level));
+        XPUSHs(SWIG_FromCharPtr(str));
+        PUTBACK;
+
+        perl_call_sv(__prelude_log_func, G_VOID);
+
+        FREETMPS;
+        LEAVE;
+}
+
+
 static int _cb_perl_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
         int ret;
@@ -85,7 +110,17 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
 
         return ret;
 }
-%}
+};
+
+%typemap(in, fragment="TransitionFunc") void (*log_cb)(int level, const char *log) {
+        if ( __prelude_log_func )
+                SvREFCNT_dec(__prelude_log_func);
+
+        __prelude_log_func = $input;
+        SvREFCNT_inc($input);
+
+        $1 = _cb_perl_log;
+};
 
 %extend Prelude::IDMEF {
         void Write(void *nocast_p) {
@@ -128,6 +163,8 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
         char **argv;
         int j, argc = 1, ret;
         AV *pargv = get_av("ARGV", FALSE);
+
+        __initial_thread = (gl_thread_t) gl_thread_self();
 
         ret = av_len(pargv);
         if ( ret >= 0 )

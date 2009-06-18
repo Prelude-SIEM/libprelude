@@ -8,7 +8,10 @@
 #include <list>
 #include <sstream>
 
+#include "config.h"
+
 #include "prelude.hxx"
+#include "prelude-log.hxx"
 #include "prelude-error.hxx"
 #include "prelude-connection.hxx"
 #include "prelude-connection-pool.hxx"
@@ -20,6 +23,7 @@
 #include "idmef-path.hxx"
 #include "idmef-time.hxx"
 #include "idmef.hxx"
+#include "glthread/thread.h"
 
 using namespace Prelude;
 %}
@@ -207,6 +211,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore operator prelude_client_profile_t *() const;
 
 %include prelude.hxx
+%include prelude-log.hxx
 %include prelude-error.hxx
 %include prelude-connection.hxx
 %include prelude-connection-pool.hxx

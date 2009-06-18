@@ -15,6 +15,25 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 
 
 %{
+static gl_thread_t __initial_thread;
+PyObject *__prelude_log_func = NULL;
+
+static void _cb_python_log(int level, const char *str)
+{
+        PyObject *arglist, *result;
+
+        SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+
+        arglist = Py_BuildValue("(i,s)", level, str);
+        result = PyEval_CallObject(__prelude_log_func, arglist);
+
+        Py_DECREF(arglist);
+        Py_XDECREF(result);
+
+        SWIG_PYTHON_THREAD_END_BLOCK;
+}
+
+
 static int _cb_python_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
         size_t ret;
@@ -47,6 +66,19 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         return ret;
 }
 %}
+
+%typemap(in) void (*log_cb)(int level, const char *log) {
+        if ( ! PyCallable_Check($input) )
+                SWIG_exception_fail(SWIG_ValueError, "Argument is not a callable object");
+
+        if ( __prelude_log_func )
+                Py_DECREF(__prelude_log_func);
+
+        __prelude_log_func = $input;
+        Py_INCREF($input);
+
+        $1 = _cb_python_log;
+};
 
 
 /* tell squid not to cast void * value */
@@ -127,6 +159,8 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         char **argv = NULL;
         PyObject *sys = PyImport_ImportModule("sys");
         PyObject *pyargv = PyObject_GetAttrString(sys, "argv");
+
+        __initial_thread = (gl_thread_t) gl_thread_self();
 
         argc = PyObject_Length(pyargv);
         assert(argc >= 1);

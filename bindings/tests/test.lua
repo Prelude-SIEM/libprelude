@@ -2,6 +2,11 @@
 
 require("PreludeEasy")
 
+function my_cb(level, log)
+	io.write("log: " .. log)
+end
+PreludeEasy.PreludeLog_SetCallback(my_cb)
+
 idmef = PreludeEasy.IDMEF()
 
 print("*** IDMEF->Set() ***")

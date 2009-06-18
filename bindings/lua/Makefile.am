@@ -4,7 +4,7 @@ EXTRA_DIST = libpreludecpp-lua.i PreludeEasy.cxx
 
 if HAVE_LUA
 
-AM_CPPFLAGS = -I@top_srcdir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include @LUA_CFLAGS@
+AM_CPPFLAGS = -I@top_srcdir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include @LUA_CFLAGS@ -I@top_srcdir@/libmissing -I@top_builddir@/libmissing
 
 PreludeEasy_la_LDFLAGS = -module -avoid-version @LUA_LIBS@
 PreludeEasy_la_LIBADD = $(top_builddir)/bindings/c++/.libs/libpreludecpp.la

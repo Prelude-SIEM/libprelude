@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
+import sys
 import PreludeEasy
+
+def log_cb(level, str):
+	sys.stdout.write("log: " + str)
+
+PreludeEasy.PreludeLog.SetCallback(log_cb)
 
 idmef = PreludeEasy.IDMEF()
 

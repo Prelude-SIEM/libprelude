@@ -110,7 +110,23 @@ int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result);
         $1 = *pf;
 }
 
-%{
+%fragment("TransitionFunc", "header") {
+static int __prelude_log_func;
+static lua_State *__lua_state = NULL;
+static gl_thread_t __initial_thread;
+
+static void _cb_lua_log(int level, const char *str)
+{
+        if ( (gl_thread_t) gl_thread_self() != __initial_thread )
+                return;
+
+        lua_rawgeti(__lua_state, LUA_REGISTRYINDEX, __prelude_log_func);
+        lua_pushnumber(__lua_state, level);
+        lua_pushstring(__lua_state, str);
+        lua_call(__lua_state, 2, 0);
+}
+
+
 static int _cb_lua_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
         size_t ret;
@@ -140,7 +156,20 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
         return ret;
 }
 
-%}
+};
+
+
+%typemap(in, fragment="TransitionFunc") void (*log_cb)(int level, const char *log) {
+        if ( ! lua_isfunction(L, -1) )
+                SWIG_exception(SWIG_ValueError, "Argument should be a function");
+
+        if ( __lua_state )
+                luaL_unref(L, LUA_REGISTRYINDEX, __prelude_log_func);
+
+        __prelude_log_func = luaL_ref(L, LUA_REGISTRYINDEX);
+        $1 = _cb_lua_log;
+        __lua_state = L;
+};
 
 
 %extend Prelude::IDMEF {
@@ -290,6 +319,8 @@ int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result)
 %init {
         int argc = 0, ret;
         static char *argv[1024];
+
+        __initial_thread = (gl_thread_t) gl_thread_self();
 
         lua_getglobal(L, "arg");
         lua_pushnil(L);

@@ -23,6 +23,23 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 extern "C" {
 #include "rubyio.h"
 }
+%};
+
+
+%fragment("TransitionFunc", "header") {
+static gl_thread_t __initial_thread;
+static VALUE __prelude_log_func = Qnil;
+
+static void _cb_ruby_log(int level, const char *str)
+{
+        static int cid = rb_intern("call");
+
+        if ( (gl_thread_t) gl_thread_self() != __initial_thread )
+                return;
+
+        rb_funcall(__prelude_log_func, cid, 2, SWIG_From_int(level), SWIG_FromCharPtr(str));
+}
+
 
 static int _cb_ruby_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
@@ -63,8 +80,18 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 
         return ret;
 }
+};
 
-%}
+
+%typemap(in, fragment="TransitionFunc") void (*log_cb)(int level, const char *log) {
+        if ( ! SWIG_Ruby_isCallable($input) )
+                SWIG_exception_fail(SWIG_ValueError, "Argument is not a callable object");
+
+        __prelude_log_func = $input;
+        rb_global_variable(&$input);
+
+        $1 = _cb_ruby_log;
+};
 
 
 %extend Prelude::IDMEF {
@@ -135,6 +162,8 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         char **argv;
         int _i, argc;
         VALUE rbargv, *ptr;
+
+        __initial_thread = (gl_thread_t) gl_thread_self();
 
         rbargv = rb_const_get(rb_cObject, rb_intern("ARGV"));
         argc = RARRAY(rbargv)->len + 1;
