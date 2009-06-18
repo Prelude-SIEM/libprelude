@@ -32,6 +32,17 @@
 #endif
 
 
+/**
+ * prelude_async_flags_t
+ * @PRELUDE_ASYNC_FLAGS_TIMER: Enable asynchronous timer.
+ *
+ * This provides asynchronous timer. When enabled, the heartbeat
+ * function (and user specified callback, if any) will be called
+ * automatically, from an asynchronous thread.
+ *
+ * If you use this flags, you won't need to call prelude_wake_up_timer()
+ * anymore.
+ */
 typedef enum {
         PRELUDE_ASYNC_FLAGS_TIMER   = 0x01
 } prelude_async_flags_t;

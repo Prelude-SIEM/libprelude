@@ -1764,6 +1764,7 @@ prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client)
 
 
 
+#ifndef PRELUDE_DISABLE_DEPRECATED
 /**
  * prelude_client_is_setup_needed:
  * @error: Error returned by prelude_client_start().
@@ -1783,7 +1784,6 @@ prelude_bool_t prelude_client_is_setup_needed(int error)
          */
         return FALSE;
 }
-
 
 
 const char *prelude_client_get_setup_error(prelude_client_t *client)
@@ -1833,6 +1833,7 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 
         return _prelude_thread_get_error();
 }
+#endif
 
 
 

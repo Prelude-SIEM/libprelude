@@ -704,7 +704,7 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist,
  * @argc: Number of argument.
  * @argv: Argument list.
  * @err: Pointer to a #prelude_string_t object where to store an error string.
- * @context:
+ * @context: Pointer to an optional option context.
  *
  * prelude_option_read(), parse the given argument and try to
  * match them against option in @option. If an option match, it's associated

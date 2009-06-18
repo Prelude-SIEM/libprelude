@@ -1135,16 +1135,16 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 /**
  * idmef_path_check_operator:
  * @path: Pointer to a #idmef_path_t object.
- * @operator: Operator to check compatibility with.
+ * @op: Operator to check compatibility with.
  *
- * Check whether @operator can apply to value pointed to by @path.
+ * Check whether @op can apply to value pointed to by @path.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_path_check_operator(const idmef_path_t *path, idmef_criterion_operator_t operator)
+int idmef_path_check_operator(const idmef_path_t *path, idmef_criterion_operator_t op)
 {
         prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
-        return idmef_value_type_check_operator(idmef_path_get_value_type(path, -1), operator);
+        return idmef_value_type_check_operator(idmef_path_get_value_type(path, -1), op);
 }
 
 
