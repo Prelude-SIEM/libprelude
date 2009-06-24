@@ -1243,6 +1243,13 @@ int prelude_client_init(prelude_client_t *client)
         prelude_string_t *err;
         prelude_option_warning_t old_warnings;
 
+        /*
+         * Calling two time init() would result in error in
+         * fill_client_infos(), due to idmef_analyzer_t object reuse.
+         */
+        if ( client->status != CLIENT_STATUS_NEED_INIT )
+                return 0;
+
         prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         prelude_option_set_warnings(0, &old_warnings);
