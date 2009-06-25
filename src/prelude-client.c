@@ -451,7 +451,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 
         idmef_process_set_pid(process, getpid());
 
-        if ( ! program )
+        if ( ! program || ! *program )
                 return 0;
 
         name = path = NULL;
