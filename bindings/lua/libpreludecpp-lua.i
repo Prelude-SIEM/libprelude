@@ -323,6 +323,9 @@ int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result)
         __initial_thread = (gl_thread_t) gl_thread_self();
 
         lua_getglobal(L, "arg");
+        if ( ! lua_istable(L, -1) )
+                return;
+
         lua_pushnil(L);
 
         while ( lua_next(L, -2) != 0 ) {
