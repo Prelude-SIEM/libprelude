@@ -150,19 +150,22 @@ static int parse_time_gmt(struct tm *tm, int32_t *gmtoff, const char *buf)
  *
  * Fills @time object with information retrieved from the user provided
  * @buf, containing a string describing a time in a format conforming
- * to the IDMEF definition  (v. 0.10, section 3.2.6).
+ * to the IDMEF definition (v. 0.10, section 3.2.6).
  *
- * Additionally, the provided time might be separated with white spaces, instead
- * of the IDMEF define 'T' character. The format might not specify a timezone
- * (will assume UTC in this case).
+ * Additionally, the provided time might be separated with white spaces,
+ * instead of the IDMEF defined 'T' character.
+ *
+ * If there is no UTC offset specified, we assume that the provided
+ * time is local, and compute the GMT offset by ourselve.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
 int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
 {
+        int ret;
         char *ptr;
         struct tm tm;
-        int is_localtime = 1, ret;
+        prelude_bool_t miss_gmt = TRUE;
 
         prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -172,24 +175,29 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
 
         ptr = parse_time_ymd(&tm, buf);
         if ( ! ptr )
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing date field, format should be: YY-MM-DD");
 
         if ( *ptr ) {
                 ptr = parse_time_hmsu(&tm, &time->usec, ptr);
                 if ( ! ptr )
-                        return -1;
+                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing time field, format should be: HH:MM:SS");
 
                 if ( *ptr ) {
                         ret = parse_time_gmt(&tm, &time->gmt_offset, ptr);
                         if ( ret < 0 )
-                                return -1;
+                                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing GMT offset field (Z)?(+|-)?HH:MM");
 
-                        is_localtime = 0;
+                        miss_gmt = FALSE;
                 }
         }
 
-        time->sec = is_localtime ? mktime(&tm) : prelude_timegm(&tm);
+        if ( miss_gmt ) {
+                long gmtoff;
+                prelude_get_gmt_offset_from_tm(&tm, &gmtoff);
+                time->gmt_offset = (int32_t) gmtoff;
+        }
 
+        time->sec = miss_gmt ? mktime(&tm) : prelude_timegm(&tm);
         return 0;
 }
 
