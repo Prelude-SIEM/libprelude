@@ -1,3 +1,26 @@
+* 2009-07-08, libprelude-0.9.24:
+
+- Initial prelude-log C++/Python/Ruby/Perl/Lua bindings support.
+  This implement language bindings for the PreludeLog interface.
+
+- Make the created profile permission fully respect required ownership.
+  The analyzerid file within the created profile was incorrectly created
+  with current ownership, rather than using specified uid/gid.
+
+- Ruby and Python bindings were not properly checking whether the
+  argument was a file descriptor in case the left/right shift IDMEF
+  operator were used.
+
+- Fix prelude-client initialization problem with empty argv[0], which
+  sometime happen when called from certain high level language.
+
+- Fix error in case of multiple initialization.
+
+- Fix possible Lua module crash on initialization.
+
+- Various bug fixes
+
+
 * 2009-06-08, libprelude-0.9.23:
 
 - New API functions to retrieve operators applicable to a given idmef_path_t,
