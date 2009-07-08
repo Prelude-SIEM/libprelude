@@ -152,15 +152,6 @@ EXTRA_DIST += test-getline.c
 
 ## end   gnulib module getline-tests
 
-## begin gnulib module getpagesize
-
-
-EXTRA_DIST += getpagesize.c
-
-EXTRA_libtests_a_SOURCES += getpagesize.c
-
-## end   gnulib module getpagesize
-
 ## begin gnulib module gettimeofday-tests
 
 TESTS += test-gettimeofday
@@ -212,6 +203,14 @@ check_PROGRAMS += test-mbsinit
 EXTRA_DIST += test-mbsinit.sh test-mbsinit.c
 
 ## end   gnulib module mbsinit-tests
+
+## begin gnulib module memchr-tests
+
+TESTS += test-memchr
+check_PROGRAMS += test-memchr
+EXTRA_DIST += test-memchr.c zerosize-ptr.h
+
+## end   gnulib module memchr-tests
 
 ## begin gnulib module memmem-tests
 

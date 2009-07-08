@@ -88,6 +88,8 @@ AC_SUBST([LTALLOCA])
   gl_STDIO_MODULE_INDICATOR([getdelim])
   gl_FUNC_GETLINE
   gl_STDIO_MODULE_INDICATOR([getline])
+  gl_FUNC_GETPAGESIZE
+  gl_UNISTD_MODULE_INDICATOR([getpagesize])
   gl_FUNC_GETPASS
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
@@ -128,6 +130,8 @@ AC_SUBST([LTALLOCA])
   gl_WCHAR_MODULE_INDICATOR([mbrtowc])
   gl_FUNC_MBSINIT
   gl_WCHAR_MODULE_INDICATOR([mbsinit])
+  gl_FUNC_MEMCHR
+  gl_STRING_MODULE_INDICATOR([memchr])
   gl_FUNC_MEMMEM
   gl_FUNC_MEMMEM_SIMPLE
   gl_STRING_MODULE_INDICATOR([memmem])
@@ -261,8 +265,6 @@ AC_SUBST([LTALLOCA])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gl_FUNC_UNGETC_WORKS
-  gl_FUNC_GETPAGESIZE
-  gl_UNISTD_MODULE_INDICATOR([getpagesize])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
@@ -408,6 +410,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/getaddrinfo.c
   lib/getdelim.c
   lib/getline.c
+  lib/getpagesize.c
   lib/getpass.c
   lib/getpass.h
   lib/getsockname.c
@@ -433,6 +436,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/malloc.c
   lib/mbrtowc.c
   lib/mbsinit.c
+  lib/memchr.c
+  lib/memchr.valgrind
   lib/memmem.c
   lib/minmax.h
   lib/mktime.c
@@ -548,6 +553,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/mbrtowc.m4
   m4/mbsinit.m4
   m4/mbstate_t.m4
+  m4/memchr.m4
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
@@ -642,6 +648,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-mbrtowc4.sh
   tests/test-mbsinit.c
   tests/test-mbsinit.sh
+  tests/test-memchr.c
   tests/test-memmem.c
   tests/test-netdb.c
   tests/test-netinet_in.c
@@ -679,7 +686,6 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-wcrtomb.sh
   tests/test-wctype.c
   tests/zerosize-ptr.h
-  tests=lib/getpagesize.c
   tests=lib/glthread/yield.h
   tests=lib/sockets.c
   tests=lib/sockets.h
