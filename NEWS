@@ -1,3 +1,11 @@
+* 2009-07-08, libprelude-0.9.24.1:
+
+- Use SWIG 1.3.39 to generate bindings code, fixes Prewikka compatibility
+  problem because of SWIG version mismatch between libprelude/libpreludedb
+  modules.
+
+
+
 * 2009-07-08, libprelude-0.9.24:
 
 - Initial prelude-log C++/Python/Ruby/Perl/Lua bindings support.
