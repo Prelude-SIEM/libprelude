@@ -1,5 +1,5 @@
 /* Test of <stdlib.h> substitute.
-   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009, 2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ int exitcode;
 verify (sizeof NULL == sizeof (void *));
 
 int
-main ()
+main (void)
 {
   /* Check that some macros are defined and different integer constants.  */
   switch (exitcode)

@@ -19,24 +19,21 @@
 
 #include <string.h>
 
+#include "signature.h"
+SIGNATURE_CHECK (memmem, void *, (void const *, size_t, void const *, size_t));
+
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "zerosize-ptr.h"
+#include "macros.h"
 
-#define ASSERT(expr) \
-  do									     \
-    {									     \
-      if (!(expr))							     \
-        {								     \
-          fprintf (stderr, "%s:%d: assertion failed\n", __FILE__, __LINE__); \
-          fflush (stderr);						     \
-          abort ();							     \
-        }								     \
-    }									     \
-  while (0)
+static void *
+null_ptr (void)
+{
+  return NULL;
+}
 
 int
 main (int argc, char *argv[])
@@ -88,7 +85,7 @@ main (int argc, char *argv[])
 
   {
     const char input[] = "foo";
-    const char *result = memmem (input, strlen (input), NULL, 0);
+    const char *result = memmem (input, strlen (input), null_ptr (), 0);
     ASSERT (result == input);
   }
 
@@ -104,15 +101,15 @@ main (int argc, char *argv[])
     char *haystack = (char *) malloc (m + 1);
     if (haystack != NULL)
       {
-	memset (haystack, 'A', m);
-	haystack[0] = 'B';
+        memset (haystack, 'A', m);
+        haystack[0] = 'B';
 
-	for (; repeat > 0; repeat--)
-	  {
-	    ASSERT (memmem (haystack, m, needle, n) == haystack + 1);
-	  }
+        for (; repeat > 0; repeat--)
+          {
+            ASSERT (memmem (haystack, m, needle, n) == haystack + 1);
+          }
 
-	free (haystack);
+        free (haystack);
       }
   }
 
@@ -128,14 +125,14 @@ main (int argc, char *argv[])
     char *needle = (char *) malloc (m + 1);
     if (needle != NULL)
       {
-	memset (needle, 'A', m);
+        memset (needle, 'A', m);
 
-	for (; repeat > 0; repeat--)
-	  {
-	    ASSERT (memmem (haystack, n, needle, m) == NULL);
-	  }
+        for (; repeat > 0; repeat--)
+          {
+            ASSERT (memmem (haystack, n, needle, m) == NULL);
+          }
 
-	free (needle);
+        free (needle);
       }
   }
 
@@ -146,16 +143,16 @@ main (int argc, char *argv[])
     char *needle = (char *) malloc (m + 1);
     if (haystack != NULL && needle != NULL)
       {
-	const char *result;
+        const char *result;
 
-	memset (haystack, 'A', 2 * m);
-	haystack[2 * m] = 'B';
+        memset (haystack, 'A', 2 * m);
+        haystack[2 * m] = 'B';
 
-	memset (needle, 'A', m);
-	needle[m] = 'B';
+        memset (needle, 'A', m);
+        needle[m] = 'B';
 
-	result = memmem (haystack, 2 * m + 1, needle, m + 1);
-	ASSERT (result == haystack + m);
+        result = memmem (haystack, 2 * m + 1, needle, m + 1);
+        ASSERT (result == haystack + m);
       }
     free (needle);
     free (haystack);
@@ -171,16 +168,16 @@ main (int argc, char *argv[])
     char *needle = (char *) malloc (n);
     if (haystack != NULL && needle != NULL)
       {
-	const char *result;
+        const char *result;
 
-	memset (haystack, 'A', m);
-	memset (needle, 'B', n);
+        memset (haystack, 'A', m);
+        memset (needle, 'B', n);
 
-	for (; repeat > 0; repeat--)
-	  {
-	    result = memmem (haystack, m, needle, n);
-	    ASSERT (result == NULL);
-	  }
+        for (; repeat > 0; repeat--)
+          {
+            result = memmem (haystack, m, needle, n);
+            ASSERT (result == NULL);
+          }
       }
     free (haystack);
     free (needle);

@@ -1,5 +1,5 @@
 # timegm.m4 serial 6
-dnl Copyright (C) 2003, 2007, 2009 Free Software Foundation, Inc.
+dnl Copyright (C) 2003, 2007, 2009, 2010 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -34,7 +34,7 @@ AC_DEFUN([gl_PREREQ_TIMEGM], [
        # so we need to substitute our own mktime implementation.
        AC_LIBOBJ([mktime])
        AC_DEFINE([mktime], [rpl_mktime],
-	 [Define to rpl_mktime if the replacement function should be used.])
+         [Define to rpl_mktime if the replacement function should be used.])
        gl_PREREQ_MKTIME])
   fi
 ])

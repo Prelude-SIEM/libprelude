@@ -36,12 +36,12 @@
 #include <errno.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <sys/utsname.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
-#include "uname.h"
 #include "glthread/lock.h"
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT

@@ -1,5 +1,5 @@
 /* Test of poll() function.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,18 +19,21 @@
 
 #include <config.h>
 
+#include <poll.h>
+
+#include "signature.h"
+SIGNATURE_CHECK (poll, int, (struct pollfd[], nfds_t, int));
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <poll.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <sys/ioctl.h>
 #include <errno.h>
-#include "sockets.h"
 
 #if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
 # define WIN32_NATIVE
@@ -51,7 +54,7 @@
 #define SO_REUSEPORT    SO_REUSEADDR
 #endif
 
-#define TEST_PORT	12345
+#define TEST_PORT       12345
 
 
 /* Minimal testing infrastructure.  */
@@ -269,7 +272,7 @@ test_accept_first (void)
       close (s);
       c = connect_to_socket (true);
       if (poll1_nowait (c, POLLOUT | POLLWRNORM | POLLRDBAND)
-	  != (POLLOUT | POLLWRNORM))
+          != (POLLOUT | POLLWRNORM))
         failed ("cannot write after blocking connect");
       write (c, "foo", 3);
       wait (&pid);
@@ -359,8 +362,6 @@ int
 main ()
 {
   int result;
-
-  gl_sockets_startup (SOCKETS_1_1);
 
 #ifdef INTERACTIVE
   printf ("Please press Enter\n");

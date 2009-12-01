@@ -1,5 +1,5 @@
 /* Multithreading primitives.
-   Copyright (C) 2005-2009 Free Software Foundation, Inc.
+   Copyright (C) 2005-2010 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -48,16 +48,16 @@ glthread_in_use (void)
       pthread_t thread;
 
       if (pthread_create (&thread, NULL, dummy_thread_func, NULL) != 0)
-	/* Thread creation failed.  */
-	result = 0;
+        /* Thread creation failed.  */
+        result = 0;
       else
-	{
-	  /* Thread creation works.  */
-	  void *retval;
-	  if (pthread_join (thread, &retval) != 0)
-	    abort ();
-	  result = 1;
-	}
+        {
+          /* Thread creation works.  */
+          void *retval;
+          if (pthread_join (thread, &retval) != 0)
+            abort ();
+          result = 1;
+        }
       tested = 1;
     }
   return result;

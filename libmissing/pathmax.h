@@ -1,5 +1,6 @@
 /* Define PATH_MAX somehow.  Requires sys/types.h.
-   Copyright (C) 1992, 1999, 2001, 2003, 2005, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1999, 2001, 2003, 2005, 2009-2010 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +29,7 @@
 
 # if !defined PATH_MAX && defined _PC_PATH_MAX && defined HAVE_PATHCONF
 #  define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 \
-		    : pathconf ("/", _PC_PATH_MAX))
+                    : pathconf ("/", _PC_PATH_MAX))
 # endif
 
 /* Don't include sys/param.h if it already has been.  */

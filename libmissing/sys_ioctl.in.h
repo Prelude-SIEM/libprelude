@@ -1,5 +1,5 @@
 /* Substitute for and wrapper around <sys/ioctl.h>.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -30,8 +30,11 @@
 #define _GL_SYS_IOCTL_H
 
 /* AIX 5.1 and Solaris 10 declare ioctl() in <unistd.h> and in <stropts.h>,
-   but not in <sys/ioctl.h>.  */
-#include <unistd.h>
+   but not in <sys/ioctl.h>.
+   But avoid namespace pollution on glibc systems.  */
+#ifndef __GLIBC__
+# include <unistd.h>
+#endif
 
 /* The definition of GL_LINK_WARNING is copied here.  */
 
@@ -49,15 +52,15 @@ extern "C" {
 #  define ioctl rpl_ioctl
 extern int ioctl (int fd, int request, ... /* {void *,char *} arg */);
 # endif
-#elif @SYS_IOCTL_H_HAVE_WINSOCK2_H@
+#elif @SYS_IOCTL_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
 # undef ioctl
 # define ioctl ioctl_used_without_requesting_gnulib_module_ioctl
 #elif defined GNULIB_POSIXCHECK
 # undef ioctl
-# define ioctl(f,c,a) \
+# define ioctl \
     (GL_LINK_WARNING ("ioctl does not portably work on sockets - " \
                       "use gnulib module ioctl for portability"), \
-     ioctl (f, c, a))
+     ioctl)
 #endif
 
 

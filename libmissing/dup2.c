@@ -1,6 +1,6 @@
 /* Duplicate an open file descriptor to a specified file descriptor.
 
-   Copyright (C) 1999, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2004-2007, 2009-2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,69 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#ifndef F_DUPFD
+#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+/* Get declarations of the Win32 API functions.  */
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h>
+#endif
+
+#if HAVE_DUP2
+
+# undef dup2
+
+int
+rpl_dup2 (int fd, int desired_fd)
+{
+  int result;
+# if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+  /* If fd is closed, mingw hangs on dup2 (fd, fd).  If fd is open,
+     dup2 (fd, fd) returns 0, but all further attempts to use fd in
+     future dup2 calls will hang.  */
+  if (fd == desired_fd)
+    {
+      if ((HANDLE) _get_osfhandle (fd) == INVALID_HANDLE_VALUE)
+        {
+          errno = EBADF;
+          return -1;
+        }
+      return fd;
+    }
+  /* Wine 1.0.1 return 0 when desired_fd is negative but not -1:
+     http://bugs.winehq.org/show_bug.cgi?id=21289 */
+  if (desired_fd < 0)
+    {
+      errno = EBADF;
+      return -1;
+    }
+# endif
+  result = dup2 (fd, desired_fd);
+# ifdef __linux__
+  /* Correct a Linux return value.
+     <http://git.kernel.org/?p=linux/kernel/git/stable/linux-2.6.30.y.git;a=commitdiff;h=2b79bc4f7ebbd5af3c8b867968f9f15602d5f802>
+   */
+  if (fd == desired_fd && result == (unsigned int) -EBADF)
+    {
+      errno = EBADF;
+      result = -1;
+    }
+# endif
+  if (result == 0)
+    result = desired_fd;
+  /* Correct a cygwin 1.5.x errno value.  */
+  else if (result == -1 && errno == EMFILE)
+    errno = EBADF;
+# if REPLACE_FCHDIR
+  if (fd != desired_fd && result != -1)
+    result = _gl_register_dup (fd, result);
+# endif
+  return result;
+}
+
+#else /* !HAVE_DUP2 */
+
+/* On older platforms, dup2 did not exist.  */
+
+# ifndef F_DUPFD
 static int
 dupfd (int fd, int desired_fd)
 {
@@ -41,17 +103,26 @@ dupfd (int fd, int desired_fd)
       return r;
     }
 }
-#endif
+# endif
 
 int
 dup2 (int fd, int desired_fd)
 {
-  if (fd == desired_fd)
-    return fd;
+  int result = fcntl (fd, F_GETFL) < 0 ? -1 : fd;
+  if (result == -1 || fd == desired_fd)
+    return result;
   close (desired_fd);
-#ifdef F_DUPFD
-  return fcntl (fd, F_DUPFD, desired_fd);
-#else
-  return dupfd (fd, desired_fd);
-#endif
+# ifdef F_DUPFD
+  result = fcntl (fd, F_DUPFD, desired_fd);
+#  if REPLACE_FCHDIR
+  if (0 <= result)
+    result = _gl_register_dup (fd, result);
+#  endif
+# else
+  result = dupfd (fd, desired_fd);
+# endif
+  if (result == -1 && (errno == EMFILE || errno == EINVAL))
+    errno = EBADF;
+  return result;
 }
+#endif /* !HAVE_DUP2 */
