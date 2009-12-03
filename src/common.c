@@ -508,10 +508,10 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
 {
         static const prelude_msg_priority_t priority[] = {
                 PRELUDE_MSG_PRIORITY_NONE, /* not bound                         */
-                PRELUDE_MSG_PRIORITY_LOW,  /* IDMEF_IMPACT_SEVERITY_LOW    -> 1 */
-                PRELUDE_MSG_PRIORITY_MID,  /* IDMEF_IMPACT_SEVERITY_MEDIUM -> 2 */
-                PRELUDE_MSG_PRIORITY_HIGH, /* IDMEF_IMPACT_SEVERITY_HIGH   -> 3 */
-                PRELUDE_MSG_PRIORITY_LOW   /* IDMEF_IMPACT_SEVERITY_INFO   -> 4 */
+                PRELUDE_MSG_PRIORITY_LOW,  /* IDMEF_IMPACT_SEVERITY_INFO   -> 1 */
+                PRELUDE_MSG_PRIORITY_LOW   /* IDMEF_IMPACT_SEVERITY_LOW    -> 2 */
+                PRELUDE_MSG_PRIORITY_MID,  /* IDMEF_IMPACT_SEVERITY_MEDIUM -> 3 */
+                PRELUDE_MSG_PRIORITY_HIGH, /* IDMEF_IMPACT_SEVERITY_HIGH   -> 4 */
         };
 
         if ( severity >= (sizeof(priority) / sizeof(*priority)) )
