@@ -1005,16 +1005,16 @@ int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, con
                 return -1;
 ");
             } else {
-		if ( $field->{typename} eq "float" ) {
-			$self->output("
+                if ( $field->{typename} eq "float" ) {
+                        $self->output("
         ret = float_compare(obj1->$field->{name}, obj2->$field->{name});
 ");
-		} else {
-                	$self->output("
+                } else {
+                        $self->output("
         if ( obj1->$field->{name} != obj2->$field->{name} )
                 return -1;
 ");
-		}
+                }
             }
         }
     }
@@ -1427,7 +1427,7 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
     $refer = $field->{ptr} ? "" : "&";
 
     if ( $need_check ) {
-	$self->output("
+        $self->output("
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 ");
     }
