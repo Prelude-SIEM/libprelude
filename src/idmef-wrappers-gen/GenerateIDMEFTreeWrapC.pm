@@ -1510,7 +1510,7 @@ void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *pt
         \}
 
         ptr->$field->{name}.$member->{name} = $member->{name};
-        ptr->$field->{var} = $member->{value};
+        ptr->$field->{var} = ($member->{name}) ? $member->{value} : 0;
 \}
 ");
 

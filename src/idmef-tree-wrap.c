@@ -8467,7 +8467,7 @@ void idmef_service_set_web_service(idmef_service_t *ptr, idmef_web_service_t *we
         }
 
         ptr->specific.web_service = web_service;
-        ptr->type = IDMEF_SERVICE_TYPE_WEB;
+        ptr->type = (web_service) ? IDMEF_SERVICE_TYPE_WEB : 0;
 }
 
 /**
@@ -8552,7 +8552,7 @@ void idmef_service_set_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t *
         }
 
         ptr->specific.snmp_service = snmp_service;
-        ptr->type = IDMEF_SERVICE_TYPE_SNMP;
+        ptr->type = (snmp_service) ? IDMEF_SERVICE_TYPE_SNMP : 0;
 }
 
 /**
@@ -21025,7 +21025,7 @@ void idmef_alert_set_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t *tool_ale
         }
 
         ptr->detail.tool_alert = tool_alert;
-        ptr->type = IDMEF_ALERT_TYPE_TOOL;
+        ptr->type = (tool_alert) ? IDMEF_ALERT_TYPE_TOOL : 0;
 }
 
 /**
@@ -21118,7 +21118,7 @@ void idmef_alert_set_correlation_alert(idmef_alert_t *ptr, idmef_correlation_ale
         }
 
         ptr->detail.correlation_alert = correlation_alert;
-        ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
+        ptr->type = (correlation_alert) ? IDMEF_ALERT_TYPE_CORRELATION : 0;
 }
 
 /**
@@ -21211,7 +21211,7 @@ void idmef_alert_set_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t *
         }
 
         ptr->detail.overflow_alert = overflow_alert;
-        ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
+        ptr->type = (overflow_alert) ? IDMEF_ALERT_TYPE_OVERFLOW : 0;
 }
 
 /**
@@ -22766,7 +22766,7 @@ void idmef_message_set_alert(idmef_message_t *ptr, idmef_alert_t *alert)
         }
 
         ptr->message.alert = alert;
-        ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
+        ptr->type = (alert) ? IDMEF_MESSAGE_TYPE_ALERT : 0;
 }
 
 /**
@@ -22851,7 +22851,7 @@ void idmef_message_set_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t *heartb
         }
 
         ptr->message.heartbeat = heartbeat;
-        ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
+        ptr->type = (heartbeat) ? IDMEF_MESSAGE_TYPE_HEARTBEAT : 0;
 }
 
 /**
