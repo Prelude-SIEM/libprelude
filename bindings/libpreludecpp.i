@@ -153,9 +153,12 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
                 idmef_data_t *d = idmef_value_get_data(value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
-                if ( t == IDMEF_DATA_TYPE_CHAR || t == IDMEF_DATA_TYPE_CHAR_STRING ||
+                if ( t == IDMEF_DATA_TYPE_CHAR ||
                      t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
                         *ret = SWIG_FromCharPtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
+
+                else if ( t == IDMEF_DATA_TYPE_CHAR_STRING )
+                        *ret = SWIG_FromCharPtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d) - 1);
 
                 else if ( t == IDMEF_DATA_TYPE_FLOAT )
                         *ret = SWIG_From_float(idmef_data_get_float(d));
