@@ -177,7 +177,7 @@ IDMEFValue::IDMEFValue(double value)
 
 IDMEFValue::IDMEFValue(IDMEFTime &time)
 {
-        int ret = idmef_value_new_time(&_value, time);
+        int ret = idmef_value_new_time(&_value, idmef_time_ref(time));
         if ( ret < 0 )
                 throw PreludeError(ret);
 }
