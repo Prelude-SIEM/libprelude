@@ -391,7 +391,7 @@ static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size
         static const char b64tbl[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
         while ( size ) {
-                ret = prelude_string_ncat(out, &b64tbl[src[0] >> 2], 1);
+                ret = prelude_string_ncat(out, &b64tbl[(src[0] >> 2) & 0x3f], 1);
                 if ( ret < 0 )
                         return ret;
 
@@ -582,7 +582,7 @@ int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr)
 
 int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
 {
-        prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION)); 
+        prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_data_set_char_string_dup_fast(data, ptr, strlen(ptr));
@@ -590,7 +590,7 @@ int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
 
 int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr)
 {
-        prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION)); 
+        prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_data_set_char_string_nodup_fast(data, ptr, strlen(ptr));

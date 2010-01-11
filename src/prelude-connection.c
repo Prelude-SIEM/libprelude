@@ -541,7 +541,7 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
 
 static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 {
-        struct addrinfo *ai;
+        struct addrinfo *ai = NULL;
         int ret, ai_family, ai_addrlen;
 #if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
         struct sockaddr_un *un;
@@ -567,7 +567,9 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 
         cnx->sa = malloc(ai_addrlen);
         if ( ! cnx->sa ) {
-                freeaddrinfo(ai);
+                if ( ai )
+                        freeaddrinfo(ai);
+
                 return prelude_error_from_errno(errno);
         }
 

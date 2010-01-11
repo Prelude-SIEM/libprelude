@@ -1047,8 +1047,11 @@ static int ask_one_shot_password(char **buf, const char *ask, ...)
 
                 snprintf(str, sizeof(str), "Confirm %s: ", askbuf);
                 pass2 = getpass(str);
-                if ( ! pass2 )
+                if ( ! pass2 ) {
+                        memset(pass1, 0, strlen(pass1));
+                        free(pass1);
                         return -1;
+                }
 
                 ret = strcmp(pass1, pass2);
                 memset(pass2, 0, strlen(pass2));

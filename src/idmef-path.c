@@ -855,9 +855,7 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
         int ret;
 
         prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        if ( depth > MAX_DEPTH || depth > path->depth )
-                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
+        prelude_return_val_if_fail(depth >= path->depth, prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH));
 
         if ( index == INDEX_FORBIDDEN )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED);
@@ -914,9 +912,7 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
 {
         prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        if ( depth > (path->depth - 1) )
-                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
+        prelude_return_val_if_fail(depth >= path->depth, prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH));
 
         if ( path->elem[depth].index == INDEX_UNDEFINED )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED);
@@ -1284,13 +1280,14 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
         const idmef_path_element_t *elem;
 
         prelude_return_val_if_fail(path, NULL);
+        prelude_return_val_if_fail(depth < 0 || depth <= path->depth, NULL);
 
         if ( depth < 0 )
                 return path->name;
 
         elem = &path->elem[depth];
 
-        if ( elem->class < 0 || elem->value_type == IDMEF_VALUE_TYPE_ENUM )
+        if ( depth > 0 && (elem->class < 0 || elem->value_type == IDMEF_VALUE_TYPE_ENUM) )
                 ret = idmef_class_get_child_name(path->elem[depth - 1].class, elem->position);
         else
                 ret = idmef_class_get_name(elem->class);
