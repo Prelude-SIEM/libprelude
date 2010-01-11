@@ -188,6 +188,8 @@ AC_SUBST([LTALLOCA])
   gl_SOCKETS
   gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
+  gl_FUNC_STAT
+  gl_SYS_STAT_MODULE_INDICATOR([stat])
   AM_STDBOOL_H
   gl_STDDEF_H
   gl_STDINT_H
@@ -311,8 +313,6 @@ AC_SUBST([LTALLOCA])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_DECLS_ONCE([alarm])
-  gl_FUNC_STAT
-  gl_SYS_STAT_MODULE_INDICATOR([stat])
   gt_TYPE_WCHAR_T
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
@@ -514,6 +514,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/socket.c
   lib/sockets.c
   lib/sockets.h
+  lib/stat.c
   lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
@@ -783,7 +784,6 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/lstat.c
   tests=lib/open.c
   tests=lib/same-inode.h
-  tests=lib/stat.c
   tests=lib/symlink.c
   tests=lib/wctob.c
 ])

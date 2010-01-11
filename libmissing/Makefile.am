@@ -904,6 +904,15 @@ EXTRA_DIST += w32sock.h
 
 ## end   gnulib module sockets
 
+## begin gnulib module stat
+
+
+EXTRA_DIST += stat.c
+
+EXTRA_libmissing_la_SOURCES += stat.c
+
+## end   gnulib module stat
+
 ## begin gnulib module stdbool
 
 BUILT_SOURCES += $(STDBOOL_H)

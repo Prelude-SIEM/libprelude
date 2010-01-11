@@ -521,15 +521,6 @@ EXTRA_DIST += test-sockets.c
 
 ## end   gnulib module sockets-tests
 
-## begin gnulib module stat
-
-
-EXTRA_DIST += stat.c
-
-EXTRA_libtests_a_SOURCES += stat.c
-
-## end   gnulib module stat
-
 ## begin gnulib module stat-tests
 
 TESTS += test-stat
