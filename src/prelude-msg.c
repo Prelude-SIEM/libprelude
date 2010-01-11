@@ -98,7 +98,7 @@ struct prelude_msg {
 /*
  * Anything bigger than this will be discarded.
  */
-static size_t max_message_size = 1024 * 1024;
+static const size_t max_message_size = 100 * 1024 * 1024;
 
 
 
@@ -258,7 +258,7 @@ inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf
                 return prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH, "maximum message size exceeded: %" PRELUDE_PRIu64 " > %" PRELUDE_PRIu64,
                                              (uint64_t) (msg->hdr.datalen + tmp), (uint64_t) max_message_size);
 
-        msg->hdr.datalen += prelude_extract_uint32(hdrbuf + 4);
+        msg->hdr.datalen += tmp;
 
         return 0;
 }
