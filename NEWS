@@ -1,3 +1,26 @@
+* 2009-01-11, libprelude-0.9.25:
+
+- Sent message priority will now be correctly assigned depending on the input
+  IDMEF message.
+
+- Fix critical warnings on destroy when assigning NULL value to IDMEF union.
+
+- Fix Ruby include path detection on certain systems
+
+- Fix idmef_data_t (type CHAR_STRING) mapping to high level language string,
+  this prevent enclosing the terminating \0 when mapping an idmef_data_t of
+  carrying a string to an high level language string (example: Python, Perl).
+
+- Prevent a possible double free when a C++ IDMEFTime object was referenced
+  from multiples place.
+
+- Increase maximum protocol message size, the old size (1mb) could be a
+  problem for systems sending very large alerts (example: CorrelationAlert
+  with a lot of sources/targets). In the future, this limitation might be
+  completly removed.
+
+
+
 * 2009-07-08, libprelude-0.9.24.1:
 
 - Use SWIG 1.3.39 to generate bindings code, fixes Prewikka compatibility
@@ -51,7 +74,7 @@
 
 - Automatic, detailed ChangeLog generation (from http://live.gnome.org/Git/ChangeLog).
 
-- Prefix C++ enumeration, implement IDMEFValue::Match() method, 
+- Prefix C++ enumeration, implement IDMEFValue::Match() method,
   and provide IDMEFCriterion operator to be used by this method.
 
 - Old behavior when returning an IDMEFValue was to map it's internal type
