@@ -1,6 +1,6 @@
 SUBDIRS = c++ low-level lua python ruby
 
-EXTRA_DIST = libpreludecpp.i libpreludecpp-perl.i perl/Makefile.PL.in
+EXTRA_DIST = libpreludecpp.i perl/libpreludecpp-perl.i perl/Makefile.PL.in
 
 CLEANFILES = perl/pm_to_blib perl/PreludeEasy.o perl/blib python/build
 DISTCLEANFILES=perl/PreludeEasy.cxx
@@ -25,7 +25,7 @@ perl: perl-build
 perl-makefile:
 	cd perl && LANG="" DESTDIR=$(DESTDIR) LIBDIR=$(libdir) $(PERL) Makefile.PL @PERL_EXTRA_PARAMS@ CC="$(CXX)"
 
-perl/PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i libpreludecpp-perl.i
+perl/PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i perl/libpreludecpp-perl.i
 if HAVE_SWIG
 	$(SWIG) -c++ -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -perl5 -o $@ libpreludecpp.i
 endif

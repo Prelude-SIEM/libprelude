@@ -46,7 +46,7 @@ typedef signed int prelude_error_t;
 
 
 #ifdef SWIGPERL
-%include libpreludecpp-perl.i
+%include perl/libpreludecpp-perl.i
 #endif
 
 #ifdef SWIGPYTHON
