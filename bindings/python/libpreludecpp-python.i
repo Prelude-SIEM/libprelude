@@ -186,6 +186,8 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                 throw PreludeError(ret);
         }
 
+        free(argv);
+
         Py_DECREF(pyargv);
         Py_DECREF(sys);
 }

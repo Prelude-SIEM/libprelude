@@ -188,4 +188,6 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                 free(argv);
                 throw PreludeError(ret);
         }
+
+        free(argv);
 }

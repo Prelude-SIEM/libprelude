@@ -189,4 +189,6 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
                 free(argv);
                 throw PreludeError(ret);
         }
+
+        free(argv);
 }
