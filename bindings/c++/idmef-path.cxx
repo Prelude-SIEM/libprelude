@@ -113,6 +113,17 @@ void IDMEFPath::Set(IDMEF &message, IDMEFValue *value)
 }
 
 
+void IDMEFPath::Set(IDMEF &message, std::vector<IDMEFValue> value)
+{
+        int ret;
+        IDMEFValue v = value;
+
+        ret = idmef_path_set(_path, message, v);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
 void IDMEFPath::Set(IDMEF &message, IDMEFValue &value)
 {
         int ret;

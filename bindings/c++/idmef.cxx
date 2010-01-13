@@ -42,6 +42,12 @@ IDMEF::~IDMEF()
 }
 
 
+void IDMEF::Set(const char *path, std::vector<IDMEFValue> value)
+{
+        IDMEFPath(path).Set(*this, value);
+}
+
+
 void IDMEF::Set(const char *path, IDMEFValue *value)
 {
         IDMEFPath(path).Set(*this, value);

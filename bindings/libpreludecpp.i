@@ -75,26 +75,6 @@ typedef signed int prelude_error_t;
 %fragment("IDMEFValue_to_SWIG", "header", fragment="IDMEFValueList_to_SWIG", fragment="SWIG_From_float") {
 
 
-static int iterate_cb(idmef_value_t *value, void *extra)
-{
-        prelude_bool_t *is_class = (prelude_bool_t *) extra;
-
-        if ( idmef_value_is_list(value) )
-                return idmef_value_iterate(value, iterate_cb, extra);
-
-        *is_class = (prelude_bool_t) (idmef_value_get_type(value) == IDMEF_VALUE_TYPE_CLASS);
-
-        return -1;
-}
-
-static prelude_bool_t is_class_list(idmef_value_t *value)
-{
-        prelude_bool_t is_class;
-
-        idmef_value_iterate(value, iterate_cb, &is_class);
-        return is_class;
-}
-
 int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
@@ -146,7 +126,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
                 *ret = SWIG_NewPointerObj(new IDMEFTime(time), SWIGTYPE_p_Prelude__IDMEFTime, 1);
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_LIST && ! is_class_list(value) )
+        else if ( type == IDMEF_VALUE_TYPE_LIST )
                 *ret = IDMEFValueList_to_SWIG(result);
 
         else if ( type == IDMEF_VALUE_TYPE_DATA ) {
@@ -170,7 +150,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_CLASS || type == IDMEF_VALUE_TYPE_LIST )
+        else if ( type == IDMEF_VALUE_TYPE_CLASS )
                 *ret = SWIG_NewPointerObj(new IDMEFValue(idmef_value_ref(value)), SWIGTYPE_p_Prelude__IDMEFValue, 1);
 
         else return -1;

@@ -183,6 +183,19 @@ IDMEFValue::IDMEFValue(IDMEFTime &time)
 }
 
 
+IDMEFValue::IDMEFValue(std::vector<IDMEFValue> value)
+{
+        int ret;
+        std::vector<Prelude::IDMEFValue>::const_iterator i;
+
+        ret = idmef_value_new_list(&_value);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        for ( i = value.begin(); i != value.end(); i++ )
+                idmef_value_list_add(_value, idmef_value_ref(*i));
+}
+
 IDMEFValue::IDMEFValue(idmef_value_t *value)
 {
         _value = value;

@@ -44,6 +44,7 @@ namespace Prelude {
                 IDMEFValue();
                 ~IDMEFValue();
                 IDMEFValue(const IDMEFValue &value);
+                IDMEFValue(std::vector<IDMEFValue> value);
                 IDMEFValue(idmef_value_t *value);
                 IDMEFValue(std::string value);
                 IDMEFValue(const char *value);
