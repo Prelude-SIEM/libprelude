@@ -552,8 +552,8 @@ dnl * Easy bindings support                          *
 dnl **************************************************
 
 
-AC_ARG_ENABLE(easy-bindings, AC_HELP_STRING(--enable-easy-bindings, Enable support for high level binding @<:@default=no@:>@),
-                enable_easy_bindings=$enableval, enable_easy_bindings="no")
+AC_ARG_ENABLE(easy-bindings, AC_HELP_STRING(--enable-easy-bindings, Enable support for high level binding @<:@default=yes@:>@),
+                enable_easy_bindings=$enableval, enable_easy_bindings="yes")
 
 AM_CONDITIONAL(HAVE_EASY_BINDINGS, test x$enable_easy_bindings = xyes)
 
