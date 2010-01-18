@@ -100,7 +100,15 @@ static struct gcry_thread_cbs gcry_threads_prelude = {
         gcry_prelude_mutex_init,
         gcry_prelude_mutex_destroy,
         gcry_prelude_mutex_lock,
-        gcry_prelude_mutex_unlock
+        gcry_prelude_mutex_unlock,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
 };
 
 
@@ -121,7 +129,7 @@ static void slice_arguments(int *argc, char **argv)
         rootopt = _prelude_generic_optlist;
         _prelude_internal_argv[_prelude_internal_argc++] = argv[0];
 
-        for ( i = 0; i < *argc && _prelude_internal_argc + 1 < sizeof(_prelude_internal_argv) / sizeof(char *); i++ ) {
+        for ( i = 0; i < *argc && (size_t) _prelude_internal_argc + 1 < sizeof(_prelude_internal_argv) / sizeof(char *); i++ ) {
 
                 ptr = argv[i];
                 if ( *ptr != '-' )

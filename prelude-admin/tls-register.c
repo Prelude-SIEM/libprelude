@@ -252,7 +252,7 @@ static ssize_t safe_write(int fd, const unsigned char *buf, size_t size)
 
 
 
-static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned char *buf, size_t size)
+static int save_buf(const char *filename, prelude_uid_t uid, prelude_gid_t gid, const unsigned char *buf, size_t size)
 {
         ssize_t sret;
         int fd, ret, flags = 0;
@@ -276,7 +276,7 @@ static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned c
         }
 
         sret = safe_write(fd, buf, size);
-        if ( sret != size ) {
+        if ( sret < 0 || (size_t) sret != size ) {
                 fprintf(stderr, "error writing to %s: %s.\n", filename, strerror(errno));
                 safe_close(fd);
                 return -1;
@@ -532,7 +532,7 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp
 
 
 static gnutls_x509_privkey gen_crypto(prelude_client_profile_t *cp,
-                                      const char *filename, uid_t uid, gid_t gid)
+                                      const char *filename, prelude_uid_t uid, prelude_gid_t gid)
 {
         int ret;
         char buf[65535];
@@ -724,7 +724,7 @@ int tls_handle_certificate_request(const char *srcinfo, prelude_client_profile_t
         gnutls_x509_crt_export(gencrt, GNUTLS_X509_FMT_PEM, buf, &size);
 
         ret = prelude_io_write_delimited(fd, buf, size);
-        if ( ret != size ) {
+        if ( ret < 0 || (size_t) ret != size ) {
                 prelude_perror(ret, "error sending signed certificate");
                 return -1;
         }
@@ -740,7 +740,7 @@ int tls_handle_certificate_request(const char *srcinfo, prelude_client_profile_t
         gnutls_x509_crt_export(crt, GNUTLS_X509_FMT_PEM, buf, &size);
 
         ret = prelude_io_write_delimited(fd, buf, size);
-        if ( ret != size ) {
+        if ( ret < 0 || (size_t) ret != size ) {
                 prelude_perror(ret, "error sending signed certificate");
                 return -1;
         }
@@ -770,7 +770,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
         gnutls_x509_crq_deinit(crq);
 
         ret = prelude_io_write_delimited(fd, buf, size);
-        if ( ret != size ) {
+        if ( ret < 0 || (size_t) ret != size ) {
                 prelude_perror(ret, "error sending certificate request");
                 return -1;
         }

@@ -336,13 +336,16 @@ static int start_inet_connection(prelude_connection_t *cnx,
 {
         socklen_t len;
         int sock, ret, tmp;
+        union {
+                struct sockaddr sa;
 #ifdef HAVE_IPV6
-        struct sockaddr_in6 addr;
-        uint16_t *port = &addr.sin6_port;
+                struct sockaddr_in6 addr;
+# define ADDR_PORT(x) (x).sin6_port
 #else
-        struct sockaddr_in addr;
-        uint16_t *port = &addr.sin_port;
+                struct sockaddr_in addr;
+# define ADDR_PORT(x) (x).sin_port
 #endif
+        } addr;
 
         sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
@@ -363,20 +366,20 @@ static int start_inet_connection(prelude_connection_t *cnx,
          * Get information about the connection,
          * because the sensor might want to know source addr/port used.
          */
-        len = sizeof(addr);
+        len = sizeof(addr.addr);
 
-        ret = getsockname(sock, (struct sockaddr *) &addr, &len);
+        ret = getsockname(sock, &addr.sa, &len);
         if ( ret < 0 )
                 ret = prelude_error_verbose(PRELUDE_ERROR_SYSTEM_ERROR, "getsockname failed: %s", strerror(errno));
         else {
                 char buf[512];
 
-                if ( inet_ntop(((struct sockaddr *)&addr)->sa_family, prelude_sockaddr_get_inaddr((struct sockaddr *) &addr), buf, sizeof(buf)) )
+                if ( inet_ntop(addr.sa.sa_family, prelude_sockaddr_get_inaddr(&addr.sa), buf, sizeof(buf)) )
                         cnx->saddr = strdup(buf);
                 else
                         cnx->saddr = NULL;
 
-                cnx->sport = ntohs(*port);
+                cnx->sport = ntohs(ADDR_PORT(addr.addr));
         }
 
         return ret;
@@ -1008,7 +1011,7 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
         } tbl[] = {
                 { "idmef", PRELUDE_CONNECTION_PERMISSION_IDMEF_READ, PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE },
                 { "admin", PRELUDE_CONNECTION_PERMISSION_ADMIN_READ, PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE },
-                { NULL, 0 },
+                { NULL, 0, 0 },
         };
 
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -1061,7 +1064,8 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
 
 int prelude_connection_permission_to_string(prelude_connection_permission_t permission, prelude_string_t *out)
 {
-        int i, ret = 0;
+        size_t i;
+        int ret = 0;
         const struct {
                 const char *name;
                 prelude_connection_permission_t val_read;

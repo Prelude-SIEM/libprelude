@@ -200,11 +200,11 @@ static ssize_t get_header(prelude_log_t level, char *buf, size_t size)
                         len = strftime(buf, size, "%d %b %H:%M:%S ", t);
 
                 ret = snprintf(buf + len, size - len, "(process:%d) %s: ", (int) getpid(), level_to_string(level));
-                if ( ret < 0 || ret >= (size - len) )
+                if ( ret < 0 || (size_t) ret >= (size - len) )
                         return -1;
         } else {
                 ret = snprintf(buf + len, size - len, "%s: ", level_to_string(level));
-                if ( ret < 0 || ret >= (size - len) )
+                if ( ret < 0 || (size_t) ret >= (size - len) )
                         return -1;
         }
 
@@ -229,7 +229,7 @@ static void do_log_v(prelude_log_t level, const char *file,
         PRELUDE_VA_COPY(bkp, ap);
 
         ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
-        if ( ret < 0 || ret >= (sizeof(buf) - len) )
+        if ( ret < 0 || (size_t) ret >= (sizeof(buf) - len) )
                 goto out;
 
         if ( level <= PRELUDE_LOG_ERR || level >= PRELUDE_LOG_DEBUG ) {
@@ -396,7 +396,7 @@ void _prelude_log_set_abort_level(prelude_log_t level)
 
 int _prelude_log_set_abort_level_from_string(const char *level)
 {
-        int i;
+        size_t i;
         char *eptr;
         long lvalue;
         struct {

@@ -254,7 +254,7 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t
                                        unsigned int depth, prelude_list_t *list,
                                        idmef_class_id_t parent_class, int which)
 {
-        unsigned int cnt = 0;
+        int cnt = 0;
         prelude_list_t *tmp;
 
         if ( which >= 0 ) {
@@ -349,8 +349,9 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
 
 static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
 {
+        size_t i;
         void *ptr;
-        int i, ret, index;
+        int ret, index;
         idmef_value_type_id_t tid;
         const idmef_path_element_t *elem;
         idmef_class_id_t class, parent_class;
@@ -701,7 +702,7 @@ int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
         prelude_return_val_if_fail(format, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = vsnprintf(buffer, sizeof(buffer), format, args);
-        if ( ret < 0 || ret > sizeof(buffer) - 1 )
+        if ( ret < 0 || (size_t) ret > sizeof(buffer) - 1 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
 
         return idmef_path_new_fast(path, buffer);
@@ -850,7 +851,7 @@ static inline int invalidate(idmef_path_t *path)
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int index)
+int idmef_path_set_index(idmef_path_t *path, unsigned int depth, int index)
 {
         int ret;
 
@@ -938,7 +939,7 @@ int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned int index)
+int idmef_path_make_child(idmef_path_t *path, const char *child_name, int index)
 {
         int ret;
         char buf[16] = { 0 };
@@ -1198,7 +1199,7 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
  */
 prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path)
 {
-        int i;
+        size_t i;
 
         prelude_return_val_if_fail(path, FALSE);
 
@@ -1220,7 +1221,8 @@ prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path)
  */
 int idmef_path_has_lists(const idmef_path_t *path)
 {
-        int i, ret = 0;
+        size_t i;
+        int ret = 0;
 
         prelude_return_val_if_fail(path, 0);
 
@@ -1280,7 +1282,7 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
         const idmef_path_element_t *elem;
 
         prelude_return_val_if_fail(path, NULL);
-        prelude_return_val_if_fail(depth < 0 || depth < path->depth, NULL);
+        prelude_return_val_if_fail(depth < 0 || (size_t) depth < path->depth, NULL);
 
         if ( depth < 0 )
                 return path->name;

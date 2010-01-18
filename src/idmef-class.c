@@ -52,7 +52,7 @@
 
 static inline int is_class_valid(idmef_class_id_t class)
 {
-        if ( class < 0 || class >= sizeof(object_data) / sizeof(*object_data) )
+        if ( class < 0 || (size_t) class >= sizeof(object_data) / sizeof(*object_data) )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN, "Unknown IDMEF class '%d'", (int) class);
 
         return 0;
@@ -67,7 +67,7 @@ static inline int is_child_valid(idmef_class_id_t class, idmef_class_child_id_t 
         if ( ret < 0 )
                 return ret;
 
-        if ( child < 0 || child >= object_data[class].children_list_elem )
+        if ( child < 0 || (size_t) child >= object_data[class].children_list_elem )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%d' for class '%s'",
                                              (int) child, object_data[class].name);
 
@@ -80,7 +80,7 @@ static inline int is_child_valid(idmef_class_id_t class, idmef_class_child_id_t 
 idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char *name)
 {
         int ret;
-        idmef_class_child_id_t i;
+        size_t i;
         const children_list_t *list;
 
         ret = is_class_valid(class);

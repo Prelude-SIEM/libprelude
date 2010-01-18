@@ -165,29 +165,31 @@ static int process_event(prelude_client_profile_t *cp, int server_sock, prelude_
         void *inaddr;
         socklen_t len;
         int ret, csock;
-        struct sockaddr *sa;
+        union {
+                struct sockaddr sa;
 #ifndef HAVE_IPV6
-        struct sockaddr_in addr;
+                struct sockaddr_in addr;
+# define ADDR_PORT(x) (x).sin_port
 #else
-        struct sockaddr_in6 addr;
+                struct sockaddr_in6 addr;
+# define ADDR_PORT(x) (x).sin6_port
 #endif
+        } addr;
 
-        len = sizeof(addr);
-        sa = (struct sockaddr *) &addr;
+        len = sizeof(addr.addr);
 
-        csock = accept(server_sock, sa, &len);
+        csock = accept(server_sock, &addr.addr, &len);
         if ( csock < 0 ) {
                 fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
                 return -1;
         }
 
-        inaddr = prelude_sockaddr_get_inaddr(sa);
+        inaddr = prelude_sockaddr_get_inaddr(&addr.sa);
         if ( ! inaddr )
                 return -1;
 
-        inet_ntop(sa->sa_family, inaddr, buf, sizeof(buf));
-        snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u",
-                 ntohs(((struct sockaddr_in *) sa)->sin_port));
+        inet_ntop(addr.sa.sa_family, inaddr, buf, sizeof(buf));
+        snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u", ntohs(ADDR_PORT(addr.addr)));
 
         prelude_io_set_sys_io(fd, csock);
 

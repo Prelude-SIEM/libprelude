@@ -443,7 +443,7 @@ int prelude_option_push_request(prelude_msgbuf_t *msg, int type, const char *req
 int prelude_option_new_request(prelude_msgbuf_t *msgbuf,
                                uint32_t request_id, uint64_t *target_id, size_t size)
 {
-        int i;
+        size_t i;
         uint32_t hop, instance_id = 0;
 
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REQUEST);

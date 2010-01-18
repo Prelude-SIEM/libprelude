@@ -69,13 +69,13 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth);
 
 idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth);
 
-int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int index);
+int idmef_path_set_index(idmef_path_t *path, unsigned int depth, int index);
 
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth);
 
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth);
 
-int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned int index);
+int idmef_path_make_child(idmef_path_t *path, const char *child_name, int index);
 
 int idmef_path_make_parent(idmef_path_t *path);
 

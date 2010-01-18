@@ -516,8 +516,9 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
  */
 ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
 {
+        ssize_t ret;
+        size_t n = 0;
         struct pollfd pfd;
-        ssize_t n = 0, ret;
         unsigned char *in = buf;
 
         prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -538,11 +539,11 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
                 if ( ret < 0 )
                         return ret;
 
-                n += ret;
+                n += (size_t) ret;
 
         } while ( n != count );
 
-        return n;
+        return (ssize_t) n;
 }
 
 

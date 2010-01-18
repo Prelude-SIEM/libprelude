@@ -133,7 +133,7 @@ const object_data_t object_data[] = \{
     foreach my $obj ( sort { $a->{id} <=> $b->{id} } map { ($_->{obj_type} != &OBJ_PRE_DECLARED ? $_ : () ) } @{ $tree->{obj_list} } ) {
 
         for ( my $i = $last_id + 1; $i < $obj->{id}; $i++ ) {
-            $self->output("        \{ \"(unassigned)\", 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
+            $self->output("        \{ \"(unassigned)\", 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
         }
 
         $last_id = $obj->{id};
@@ -166,12 +166,13 @@ const object_data_t object_data[] = \{
                       "NULL, ",
                       "NULL, ",
                       "NULL, ",
-                      "NULL  ",
+                      "NULL, ",
+                      "NULL ",
                       "\}, ",
                       "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_ENUM );
     }
 
-    $self->output("        \{ NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}\n");
+    $self->output("        \{ NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}\n");
     $self->output("};\n");
 }
 

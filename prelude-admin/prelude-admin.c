@@ -126,11 +126,11 @@ static const char *get_tls_config(void)
 static int chown_cb(const char *filename, const struct stat *st, int flag)
 {
         int ret;
-        uid_t uid;
-        gid_t gid;
+        prelude_uid_t uid;
+        prelude_gid_t gid;
 
-        uid = uid_set ? prelude_client_profile_get_uid(profile) : -1;
-        gid = gid_set ? prelude_client_profile_get_gid(profile) : -1;
+        uid = uid_set ? prelude_client_profile_get_uid(profile) : (prelude_uid_t) -1;
+        gid = gid_set ? prelude_client_profile_get_gid(profile) : (prelude_gid_t) -1;
 
         ret = chown(filename, uid, gid);
         if ( ret < 0 )
@@ -404,7 +404,7 @@ static void print_send_help(void)
 #if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        uid_t uid;
+        prelude_uid_t uid;
         const char *p;
         struct passwd *pw;
 
@@ -432,7 +432,7 @@ static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
 static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        uid_t gid;
+        prelude_gid_t gid;
         const char *p;
         struct group *grp;
 
@@ -1901,7 +1901,7 @@ typedef struct {
 
 static void print_info(const char *info, unsigned int pad)
 {
-        int i;
+        unsigned int i;
         size_t len = strlen(info);
 
         printf("%s", info);
@@ -1937,7 +1937,7 @@ static void print_add(unsigned int sub, const char *name, const char *uid, const
 
 static void print_added(void)
 {
-        int i;
+        unsigned int i;
         print_entry_t *ent;
         prelude_list_t *tmp, *bkp;
         unsigned int mtotal = 0, mpartial = 0;
@@ -2016,8 +2016,8 @@ static int list_cmd(int argc, char **argv)
 #endif
         gnutls_datum data;
         prelude_string_t *str;
-        unsigned int cert_max;
-        int ret, i, permission;
+        unsigned int cert_max, i;
+        int ret,  permission;
         gnutls_x509_crt certs[1024];
         char dirname[PATH_MAX];
         char buf[1024], analyzerid[128], uidbuf[128] = { 0 }, gidbuf[128] = { 0 };
@@ -2148,7 +2148,7 @@ static const struct cmdtbl tbl[] = {
 
 static int print_help(void)
 {
-        int i;
+        unsigned int i;
 
         fprintf(stderr, "\nUsage %s <subcommand> [options] [args]\n", myprogname);
         fprintf(stderr, "Type \"%s <subcommand>\" for help on a specific subcommand.\n\n", myprogname);
@@ -2163,7 +2163,7 @@ static int print_help(void)
 
 static int print_detailed_help(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        int i;
+        unsigned int i;
 
         for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                 if ( strcmp(arg_command, tbl[i].cmd) == 0 ) {
@@ -2179,7 +2179,8 @@ static int print_detailed_help(prelude_option_t *opt, const char *optarg, prelud
 
 int main(int argc, char **argv)
 {
-        int i, ret = -1;
+        int ret = -1;
+        unsigned int i;
         const char *slash;
 
         slash = strrchr(argv[0], '/');

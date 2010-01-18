@@ -1715,7 +1715,7 @@ sub        enum
  */
 $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
 \{
-        int i;
+        size_t i;
         const struct {
               $enum->{typename} val;
               const char *name;
@@ -1799,7 +1799,7 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
     $self->output("
         };
 
-        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || (size_t) val >= (sizeof(tbl) / sizeof(*tbl)) )
                 return NULL;
 
         return tbl[val].name;

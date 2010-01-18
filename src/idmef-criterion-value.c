@@ -118,7 +118,7 @@ static int btime_parse_month(const char *value, int *out)
                 return 0;
         }
 
-        for ( i = 0; i < sizeof(months) / sizeof(*months); i++ ) {
+        for ( i = 0; i < (int) (sizeof(months) / sizeof(*months)); i++ ) {
                 if ( strcasecmp(value, months[i]) == 0 ) {
                         *out = i; /* Numbered 0 to 11 */
                         return 0;
@@ -148,7 +148,7 @@ static int btime_parse_wday(const char *value, int *out)
                 return 0;
         }
 
-        for ( i = 0; i < sizeof(days) / sizeof(*days); i++ ) {
+        for ( i = 0; i < (int) (sizeof(days) / sizeof(*days)); i++ ) {
 
                 if ( strcasecmp(value, days[i]) == 0 ) {
                         *out = i; /* Numbered 0 (sunday) to 6 */
@@ -548,7 +548,8 @@ static int btime_parse_gmtoff(const char *param, int *out)
 
 static int btime_parse(struct tm *lt, const char *time)
 {
-        int i, ret;
+        int ret;
+        size_t i;
         long gmt_offset;
         char *end = NULL;
         struct {

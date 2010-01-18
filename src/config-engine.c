@@ -315,7 +315,8 @@ static int strip_value(char **out, const char *in, size_t tlen)
 
 static int value_resolve_variable(const char *ptr, char **out_p)
 {
-        int i, ret;
+        int ret;
+        size_t i;
         char buf[512];
         const char *tmp;
         prelude_string_t *out;
@@ -368,7 +369,7 @@ static int parse_buffer(const char *str, char **entry, char **value)
                 return -1;
 
         ptr = strchr(str, '=');
-        len = (ptr) ? ptr - str : strlen(str);
+        len = (ptr) ? (size_t) (ptr - str) : strlen(str);
 
         ret = strip_value(entry, str, len);
         if ( ret < 0 )
@@ -486,11 +487,11 @@ static int search_entry(config_t *cfg, const char *section,
 
         if ( section && ! index ) {
 
-                i = search_section(cfg, section, 0);
-                if ( i < 0 )
-                        return -1;
+                ret = search_section(cfg, section, 0);
+                if ( ret < 0 )
+                        return ret;
 
-                i++;
+                i = (unsigned int) ret + 1;
         }
 
         for ( ; i < cfg->elements; i++ ) {
@@ -543,7 +544,7 @@ static char *create_new_line(const char *entry, const char *val)
         else
                 ret = snprintf(line, len, "%s", entry);
 
-        if ( ret < 0 || ret >= len ) {
+        if ( ret < 0 || (size_t) ret >= len ) {
                 free(line);
                 return NULL;
         }
@@ -712,16 +713,16 @@ int _config_set(config_t *cfg, const char *section, const char *entry, const cha
 
 int _config_del(config_t *cfg, const char *section, const char *entry)
 {
-        int start, end;
+        int start;
         char *tmp, *value;
-        unsigned int line = 0;
+        unsigned int line = 0, end;
 
         if ( ! entry ) {
                 start = search_section(cfg, section, 0);
                 if ( start < 0 )
-                        return -1;
+                        return start;
 
-                for ( end = start + 1; end < cfg->elements && ! is_section(cfg->content[end]); end++ );
+                for ( end = (unsigned int) start + 1; end < cfg->elements && ! is_section(cfg->content[end]); end++ );
 
                 while ( start >= 2 && ! *cfg->content[start - 1] && ! *cfg->content[start - 2] )
                         start--;
@@ -729,12 +730,12 @@ int _config_del(config_t *cfg, const char *section, const char *entry)
         } else {
                 start = search_entry(cfg, section, entry, &line, &tmp, &value);
                 if ( start < 0 )
-                        return -1;
+                        return start;
 
                 free_val(&tmp);
                 free_val(&value);
 
-                end = start + 1;
+                end = (unsigned int) start + 1;
         }
 
         cfg->need_sync = TRUE;

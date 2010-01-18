@@ -47,5 +47,5 @@ const char *prelude_strerror(prelude_error_t err)
 			code = PRELUDE_ERROR_UNKNOWN_ERRNO;
     	}
         
-  	return dgettext(PACKAGE, msgstr + msgidx[msgidxof(code)]);
+  	return dgettext(PACKAGE, msgstr + msgidx[msgidxof((int)code)]);
 }

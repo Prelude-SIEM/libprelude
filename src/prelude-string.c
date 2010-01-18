@@ -810,7 +810,7 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
          * ing the trailing '\0') which would have  been  written  to
          * the final string if enough space had been available.)
          */
-        if ( ret >= 0 && ret < string->size - string->index ) {
+        if ( ret >= 0 && (size_t) ret < string->size - string->index ) {
                 string->index += ret;
                 goto end;
         }

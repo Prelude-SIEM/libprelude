@@ -215,7 +215,7 @@ static int journal_check(prelude_failover_t *failover, failover_journal_entry_t 
         }
 
         prelude_log_debug(7, "rindex=%" PRELUDE_PRIu64 " size=%" PRELUDE_PRId64 "\n", jentry->value.rindex, (int64_t) wst->st_size);
-        if ( jentry->value.rindex > wst->st_size ) {
+        if ( jentry->value.rindex > (uint64_t) wst->st_size ) {
                 /*
                  * Latest journal entry has a read index that is higher than the size
                  * of our data file. This mean that the data file is corrupted, and we
@@ -229,7 +229,7 @@ static int journal_check(prelude_failover_t *failover, failover_journal_entry_t 
                 return 0;
         }
 
-        else if ( jentry->value.rindex == wst->st_size ) {
+        else if ( jentry->value.rindex == (uint64_t) wst->st_size ) {
                 /*
                  * Read-Index and size are the same, but file was not truncated.
                  */
@@ -395,7 +395,7 @@ static int get_failover_data_filename_and_fd(const char *dirname, char *filename
                         continue;
 
                 ret = snprintf(filename, size, "%s/%s", dirname, de->d_name);
-                if ( ret < 0 || ret >= size )
+                if ( ret < 0 || (size_t) ret >= size )
                         continue;
 
                 ret = open_exclusive(filename, O_CREAT|O_WRONLY|O_APPEND, &fd);
@@ -405,7 +405,7 @@ static int get_failover_data_filename_and_fd(const char *dirname, char *filename
 
         while ( ret != 1 ) {
                 ret = snprintf(filename, size, "%s/data%d", dirname, i++);
-                if ( ret < 0 || ret >= size )
+                if ( ret < 0 || (size_t) ret >= size )
                         continue;
 
                 ret = open_exclusive(filename, O_CREAT|O_WRONLY|O_APPEND, &fd);
@@ -574,7 +574,7 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
         flen = strlen(filename);
 
         ret = snprintf(filename + flen, sizeof(filename) - flen, ".journal");
-        if ( ret < 0 || ret >= (sizeof(filename) - flen) ) {
+        if ( ret < 0 || (size_t) ret >= (sizeof(filename) - flen) ) {
                 umask(mode);
                 prelude_failover_destroy(new);
                 return -1;

@@ -533,7 +533,7 @@ static void class_destroy(idmef_value_type_t *type)
 
 
 static const idmef_value_type_operation_t ops_tbl[] = {
-        { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                           },
+        { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL                     },
         { "int8", sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, NULL, generic_compare, int8_read, int8_write             },
         { "uint8", sizeof(uint8_t), INTEGER_OPERATOR, generic_copy,
@@ -571,7 +571,7 @@ static const idmef_value_type_operation_t ops_tbl[] = {
 
 static int is_type_valid(idmef_value_type_id_t type)
 {
-        if ( type < 0 || type >= (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
+        if ( type < 0 || (size_t) type >= (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN, "Unknown IDMEF type id: '%d'", type);
 
         return 0;
@@ -581,6 +581,12 @@ static int is_type_valid(idmef_value_type_id_t type)
 
 const char *idmef_value_type_to_string(idmef_value_type_id_t type)
 {
+        int ret;
+
+        ret = is_type_valid(type);
+        if ( ret < 0 )
+                return NULL;
+
         return ops_tbl[type].name;
 }
 

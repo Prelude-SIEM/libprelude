@@ -30,5 +30,5 @@
 const char *prelude_strsource(prelude_error_t err)
 {
         prelude_error_source_t source = prelude_error_get_source(err);
-        return dgettext(PACKAGE, msgstr + msgidx[msgidxof(source)]);
+        return dgettext(PACKAGE, msgstr + msgidx[msgidxof((int) source)]);
 }

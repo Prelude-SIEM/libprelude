@@ -351,7 +351,7 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
                         needsep = (_prelude_init_cwd[cwdlen - 1] != '/' ) ? '/' : '\0';
 
                 ret = snprintf(pathname, sizeof(pathname), "%s%c", _prelude_init_cwd, needsep);
-                if ( ret < 0 || ret >= sizeof(pathname) )
+                if ( ret < 0 || (size_t) ret >= sizeof(pathname) )
                         return prelude_error_from_errno(errno);
         }
 
@@ -514,7 +514,7 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
                 PRELUDE_MSG_PRIORITY_HIGH, /* IDMEF_IMPACT_SEVERITY_HIGH   -> 4 */
         };
 
-        if ( severity >= (sizeof(priority) / sizeof(*priority)) )
+        if ( severity < 0 || (size_t) severity >= (sizeof(priority) / sizeof(*priority)) )
                 return PRELUDE_MSG_PRIORITY_NONE;
 
         return priority[severity];
