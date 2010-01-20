@@ -178,7 +178,7 @@ static int process_event(prelude_client_profile_t *cp, int server_sock, prelude_
 
         len = sizeof(addr.addr);
 
-        csock = accept(server_sock, &addr.addr, &len);
+        csock = accept(server_sock, &addr.sa, &len);
         if ( csock < 0 ) {
                 fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
                 return -1;
