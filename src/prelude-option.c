@@ -1610,6 +1610,19 @@ int prelude_option_new_context(prelude_option_t *opt, prelude_option_context_t *
 }
 
 
+void prelude_option_context_set_data(prelude_option_context_t *oc, void *data)
+{
+        oc->data = data;
+}
+
+
+
+void *prelude_option_context_get_data(prelude_option_context_t *oc)
+{
+        return oc->data;
+}
+
+
 
 void prelude_option_context_destroy(prelude_option_context_t *oc)
 {

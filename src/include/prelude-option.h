@@ -40,18 +40,18 @@ typedef enum {
         PRELUDE_OPTION_TYPE_DESTROY = 0x20
 } prelude_option_type_t;
 
-         
+
 typedef enum {
         PRELUDE_OPTION_INPUT_TYPE_STRING   = 1,
         PRELUDE_OPTION_INPUT_TYPE_INTEGER  = 2,
         PRELUDE_OPTION_INPUT_TYPE_BOOLEAN  = 3
 } prelude_option_input_type_t;
-         
+
 
 typedef struct prelude_option prelude_option_t;
 typedef struct prelude_option_context prelude_option_context_t;
 
-typedef int (*prelude_option_destroy_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);         
+typedef int (*prelude_option_destroy_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);
 typedef int (*prelude_option_commit_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);
 typedef int (*prelude_option_get_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);
 typedef int (*prelude_option_set_callback_t)(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context);
@@ -170,7 +170,7 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
                                          prelude_option_destroy_callback_t destroy);
-         
+
 prelude_option_destroy_callback_t prelude_option_get_destroy_callback(prelude_option_t *opt);
 
 
@@ -195,14 +195,17 @@ int prelude_option_new_context(prelude_option_t *opt, prelude_option_context_t *
 
 void prelude_option_context_destroy(prelude_option_context_t *oc);
 
+void *prelude_option_context_get_data(prelude_option_context_t *oc);
+
+void prelude_option_context_set_data(prelude_option_context_t *oc, void *data);
 
 prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
                                         prelude_option_type_t type, prelude_bool_t walk_children);
 
 prelude_option_context_t *prelude_option_search_context(prelude_option_t *opt, const char *name);
-         
+
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

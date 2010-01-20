@@ -90,6 +90,13 @@
 
 
 
+typedef struct {
+        prelude_client_t *client;
+        idmef_address_t *addr;
+        idmef_address_t *idmef_addr;
+} node_address_data_t;
+
+
 struct prelude_client {
 
         int refcount;
@@ -498,12 +505,13 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 static int set_node_address_category(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         idmef_address_category_t category;
+        node_address_data_t *data = context;
 
         category = idmef_address_category_to_numeric(optarg);
         if ( category < 0 )
                 return category;
 
-        idmef_address_set_category(context, category);
+        idmef_address_set_category(data->addr, category);
 
         return 0;
 }
@@ -512,7 +520,8 @@ static int set_node_address_category(prelude_option_t *opt, const char *optarg, 
 
 static int get_node_address_category(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
-        idmef_address_category_t category = idmef_address_get_category(context);
+        node_address_data_t *data = context;
+        idmef_address_category_t category = idmef_address_get_category(data->addr);
         return prelude_string_cat(out, idmef_address_category_to_string(category));
 }
 
@@ -520,10 +529,12 @@ static int get_node_address_category(prelude_option_t *opt, prelude_string_t *ou
 
 static int set_node_address_vlan_num(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
+        node_address_data_t *data = context;
+
         if ( ! optarg )
-                idmef_address_unset_vlan_num(context);
+                idmef_address_unset_vlan_num(data->addr);
         else
-                idmef_address_set_vlan_num(context, atoi(optarg));
+                idmef_address_set_vlan_num(data->addr, atoi(optarg));
 
         return 0;
 }
@@ -533,8 +544,9 @@ static int set_node_address_vlan_num(prelude_option_t *opt, const char *optarg, 
 static int get_node_address_vlan_num(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         int32_t *num;
+        node_address_data_t *data = context;
 
-        num = idmef_address_get_vlan_num(context);
+        num = idmef_address_get_vlan_num(data->addr);
         if ( num )
                 return prelude_string_sprintf(out, "%" PRELUDE_PRId32, *num);
 
@@ -547,6 +559,7 @@ static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg,
 {
         int ret;
         prelude_string_t *str = NULL;
+        node_address_data_t *data = context;
 
         if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
@@ -554,7 +567,7 @@ static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg,
                         return ret;
         }
 
-        idmef_address_set_vlan_name(context, str);
+        idmef_address_set_vlan_name(data->addr, str);
 
         return 0;
 }
@@ -564,8 +577,9 @@ static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg,
 static int get_node_address_vlan_name(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_string_t *str;
+        node_address_data_t *data = context;
 
-        str = idmef_address_get_vlan_name(context);
+        str = idmef_address_get_vlan_name(data->addr);
         if ( ! str )
                 return 0;
 
@@ -578,6 +592,7 @@ static int set_node_address_address(prelude_option_t *opt, const char *optarg, p
 {
         int ret;
         prelude_string_t *str = NULL;
+        node_address_data_t *data = context;
 
         if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
@@ -585,7 +600,7 @@ static int set_node_address_address(prelude_option_t *opt, const char *optarg, p
                         return ret;
         }
 
-        idmef_address_set_address(context, str);
+        idmef_address_set_address(data->addr, str);
         return 0;
 }
 
@@ -594,8 +609,9 @@ static int set_node_address_address(prelude_option_t *opt, const char *optarg, p
 static int get_node_address_address(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_string_t *str;
+        node_address_data_t *data = context;
 
-        str = idmef_address_get_address(context);
+        str = idmef_address_get_address(data->addr);
         if ( ! str )
                 return 0;
 
@@ -608,6 +624,7 @@ static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, p
 {
         int ret;
         prelude_string_t *str = NULL;
+        node_address_data_t *data = context;
 
         if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
@@ -615,7 +632,7 @@ static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, p
                         return ret;
         }
 
-        idmef_address_set_netmask(context, str);
+        idmef_address_set_netmask(data->addr, str);
         return 0;
 }
 
@@ -624,8 +641,9 @@ static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, p
 static int get_node_address_netmask(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_string_t *str;
+        node_address_data_t *data = context;
 
-        str = idmef_address_get_netmask(context);
+        str = idmef_address_get_netmask(data->addr);
         if ( ! str )
                 return 0;
 
@@ -634,35 +652,110 @@ static int get_node_address_netmask(prelude_option_t *opt, prelude_string_t *out
 
 
 
+
 static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
-        idmef_node_t *node;
-        idmef_address_t *addr;
+        node_address_data_t *data;
         prelude_option_context_t *octx;
         prelude_client_t *ptr = context;
 
-        if ( prelude_option_search_context(opt, optarg) )
+        octx = prelude_option_search_context(opt, optarg);
+        if ( octx )
                 return 0;
 
-        ret = idmef_analyzer_new_node(ptr->analyzer, &node);
+        data = malloc(sizeof(*data));
+        if ( ! data )
+                return prelude_error_from_errno(errno);
+
+        data->client = ptr;
+        data->idmef_addr = NULL;
+
+        ret = idmef_address_new(&data->addr);
+        if ( ret < 0 ) {
+                free(data);
+                return ret;
+        }
+
+        ret = prelude_option_new_context(opt, &octx, optarg, data);
+        if ( ret < 0 ) {
+                idmef_address_destroy(data->addr);
+                free(data);
+        }
+
+        return ret;
+}
+
+
+static int commit_node_address(prelude_option_t *opt, prelude_string_t *out, void *context)
+{
+        int ret;
+        idmef_node_t *node;
+        idmef_analyzer_t *analyzer;
+        idmef_address_t *addr = NULL, *naddr;
+        node_address_data_t *data = context;
+
+        ret = idmef_analyzer_new_node(data->client->analyzer, &node);
         if ( ret < 0 )
                 return ret;
 
-        ret = idmef_node_new_address(node, &addr, -1);
+        if ( node && data->idmef_addr ) {
+                while ( (addr = idmef_node_get_next_address(node, addr)) ) {
+                        if ( addr == data->idmef_addr ) {
+                                idmef_address_destroy(addr);
+                                break;
+                        }
+                }
+        }
+
+        ret = idmef_address_clone(data->addr, &naddr);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
-        return prelude_option_new_context(opt, &octx, optarg, addr);
+        data->idmef_addr = naddr;
+        idmef_node_set_address(node, naddr, -1);
+
+        if ( data->client->_analyzer_copy ) {
+                ret = idmef_analyzer_clone(data->client->analyzer, &analyzer);
+                if ( ret < 0 )
+                        return ret;
+
+                idmef_analyzer_destroy(data->client->_analyzer_copy);
+                data->client->_analyzer_copy = analyzer;
+        }
+
+        return 0;
 }
-
 
 
 static int destroy_node_address(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
-        idmef_address_t *addr = context;
+        int ret;
+        idmef_node_t *node;
+        idmef_analyzer_t *analyzer;
+        idmef_address_t *addr = NULL;
+        node_address_data_t *data = context;
 
-        idmef_address_destroy(addr);
+        node = idmef_analyzer_get_node(data->client->analyzer);
+        if ( node ) {
+                while ( (addr = idmef_node_get_next_address(node, addr)) ) {
+                        if ( addr == data->idmef_addr ) {
+                                idmef_address_destroy(addr);
+                                break;
+                        }
+                }
+        }
+
+        if ( data->client->_analyzer_copy ) {
+                ret = idmef_analyzer_clone(data->client->analyzer, &analyzer);
+                if ( ret == 0 ) {
+                        idmef_analyzer_destroy(data->client->_analyzer_copy);
+                        data->client->_analyzer_copy = analyzer;
+                }
+        }
+
+        idmef_address_destroy(data->addr);
+        free(data);
 
         return 0;
 }
@@ -1097,6 +1190,7 @@ int _prelude_client_register_options(void)
         if ( ret < 0 )
                 return ret;
 
+        prelude_option_set_commit_callback(opt, commit_node_address);
         prelude_option_set_destroy_callback(opt, destroy_node_address);
 
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "address",
