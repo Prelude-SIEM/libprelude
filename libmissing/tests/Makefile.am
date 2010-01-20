@@ -43,6 +43,8 @@ libtests_a_DEPENDENCIES = $(gltests_LIBOBJS)
 EXTRA_libtests_a_SOURCES =
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 
+TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
+
 ## begin gnulib module alignof-tests
 
 TESTS += test-alignof
@@ -102,7 +104,6 @@ libtests_a_SOURCES += binary-io.h
 ## begin gnulib module binary-io-tests
 
 TESTS += test-binary-io.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@'
 check_PROGRAMS += test-binary-io
 
 EXTRA_DIST += test-binary-io.sh test-binary-io.c macros.h
@@ -112,7 +113,7 @@ EXTRA_DIST += test-binary-io.sh test-binary-io.c macros.h
 ## begin gnulib module btowc-tests
 
 TESTS += test-btowc1.sh test-btowc2.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR='@LOCALE_FR@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
+TESTS_ENVIRONMENT += LOCALE_FR='@LOCALE_FR@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
 check_PROGRAMS += test-btowc
 
 EXTRA_DIST += test-btowc1.sh test-btowc2.sh test-btowc.c signature.h macros.h
@@ -137,7 +138,7 @@ libtests_a_SOURCES += c-strcase.h c-strcasecmp.c c-strncasecmp.c
 ## begin gnulib module c-strcase-tests
 
 TESTS += test-c-strcase.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR='@LOCALE_FR@' LOCALE_TR_UTF8='@LOCALE_TR_UTF8@'
+TESTS_ENVIRONMENT += LOCALE_FR='@LOCALE_FR@' LOCALE_TR_UTF8='@LOCALE_TR_UTF8@'
 check_PROGRAMS += test-c-strcasecmp test-c-strncasecmp
 EXTRA_DIST += test-c-strcase.sh test-c-strcasecmp.c test-c-strncasecmp.c macros.h
 
@@ -175,7 +176,7 @@ BUILT_SOURCES += fcntl.h
 
 # We need the following in order to create <fcntl.h> when the system
 # doesn't have one that works with the given compiler.
-fcntl.h: fcntl.in.h $(LINK_WARNING_H) $(ARG_NONNULL_H)
+fcntl.h: fcntl.in.h $(WARN_ON_USE_H) $(ARG_NONNULL_H)
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
@@ -189,8 +190,8 @@ fcntl.h: fcntl.in.h $(LINK_WARNING_H) $(ARG_NONNULL_H)
 	      -e 's|@''REPLACE_FCNTL''@|$(REPLACE_FCNTL)|g' \
 	      -e 's|@''REPLACE_OPEN''@|$(REPLACE_OPEN)|g' \
 	      -e 's|@''REPLACE_OPENAT''@|$(REPLACE_OPENAT)|g' \
-	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
 	      < $(srcdir)/fcntl.in.h; \
 	} > $@-t && \
 	mv $@-t $@
@@ -220,7 +221,6 @@ EXTRA_DIST += test-fopen.h test-fopen.c signature.h macros.h
 ## begin gnulib module fseeko-tests
 
 TESTS += test-fseeko.sh test-fseeko2.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
 check_PROGRAMS += test-fseeko
 EXTRA_DIST += test-fseeko.c test-fseeko.sh test-fseeko2.sh signature.h macros.h
 
@@ -306,30 +306,6 @@ EXTRA_DIST += test-langinfo.c
 
 ## end   gnulib module langinfo-tests
 
-## begin gnulib module link-warning
-
-# The BUILT_SOURCES created by this Makefile snippet are not used via #include
-# statements but through direct file reference. Therefore this snippet must be
-# present in all Makefile.am that need it. This is ensured by the applicability
-# 'all' defined above.
-
-BUILT_SOURCES += link-warning.h
-# The link-warning.h that gets inserted into generated .h files is the same as
-# build-aux/link-warning.h, except that it has the copyright header cut off.
-link-warning.h: $(top_srcdir)/./link-warning.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	sed -n -e '/GL_LINK_WARNING/,$$p' \
-	  < $(top_srcdir)/./link-warning.h \
-	  > $@-t && \
-	mv $@-t $@
-MOSTLYCLEANFILES += link-warning.h link-warning.h-t
-
-LINK_WARNING_H=link-warning.h
-
-EXTRA_DIST += $(top_srcdir)/./link-warning.h
-
-## end   gnulib module link-warning
-
 ## begin gnulib module lock-tests
 
 TESTS += test-lock
@@ -342,7 +318,6 @@ EXTRA_DIST += test-lock.c
 ## begin gnulib module lseek-tests
 
 TESTS += test-lseek.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
 check_PROGRAMS += test-lseek
 EXTRA_DIST += test-lseek.c test-lseek.sh signature.h macros.h
 
@@ -369,7 +344,6 @@ EXTRA_DIST += test-lstat.h test-lstat.c signature.h macros.h
 
 TESTS += test-mbrtowc1.sh test-mbrtowc2.sh test-mbrtowc3.sh test-mbrtowc4.sh
 TESTS_ENVIRONMENT += \
-  EXEEXT='@EXEEXT@' \
   LOCALE_FR='@LOCALE_FR@' \
   LOCALE_FR_UTF8='@LOCALE_FR_UTF8@' \
   LOCALE_JA='@LOCALE_JA@' \
@@ -383,7 +357,7 @@ EXTRA_DIST += test-mbrtowc1.sh test-mbrtowc2.sh test-mbrtowc3.sh test-mbrtowc4.s
 ## begin gnulib module mbsinit-tests
 
 TESTS += test-mbsinit.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
+TESTS_ENVIRONMENT += LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
 check_PROGRAMS += test-mbsinit
 
 EXTRA_DIST += test-mbsinit.sh test-mbsinit.c signature.h macros.h
@@ -426,7 +400,7 @@ EXTRA_DIST += test-netinet_in.c
 ## begin gnulib module nl_langinfo-tests
 
 TESTS += test-nl_langinfo.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' LOCALE_FR='@LOCALE_FR@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
+TESTS_ENVIRONMENT += LOCALE_FR='@LOCALE_FR@' LOCALE_FR_UTF8='@LOCALE_FR_UTF8@'
 check_PROGRAMS += test-nl_langinfo
 EXTRA_DIST += test-nl_langinfo.sh test-nl_langinfo.c signature.h macros.h
 
@@ -452,7 +426,6 @@ EXTRA_DIST += test-open.h test-open.c signature.h macros.h
 ## begin gnulib module perror-tests
 
 TESTS += test-perror.sh
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'
 check_PROGRAMS += test-perror
 EXTRA_DIST += signature.h test-perror.c test-perror.sh
 
@@ -462,7 +435,7 @@ EXTRA_DIST += signature.h test-perror.c test-perror.sh
 
 TESTS += test-poll
 check_PROGRAMS += test-poll
-test_poll_LDADD = $(LDADD) @LIBSOCKET@
+test_poll_LDADD = $(LDADD) @LIBSOCKET@ $(INET_PTON_LIB)
 EXTRA_DIST += signature.h test-poll.c
 
 ## end   gnulib module poll-tests
@@ -478,7 +451,6 @@ EXTRA_DIST += same-inode.h
 
 TESTS += test-select test-select-in.sh test-select-out.sh
 # test-select-stdin has to be run by hand.
-TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@'
 check_PROGRAMS += test-select test-select-fd test-select-stdin
 test_select_LDADD = $(LDADD) @LIBSOCKET@ $(INET_PTON_LIB)
 test_select_fd_LDADD = $(LDADD) @LIBSOCKET@
@@ -720,6 +692,25 @@ EXTRA_DIST += test-vsnprintf.c signature.h macros.h
 
 ## end   gnulib module vsnprintf-tests
 
+## begin gnulib module warn-on-use
+
+BUILT_SOURCES += warn-on-use.h
+# The warn-on-use.h that gets inserted into generated .h files is the same as
+# build-aux/warn-on-use.h, except that it has the copyright header cut off.
+warn-on-use.h: $(top_srcdir)/./warn-on-use.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	sed -n -e '/^.ifndef/,$$p' \
+	  < $(top_srcdir)/./warn-on-use.h \
+	  > $@-t && \
+	mv $@-t $@
+MOSTLYCLEANFILES += warn-on-use.h warn-on-use.h-t
+
+WARN_ON_USE_H=warn-on-use.h
+
+EXTRA_DIST += $(top_srcdir)/./warn-on-use.h
+
+## end   gnulib module warn-on-use
+
 ## begin gnulib module wchar-tests
 
 TESTS += test-wchar
@@ -732,7 +723,6 @@ EXTRA_DIST += test-wchar.c
 
 TESTS += test-wcrtomb.sh
 TESTS_ENVIRONMENT += \
-  EXEEXT='@EXEEXT@' \
   LOCALE_FR='@LOCALE_FR@' \
   LOCALE_FR_UTF8='@LOCALE_FR_UTF8@' \
   LOCALE_JA='@LOCALE_JA@' \
