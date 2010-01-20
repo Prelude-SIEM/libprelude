@@ -2234,9 +2234,11 @@ int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additio
                         return ret;
         }
 
-        ret = idmef_data_copy(src->data, dst->data);
-        if ( ret < 0 )
-                return ret;
+        if ( src->data ) {
+                ret = idmef_data_copy(src->data, dst->data);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         return 0;
 }
@@ -2742,13 +2744,17 @@ int idmef_reference_copy(const idmef_reference_t *src, idmef_reference_t *dst)
 
         dst->origin = src->origin;
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        ret = prelude_string_copy(src->url, dst->url);
-        if ( ret < 0 )
-                return ret;
+        if ( src->url ) {
+                ret = prelude_string_copy(src->url, dst->url);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->meaning ) {
                 ret = prelude_string_clone(src->meaning, &dst->meaning);
@@ -3275,9 +3281,11 @@ int idmef_classification_copy(const idmef_classification_t *src, idmef_classific
                         return ret;
         }
 
-        ret = prelude_string_copy(src->text, dst->text);
-        if ( ret < 0 )
-                return ret;
+        if ( src->text ) {
+                ret = prelude_string_copy(src->text, dst->text);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         {
                 prelude_list_t *n, *tmp;
@@ -5075,9 +5083,11 @@ int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
 
         dst->vlan_num = src->vlan_num;
 
-        ret = prelude_string_copy(src->address, dst->address);
-        if ( ret < 0 )
-                return ret;
+        if ( src->address ) {
+                ret = prelude_string_copy(src->address, dst->address);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->netmask ) {
                 ret = prelude_string_clone(src->netmask, &dst->netmask);
@@ -5923,9 +5933,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
                         return ret;
         }
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         dst->pid_is_set = src->pid_is_set;
 
@@ -6604,9 +6616,11 @@ int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *
 
         ret = 0;
 
-        ret = prelude_string_copy(src->url, dst->url);
-        if ( ret < 0 )
-                return ret;
+        if ( src->url ) {
+                ret = prelude_string_copy(src->url, dst->url);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->cgi ) {
                 ret = prelude_string_clone(src->cgi, &dst->cgi);
@@ -10634,9 +10648,11 @@ int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *
 
         ret = 0;
 
-        ret = idmef_user_id_copy(src->user_id, dst->user_id);
-        if ( ret < 0 )
-                return ret;
+        if ( src->user_id ) {
+                ret = idmef_user_id_copy(src->user_id, dst->user_id);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         {
                 prelude_list_t *n, *tmp;
@@ -11733,9 +11749,11 @@ int idmef_checksum_copy(const idmef_checksum_t *src, idmef_checksum_t *dst)
 
         ret = 0;
 
-        ret = prelude_string_copy(src->value, dst->value);
-        if ( ret < 0 )
-                return ret;
+        if ( src->value ) {
+                ret = prelude_string_copy(src->value, dst->value);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->key ) {
                 ret = prelude_string_clone(src->key, &dst->key);
@@ -13343,13 +13361,17 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                         return ret;
         }
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        ret = prelude_string_copy(src->path, dst->path);
-        if ( ret < 0 )
-                return ret;
+        if ( src->path ) {
+                ret = prelude_string_copy(src->path, dst->path);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->create_time ) {
                 ret = idmef_time_clone(src->create_time, &dst->create_time);
@@ -14061,17 +14083,23 @@ int idmef_linkage_copy(const idmef_linkage_t *src, idmef_linkage_t *dst)
 
         dst->category = src->category;
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        ret = prelude_string_copy(src->path, dst->path);
-        if ( ret < 0 )
-                return ret;
+        if ( src->path ) {
+                ret = prelude_string_copy(src->path, dst->path);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        ret = idmef_file_copy(src->file, dst->file);
-        if ( ret < 0 )
-                return ret;
+        if ( src->file ) {
+                ret = idmef_file_copy(src->file, dst->file);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         return 0;
 }
@@ -16476,9 +16504,11 @@ int idmef_alertident_copy(const idmef_alertident_t *src, idmef_alertident_t *dst
 
         ret = 0;
 
-        ret = prelude_string_copy(src->alertident, dst->alertident);
-        if ( ret < 0 )
-                return ret;
+        if ( src->alertident ) {
+                ret = prelude_string_copy(src->alertident, dst->alertident);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->analyzerid ) {
                 ret = prelude_string_clone(src->analyzerid, &dst->analyzerid);
@@ -18647,9 +18677,11 @@ int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
 
         ret = 0;
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->command ) {
                 ret = prelude_string_clone(src->command, &dst->command);
@@ -19120,9 +19152,11 @@ int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_cor
 
         ret = 0;
 
-        ret = prelude_string_copy(src->name, dst->name);
-        if ( ret < 0 )
-                return ret;
+        if ( src->name ) {
+                ret = prelude_string_copy(src->name, dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         {
                 prelude_list_t *n, *tmp;
@@ -19570,9 +19604,11 @@ int idmef_overflow_alert_copy(const idmef_overflow_alert_t *src, idmef_overflow_
 
         ret = 0;
 
-        ret = prelude_string_copy(src->program, dst->program);
-        if ( ret < 0 )
-                return ret;
+        if ( src->program ) {
+                ret = prelude_string_copy(src->program, dst->program);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         dst->size_is_set = src->size_is_set;
 
@@ -21293,13 +21329,17 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 }
         }
 
-        ret = idmef_time_copy(src->create_time, dst->create_time);
-        if ( ret < 0 )
-                return ret;
+        if ( src->create_time ) {
+                ret = idmef_time_copy(src->create_time, dst->create_time);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        ret = idmef_classification_copy(src->classification, dst->classification);
-        if ( ret < 0 )
-                return ret;
+        if ( src->classification ) {
+                ret = idmef_classification_copy(src->classification, dst->classification);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->detect_time ) {
                 ret = idmef_time_clone(src->detect_time, &dst->detect_time);
@@ -22346,9 +22386,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
                 }
         }
 
-        ret = idmef_time_copy(src->create_time, dst->create_time);
-        if ( ret < 0 )
-                return ret;
+        if ( src->create_time ) {
+                ret = idmef_time_copy(src->create_time, dst->create_time);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( src->analyzer_time ) {
                 ret = idmef_time_clone(src->analyzer_time, &dst->analyzer_time);
@@ -22912,9 +22954,11 @@ int idmef_message_copy(const idmef_message_t *src, idmef_message_t *dst)
 
         ret = 0;
 
-        ret = prelude_string_copy(src->version, dst->version);
-        if ( ret < 0 )
-                return ret;
+        if ( src->version ) {
+                ret = prelude_string_copy(src->version, dst->version);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         switch ( src->type ) {
 

@@ -824,9 +824,11 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
         } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
             if ( $field->{required} ) {
                 $self->output("
-        ret = ${copy_func}(src->$field->{name}, dst->$field->{name});
-        if ( ret < 0 )
-                return ret;
+        if ( src->$field->{name} ) {
+                ret = ${copy_func}(src->$field->{name}, dst->$field->{name});
+                if ( ret < 0 )
+                        return ret;
+        }
 ");
 
             }
