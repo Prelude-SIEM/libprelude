@@ -97,6 +97,44 @@ static int anon_check_passwd(prelude_io_t *fd)
 }
 
 
+static inline gnutls_transport_ptr fd_to_ptr(int fd)
+{
+        union {
+                gnutls_transport_ptr ptr;
+                int fd;
+        } data;
+
+        data.fd = fd;
+
+        return data.ptr;
+}
+
+
+static inline int ptr_to_fd(gnutls_transport_ptr ptr)
+{
+        union {
+                gnutls_transport_ptr ptr;
+                int fd;
+        } data;
+
+        data.ptr = ptr;
+
+        return data.fd;
+}
+
+
+static ssize_t tls_pull(gnutls_transport_ptr fd, void *buf, size_t count)
+{
+        return read(ptr_to_fd(fd), buf, count);
+}
+
+
+
+static ssize_t tls_push(gnutls_transport_ptr fd, const void *buf, size_t count)
+{
+        return write(ptr_to_fd(fd), buf, count);
+}
+
 
 static gnutls_session new_tls_session(int sock)
 {
@@ -108,10 +146,6 @@ static gnutls_session new_tls_session(int sock)
                 GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
 #endif
                 0 };
-        union {
-                int fd;
-                void *ptr;
-        } data;
 
         gnutls_init(&session, GNUTLS_SERVER);
 
@@ -124,8 +158,9 @@ static gnutls_session new_tls_session(int sock)
 #endif
         gnutls_credentials_set(session, GNUTLS_CRD_ANON, anoncred);
 
-        data.fd = sock;
-        gnutls_transport_set_ptr(session, data.ptr);
+        gnutls_transport_set_ptr(session, fd_to_ptr(sock));
+        gnutls_transport_set_pull_function(session, tls_pull);
+        gnutls_transport_set_push_function(session, tls_push);
 
         ret = gnutls_handshake(session);
         if ( ret < 0 ) {

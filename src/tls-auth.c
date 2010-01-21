@@ -180,10 +180,10 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
-static void *fd_to_ptr(int fd)
+static inline gnutls_transport_ptr fd_to_ptr(int fd)
 {
         union {
-                void *ptr;
+                gnutls_transport_ptr ptr;
                 int fd;
         } data;
 
@@ -192,6 +192,18 @@ static void *fd_to_ptr(int fd)
         return data.ptr;
 }
 
+
+static inline int ptr_to_fd(gnutls_transport_ptr ptr)
+{
+        union {
+                gnutls_transport_ptr ptr;
+                int fd;
+        } data;
+
+        data.ptr = ptr;
+
+        return data.fd;
+}
 
 
 static void set_default_priority(gnutls_session session)
@@ -237,6 +249,20 @@ int tls_auth_init_priority(const char *tlsopts)
 }
 
 
+
+static ssize_t tls_pull(gnutls_transport_ptr fd, void *buf, size_t count)
+{
+        return read(ptr_to_fd(fd), buf, count);
+}
+
+
+
+static ssize_t tls_push(gnutls_transport_ptr fd, const void *buf, size_t count)
+{
+        return write(ptr_to_fd(fd), buf, count);
+}
+
+
 int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
                         uint64_t *analyzerid, prelude_connection_permission_t *permission)
 {
@@ -263,6 +289,8 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
 
         fd = prelude_io_get_fd(io);
         gnutls_transport_set_ptr(session, fd_to_ptr(fd));
+        gnutls_transport_set_pull_function(session, tls_pull);
+        gnutls_transport_set_push_function(session, tls_push);
 
         do {
                 ret = gnutls_handshake(session);
