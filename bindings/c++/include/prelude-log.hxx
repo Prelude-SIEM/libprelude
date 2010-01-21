@@ -27,6 +27,9 @@
 #include "prelude.h"
 #include "idmef-path.h"
 
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
+# undef ERROR
+#endif
 
 namespace Prelude {
         class PreludeLog {
