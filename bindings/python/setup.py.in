@@ -84,6 +84,6 @@ setup(name="PreludeEasy",
       py_modules=["PreludeEasy"],
       ext_modules=[Extension("_PreludeEasy",
                              ["_PreludeEasy.cxx"],
-                             extra_compile_args=split_args("-I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include -I@top_srcdir@/libmissing -I@top_builddir@/libmissing"),
+                             extra_compile_args=split_args("-I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include"),
                              library_dirs=[ "@top_builddir@/src/.libs/", "@top_builddir@/bindings/c++/.libs/" ],
                              extra_link_args=split_args("-lpreludecpp -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @LTLIBTHREAD@"))])

@@ -15,7 +15,6 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 
 
 %{
-static gl_thread_t __initial_thread;
 PyObject *__prelude_log_func = NULL;
 
 static void _cb_python_log(int level, const char *str)
@@ -159,8 +158,6 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         char **argv = NULL;
         PyObject *sys = PyImport_ImportModule("sys");
         PyObject *pyargv = PyObject_GetAttrString(sys, "argv");
-
-        __initial_thread = (gl_thread_t) gl_thread_self();
 
         argc = PyObject_Length(pyargv);
         assert(argc >= 1);

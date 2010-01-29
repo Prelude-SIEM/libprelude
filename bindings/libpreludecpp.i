@@ -8,7 +8,10 @@
 #include <list>
 #include <sstream>
 
-#include "config.h"
+#ifndef SWIGPYTHON
+# include "config.h"
+# include "glthread/thread.h"
+#endif
 
 #include "prelude.hxx"
 #include "prelude-log.hxx"
@@ -23,7 +26,6 @@
 #include "idmef-path.hxx"
 #include "idmef-time.hxx"
 #include "idmef.hxx"
-#include "glthread/thread.h"
 
 using namespace Prelude;
 %}
