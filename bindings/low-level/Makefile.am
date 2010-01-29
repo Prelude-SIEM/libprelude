@@ -1,8 +1,8 @@
-BINDING_DEPENDS=libprelude.i libprelude_perl.i idmef-value-class-mapping.i $(top_srcdir)/src/include/prelude-client.h $(top_srcdir)/src/include/idmef-tree-wrap.h $(top_srcdir)/src/include/idmef-value.h $(top_srcdir)/src/include/idmef-path.h $(top_srcdir)/src/include/idmef-time.h $(top_srcdir)/src/include/idmef-data.h $(top_srcdir)/src/include/prelude-string.h $(top_srcdir)/src/include/idmef-criteria.h $(top_srcdir)/src/include/prelude-msgbuf.h $(top_srcdir)/src/include/idmef-message-write.h $(top_srcdir)/src/include/idmef-message-print.h $(top_srcdir)/src/include/idmef-value-type.h $(top_srcdir)/src/include/idmef-class.h $(top_srcdir)/src/include/prelude-connection.h $(top_srcdir)/src/include/prelude-option.h $(top_srcdir)/src/include/prelude-option-wide.h $(top_srcdir)/src/include/prelude-message-id.h $(top_srcdir)/src/include/prelude-log.h
+BINDING_DEPENDS=libprelude.i perl/libprelude_perl.i idmef-value-class-mapping.i $(top_srcdir)/src/include/prelude-client.h $(top_srcdir)/src/include/idmef-tree-wrap.h $(top_srcdir)/src/include/idmef-value.h $(top_srcdir)/src/include/idmef-path.h $(top_srcdir)/src/include/idmef-time.h $(top_srcdir)/src/include/idmef-data.h $(top_srcdir)/src/include/prelude-string.h $(top_srcdir)/src/include/idmef-criteria.h $(top_srcdir)/src/include/prelude-msgbuf.h $(top_srcdir)/src/include/idmef-message-write.h $(top_srcdir)/src/include/idmef-message-print.h $(top_srcdir)/src/include/idmef-value-type.h $(top_srcdir)/src/include/idmef-class.h $(top_srcdir)/src/include/prelude-connection.h $(top_srcdir)/src/include/prelude-option.h $(top_srcdir)/src/include/prelude-option-wide.h $(top_srcdir)/src/include/prelude-message-id.h $(top_srcdir)/src/include/prelude-log.h
 
 SUBDIRS = python
 
-EXTRA_DIST = libprelude.i libprelude_perl.i idmef-value-class-mapping.i perl/Makefile.PL.in perl/Prelude.c perl/Prelude.pm 
+EXTRA_DIST = libprelude.i perl/libprelude_perl.i idmef-value-class-mapping.i perl/Makefile.PL.in perl/Prelude.c perl/Prelude.pm 
 
 CLEANFILES = perl/pm_to_blib perl/Prelude.o perl/blib python/build
 MAINTAINERCLEANFILES =  perl/Makefile           \

@@ -86,7 +86,7 @@ typedef enum {
 
 
 #ifdef SWIGPERL
-%include libprelude_perl.i
+%include perl/libprelude_perl.i
 #endif /* ! SWIGPERL */
 
 /*
