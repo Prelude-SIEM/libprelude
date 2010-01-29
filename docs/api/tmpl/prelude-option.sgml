@@ -254,6 +254,24 @@ prelude-option
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_option_context_get_data ##### -->
+<para>
+
+</para>
+
+@oc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_context_set_data ##### -->
+<para>
+
+</para>
+
+@oc: 
+@data: 
+
+
 <!-- ##### FUNCTION prelude_option_invoke_commit ##### -->
 <para>
 

@@ -955,6 +955,8 @@ prelude_option_get_shortname
 prelude_option_get_longname
 prelude_option_set_data
 prelude_option_get_data
+prelude_option_context_get_data
+prelude_option_context_set_data
 prelude_option_invoke_commit
 prelude_option_invoke_set
 prelude_option_invoke_get

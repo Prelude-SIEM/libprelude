@@ -1,3 +1,41 @@
+* 2010-01-29, libprelude-1.0.0rc1:
+
+- Libprelude EasyBindings are now enabled by default
+
+- Default to generating 2048 bits TLS keys
+
+- Fix a potential IDMEF object copy/clone error return that could occur
+  if the caller had freed a required children from the copied object.
+
+- Prevent unsafe modification of the Libprelude returned Analyzer object
+
+- When retrieving a list of IDMEF object, return a Python list
+  containing one IDMEFValue for each object.
+
+  This behavior is more consistant than retrieving a single IDMEFValue
+  carrying the whole list, and might permit the user to play with the
+  object directly if we extand the API in the future.
+
+- Fix argv memory leak on bindings initialization
+
+- Fixes some warnings uncovered by GCC -Wextra
+
+- Thanks to Steve Grubb <sgrubb@redhat.com> for reporting Flexelint
+  output! This allowed fixing the following issues:
+
+  [prelude-admin]: fix possible leak on getpass() failure.
+
+  [idmef-data]: fix potential invalid read on architecture where
+                sizeof(char) > 1.
+
+  [idmef-path]: idmef_path_set_index() would accept an off by one depth,
+                protect the caller.
+
+  [prelude-connection]: fix invalid pointer dereference in case of
+                        malloc() failure.
+
+
+
 * 2009-01-11, libprelude-0.9.25:
 
 - Sent message priority will now be correctly assigned depending on the input
