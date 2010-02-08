@@ -371,7 +371,7 @@ main ()
   result = test (test_connect_first, "Unconnected socket test");
   result += test (test_socket_pair, "Connected sockets test");
   result += test (test_accept_first, "General socket test with fork");
-  //result += test (test_pipe, "Pipe test");
+  result += test (test_pipe, "Pipe test");
 
   exit (result);
 }

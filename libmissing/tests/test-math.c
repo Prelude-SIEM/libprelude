@@ -1,5 +1,5 @@
-/* Tests of symlink.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+/* Test of <math.h> substitute.
+   Copyright (C) 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,34 +14,40 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Eric Blake <ebb9@byu.net>, 2009.  */
+/* Written by Bruno Haible <bruno@clisp.org>, 2007.  */
 
 #include <config.h>
 
-#include <unistd.h>
+#include <math.h>
 
-#include "signature.h"
-SIGNATURE_CHECK (symlink, int, (char const *, char const *));
+#ifndef NAN
+# error NAN should be defined
+choke me
+#endif
 
-#include <fcntl.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
+#if 0
+/* Check that NAN expands into a constant expression.  */
+static float n = NAN;
+#endif
 
-#include "ignore-value.h"
-#include "macros.h"
-
-#define BASE "test-symlink.t"
-
-#include "test-symlink.h"
+/* Compare two numbers with ==.
+   This is a separate function because IRIX 6.5 "cc -O" miscompiles an
+   'x == x' test.  */
+static int
+numeric_equal (double x, double y)
+{
+  return x == y;
+}
 
 int
 main (void)
 {
-  /* Remove any leftovers from a previous partial run.  */
-  ignore_value (system ("rm -rf " BASE "*"));
-
-  return test_symlink (symlink, true);
+  double d = NAN;
+  double zero = 0.0;
+  if (numeric_equal (d, d))
+    return 1;
+  d = HUGE_VAL;
+  if (!numeric_equal (d, 1.0 / zero))
+    return 1;
+  return 0;
 }

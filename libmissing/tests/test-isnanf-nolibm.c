@@ -1,5 +1,5 @@
-/* Tests of symlink.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+/* Test of isnanf() substitute.
+   Copyright (C) 2007-2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,34 +14,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Eric Blake <ebb9@byu.net>, 2009.  */
-
 #include <config.h>
 
-#include <unistd.h>
+#include "isnanf-nolibm.h"
 
-#include "signature.h"
-SIGNATURE_CHECK (symlink, int, (char const *, char const *));
-
-#include <fcntl.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-
-#include "ignore-value.h"
-#include "macros.h"
-
-#define BASE "test-symlink.t"
-
-#include "test-symlink.h"
-
-int
-main (void)
-{
-  /* Remove any leftovers from a previous partial run.  */
-  ignore_value (system ("rm -rf " BASE "*"));
-
-  return test_symlink (symlink, true);
-}
+#include "test-isnanf.h"

@@ -27,6 +27,7 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([AC_PROG_RANLIB])
   AC_REQUIRE([AM_PROG_CC_C_O])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  AC_REQUIRE([gl_FP_IEEE])
   AC_REQUIRE([AC_FUNC_FSEEKO])
   gl_THREADLIB_EARLY
 ])
@@ -79,6 +80,10 @@ AC_SUBST([LTALLOCA])
   gl_FLOAT_H
   gl_FUNC_FOPEN
   gl_STDIO_MODULE_INDICATOR([fopen])
+  gl_FUNC_FREXP_NO_LIBM
+  gl_MATH_MODULE_INDICATOR([frexp])
+  gl_FUNC_FREXPL_NO_LIBM
+  gl_MATH_MODULE_INDICATOR([frexpl])
   gl_FUNC_FSEEKO
   gl_STDIO_MODULE_INDICATOR([fseeko])
   gl_FUNC_FTW
@@ -99,6 +104,7 @@ AC_SUBST([LTALLOCA])
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
+  gl_SYS_TIME_MODULE_INDICATOR([gettimeofday])
   gl_HOSTENT
   gl_INET_NTOP
   gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
@@ -114,6 +120,9 @@ AC_SUBST([LTALLOCA])
   fi
   gl_SYS_IOCTL_MODULE_INDICATOR([ioctl])
   gl_MODULE_INDICATOR([ioctl])
+  gl_FUNC_ISNAND_NO_LIBM
+  gl_FUNC_ISNANF_NO_LIBM
+  gl_FUNC_ISNANL_NO_LIBM
   gl_LANGINFO_H
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
@@ -130,6 +139,7 @@ AC_SUBST([LTALLOCA])
   AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
   gl_FUNC_MALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+  gl_MATH_H
   gl_FUNC_MBRTOWC
   gl_WCHAR_MODULE_INDICATOR([mbrtowc])
   gl_FUNC_MBSINIT
@@ -151,6 +161,9 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_PERROR
   gl_STRING_MODULE_INDICATOR([perror])
   gl_FUNC_POLL
+  gl_FUNC_PRINTF_FREXP
+  gl_FUNC_PRINTF_FREXPL
+  m4_divert_text([INIT_PREPARE], [gl_printf_safe=yes])
   gl_FUNC_REALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([realloc-posix])
   gl_REGEX
@@ -164,6 +177,8 @@ AC_SUBST([LTALLOCA])
   fi
   gl_SYS_SOCKET_MODULE_INDICATOR([setsockopt])
   gl_SIGNAL_H
+  gl_SIGNBIT
+  gl_MATH_MODULE_INDICATOR([signbit])
   gl_SIGNALBLOCKING
   gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
   gl_SIZE_MAX
@@ -171,6 +186,7 @@ AC_SUBST([LTALLOCA])
   gl_UNISTD_MODULE_INDICATOR([sleep])
   gl_FUNC_SNPRINTF
   gl_STDIO_MODULE_INDICATOR([snprintf])
+  gl_FUNC_SNPRINTF_POSIX
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([socket])
@@ -238,6 +254,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
   gl_STDIO_MODULE_INDICATOR([vsnprintf])
+  gl_FUNC_VSNPRINTF_POSIX
   gl_WCHAR_H
   gl_FUNC_WCRTOMB
   gl_WCHAR_MODULE_INDICATOR([wcrtomb])
@@ -292,8 +309,12 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_UNGETC_WORKS
   gl_FUNC_GETPAGESIZE
   gl_UNISTD_MODULE_INDICATOR([getpagesize])
+  AC_REQUIRE([AC_C_INLINE])
   AC_C_BIGENDIAN
   AC_C_BIGENDIAN
+  gl_DOUBLE_EXPONENT_LOCATION
+  gl_FLOAT_EXPONENT_LOCATION
+  gl_LONG_DOUBLE_EXPONENT_LOCATION
   gl_FUNC_LSTAT
   gl_SYS_STAT_MODULE_INDICATOR([lstat])
   gt_LOCALE_FR
@@ -312,13 +333,20 @@ AC_SUBST([LTALLOCA])
   gl_FCNTL_MODULE_INDICATOR([open])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
   AC_CHECK_HEADERS_ONCE([unistd.h sys/wait.h])
+  AC_REQUIRE([gl_FLOAT_EXPONENT_LOCATION])
+  AC_REQUIRE([gl_DOUBLE_EXPONENT_LOCATION])
+  AC_REQUIRE([gl_LONG_DOUBLE_EXPONENT_LOCATION])
   AC_CHECK_DECLS_ONCE([alarm])
+  AC_DEFINE([CHECK_SNPRINTF_POSIX], 1,
+    [Define to 1 for strict checking in test-snprintf.c.])
   gt_TYPE_WCHAR_T
   gt_TYPE_WINT_T
   AC_CHECK_DECLS_ONCE([alarm])
   gl_FUNC_SYMLINK
   gl_UNISTD_MODULE_INDICATOR([symlink])
   AC_CHECK_FUNCS_ONCE([shutdown])
+  AC_DEFINE([CHECK_VSNPRINTF_POSIX], 1,
+    [Define to 1 for strict checking in test-vsnprintf.c.])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
@@ -442,6 +470,9 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/float+.h
   lib/float.in.h
   lib/fopen.c
+  lib/fpucw.h
+  lib/frexp.c
+  lib/frexpl.c
   lib/fseeko.c
   lib/ftw.c
   lib/ftw_.h
@@ -468,12 +499,20 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/inet_pton.c
   lib/intprops.h
   lib/ioctl.c
+  lib/isnan.c
+  lib/isnand-nolibm.h
+  lib/isnand.c
+  lib/isnanf-nolibm.h
+  lib/isnanf.c
+  lib/isnanl-nolibm.h
+  lib/isnanl.c
   lib/langinfo.in.h
   lib/listen.c
   lib/localcharset.c
   lib/localcharset.h
   lib/lseek.c
   lib/malloc.c
+  lib/math.in.h
   lib/mbrtowc.c
   lib/mbsinit.c
   lib/memchr.c
@@ -491,6 +530,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/poll.in.h
   lib/printf-args.c
   lib/printf-args.h
+  lib/printf-frexp.c
+  lib/printf-frexp.h
+  lib/printf-frexpl.c
+  lib/printf-frexpl.h
   lib/printf-parse.c
   lib/printf-parse.h
   lib/realloc.c
@@ -507,6 +550,9 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/select.c
   lib/setsockopt.c
   lib/signal.in.h
+  lib/signbitd.c
+  lib/signbitf.c
+  lib/signbitl.c
   lib/sigprocmask.c
   lib/size_max.h
   lib/sleep.c
@@ -566,12 +612,18 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/dos.m4
   m4/dup2.m4
   m4/errno_h.m4
+  m4/exponentd.m4
+  m4/exponentf.m4
+  m4/exponentl.m4
   m4/extensions.m4
   m4/fclose.m4
   m4/fcntl-o.m4
   m4/fcntl_h.m4
   m4/float_h.m4
   m4/fopen.m4
+  m4/fpieee.m4
+  m4/frexp.m4
+  m4/frexpl.m4
   m4/fseeko.m4
   m4/ftw.m4
   m4/getaddrinfo.m4
@@ -589,7 +641,11 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/inet_pton.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
+  m4/isnand.m4
+  m4/isnanf.m4
+  m4/isnanl.m4
   m4/langinfo_h.m4
+  m4/ldexpl.m4
   m4/lib-ld.m4
   m4/lib-link.m4
   m4/lib-prefix.m4
@@ -603,6 +659,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/lseek.m4
   m4/lstat.m4
   m4/malloc.m4
+  m4/math_h.m4
   m4/mbrtowc.m4
   m4/mbsinit.m4
   m4/mbstate_t.m4
@@ -616,11 +673,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/netdb_h.m4
   m4/netinet_in_h.m4
   m4/nl_langinfo.m4
+  m4/nocrash.m4
   m4/onceonly.m4
   m4/open.m4
   m4/pathmax.m4
   m4/perror.m4
   m4/poll.m4
+  m4/printf-frexp.m4
+  m4/printf-frexpl.m4
   m4/printf.m4
   m4/realloc.m4
   m4/regex.m4
@@ -629,8 +689,10 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/servent.m4
   m4/signal_h.m4
   m4/signalblocking.m4
+  m4/signbit.m4
   m4/size_max.m4
   m4/sleep.m4
+  m4/snprintf-posix.m4
   m4/snprintf.m4
   m4/sockets.m4
   m4/socklen.m4
@@ -671,6 +733,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/ungetc.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
+  m4/vsnprintf-posix.m4
   m4/vsnprintf.m4
   m4/warn-on-use.m4
   m4/wchar.m4
@@ -683,6 +746,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/xsize.m4
   m4/yield.m4
   tests/macros.h
+  tests/nan.h
   tests/signature.h
   tests/test-alignof.c
   tests/test-alloca-opt.c
@@ -702,6 +766,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-fcntl-h.c
   tests/test-fopen.c
   tests/test-fopen.h
+  tests/test-frexp.c
+  tests/test-frexpl.c
   tests/test-fseeko.c
   tests/test-fseeko.sh
   tests/test-fseeko2.sh
@@ -712,12 +778,19 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-gettimeofday.c
   tests/test-inet_ntop.c
   tests/test-inet_pton.c
+  tests/test-isnand-nolibm.c
+  tests/test-isnand.h
+  tests/test-isnanf-nolibm.c
+  tests/test-isnanf.h
+  tests/test-isnanl-nolibm.c
+  tests/test-isnanl.h
   tests/test-langinfo.c
   tests/test-lock.c
   tests/test-lseek.c
   tests/test-lseek.sh
   tests/test-lstat.c
   tests/test-lstat.h
+  tests/test-math.c
   tests/test-mbrtowc.c
   tests/test-mbrtowc1.sh
   tests/test-mbrtowc2.sh
@@ -736,13 +809,18 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-perror.c
   tests/test-perror.sh
   tests/test-poll.c
+  tests/test-printf-frexp.c
+  tests/test-printf-frexpl.c
   tests/test-select-fd.c
   tests/test-select-in.sh
   tests/test-select-out.sh
   tests/test-select-stdin.c
   tests/test-select.c
   tests/test-signal.c
+  tests/test-signbit.c
   tests/test-sleep.c
+  tests/test-snprintf-posix.c
+  tests/test-snprintf-posix.h
   tests/test-snprintf.c
   tests/test-sockets.c
   tests/test-stat.c
@@ -769,6 +847,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-uname.c
   tests/test-unistd.c
   tests/test-vasnprintf.c
+  tests/test-vsnprintf-posix.c
   tests/test-vsnprintf.c
   tests/test-wchar.c
   tests/test-wcrtomb.c
@@ -782,6 +861,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/fcntl.in.h
   tests=lib/getpagesize.c
   tests=lib/glthread/yield.h
+  tests=lib/ignore-value.h
   tests=lib/lstat.c
   tests=lib/open.c
   tests=lib/same-inode.h
