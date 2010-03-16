@@ -6676,7 +6676,7 @@ idmef_message_t *message
 </MACRO>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "1.0.0rc1"
+#define LIBPRELUDE_VERSION "1.0.0"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>

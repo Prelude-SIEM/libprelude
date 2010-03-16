@@ -1,3 +1,9 @@
+* 2010-03-16, libprelude-1.0.0:
+
+- C99 specifics formats are now available for public function using
+  string formatting.
+
+
 * 2010-01-29, libprelude-1.0.0rc1:
 
 - Libprelude EasyBindings are now enabled by default
