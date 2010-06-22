@@ -25,6 +25,7 @@
 #define _IDMEF_VALUE_TYPE_H
 
 #include "idmef-time.h"
+#include "idmef-data.h"
 #include "prelude-string.h"
 
 #ifdef __cplusplus
