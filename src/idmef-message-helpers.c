@@ -160,7 +160,13 @@ int idmef_message_get_string(idmef_message_t *message, const char *path, char **
                 goto err;
         }
 
-        ret = prelude_string_get_string_released(str, result);
+        if ( prelude_string_is_empty(str) ) {
+                *result = NULL;
+                return 0;
+        }
+
+        *result = strdup(prelude_string_get_string(str));
+        ret = prelude_string_get_len(str);
 
 err:
         idmef_value_destroy(iv);
