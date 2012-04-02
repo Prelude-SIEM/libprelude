@@ -1,20 +1,10 @@
 This directory and its children contain LibPrelude, a library for using
 the Prelude framework.
 
-Copyright (C) 2005 PreludeIDS Technologies SARL. All rights reserved.
+Copyright (C) 2005-2012 CS-SI. All rights reserved.
 
-This library is made available under a dual licensing scheme.
-
-If you link LibPrelude against other code all of which is itself
-licensed under the terms of the GNU General Public License version 2
-dated June 1991 ("GPL v2") or compatible, then you may use LibPrelude
-under the terms of the GPL v2,as appearing in the file COPYING.  If the
-file COPYING is missing, you can obtain a copy of the GPL v2 from the
-Free Software Foundation Inc., 51 Franklin St, Fifth Floor, Boston, MA
-02110-1301, USA.
-
-For any other uses of LibPrelude, you must first obtain a commercial license 
-from PreludeIDS Technologies SARL.  Please contact info@prelude-ids.com for 
-information about commercial licensing.
+You may use LibPrelude under the terms of the LGPL v2.1, as appearing in the file COPYING.
+If the file COPYING is missing, you can obtain a copy of the LGPL v2.1 from the
+Free Software Foundation Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
 
 Please also read the information in the file HACKING.README.

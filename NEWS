@@ -1,3 +1,9 @@
+* Unreleased, libprelude-1.0.1:
+
+- Libprelude is now released under the LGPL 2.1 license
+
+
+
 * 2010-03-16, libprelude-1.0.0:
 
 - C99 specifics formats are now available for public function using
