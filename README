@@ -1,5 +1,5 @@
-Prelude Library (http://www.prelude-ids.com)
-The Prelude Library is brought to you by PreludeIDS Technologies (http://www.prelude-ids.com).
+Prelude Library (http://www.prelude-technologies.com)
+The Prelude Library is brought to you by CS (http://www.c-s.fr).
 
 
 Prelude Library Overview
@@ -55,11 +55,11 @@ Get Support
 
 
 Prelude-user mailing list archives can be accessed at:
-	http://lists.prelude-ids.org
+	http://news.gmane.org/gmane.comp.security.ids.prelude.user
+	news://news.gmane.org/gmane.comp.security.ids.prelude.user
 
-
-Commercial Support is available through the PreludeIDS Technologies company:
-	http://www.prelude-ids.com, info@prelude-ids.com
+Commercial Support is available through the CS company:
+	http://www.c-s.fr, contact.prelude@c-s.fr
 
 
 
@@ -72,19 +72,19 @@ The Prelude source is constantly changing. If you want to submit a patch,
 please do so from the most recent CVS source tree, subscribe to the 
 prelude-devel mailing list by sending a mail to:
 
-        prelude-devel-subscribe@prelude-ids.org
+        prelude-devel-subscribe@prelude-ids.com
 
 and post your patch with a description of functionality.
 You can also attach patches to bugs on 
 
-        http://trac.prelude-ids.org
+        http://dev.prelude-ids.com
 
 
 2. BUGS
 
 If you find any bugs, please report them to:
 
-	http://trac.prelude-ids.org
+	http://dev.prelude-ids.com
 
 Please make sure that what you're reporting is actually a BUG and not
 a problem on your side.
