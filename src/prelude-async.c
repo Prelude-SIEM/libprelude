@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2012 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.

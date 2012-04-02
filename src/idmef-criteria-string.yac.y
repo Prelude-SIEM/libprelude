@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2012 CS-SI. All Rights Reserved.
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *

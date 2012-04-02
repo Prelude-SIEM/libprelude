@@ -1,4 +1,4 @@
-# Copyright (C) 2005 PreludeIDS Technologies. All Rights Reserved.
+# Copyright (C) 2005-2012 CS-SI. All Rights Reserved.
 # Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 #
 # This file is part of the libpreludedb program.
