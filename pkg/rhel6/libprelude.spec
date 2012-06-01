@@ -9,7 +9,7 @@ Version: 1.0.1
 Release: 1%{?dist}
 Summary: The prelude library
 Group:  System Environment/Libraries
-License: LGPLv2+
+License: GPLv2+
 URL:  http://prelude-ids.org/
 Source0: http://www.prelude-ids.org/download/releases/%{name}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

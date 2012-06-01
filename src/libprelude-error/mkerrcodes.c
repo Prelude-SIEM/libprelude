@@ -4,7 +4,7 @@
    This file is part of libgpg-error.
 
    libgpg-error is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License
+   modify it under the terms of the GNU General Public License
    as published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
  
@@ -13,7 +13,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
  
-   You should have received a copy of the GNU Lesser General Public
+   You should have received a copy of the GNU General Public
    License along with libgpg-error; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
    02111-1307, USA.  */
@@ -31,7 +31,7 @@ static const char header[] =
 "   This file is part of libgpg-error.\n"
 "\n"
 "   libgpg-error is free software; you can redistribute it and/or\n"
-"   modify it under the terms of the GNU Lesser General Public License\n"
+"   modify it under the terms of the GNU General Public License\n"
 "   as published by the Free Software Foundation; either version 2.1 of\n"
 "   the License, or (at your option) any later version.\n"
 "\n"
@@ -40,7 +40,7 @@ static const char header[] =
 "   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n"
 "   Lesser General Public License for more details.\n"
 "\n"
-"   You should have received a copy of the GNU Lesser General Public\n"
+"   You should have received a copy of the GNU General Public\n"
 "   License along with libgpg-error; if not, write to the Free\n"
 "   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
 "   02111-1307, USA.  */\n"
