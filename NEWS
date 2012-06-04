@@ -1,3 +1,21 @@
+* 2012-06-04, libprelude-1.0.1:
+
+- Fixed typo in setup.py.in
+
+- Added packaging for rhel6
+
+- Changed copyright
+
+- Prevent freeing IDMEF message value on idmef_message_get_string()
+  idmef_message_get_string() used to free the value within the IDMEF
+  message, because prelude_string_get_string_released() was used. As
+  a result, further idmef_message_get_string() on the same IDMEF path
+  where returning null value.
+
+- C++ compilation fixes
+  Include idmef-data.h, required for idmef_data_t declaration.
+
+
 * 2010-03-16, libprelude-1.0.0:
 
 - C99 specifics formats are now available for public function using

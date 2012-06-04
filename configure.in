@@ -11,7 +11,7 @@ dnl **********************************************************
 
 libprelude_major=1
 libprelude_minor=0
-libprelude_micro=0
+libprelude_micro=1
 libprelude_patchlevel=
 libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprelude_patchlevel
 
