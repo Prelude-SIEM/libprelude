@@ -501,6 +501,13 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp
                         fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
                         return NULL;
                 }
+
+                ret = snprintf((char *) buf, *size, "%s", prelude_client_profile_get_name(cp));
+				ret = gnutls_x509_crq_set_dn_by_oid(crq, GNUTLS_OID_X520_SURNAME, 0, buf, ret);
+				if ( ret < 0 ) {
+						fprintf(stderr, "error setting surName: %s.\n", gnutls_strerror(ret));
+						return NULL;
+				}
         }
 
         gnutls_x509_crq_set_version(crq, 3);
