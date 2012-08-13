@@ -13,7 +13,7 @@ providing features used by every sensor:
     
     - Interface to communicate with the Prelude Manager.
     
-    - Asynchronous Message interface (allowing sensor to emmit message 
+    - Asynchronous Message interface (allowing sensor to emit message 
       without blocking, even if there is latency on the wire).
 
     - Asynchronous timer interface.
@@ -127,9 +127,9 @@ First, all sensors get some generic configuration files, installed in:
  - $prefix/etc/prelude/default/idmef-client.conf [specific to sensor]
  - $prefix/etc/prelude/default/global.conf [used by sensor and manager]
 
-Theses file contains entry that *may* be shared between several sensor.
-If a sensor provides the same entry in it's own configuration file,
-then the sensor will by default use it's own entry.
+These files contain entries that *may* be shared between several sensors.
+If a sensor provides the same entry in its own configuration file,
+then the sensor will by default use its own entry.
 
 Example of a shared entry (in the default provided generic sensor 
 configuration file) is :

@@ -1,6 +1,6 @@
 [prelude]
 
-# This is the default configuration for all program
+# This is the default configuration for all programs
 # (sensors, agents, and manager) using libprelude. 
 #
 # Entry in this configuration file might be overriden by entry directly
@@ -13,7 +13,7 @@
 
 
 #
-# Optionnal data carried with alert/heartbeats.
+# Optional data carried with alert/heartbeats.
 # 
 # analyzer-name = Name for the analyzer
 # node-name = Name of the equipment
@@ -35,8 +35,8 @@
 # wfw                Windows for Workgroups
 
 
-# Address contained by this Node, 
-# You may have several address.
+# Address contained by this node, 
+# You may have several addresses.
 # 
 # [Node-Address]
 #

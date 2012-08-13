@@ -1,7 +1,7 @@
 [prelude]
 
 # This is the default configuration for program client of a manager
-# (sensors and agents) that use libprelude.
+# (sensors and agents) that uses libprelude.
 #
 # Entry in this configuration file might be overriden by entry directly
 # provided by the sensors/agents configuration file.
@@ -22,7 +22,7 @@ server-addr = 127.0.0.1
 # The following settings instruct the operating system when to consider
 # a connection dead in case sent data is left unacknowledged.
 #
-# Theses option are operating system specific, and might not work on
+# These options are operating system specific, and might not work on
 # certain platform. In case you modify these settings on an unsupported
 # system, a warning message will be issued when the agent starts.
 #
@@ -34,7 +34,7 @@ server-addr = 127.0.0.1
 # tcp-keepalive-time represents the number of seconds the connection
 # needs to be idle before TCP begins sending out keep-alive probes.
 #
-# tcp-keepalive-probes represent the number of not acknowledged probes
+# tcp-keepalive-probes represents the number of not acknowledged probes
 # to send before considering the connection dead.
 #
 # tcp-keepalive-intvl represents the interval between subsequent
