@@ -21,6 +21,11 @@
 *
 *****/
 
+%begin %{
+#include "config.h"
+#include "glthread/thread.h"
+%}
+
 # Exception map
 %typemap(throws) Prelude::PreludeError %{
         SWIG_exception(SWIG_RuntimeError, $1.what());

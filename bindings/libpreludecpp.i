@@ -31,11 +31,6 @@
 #include <list>
 #include <sstream>
 
-#ifndef SWIGPYTHON
-# include "config.h"
-# include "glthread/thread.h"
-#endif
-
 #include "prelude.hxx"
 #include "prelude-log.hxx"
 #include "prelude-error.hxx"
