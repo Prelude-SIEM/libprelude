@@ -36,12 +36,12 @@ int main(void)
         assert(idmef_message_new(&idmef) == 0);
 
         assert(idmef_message_set_string(idmef, "alert.classification.text", "Random value") == 0);
-        assert(idmef_message_get_string(idmef, "alert.classification.text", &res) == 0);
+        assert(idmef_message_get_string(idmef, "alert.classification.text", &res) > 0);
         assert(strcmp("Random value", res) == 0);
         free(res);
 
         assert(idmef_message_set_string(idmef, "alert.assessment.impact.severity", "high") == 0);
-        assert(idmef_message_get_string(idmef, "alert.assessment.impact.severity", &res) == 0);
+        assert(idmef_message_get_string(idmef, "alert.assessment.impact.severity", &res) > 0);
         assert(strcmp("high", res) == 0);
         free(res);
 
