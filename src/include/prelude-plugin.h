@@ -63,7 +63,19 @@ typedef struct {
 # define lt_preloaded_symbols lt__PROGRAM__LTX_preloaded_symbols
 #endif
 
+/*
+ * LT_DLSYM_CONST has been defined during the libtool 2.2.10 -> 2.4 
+ * transition. Use it to guess whether lt_preloaded_symbols is already
+ * defined by ltdl.h as a different kind of symbol.
+ * 
+ * We use void * so that application requiring plugin preloading doesn't 
+ * depend on libltdl headers and lib. In case the application doesn't 
+ * use libltdl, plugin preloading can still be used throught libprelude 
+ * preloading function.
+ */
+#ifndef LT_DLSYM_CONST
 extern const void *lt_preloaded_symbols[];
+#endif
 
 #define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()         \
         prelude_plugin_set_preloaded_symbols(lt_preloaded_symbols)
