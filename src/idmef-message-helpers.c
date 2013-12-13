@@ -234,6 +234,7 @@ int idmef_message_get_number(idmef_message_t *message, const char *path, double 
                         goto err;
         }
 
+        ret = 1;
         *result = idmef_value_get_double(iv);
 
 err:
