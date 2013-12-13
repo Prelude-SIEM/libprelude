@@ -50,17 +50,16 @@ extern "C" {
 
 
 %fragment("TransitionFunc", "header") {
-static gl_thread_t __initial_thread;
+static VALUE __log_mutex;
 static VALUE __prelude_log_func = Qnil;
 
 static void _cb_ruby_log(int level, const char *str)
 {
         static int cid = rb_intern("call");
 
-        if ( (gl_thread_t) gl_thread_self() != __initial_thread )
-                return;
-
+        rb_mutex_lock(__log_mutex);
         rb_funcall(__prelude_log_func, cid, 2, SWIG_From_int(level), SWIG_FromCharPtr(str));
+        rb_mutex_unlock(__log_mutex);
 }
 
 
@@ -186,8 +185,8 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         int _i, argc;
         VALUE rbargv, *ptr;
 
-        __initial_thread = (gl_thread_t) gl_thread_self();
-
+        __log_mutex = rb_mutex_new();
+        
         rbargv = rb_const_get(rb_cObject, rb_intern("ARGV"));
         argc = RARRAY(rbargv)->len + 1;
 
