@@ -1,68 +1,99 @@
-# poll.m4 serial 9
-dnl Copyright (c) 2003, 2005, 2006, 2007, 2009, 2010 Free Software Foundation,
-dnl Inc.
+# poll.m4 serial 17
+dnl Copyright (c) 2003, 2005-2007, 2009-2013 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_FUNC_POLL],
 [
-  AC_CHECK_HEADERS([poll.h])
-  if test "$ac_cv_header_poll_h" = no; then
+  AC_REQUIRE([gl_POLL_H])
+  AC_REQUIRE([gl_SOCKETS])
+  if test $ac_cv_header_poll_h = no; then
+    ac_cv_func_poll=no
     gl_cv_func_poll=no
   else
     AC_CHECK_FUNC([poll],
       [# Check whether poll() works on special files (like /dev/null) and
-       # and ttys (like /dev/tty). On MacOS X 10.4.0 and AIX 5.3, it doesn't.
+       # and ttys (like /dev/tty). On Mac OS X 10.4.0 and AIX 5.3, it doesn't.
        AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <fcntl.h>
 #include <poll.h>
          int main()
          {
+           int result = 0;
            struct pollfd ufd;
            /* Try /dev/null for reading.  */
            ufd.fd = open ("/dev/null", O_RDONLY);
-           if (ufd.fd < 0)
-             /* If /dev/null does not exist, it's not MacOS X nor AIX. */
-             return 0;
-           ufd.events = POLLIN;
-           ufd.revents = 0;
-           if (!(poll (&ufd, 1, 0) == 1 && ufd.revents == POLLIN))
-             return 1;
+           /* If /dev/null does not exist, it's not Mac OS X nor AIX. */
+           if (ufd.fd >= 0)
+             {
+               ufd.events = POLLIN;
+               ufd.revents = 0;
+               if (!(poll (&ufd, 1, 0) == 1 && ufd.revents == POLLIN))
+                 result |= 1;
+             }
            /* Try /dev/null for writing.  */
            ufd.fd = open ("/dev/null", O_WRONLY);
-           if (ufd.fd < 0)
-             /* If /dev/null does not exist, it's not MacOS X nor AIX. */
-             return 0;
-           ufd.events = POLLOUT;
-           ufd.revents = 0;
-           if (!(poll (&ufd, 1, 0) == 1 && ufd.revents == POLLOUT))
-             return 1;
+           /* If /dev/null does not exist, it's not Mac OS X nor AIX. */
+           if (ufd.fd >= 0)
+             {
+               ufd.events = POLLOUT;
+               ufd.revents = 0;
+               if (!(poll (&ufd, 1, 0) == 1 && ufd.revents == POLLOUT))
+                 result |= 2;
+             }
            /* Trying /dev/tty may be too environment dependent.  */
-           return 0;
+           return result;
          }]])],
          [gl_cv_func_poll=yes],
          [gl_cv_func_poll=no],
          [# When cross-compiling, assume that poll() works everywhere except on
-          # MacOS X or AIX, regardless of its version.
+          # Mac OS X or AIX, regardless of its version.
           AC_EGREP_CPP([MacOSX], [
 #if (defined(__APPLE__) && defined(__MACH__)) || defined(_AIX)
 This is MacOSX or AIX
 #endif
 ], [gl_cv_func_poll=no], [gl_cv_func_poll=yes])])])
   fi
-  if test $gl_cv_func_poll = yes; then
+  if test $gl_cv_func_poll != yes; then
+    AC_CHECK_FUNC([poll], [ac_cv_func_poll=yes], [ac_cv_func_poll=no])
+    if test $ac_cv_func_poll = no; then
+      HAVE_POLL=0
+    else
+      REPLACE_POLL=1
+    fi
+  fi
+  if test $HAVE_POLL = 0 || test $REPLACE_POLL = 1; then
+    :
+  else
     AC_DEFINE([HAVE_POLL], [1],
       [Define to 1 if you have the 'poll' function and it works.])
-    POLL_H=
-  else
-    AC_LIBOBJ([poll])
-    AC_DEFINE([poll], [rpl_poll],
-      [Define to poll if the replacement function should be used.])
-    gl_PREREQ_POLL
-    POLL_H=poll.h
   fi
-  AC_SUBST([POLL_H])
+
+  dnl Determine the needed libraries.
+  LIB_POLL="$LIBSOCKET"
+  if test $HAVE_POLL = 0 || test $REPLACE_POLL = 1; then
+    case "$host_os" in
+      mingw*)
+        dnl On the MSVC platform, the function MsgWaitForMultipleObjects
+        dnl (used in lib/poll.c) requires linking with -luser32. On mingw,
+        dnl it is implicit.
+        AC_LINK_IFELSE(
+          [AC_LANG_SOURCE([[
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+int
+main ()
+{
+  MsgWaitForMultipleObjects (0, NULL, 0, 0, 0);
+  return 0;
+}]])],
+          [],
+          [LIB_POLL="$LIB_POLL -luser32"])
+        ;;
+    esac
+  fi
+  AC_SUBST([LIB_POLL])
 ])
 
 # Prerequisites of lib/poll.c.

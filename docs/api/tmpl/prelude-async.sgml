@@ -17,6 +17,9 @@ prelude-async
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM prelude_async_flags_t ##### -->
 <para>
 
@@ -51,6 +54,7 @@ prelude-async
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -59,6 +63,7 @@ prelude-async
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -91,5 +96,6 @@ prelude-async
 
 </para>
 
+@void: 
 
 

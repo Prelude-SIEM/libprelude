@@ -2087,7 +2087,7 @@ int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additiona
 }
 
 /**
- * *idmef_additional_data_get_meaning:
+ * idmef_additional_data_get_meaning:
  * @ptr: pointer to a #idmef_additional_data_t object.
  *
  * Get meaning children of the #idmef_additional_data_t object.
@@ -2148,7 +2148,7 @@ int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_stri
 }
 
 /**
- * *idmef_additional_data_get_data:
+ * idmef_additional_data_get_data:
  * @ptr: pointer to a #idmef_additional_data_t object.
  *
  * Get data children of the #idmef_additional_data_t object.
@@ -2542,7 +2542,7 @@ int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t 
 }
 
 /**
- * *idmef_reference_get_name:
+ * idmef_reference_get_name:
  * @ptr: pointer to a #idmef_reference_t object.
  *
  * Get name children of the #idmef_reference_t object.
@@ -2603,7 +2603,7 @@ int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_reference_get_url:
+ * idmef_reference_get_url:
  * @ptr: pointer to a #idmef_reference_t object.
  *
  * Get url children of the #idmef_reference_t object.
@@ -2664,7 +2664,7 @@ int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_reference_get_meaning:
+ * idmef_reference_get_meaning:
  * @ptr: pointer to a #idmef_reference_t object.
  *
  * Get meaning children of the #idmef_reference_t object.
@@ -3058,7 +3058,7 @@ void idmef_classification_destroy(idmef_classification_t *ptr)
 }
 
 /**
- * *idmef_classification_get_ident:
+ * idmef_classification_get_ident:
  * @ptr: pointer to a #idmef_classification_t object.
  *
  * Get ident children of the #idmef_classification_t object.
@@ -3119,7 +3119,7 @@ int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t
 }
 
 /**
- * *idmef_classification_get_text:
+ * idmef_classification_get_text:
  * @ptr: pointer to a #idmef_classification_t object.
  *
  * Get text children of the #idmef_classification_t object.
@@ -3563,7 +3563,7 @@ void idmef_user_id_destroy(idmef_user_id_t *ptr)
 }
 
 /**
- * *idmef_user_id_get_ident:
+ * idmef_user_id_get_ident:
  * @ptr: pointer to a #idmef_user_id_t object.
  *
  * Get ident children of the #idmef_user_id_t object.
@@ -3673,7 +3673,7 @@ int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
 }
 
 /**
- * *idmef_user_id_get_tty:
+ * idmef_user_id_get_tty:
  * @ptr: pointer to a #idmef_user_id_t object.
  *
  * Get tty children of the #idmef_user_id_t object.
@@ -3734,7 +3734,7 @@ int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_user_id_get_name:
+ * idmef_user_id_get_name:
  * @ptr: pointer to a #idmef_user_id_t object.
  *
  * Get name children of the #idmef_user_id_t object.
@@ -3795,7 +3795,7 @@ int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_user_id_get_number:
+ * idmef_user_id_get_number:
  * @ptr: pointer to a #idmef_user_id_t object.
  *
  * Get number children of the #idmef_user_id_t object.
@@ -4180,7 +4180,7 @@ void idmef_user_destroy(idmef_user_t *ptr)
 }
 
 /**
- * *idmef_user_get_ident:
+ * idmef_user_get_ident:
  * @ptr: pointer to a #idmef_user_t object.
  *
  * Get ident children of the #idmef_user_t object.
@@ -4696,7 +4696,7 @@ void idmef_address_destroy(idmef_address_t *ptr)
 }
 
 /**
- * *idmef_address_get_ident:
+ * idmef_address_get_ident:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get ident children of the #idmef_address_t object.
@@ -4806,7 +4806,7 @@ int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **
 }
 
 /**
- * *idmef_address_get_vlan_name:
+ * idmef_address_get_vlan_name:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get vlan_name children of the #idmef_address_t object.
@@ -4867,7 +4867,7 @@ int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_address_get_vlan_num:
+ * idmef_address_get_vlan_num:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get vlan_num children of the #idmef_address_t object.
@@ -4926,7 +4926,7 @@ int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret)
 }
 
 /**
- * *idmef_address_get_address:
+ * idmef_address_get_address:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get address children of the #idmef_address_t object.
@@ -4987,7 +4987,7 @@ int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_address_get_netmask:
+ * idmef_address_get_netmask:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get netmask children of the #idmef_address_t object.
@@ -5512,7 +5512,7 @@ void idmef_process_destroy(idmef_process_t *ptr)
 }
 
 /**
- * *idmef_process_get_ident:
+ * idmef_process_get_ident:
  * @ptr: pointer to a #idmef_process_t object.
  *
  * Get ident children of the #idmef_process_t object.
@@ -5573,7 +5573,7 @@ int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_process_get_name:
+ * idmef_process_get_name:
  * @ptr: pointer to a #idmef_process_t object.
  *
  * Get name children of the #idmef_process_t object.
@@ -5634,7 +5634,7 @@ int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_process_get_pid:
+ * idmef_process_get_pid:
  * @ptr: pointer to a #idmef_process_t object.
  *
  * Get pid children of the #idmef_process_t object.
@@ -5693,7 +5693,7 @@ int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_process_get_path:
+ * idmef_process_get_path:
  * @ptr: pointer to a #idmef_process_t object.
  *
  * Get path children of the #idmef_process_t object.
@@ -6338,7 +6338,7 @@ void idmef_web_service_destroy(idmef_web_service_t *ptr)
 }
 
 /**
- * *idmef_web_service_get_url:
+ * idmef_web_service_get_url:
  * @ptr: pointer to a #idmef_web_service_t object.
  *
  * Get url children of the #idmef_web_service_t object.
@@ -6399,7 +6399,7 @@ int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_web_service_get_cgi:
+ * idmef_web_service_get_cgi:
  * @ptr: pointer to a #idmef_web_service_t object.
  *
  * Get cgi children of the #idmef_web_service_t object.
@@ -6460,7 +6460,7 @@ int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_web_service_get_http_method:
+ * idmef_web_service_get_http_method:
  * @ptr: pointer to a #idmef_web_service_t object.
  *
  * Get http_method children of the #idmef_web_service_t object.
@@ -6972,7 +6972,7 @@ void idmef_snmp_service_destroy(idmef_snmp_service_t *ptr)
 }
 
 /**
- * *idmef_snmp_service_get_oid:
+ * idmef_snmp_service_get_oid:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get oid children of the #idmef_snmp_service_t object.
@@ -7033,7 +7033,7 @@ int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret
 }
 
 /**
- * *idmef_snmp_service_get_message_processing_model:
+ * idmef_snmp_service_get_message_processing_model:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get message_processing_model children of the #idmef_snmp_service_t object.
@@ -7092,7 +7092,7 @@ int idmef_snmp_service_new_message_processing_model(idmef_snmp_service_t *ptr, u
 }
 
 /**
- * *idmef_snmp_service_get_security_model:
+ * idmef_snmp_service_get_security_model:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get security_model children of the #idmef_snmp_service_t object.
@@ -7151,7 +7151,7 @@ int idmef_snmp_service_new_security_model(idmef_snmp_service_t *ptr, uint32_t **
 }
 
 /**
- * *idmef_snmp_service_get_security_name:
+ * idmef_snmp_service_get_security_name:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get security_name children of the #idmef_snmp_service_t object.
@@ -7212,7 +7212,7 @@ int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_stri
 }
 
 /**
- * *idmef_snmp_service_get_security_level:
+ * idmef_snmp_service_get_security_level:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get security_level children of the #idmef_snmp_service_t object.
@@ -7271,7 +7271,7 @@ int idmef_snmp_service_new_security_level(idmef_snmp_service_t *ptr, uint32_t **
 }
 
 /**
- * *idmef_snmp_service_get_context_name:
+ * idmef_snmp_service_get_context_name:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get context_name children of the #idmef_snmp_service_t object.
@@ -7332,7 +7332,7 @@ int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_strin
 }
 
 /**
- * *idmef_snmp_service_get_context_engine_id:
+ * idmef_snmp_service_get_context_engine_id:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get context_engine_id children of the #idmef_snmp_service_t object.
@@ -7393,7 +7393,7 @@ int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_
 }
 
 /**
- * *idmef_snmp_service_get_command:
+ * idmef_snmp_service_get_command:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get command children of the #idmef_snmp_service_t object.
@@ -7454,7 +7454,7 @@ int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t *
 }
 
 /**
- * *idmef_snmp_service_get_community:
+ * idmef_snmp_service_get_community:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
  * Get community children of the #idmef_snmp_service_t object.
@@ -7944,7 +7944,7 @@ void idmef_service_destroy(idmef_service_t *ptr)
 }
 
 /**
- * *idmef_service_get_ident:
+ * idmef_service_get_ident:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get ident children of the #idmef_service_t object.
@@ -8005,7 +8005,7 @@ int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_service_get_ip_version:
+ * idmef_service_get_ip_version:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get ip_version children of the #idmef_service_t object.
@@ -8064,7 +8064,7 @@ int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
 }
 
 /**
- * *idmef_service_get_iana_protocol_number:
+ * idmef_service_get_iana_protocol_number:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get iana_protocol_number children of the #idmef_service_t object.
@@ -8123,7 +8123,7 @@ int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret)
 }
 
 /**
- * *idmef_service_get_iana_protocol_name:
+ * idmef_service_get_iana_protocol_name:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get iana_protocol_name children of the #idmef_service_t object.
@@ -8184,7 +8184,7 @@ int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t 
 }
 
 /**
- * *idmef_service_get_name:
+ * idmef_service_get_name:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get name children of the #idmef_service_t object.
@@ -8245,7 +8245,7 @@ int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_service_get_port:
+ * idmef_service_get_port:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get port children of the #idmef_service_t object.
@@ -8304,7 +8304,7 @@ int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
 }
 
 /**
- * *idmef_service_get_portlist:
+ * idmef_service_get_portlist:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get portlist children of the #idmef_service_t object.
@@ -8365,7 +8365,7 @@ int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_service_get_protocol:
+ * idmef_service_get_protocol:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get protocol children of the #idmef_service_t object.
@@ -9043,7 +9043,7 @@ void idmef_node_destroy(idmef_node_t *ptr)
 }
 
 /**
- * *idmef_node_get_ident:
+ * idmef_node_get_ident:
  * @ptr: pointer to a #idmef_node_t object.
  *
  * Get ident children of the #idmef_node_t object.
@@ -9153,7 +9153,7 @@ int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
 }
 
 /**
- * *idmef_node_get_location:
+ * idmef_node_get_location:
  * @ptr: pointer to a #idmef_node_t object.
  *
  * Get location children of the #idmef_node_t object.
@@ -9214,7 +9214,7 @@ int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_node_get_name:
+ * idmef_node_get_name:
  * @ptr: pointer to a #idmef_node_t object.
  *
  * Get name children of the #idmef_node_t object.
@@ -9725,7 +9725,7 @@ void idmef_source_destroy(idmef_source_t *ptr)
 }
 
 /**
- * *idmef_source_get_ident:
+ * idmef_source_get_ident:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get ident children of the #idmef_source_t object.
@@ -9835,7 +9835,7 @@ int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret)
 }
 
 /**
- * *idmef_source_get_interface:
+ * idmef_source_get_interface:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get interface children of the #idmef_source_t object.
@@ -9896,7 +9896,7 @@ int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_source_get_node:
+ * idmef_source_get_node:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get node children of the #idmef_source_t object.
@@ -9957,7 +9957,7 @@ int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
 }
 
 /**
- * *idmef_source_get_user:
+ * idmef_source_get_user:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get user children of the #idmef_source_t object.
@@ -10018,7 +10018,7 @@ int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
 }
 
 /**
- * *idmef_source_get_process:
+ * idmef_source_get_process:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get process children of the #idmef_source_t object.
@@ -10079,7 +10079,7 @@ int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
 }
 
 /**
- * *idmef_source_get_service:
+ * idmef_source_get_service:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get service children of the #idmef_source_t object.
@@ -10492,7 +10492,7 @@ void idmef_file_access_destroy(idmef_file_access_t *ptr)
 }
 
 /**
- * *idmef_file_access_get_user_id:
+ * idmef_file_access_get_user_id:
  * @ptr: pointer to a #idmef_file_access_t object.
  *
  * Get user_id children of the #idmef_file_access_t object.
@@ -10914,7 +10914,7 @@ void idmef_inode_destroy(idmef_inode_t *ptr)
 }
 
 /**
- * *idmef_inode_get_change_time:
+ * idmef_inode_get_change_time:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get change_time children of the #idmef_inode_t object.
@@ -10975,7 +10975,7 @@ int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_inode_get_number:
+ * idmef_inode_get_number:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get number children of the #idmef_inode_t object.
@@ -11034,7 +11034,7 @@ int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_inode_get_major_device:
+ * idmef_inode_get_major_device:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get major_device children of the #idmef_inode_t object.
@@ -11093,7 +11093,7 @@ int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_inode_get_minor_device:
+ * idmef_inode_get_minor_device:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get minor_device children of the #idmef_inode_t object.
@@ -11152,7 +11152,7 @@ int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_inode_get_c_major_device:
+ * idmef_inode_get_c_major_device:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get c_major_device children of the #idmef_inode_t object.
@@ -11211,7 +11211,7 @@ int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_inode_get_c_minor_device:
+ * idmef_inode_get_c_minor_device:
  * @ptr: pointer to a #idmef_inode_t object.
  *
  * Get c_minor_device children of the #idmef_inode_t object.
@@ -11561,7 +11561,7 @@ void idmef_checksum_destroy(idmef_checksum_t *ptr)
 }
 
 /**
- * *idmef_checksum_get_value:
+ * idmef_checksum_get_value:
  * @ptr: pointer to a #idmef_checksum_t object.
  *
  * Get value children of the #idmef_checksum_t object.
@@ -11622,7 +11622,7 @@ int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_checksum_get_key:
+ * idmef_checksum_get_key:
  * @ptr: pointer to a #idmef_checksum_t object.
  *
  * Get key children of the #idmef_checksum_t object.
@@ -12390,7 +12390,7 @@ void idmef_file_destroy(idmef_file_t *ptr)
 }
 
 /**
- * *idmef_file_get_ident:
+ * idmef_file_get_ident:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get ident children of the #idmef_file_t object.
@@ -12451,7 +12451,7 @@ int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_file_get_name:
+ * idmef_file_get_name:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get name children of the #idmef_file_t object.
@@ -12512,7 +12512,7 @@ int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_file_get_path:
+ * idmef_file_get_path:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get path children of the #idmef_file_t object.
@@ -12573,7 +12573,7 @@ int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_file_get_create_time:
+ * idmef_file_get_create_time:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get create_time children of the #idmef_file_t object.
@@ -12634,7 +12634,7 @@ int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_file_get_modify_time:
+ * idmef_file_get_modify_time:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get modify_time children of the #idmef_file_t object.
@@ -12695,7 +12695,7 @@ int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_file_get_access_time:
+ * idmef_file_get_access_time:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get access_time children of the #idmef_file_t object.
@@ -12756,7 +12756,7 @@ int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_file_get_data_size:
+ * idmef_file_get_data_size:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get data_size children of the #idmef_file_t object.
@@ -12815,7 +12815,7 @@ int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret)
 }
 
 /**
- * *idmef_file_get_disk_size:
+ * idmef_file_get_disk_size:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get disk_size children of the #idmef_file_t object.
@@ -13030,7 +13030,7 @@ int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret, int pos)
 
 
 /**
- * *idmef_file_get_inode:
+ * idmef_file_get_inode:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get inode children of the #idmef_file_t object.
@@ -13218,7 +13218,7 @@ int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret)
 }
 
 /**
- * *idmef_file_get_fstype:
+ * idmef_file_get_fstype:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get fstype children of the #idmef_file_t object.
@@ -13277,7 +13277,7 @@ int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
 }
 
 /**
- * *idmef_file_get_file_type:
+ * idmef_file_get_file_type:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get file_type children of the #idmef_file_t object.
@@ -13881,7 +13881,7 @@ int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **
 }
 
 /**
- * *idmef_linkage_get_name:
+ * idmef_linkage_get_name:
  * @ptr: pointer to a #idmef_linkage_t object.
  *
  * Get name children of the #idmef_linkage_t object.
@@ -13942,7 +13942,7 @@ int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_linkage_get_path:
+ * idmef_linkage_get_path:
  * @ptr: pointer to a #idmef_linkage_t object.
  *
  * Get path children of the #idmef_linkage_t object.
@@ -14003,7 +14003,7 @@ int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_linkage_get_file:
+ * idmef_linkage_get_file:
  * @ptr: pointer to a #idmef_linkage_t object.
  *
  * Get file children of the #idmef_linkage_t object.
@@ -14483,7 +14483,7 @@ void idmef_target_destroy(idmef_target_t *ptr)
 }
 
 /**
- * *idmef_target_get_ident:
+ * idmef_target_get_ident:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get ident children of the #idmef_target_t object.
@@ -14593,7 +14593,7 @@ int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
 }
 
 /**
- * *idmef_target_get_interface:
+ * idmef_target_get_interface:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get interface children of the #idmef_target_t object.
@@ -14654,7 +14654,7 @@ int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_target_get_node:
+ * idmef_target_get_node:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get node children of the #idmef_target_t object.
@@ -14715,7 +14715,7 @@ int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
 }
 
 /**
- * *idmef_target_get_user:
+ * idmef_target_get_user:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get user children of the #idmef_target_t object.
@@ -14776,7 +14776,7 @@ int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
 }
 
 /**
- * *idmef_target_get_process:
+ * idmef_target_get_process:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get process children of the #idmef_target_t object.
@@ -14837,7 +14837,7 @@ int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
 }
 
 /**
- * *idmef_target_get_service:
+ * idmef_target_get_service:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get service children of the #idmef_target_t object.
@@ -15435,7 +15435,7 @@ void idmef_analyzer_destroy(idmef_analyzer_t *ptr)
 }
 
 /**
- * *idmef_analyzer_get_analyzerid:
+ * idmef_analyzer_get_analyzerid:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get analyzerid children of the #idmef_analyzer_t object.
@@ -15496,7 +15496,7 @@ int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_name:
+ * idmef_analyzer_get_name:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get name children of the #idmef_analyzer_t object.
@@ -15557,7 +15557,7 @@ int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_manufacturer:
+ * idmef_analyzer_get_manufacturer:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get manufacturer children of the #idmef_analyzer_t object.
@@ -15618,7 +15618,7 @@ int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **re
 }
 
 /**
- * *idmef_analyzer_get_model:
+ * idmef_analyzer_get_model:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get model children of the #idmef_analyzer_t object.
@@ -15679,7 +15679,7 @@ int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_version:
+ * idmef_analyzer_get_version:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get version children of the #idmef_analyzer_t object.
@@ -15740,7 +15740,7 @@ int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_class:
+ * idmef_analyzer_get_class:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get class children of the #idmef_analyzer_t object.
@@ -15801,7 +15801,7 @@ int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_ostype:
+ * idmef_analyzer_get_ostype:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get ostype children of the #idmef_analyzer_t object.
@@ -15862,7 +15862,7 @@ int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_osversion:
+ * idmef_analyzer_get_osversion:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get osversion children of the #idmef_analyzer_t object.
@@ -15923,7 +15923,7 @@ int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_node:
+ * idmef_analyzer_get_node:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get node children of the #idmef_analyzer_t object.
@@ -15984,7 +15984,7 @@ int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_process:
+ * idmef_analyzer_get_process:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get process children of the #idmef_analyzer_t object.
@@ -16365,7 +16365,7 @@ void idmef_alertident_destroy(idmef_alertident_t *ptr)
 }
 
 /**
- * *idmef_alertident_get_alertident:
+ * idmef_alertident_get_alertident:
  * @ptr: pointer to a #idmef_alertident_t object.
  *
  * Get alertident children of the #idmef_alertident_t object.
@@ -16426,7 +16426,7 @@ int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **
 }
 
 /**
- * *idmef_alertident_get_analyzerid:
+ * idmef_alertident_get_analyzerid:
  * @ptr: pointer to a #idmef_alertident_t object.
  *
  * Get analyzerid children of the #idmef_alertident_t object.
@@ -16731,7 +16731,7 @@ void idmef_impact_destroy(idmef_impact_t *ptr)
 }
 
 /**
- * *idmef_impact_get_severity:
+ * idmef_impact_get_severity:
  * @ptr: pointer to a #idmef_impact_t object.
  *
  * Get severity children of the #idmef_impact_t object.
@@ -16790,7 +16790,7 @@ int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret
 }
 
 /**
- * *idmef_impact_get_completion:
+ * idmef_impact_get_completion:
  * @ptr: pointer to a #idmef_impact_t object.
  *
  * Get completion children of the #idmef_impact_t object.
@@ -16898,7 +16898,7 @@ int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret)
 }
 
 /**
- * *idmef_impact_get_description:
+ * idmef_impact_get_description:
  * @ptr: pointer to a #idmef_impact_t object.
  *
  * Get description children of the #idmef_impact_t object.
@@ -17246,7 +17246,7 @@ int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret
 }
 
 /**
- * *idmef_action_get_description:
+ * idmef_action_get_description:
  * @ptr: pointer to a #idmef_action_t object.
  *
  * Get description children of the #idmef_action_t object.
@@ -17906,7 +17906,7 @@ void idmef_assessment_destroy(idmef_assessment_t *ptr)
 }
 
 /**
- * *idmef_assessment_get_impact:
+ * idmef_assessment_get_impact:
  * @ptr: pointer to a #idmef_assessment_t object.
  *
  * Get impact children of the #idmef_assessment_t object.
@@ -18045,7 +18045,7 @@ int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret, i
 
 
 /**
- * *idmef_assessment_get_confidence:
+ * idmef_assessment_get_confidence:
  * @ptr: pointer to a #idmef_assessment_t object.
  *
  * Get confidence children of the #idmef_assessment_t object.
@@ -18460,7 +18460,7 @@ void idmef_tool_alert_destroy(idmef_tool_alert_t *ptr)
 }
 
 /**
- * *idmef_tool_alert_get_name:
+ * idmef_tool_alert_get_name:
  * @ptr: pointer to a #idmef_tool_alert_t object.
  *
  * Get name children of the #idmef_tool_alert_t object.
@@ -18521,7 +18521,7 @@ int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_tool_alert_get_command:
+ * idmef_tool_alert_get_command:
  * @ptr: pointer to a #idmef_tool_alert_t object.
  *
  * Get command children of the #idmef_tool_alert_t object.
@@ -18996,7 +18996,7 @@ void idmef_correlation_alert_destroy(idmef_correlation_alert_t *ptr)
 }
 
 /**
- * *idmef_correlation_alert_get_name:
+ * idmef_correlation_alert_get_name:
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  *
  * Get name children of the #idmef_correlation_alert_t object.
@@ -19406,7 +19406,7 @@ void idmef_overflow_alert_destroy(idmef_overflow_alert_t *ptr)
 }
 
 /**
- * *idmef_overflow_alert_get_program:
+ * idmef_overflow_alert_get_program:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
  *
  * Get program children of the #idmef_overflow_alert_t object.
@@ -19467,7 +19467,7 @@ int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string
 }
 
 /**
- * *idmef_overflow_alert_get_size:
+ * idmef_overflow_alert_get_size:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
  *
  * Get size children of the #idmef_overflow_alert_t object.
@@ -19526,7 +19526,7 @@ int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret)
 }
 
 /**
- * *idmef_overflow_alert_get_buffer:
+ * idmef_overflow_alert_get_buffer:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
  *
  * Get buffer children of the #idmef_overflow_alert_t object.
@@ -20324,7 +20324,7 @@ void idmef_alert_destroy(idmef_alert_t *ptr)
 }
 
 /**
- * *idmef_alert_get_messageid:
+ * idmef_alert_get_messageid:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get messageid children of the #idmef_alert_t object.
@@ -20463,7 +20463,7 @@ int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret, int pos
 
 
 /**
- * *idmef_alert_get_create_time:
+ * idmef_alert_get_create_time:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get create_time children of the #idmef_alert_t object.
@@ -20524,7 +20524,7 @@ int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_alert_get_classification:
+ * idmef_alert_get_classification:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get classification children of the #idmef_alert_t object.
@@ -20585,7 +20585,7 @@ int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **
 }
 
 /**
- * *idmef_alert_get_detect_time:
+ * idmef_alert_get_detect_time:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get detect_time children of the #idmef_alert_t object.
@@ -20646,7 +20646,7 @@ int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_alert_get_analyzer_time:
+ * idmef_alert_get_analyzer_time:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get analyzer_time children of the #idmef_alert_t object.
@@ -20863,7 +20863,7 @@ int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret, int pos)
 
 
 /**
- * *idmef_alert_get_assessment:
+ * idmef_alert_get_assessment:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get assessment children of the #idmef_alert_t object.
@@ -21954,7 +21954,7 @@ void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr)
 }
 
 /**
- * *idmef_heartbeat_get_messageid:
+ * idmef_heartbeat_get_messageid:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  *
  * Get messageid children of the #idmef_heartbeat_t object.
@@ -22093,7 +22093,7 @@ int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret,
 
 
 /**
- * *idmef_heartbeat_get_create_time:
+ * idmef_heartbeat_get_create_time:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  *
  * Get create_time children of the #idmef_heartbeat_t object.
@@ -22154,7 +22154,7 @@ int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 }
 
 /**
- * *idmef_heartbeat_get_analyzer_time:
+ * idmef_heartbeat_get_analyzer_time:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  *
  * Get analyzer_time children of the #idmef_heartbeat_t object.
@@ -22215,7 +22215,7 @@ int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret
 }
 
 /**
- * *idmef_heartbeat_get_heartbeat_interval:
+ * idmef_heartbeat_get_heartbeat_interval:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  *
  * Get heartbeat_interval children of the #idmef_heartbeat_t object.
@@ -22692,7 +22692,7 @@ static void idmef_message_destroy_internal(idmef_message_t *ptr)
 }
 
 /**
- * *idmef_message_get_version:
+ * idmef_message_get_version:
  * @ptr: pointer to a #idmef_message_t object.
  *
  * Get version children of the #idmef_message_t object.

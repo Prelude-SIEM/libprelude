@@ -56,6 +56,9 @@ idmef_message_read()
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM prelude_connection_pool_flags_t ##### -->
 <para>
 

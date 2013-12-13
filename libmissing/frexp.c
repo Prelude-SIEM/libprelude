@@ -1,5 +1,5 @@
 /* Split a double into fraction and mantissa.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,9 @@
 /* Written by Paolo Bonzini <bonzini@gnu.org>, 2003, and
    Bruno Haible <bruno@clisp.org>, 2007.  */
 
-#include <config.h>
+#if ! defined USE_LONG_DOUBLE
+# include <config.h>
+#endif
 
 /* Specification.  */
 #include <math.h>

@@ -1,5 +1,5 @@
 /* Test of <sys/socket.h> substitute.
-   Copyright (C) 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,19 @@
 int a[] = { SHUT_RD, SHUT_WR, SHUT_RDWR };
 #endif
 
+/* Check that the 'socklen_t' type is defined.  */
+socklen_t t1;
+
+/* Check that the 'size_t' and 'ssize_t' types are defined.  */
+size_t t2;
+ssize_t t3;
+
+/* Check that 'struct iovec' is defined.  */
+struct iovec io;
+
+/* Check that a minimal set of 'struct msghdr' is defined.  */
+struct msghdr msg;
+
 int
 main (void)
 {
@@ -34,7 +47,7 @@ main (void)
   sa_family_t i;
 
   /* Check some errno values.  */
-  switch (0)
+  switch (ENOTSOCK)
     {
     case ENOTSOCK:
     case EADDRINUSE:
@@ -48,6 +61,8 @@ main (void)
 
   x.ss_family = 42;
   i = 42;
+  msg.msg_iov = &io;
 
-  return 0;
+  return (x.ss_family - i + msg.msg_namelen + msg.msg_iov->iov_len
+          + msg.msg_iovlen);
 }

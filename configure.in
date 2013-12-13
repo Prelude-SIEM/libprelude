@@ -1,20 +1,4 @@
-AC_INIT
-AC_CONFIG_SRCDIR([src])
-AC_PREREQ(2.59)
-AC_CANONICAL_HOST
-AC_CANONICAL_TARGET
-
-
-dnl **********************************************************
-dnl * Version and release information
-dnl **********************************************************
-
-libprelude_major=1
-libprelude_minor=0
-libprelude_micro=1
-libprelude_patchlevel=
-libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprelude_patchlevel
-
+AC_INIT(libprelude, 1.0.1)
 
 dnl **********************************************************
 dnl * Library soname (http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91)
@@ -31,10 +15,15 @@ libpreludecpp_age=3
 LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
 
 
-AM_INIT_AUTOMAKE(libprelude, $libprelude_version)
+AC_PREREQ(2.59)
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
+AC_CONFIG_SRCDIR([src])
+AM_INIT_AUTOMAKE([-Wall tar-pax 1.9])
+
 AC_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
-
 
 dnl **********************************************************
 dnl * Check required program.
@@ -57,10 +46,10 @@ dnl **********************************************************
 gl_EARLY
 LT_CONFIG_LTDL_DIR([libltdl])
 AC_CONFIG_MACRO_DIR([m4])
+
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT([dlopen win32-dll disable-static])
 LTDL_INIT([recursive])
-
-
 
 
 dnl **********************************************************
@@ -121,7 +110,7 @@ AC_SUBST(PTHREAD_LIBS)
 
 dnl ***
 dnl *** Can we use -Werror -Wmissing-braces for some checks ? ***
-AX_C_CHECK_FLAG(-Werror -Wmissing-braces, , , buggy_pthread_cppflags="-Werror -Wmissing-braces")
+AX_CHECK_COMPILE_FLAG(-Werror -Wmissing-braces, buggy_pthread_cppflags="-Werror -Wmissing-braces")
 
 
 old_CFLAGS="$CFLAGS"
@@ -300,7 +289,7 @@ dnl we currently check for all three va_copy possibilities, so we get
 dnl all results in config.log for bug reports.
 
 AC_CACHE_CHECK([for an implementation of va_copy()],prelude_cv_va_copy,[
-        AC_LINK_IFELSE([#include <stdarg.h>
+        AC_LINK_IFELSE([AC_LANG_SOURCE([#include <stdarg.h>
         void f (int i, ...) {
         va_list args1, args2;
         va_start (args1, i);
@@ -312,12 +301,12 @@ AC_CACHE_CHECK([for an implementation of va_copy()],prelude_cv_va_copy,[
         int main() {
           f (0, 42);
           return 0;
-        }],
+        }])],
         [prelude_cv_va_copy=yes],
         [prelude_cv_va_copy=no])
 ])
 AC_CACHE_CHECK([for an implementation of __va_copy()],prelude_cv___va_copy,[
-        AC_LINK_IFELSE([#include <stdarg.h>
+        AC_LINK_IFELSE([AC_LANG_SOURCE([#include <stdarg.h>
         void f (int i, ...) {
         va_list args1, args2;
         va_start (args1, i);
@@ -329,7 +318,7 @@ AC_CACHE_CHECK([for an implementation of __va_copy()],prelude_cv___va_copy,[
         int main() {
           f (0, 42);
           return 0;
-        }],
+        }])],
         [prelude_cv___va_copy=yes],
         [prelude_cv___va_copy=no])
 ])
@@ -640,7 +629,7 @@ dnl **************************************************
 AC_MSG_CHECKING(for cpu-specific compiler flags)
 if test "$host_cpu" == "x86_64" && test $enable_static = "yes"; then
         AC_MSG_RESULT(x86_64/static: adding -fPIC)
-        AX_C_CHECK_FLAG(-fPIC, , , CPPFLAGS="$CPPFLAGS -fPIC")
+        AX_CHECK_COMPILE_FLAG(-fPIC, CPPFLAGS="$CPPFLAGS -fPIC")
 else
         AC_MSG_RESULT(none needed)
 fi
@@ -654,7 +643,7 @@ case "$host_os" in
         # apparently-legal code won't compile with its precompiled
         # headers.
         AC_MSG_RESULT(Darwin: adding -no-cpp-precomp)
-        AX_C_CHECK_FLAG(-no-cpp-precomp, , , PCFLAGS="$PCFLAGS -no-cpp-precomp")
+        AX_CHECK_COMPILE_FLAG(-no-cpp-precomp, PCFLAGS="$PCFLAGS -no-cpp-precomp")
         ;;
  *)
         AC_MSG_RESULT(none needed)
@@ -662,18 +651,18 @@ case "$host_os" in
 esac
 
 
-AX_LD_CHECK_FLAG(-z relro, , , LDFLAGS="$LDFLAGS -z relro")
-AX_LD_CHECK_FLAG(-z now, , , LDFLAGS="$LDFLAGS -z now")
+AX_CHECK_LINK_FLAG(-z relro, LDFLAGS="$LDFLAGS -z relro")
+AX_CHECK_LINK_FLAG(-z now, LDFLAGS="$LDFLAGS -z now")
 
 
 for i in -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
          -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused \
          -Wformat -Wformat-security; do
-        AX_C_CHECK_FLAG($i, , , PCFLAGS="$PCFLAGS $i")
+        AX_CHECK_COMPILE_FLAG($i, PCFLAGS="$PCFLAGS $i")
 done
 
 if test x$buggy_pthread_initializers = xyes; then
-   AX_C_CHECK_FLAG(-Wno-missing-braces, , , PCFLAGS="$PCFLAGS -Wno-missing-braces")
+   AX_CHECK_COMPILE_FLAG(-Wno-missing-braces, PCFLAGS="$PCFLAGS -Wno-missing-braces")
 fi
 
 

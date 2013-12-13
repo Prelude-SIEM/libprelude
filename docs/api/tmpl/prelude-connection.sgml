@@ -17,6 +17,9 @@ prelude-connection
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM prelude_connection_permission_t ##### -->
 <para>
 
@@ -222,6 +225,7 @@ prelude-connection
 
 </para>
 
+@void: 
 @Returns: 
 
 

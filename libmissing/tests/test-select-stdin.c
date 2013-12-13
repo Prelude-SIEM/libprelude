@@ -1,5 +1,5 @@
 /* Test of select() substitute, reading from stdin.
-   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include <unistd.h>
+
+#include "macros.h"
 
 int
 main (void)
@@ -67,14 +69,15 @@ main (void)
               exit (1);
             }
           /* Timeout */
-          printf ("."); fflush (stdout);
+          printf (".");
+          ASSERT (fflush (stdout) == 0);
         }
       else
         {
           char c;
 
           printf ("Input available! Trying to read 1 byte...\n");
-          read (0, &c, 1);
+          ASSERT (read (0, &c, 1) == 1);
         }
     }
 }

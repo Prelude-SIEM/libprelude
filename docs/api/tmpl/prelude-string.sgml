@@ -17,6 +17,9 @@ prelude-string
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### TYPEDEF prelude_string_t ##### -->
 <para>
 
@@ -296,7 +299,7 @@ prelude-string
 
 @string: 
 @fmt: 
-@Varargs: 
+@...: 
 @Returns: 
 
 

@@ -1,12 +1,12 @@
-# sys_select_h.m4 serial 11
-dnl Copyright (C) 2006-2010 Free Software Foundation, Inc.
+# sys_select_h.m4 serial 20
+dnl Copyright (C) 2006-2013 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_HEADER_SYS_SELECT],
 [
-  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  AC_REQUIRE([AC_C_RESTRICT])
   AC_REQUIRE([gl_SYS_SELECT_H_DEFAULTS])
   AC_CACHE_CHECK([whether <sys/select.h> is self-contained],
     [gl_cv_header_sys_select_h_selfcontained],
@@ -32,10 +32,18 @@ AC_DEFUN([gl_HEADER_SYS_SELECT],
              [AC_LANG_PROGRAM([[#include <sys/select.h>]], [[
                   #undef memset
                   #define memset nonexistent_memset
-                  extern void *memset (void *, int, unsigned long);
+                  extern
+                  #ifdef __cplusplus
+                  "C"
+                  #endif
+                  void *memset (void *, int, unsigned long);
                   #undef bzero
                   #define bzero nonexistent_bzero
-                  extern void bzero (void *, unsigned long);
+                  extern
+                  #ifdef __cplusplus
+                  "C"
+                  #endif
+                  void bzero (void *, unsigned long);
                   fd_set fds;
                   FD_ZERO (&fds);
                 ]])
@@ -45,7 +53,7 @@ AC_DEFUN([gl_HEADER_SYS_SELECT],
           ])
       fi
     ])
-  AC_CHECK_HEADERS_ONCE([sys/select.h])
+  dnl <sys/select.h> is always overridden, because of GNULIB_POSIXCHECK.
   gl_CHECK_NEXT_HEADERS([sys/select.h])
   if test $ac_cv_header_sys_select_h = yes; then
     HAVE_SYS_SELECT_H=1
@@ -53,32 +61,35 @@ AC_DEFUN([gl_HEADER_SYS_SELECT],
     HAVE_SYS_SELECT_H=0
   fi
   AC_SUBST([HAVE_SYS_SELECT_H])
-  if test $gl_cv_header_sys_select_h_selfcontained != yes; then
-    gl_PREREQ_SYS_H_WINSOCK2
-  fi
+  gl_PREREQ_SYS_H_WINSOCK2
 
   dnl Check for declarations of anything we want to poison if the
   dnl corresponding gnulib module is not in use.
   gl_WARN_ON_USE_PREPARE([[
 /* Some systems require prerequisite headers.  */
 #include <sys/types.h>
-#if !defined __GLIBC__ && HAVE_SYS_TIME_H
+#if !(defined __GLIBC__ && !defined __UCLIBC__) && HAVE_SYS_TIME_H
 # include <sys/time.h>
 #endif
 #include <sys/select.h>
-    ]], [select])
+    ]], [pselect select])
 ])
 
 AC_DEFUN([gl_SYS_SELECT_MODULE_INDICATOR],
 [
   dnl Use AC_REQUIRE here, so that the default settings are expanded once only.
   AC_REQUIRE([gl_SYS_SELECT_H_DEFAULTS])
-  GNULIB_[]m4_translit([$1],[abcdefghijklmnopqrstuvwxyz./-],[ABCDEFGHIJKLMNOPQRSTUVWXYZ___])=1
+  gl_MODULE_INDICATOR_SET_VARIABLE([$1])
+  dnl Define it also as a C macro, for the benefit of the unit tests.
+  gl_MODULE_INDICATOR_FOR_TESTS([$1])
 ])
 
 AC_DEFUN([gl_SYS_SELECT_H_DEFAULTS],
 [
+  GNULIB_PSELECT=0; AC_SUBST([GNULIB_PSELECT])
   GNULIB_SELECT=0; AC_SUBST([GNULIB_SELECT])
   dnl Assume proper GNU behavior unless another module says otherwise.
+  HAVE_PSELECT=1; AC_SUBST([HAVE_PSELECT])
+  REPLACE_PSELECT=0; AC_SUBST([REPLACE_PSELECT])
   REPLACE_SELECT=0; AC_SUBST([REPLACE_SELECT])
 ])

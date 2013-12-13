@@ -1224,7 +1224,7 @@ sub     struct_field_normal
 
     $self->output("
 /**
- * ${ptr}idmef_$struct->{short_typename}_get_${name}:
+ * idmef_$struct->{short_typename}_get_${name}:
  * \@ptr: pointer to a #$struct->{typename} object.
  *
  * Get ${name} children of the #$struct->{typename} object.

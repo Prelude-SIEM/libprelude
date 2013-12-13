@@ -156,6 +156,9 @@ is interrupted by a signal.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM prelude_client_exit_status_t ##### -->
 <para>
 

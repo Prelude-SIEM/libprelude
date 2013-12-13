@@ -17,6 +17,9 @@ idmef-criteria
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM idmef_criterion_operator_t ##### -->
 <para>
 

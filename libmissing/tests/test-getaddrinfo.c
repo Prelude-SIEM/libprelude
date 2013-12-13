@@ -1,6 +1,6 @@
 /* Test the getaddrinfo module.
 
-   Copyright (C) 2006-2010 Free Software Foundation, Inc.
+   Copyright (C) 2006-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -107,13 +107,15 @@ simple (char const *host, char const *service)
 #endif
       /* Provide details if errno was set.  */
       if (res == EAI_SYSTEM)
-        dbgprintf ("system error: %s\n", strerror (err));
+        fprintf (stderr, "system error: %s\n", strerror (err));
 
       return 1;
     }
 
   for (ai = ai0; ai; ai = ai->ai_next)
     {
+      void *ai_addr = ai->ai_addr;
+      struct sockaddr_in *sock_addr = ai_addr;
       dbgprintf ("\tflags %x\n", ai->ai_flags);
       dbgprintf ("\tfamily %x\n", ai->ai_family);
       dbgprintf ("\tsocktype %x\n", ai->ai_socktype);
@@ -121,8 +123,7 @@ simple (char const *host, char const *service)
       dbgprintf ("\taddrlen %ld: ", (unsigned long) ai->ai_addrlen);
       dbgprintf ("\tFound %s\n",
                  inet_ntop (ai->ai_family,
-                            &((struct sockaddr_in *)
-                              ai->ai_addr)->sin_addr,
+                            &sock_addr->sin_addr,
                             buf, sizeof (buf) - 1));
       if (ai->ai_canonname)
         dbgprintf ("\tFound %s...\n", ai->ai_canonname);
@@ -161,25 +162,6 @@ simple (char const *host, char const *service)
 
 int main (void)
 {
-#if _WIN32
-  {
-    WORD requested;
-    WSADATA data;
-    int err;
-
-    requested = MAKEWORD (1, 1);
-    err = WSAStartup (requested, &data);
-    if (err != 0)
-      return 1;
-
-    if (data.wVersion < requested)
-      {
-        WSACleanup ();
-        return 2;
-      }
-  }
-#endif
-
   return simple (HOST1, SERV1)
     + simple (HOST2, SERV2)
     + simple (HOST3, SERV3)

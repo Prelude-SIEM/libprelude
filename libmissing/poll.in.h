@@ -1,7 +1,7 @@
 /* Header for poll(2) emulation
    Contributed by Paolo Bonzini.
 
-   Copyright 2001, 2002, 2003, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright 2001-2003, 2007, 2009-2013 Free Software Foundation, Inc.
 
    This file is part of gnulib.
 
@@ -16,23 +16,44 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License along
-   with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GL_POLL_H
-#define _GL_POLL_H
+#ifndef _@GUARD_PREFIX@_POLL_H
+
+#if __GNUC__ >= 3
+@PRAGMA_SYSTEM_HEADER@
+#endif
+@PRAGMA_COLUMNS@
+
+/* The include_next requires a split double-inclusion guard.  */
+#if @HAVE_POLL_H@
+# @INCLUDE_NEXT@ @NEXT_POLL_H@
+#endif
+
+#ifndef _@GUARD_PREFIX@_POLL_H
+#define _@GUARD_PREFIX@_POLL_H
+
+
+/* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
+
+/* The definition of _GL_WARN_ON_USE is copied here.  */
+
+
+#if !@HAVE_POLL_H@
 
 /* fake a poll(2) environment */
-#define POLLIN      0x0001      /* any readable data available   */
-#define POLLPRI     0x0002      /* OOB/Urgent readable data      */
-#define POLLOUT     0x0004      /* file descriptor is writeable  */
-#define POLLERR     0x0008      /* some poll error occurred      */
-#define POLLHUP     0x0010      /* file descriptor was "hung up" */
-#define POLLNVAL    0x0020      /* requested events "invalid"    */
-#define POLLRDNORM  0x0040
-#define POLLRDBAND  0x0080
-#define POLLWRNORM  0x0100
-#define POLLWRBAND  0x0200
+# define POLLIN      0x0001      /* any readable data available   */
+# define POLLPRI     0x0002      /* OOB/Urgent readable data      */
+# define POLLOUT     0x0004      /* file descriptor is writable   */
+# define POLLERR     0x0008      /* some poll error occurred      */
+# define POLLHUP     0x0010      /* file descriptor was "hung up" */
+# define POLLNVAL    0x0020      /* requested events "invalid"    */
+# define POLLRDNORM  0x0040
+# define POLLRDBAND  0x0080
+# define POLLWRNORM  0x0100
+# define POLLWRBAND  0x0200
+
+# if !GNULIB_defined_poll_types
 
 struct pollfd
 {
@@ -43,11 +64,40 @@ struct pollfd
 
 typedef unsigned long nfds_t;
 
-extern int poll (struct pollfd *pfd, nfds_t nfd, int timeout);
+#  define GNULIB_defined_poll_types 1
+# endif
 
 /* Define INFTIM only if doing so conforms to POSIX.  */
-#if !defined (_POSIX_C_SOURCE) && !defined (_XOPEN_SOURCE)
-#define INFTIM (-1)
+# if !defined (_POSIX_C_SOURCE) && !defined (_XOPEN_SOURCE)
+#  define INFTIM (-1)
+# endif
+
 #endif
 
-#endif /* _GL_POLL_H */
+
+#if @GNULIB_POLL@
+# if @REPLACE_POLL@
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef poll
+#   define poll rpl_poll
+#  endif
+_GL_FUNCDECL_RPL (poll, int, (struct pollfd *pfd, nfds_t nfd, int timeout));
+_GL_CXXALIAS_RPL (poll, int, (struct pollfd *pfd, nfds_t nfd, int timeout));
+# else
+#  if !@HAVE_POLL@
+_GL_FUNCDECL_SYS (poll, int, (struct pollfd *pfd, nfds_t nfd, int timeout));
+#  endif
+_GL_CXXALIAS_SYS (poll, int, (struct pollfd *pfd, nfds_t nfd, int timeout));
+# endif
+_GL_CXXALIASWARN (poll);
+#elif defined GNULIB_POSIXCHECK
+# undef poll
+# if HAVE_RAW_DECL_POLL
+_GL_WARN_ON_USE (poll, "poll is unportable - "
+                 "use gnulib module poll for portability");
+# endif
+#endif
+
+
+#endif /* _@GUARD_PREFIX@_POLL_H */
+#endif /* _@GUARD_PREFIX@_POLL_H */

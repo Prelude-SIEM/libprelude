@@ -1,6 +1,6 @@
 /* ignore a function return without a compiler warning
 
-   Copyright (C) 2008-2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Jim Meyering.  */
+/* Written by Jim Meyering, Eric Blake and Pádraig Brady.  */
 
-/* Use these functions to avoid a warning when using a function declared with
+/* Use "ignore_value" to avoid a warning when using a function declared with
    gcc's warn_unused_result attribute, but for which you really do want to
    ignore the result.  Traditionally, people have used a "(void)" cast to
    indicate that a function's return value is deliberately unused.  However,
@@ -32,6 +32,19 @@
    "copy.c:233: warning: ignoring return value of 'fchown',
    declared with attribute warn_unused_result".  */
 
-static inline void ignore_value (int i) { (void) i; }
-static inline void ignore_ptr (void* p) { (void) p; }
-/* FIXME: what about aggregate types? */
+#ifndef _GL_IGNORE_VALUE_H
+#define _GL_IGNORE_VALUE_H
+
+/* Normally casting an expression to void discards its value, but GCC
+   versions 3.4 and newer have __attribute__ ((__warn_unused_result__))
+   which may cause unwanted diagnostics in that case.  Use __typeof__
+   and __extension__ to work around the problem, if the workaround is
+   known to be needed.  */
+#if 3 < __GNUC__ + (4 <= __GNUC_MINOR__)
+# define ignore_value(x) \
+    (__extension__ ({ __typeof__ (x) __x = (x); (void) __x; }))
+#else
+# define ignore_value(x) ((void) (x))
+#endif
+
+#endif

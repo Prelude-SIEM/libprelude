@@ -1,6 +1,6 @@
 /* ioctl.c --- wrappers for Windows ioctl function
 
-   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -23,29 +23,66 @@
 
 #include <stdarg.h>
 
-#define WIN32_LEAN_AND_MEAN
-/* Get winsock2.h. */
-#include <sys/socket.h>
+#if HAVE_IOCTL
 
-/* Get set_winsock_errno, FD_TO_SOCKET etc. */
-#include "w32sock.h"
-
+/* Provide a wrapper with the POSIX prototype.  */
+# undef ioctl
 int
-rpl_ioctl (int fd, int req, ...)
+rpl_ioctl (int fd, int request, ... /* {void *,char *} arg */)
 {
   void *buf;
   va_list args;
-  SOCKET sock;
-  int r;
 
-  va_start (args, req);
+  va_start (args, request);
   buf = va_arg (args, void *);
   va_end (args);
 
-  sock = FD_TO_SOCKET (fd);
-  r = ioctlsocket (sock, req, buf);
-  if (r < 0)
-    set_winsock_errno ();
-
-  return r;
+  /* Cast 'request' so that when the system's ioctl function takes a 64-bit
+     request argument, the value gets zero-extended, not sign-extended.  */
+  return ioctl (fd, (unsigned int) request, buf);
 }
+
+#else /* mingw */
+
+# include <errno.h>
+
+/* Get HANDLE.  */
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h>
+
+# include "fd-hook.h"
+/* Get _get_osfhandle.  */
+# include "msvc-nothrow.h"
+
+static int
+primary_ioctl (int fd, int request, void *arg)
+{
+  /* We don't support FIONBIO on pipes here.  If you want to make pipe
+     fds non-blocking, use the gnulib 'nonblocking' module, until
+     gnulib implements fcntl F_GETFL / F_SETFL with O_NONBLOCK.  */
+
+  if ((HANDLE) _get_osfhandle (fd) != INVALID_HANDLE_VALUE)
+    errno = ENOSYS;
+  else
+    errno = EBADF;
+  return -1;
+}
+
+int
+ioctl (int fd, int request, ... /* {void *,char *} arg */)
+{
+  void *arg;
+  va_list args;
+
+  va_start (args, request);
+  arg = va_arg (args, void *);
+  va_end (args);
+
+# if WINDOWS_SOCKETS
+  return execute_all_ioctl_hooks (primary_ioctl, fd, request, arg);
+# else
+  return primary_ioctl (fd, request, arg);
+# endif
+}
+
+#endif

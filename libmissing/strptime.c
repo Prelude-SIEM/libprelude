@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2005, 2007, 2009, 2010 Free Software Foundation,
+/* Copyright (C) 2002, 2004-2005, 2007, 2009-2013 Free Software Foundation,
    Inc.
    This file is part of the GNU C Library.
 
@@ -13,8 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License along
-   with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef _LIBC
 # include <config.h>
@@ -200,7 +199,7 @@ static void
 day_of_the_week (struct tm *tm)
 {
   /* We know that January 1st 1970 was a Thursday (= 4).  Compute the
-     the difference between this data in the one on TM and so determine
+     difference between this data in the one on TM and so determine
      the weekday.  */
   int corr_year = 1900 + tm->tm_year - (tm->tm_mon < 2);
   int wday = (-473
@@ -240,7 +239,6 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
   struct locale_data *const current = locale->__locales[LC_TIME];
 #endif
 
-  const char *rp_backup;
   int cnt;
   size_t val;
   int have_I, is_pm;
@@ -251,14 +249,16 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
   int have_mon, have_mday;
   int have_uweek, have_wweek;
   int week_no;
+#ifdef _NL_CURRENT
   size_t num_eras;
-  struct era_entry *era;
+  struct era_entry *era = NULL;
+  const char *rp_backup;
+#endif
 
   have_I = is_pm = 0;
   century = -1;
   want_century = 0;
   want_era = 0;
-  era = NULL;
   week_no = 0;
 
   have_wday = want_xday = have_yday = have_mon = have_mday = have_uweek = 0;
@@ -276,7 +276,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
           continue;
         }
 
-      /* Any character but `%' must be matched by the same character
+      /* Any character but '%' must be matched by the same character
          in the iput string.  */
       if (*fmt != '%')
         {
@@ -286,17 +286,17 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
       ++fmt;
 #ifndef _NL_CURRENT
-      /* We need this for handling the `E' modifier.  */
+      /* We need this for handling the 'E' modifier.  */
     start_over:
-#endif
-
+#else
       /* Make back up of current processing pointer.  */
       rp_backup = rp;
+#endif
 
       switch (*fmt++)
         {
         case '%':
-          /* Match the `%' character itself.  */
+          /* Match the '%' character itself.  */
           match_char ('%', *rp++);
           break;
         case 'a':
@@ -408,7 +408,9 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
           break;
         case 'C':
           /* Match century number.  */
+#ifdef _NL_CURRENT
         match_century:
+#endif
           get_number (0, 99, 2);
           century = val;
           want_xday = 1;
@@ -555,7 +557,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
         case 's':
           {
             /* The number of seconds may be very high so we cannot use
-               the `get_number' macro.  Instead read the number
+               the 'get_number' macro.  Instead read the number
                character for character and construct the result while
                doing this.  */
             time_t secs = 0;
@@ -644,7 +646,9 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
           have_wday = 1;
           break;
         case 'y':
+#ifdef _NL_CURRENT
         match_year_in_century:
+#endif
           /* Match year within century.  */
           get_number (0, 99, 2);
           /* The "Year 2000: The Millennium Rollover" paper suggests that
@@ -669,7 +673,7 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
              specify hours.  If fours digits are used, minutes are
              also specified.  */
           {
-            bool neg;
+            bool neg _GL_UNUSED;
             int n;
 
             val = 0;

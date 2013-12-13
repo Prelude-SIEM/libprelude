@@ -31,6 +31,9 @@ if ( ret &lt; 0 ) {
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO LIBPRELUDE_VERSION ##### -->
 <para>
 
@@ -53,6 +56,7 @@ if ( ret &lt; 0 ) {
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_check_version ##### -->
@@ -78,6 +82,7 @@ if ( ret &lt; 0 ) {
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_fork_parent ##### -->
@@ -85,6 +90,7 @@ if ( ret &lt; 0 ) {
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_fork_prepare ##### -->
@@ -92,5 +98,6 @@ if ( ret &lt; 0 ) {
 
 </para>
 
+@void: 
 
 

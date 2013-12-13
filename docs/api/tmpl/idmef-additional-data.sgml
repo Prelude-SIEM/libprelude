@@ -17,6 +17,9 @@ idmef-additional-data
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION idmef_additional_data_new_real ##### -->
 <para>
 

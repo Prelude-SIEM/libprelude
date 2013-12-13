@@ -1,5 +1,5 @@
-# exponentd.m4 serial 1
-dnl Copyright (C) 2007-2010 Free Software Foundation, Inc.
+# exponentd.m4 serial 3
+dnl Copyright (C) 2007-2008, 2010-2013 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -8,7 +8,8 @@ AC_DEFUN([gl_DOUBLE_EXPONENT_LOCATION],
   AC_CACHE_CHECK([where to find the exponent in a 'double'],
     [gl_cv_cc_double_expbit0],
     [
-      AC_TRY_RUN([
+      AC_RUN_IFELSE(
+        [AC_LANG_SOURCE([[
 #include <float.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -71,7 +72,7 @@ int main ()
   fprintf (fp, "unknown");
   return (fclose (fp) != 0);
 }
-        ],
+        ]])],
         [gl_cv_cc_double_expbit0=`cat conftest.out`],
         [gl_cv_cc_double_expbit0="unknown"],
         [
@@ -79,7 +80,8 @@ int main ()
           dnl different sets of instructions: The older FPA instructions assume
           dnl that they are stored in big-endian word order, while the words
           dnl (like integer types) are stored in little-endian byte order.
-          dnl The newer VFP instructions assume little-endian order consistenly.
+          dnl The newer VFP instructions assume little-endian order
+          dnl consistently.
           AC_EGREP_CPP([mixed_endianness], [
 #if defined arm || defined __arm || defined __arm__
   mixed_endianness

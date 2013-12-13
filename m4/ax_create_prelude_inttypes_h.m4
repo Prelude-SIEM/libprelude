@@ -30,7 +30,7 @@ else
   __PRELUDE_HAVE_INTTYPES_H="/* #define __PRELUDE_HAVE_INTTYPES_H */"
 fi
 
-AC_COMPILE_CHECK_SIZEOF(long)
+AC_CHECK_SIZEOF(long)
 
 if test "$ac_cv_sizeof_long" = "8" ; then
   __PRELUDE_HAVE_64BIT_LONG="#define __PRELUDE_HAVE_64BIT_LONG"

@@ -1,5 +1,5 @@
 /* Test of isnanf() substitute.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,12 +18,10 @@
 
 #include <limits.h>
 
+#include "minus-zero.h"
+#include "infinity.h"
 #include "nan.h"
 #include "macros.h"
-
-/* HP cc on HP-UX 10.20 has a bug with the constant expression -0.0f.
-   So we use -zero instead.  */
-float zero = 0.0f;
 
 int
 main ()
@@ -36,10 +34,10 @@ main ()
   ASSERT (!isnanf (-2.718e30f));
   ASSERT (!isnanf (-2.718e-30f));
   ASSERT (!isnanf (0.0f));
-  ASSERT (!isnanf (-zero));
+  ASSERT (!isnanf (minus_zerof));
   /* Infinite values.  */
-  ASSERT (!isnanf (1.0f / 0.0f));
-  ASSERT (!isnanf (-1.0f / 0.0f));
+  ASSERT (!isnanf (Infinityf ()));
+  ASSERT (!isnanf (- Infinityf ()));
   /* Quiet NaN.  */
   ASSERT (isnanf (NaNf ()));
 #if defined FLT_EXPBIT0_WORD && defined FLT_EXPBIT0_BIT

@@ -17,6 +17,9 @@ prelude-timer
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT prelude_timer_t ##### -->
 <para>
 
@@ -116,6 +119,7 @@ prelude-timer
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_timer_flush ##### -->
@@ -123,6 +127,7 @@ prelude-timer
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_timer_lock_critical_region ##### -->
@@ -130,6 +135,7 @@ prelude-timer
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION prelude_timer_unlock_critical_region ##### -->
@@ -137,5 +143,6 @@ prelude-timer
 
 </para>
 
+@void: 
 
 

@@ -17,6 +17,9 @@ prelude-log
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM prelude_log_t ##### -->
 <para>
 
@@ -36,24 +39,22 @@ prelude-log
 @PRELUDE_LOG_FLAGS_QUIET: 
 @PRELUDE_LOG_FLAGS_SYSLOG: 
 
-<!-- ##### FUNCTION prelude_log ##### -->
+<!-- ##### MACRO prelude_log ##### -->
 <para>
 
 </para>
 
 @level: 
-@fmt: 
-@Varargs: 
+@...: 
 
 
-<!-- ##### FUNCTION prelude_log_debug ##### -->
+<!-- ##### MACRO prelude_log_debug ##### -->
 <para>
 
 </para>
 
 @level: 
-@fmt: 
-@Varargs: 
+@...: 
 
 
 <!-- ##### MACRO prelude_log_v ##### -->
@@ -97,6 +98,7 @@ prelude-log
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -113,6 +115,7 @@ prelude-log
 
 </para>
 
+@void: 
 @Returns: 
 
 

@@ -1,5 +1,5 @@
 /* Substitute for and wrapper around <langinfo.h>.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2013 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -12,27 +12,27 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /*
  * POSIX <langinfo.h> for platforms that lack it or have an incomplete one.
  * <http://www.opengroup.org/onlinepubs/9699919799/basedefs/langinfo.h.html>
  */
 
-#ifndef _GL_LANGINFO_H
+#ifndef _@GUARD_PREFIX@_LANGINFO_H
 
 #if __GNUC__ >= 3
 @PRAGMA_SYSTEM_HEADER@
 #endif
+@PRAGMA_COLUMNS@
 
 /* The include_next requires a split double-inclusion guard.  */
 #if @HAVE_LANGINFO_H@
 # @INCLUDE_NEXT@ @NEXT_LANGINFO_H@
 #endif
 
-#ifndef _GL_LANGINFO_H
-#define _GL_LANGINFO_H
+#ifndef _@GUARD_PREFIX@_LANGINFO_H
+#define _@GUARD_PREFIX@_LANGINFO_H
 
 
 #if !@HAVE_LANGINFO_H@
@@ -40,7 +40,10 @@
 /* A platform that lacks <langinfo.h>.  */
 
 /* Assume that it also lacks <nl_types.h> and the nl_item type.  */
+# if !GNULIB_defined_nl_item
 typedef int nl_item;
+#  define GNULIB_defined_nl_item 1
+# endif
 
 /* nl_langinfo items of the LC_CTYPE category */
 # define CODESET     10000
@@ -112,6 +115,11 @@ typedef int nl_item;
 #  define GNULIB_defined_CODESET 1
 # endif
 
+# if !@HAVE_LANGINFO_T_FMT_AMPM@
+#  define T_FMT_AMPM  10006
+#  define GNULIB_defined_T_FMT_AMPM 1
+# endif
+
 # if !@HAVE_LANGINFO_ERA@
 #  define ERA         10047
 #  define ERA_D_FMT   10048
@@ -121,15 +129,19 @@ typedef int nl_item;
 #  define GNULIB_defined_ERA 1
 # endif
 
+# if !@HAVE_LANGINFO_YESEXPR@
+#  define YESEXPR     10053
+#  define NOEXPR      10054
+#  define GNULIB_defined_YESEXPR 1
+# endif
+
 #endif
+
+/* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
 
 /* The definition of _GL_WARN_ON_USE is copied here.  */
 
 /* Declare overridden functions.  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 /* Return a piece of locale dependent information.
@@ -138,12 +150,19 @@ extern "C" {
 
 #if @GNULIB_NL_LANGINFO@
 # if @REPLACE_NL_LANGINFO@
-#  undef nl_langinfo
-#  define nl_langinfo rpl_nl_langinfo
+#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+#   undef nl_langinfo
+#   define nl_langinfo rpl_nl_langinfo
+#  endif
+_GL_FUNCDECL_RPL (nl_langinfo, char *, (nl_item item));
+_GL_CXXALIAS_RPL (nl_langinfo, char *, (nl_item item));
+# else
+#  if !@HAVE_NL_LANGINFO@
+_GL_FUNCDECL_SYS (nl_langinfo, char *, (nl_item item));
+#  endif
+_GL_CXXALIAS_SYS (nl_langinfo, char *, (nl_item item));
 # endif
-# if !@HAVE_NL_LANGINFO@ || @REPLACE_NL_LANGINFO@
-extern char *nl_langinfo (nl_item item);
-# endif
+_GL_CXXALIASWARN (nl_langinfo);
 #elif defined GNULIB_POSIXCHECK
 # undef nl_langinfo
 # if HAVE_RAW_DECL_NL_LANGINFO
@@ -153,10 +172,5 @@ _GL_WARN_ON_USE (nl_langinfo, "nl_langinfo is not portable - "
 #endif
 
 
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /* _GL_LANGINFO_H */
-#endif /* _GL_LANGINFO_H */
+#endif /* _@GUARD_PREFIX@_LANGINFO_H */
+#endif /* _@GUARD_PREFIX@_LANGINFO_H */

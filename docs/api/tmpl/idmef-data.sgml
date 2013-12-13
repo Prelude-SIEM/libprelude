@@ -17,6 +17,9 @@ idmef-data
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM idmef_data_type_t ##### -->
 <para>
 
@@ -30,16 +33,6 @@ idmef-data
 @IDMEF_DATA_TYPE_FLOAT: 
 @IDMEF_DATA_TYPE_CHAR_STRING: 
 @IDMEF_DATA_TYPE_BYTE_STRING: 
-
-<!-- ##### STRUCT data ##### -->
-<para>
-
-</para>
-
-@refcount: 
-@flags: 
-@type: 
-@len: 
 
 <!-- ##### FUNCTION idmef_data_new ##### -->
 <para>

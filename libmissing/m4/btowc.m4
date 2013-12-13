@@ -1,5 +1,5 @@
-# btowc.m4 serial 5
-dnl Copyright (C) 2008-2010 Free Software Foundation, Inc.
+# btowc.m4 serial 10
+dnl Copyright (C) 2008-2013 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -18,10 +18,46 @@ AC_DEFUN([gl_FUNC_BTOWC],
     HAVE_BTOWC=0
   else
 
-    dnl IRIX 6.5 btowc(EOF) is 0xFF, not WEOF.
     AC_REQUIRE([AC_PROG_CC])
     AC_REQUIRE([gt_LOCALE_FR])
     AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
+
+    dnl Cygwin 1.7.2 btowc('\0') is WEOF, not 0.
+    AC_CACHE_CHECK([whether btowc(0) is correct],
+      [gl_cv_func_btowc_nul],
+      [
+        AC_RUN_IFELSE(
+          [AC_LANG_SOURCE([[
+#include <string.h>
+/* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+   <wchar.h>.
+   BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
+   included before <wchar.h>.  */
+#include <stddef.h>
+#include <stdio.h>
+#include <time.h>
+#include <wchar.h>
+int main ()
+{
+  if (btowc ('\0') != 0)
+    return 1;
+  return 0;
+}]])],
+          [gl_cv_func_btowc_nul=yes],
+          [gl_cv_func_btowc_nul=no],
+          [
+changequote(,)dnl
+           case "$host_os" in
+                      # Guess no on Cygwin.
+             cygwin*) gl_cv_func_btowc_nul="guessing no" ;;
+                      # Guess yes otherwise.
+             *)       gl_cv_func_btowc_nul="guessing yes" ;;
+           esac
+changequote([,])dnl
+          ])
+      ])
+
+    dnl IRIX 6.5 btowc(EOF) is 0xFF, not WEOF.
     AC_CACHE_CHECK([whether btowc(EOF) is correct],
       [gl_cv_func_btowc_eof],
       [
@@ -36,10 +72,17 @@ changequote(,)dnl
         esac
 changequote([,])dnl
         if test $LOCALE_FR != none; then
-          AC_TRY_RUN([
+          AC_RUN_IFELSE(
+            [AC_LANG_SOURCE([[
 #include <locale.h>
-#include <stdio.h>
 #include <string.h>
+/* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+   <wchar.h>.
+   BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
+   included before <wchar.h>.  */
+#include <stddef.h>
+#include <stdio.h>
+#include <time.h>
 #include <wchar.h>
 int main ()
 {
@@ -49,21 +92,21 @@ int main ()
         return 1;
     }
   return 0;
-}],
+}]])],
             [gl_cv_func_btowc_eof=yes],
             [gl_cv_func_btowc_eof=no],
             [:])
         fi
       ])
+
+    case "$gl_cv_func_btowc_nul" in
+      *yes) ;;
+      *) REPLACE_BTOWC=1 ;;
+    esac
     case "$gl_cv_func_btowc_eof" in
       *yes) ;;
       *) REPLACE_BTOWC=1 ;;
     esac
-  fi
-  if test $HAVE_BTOWC = 0 || test $REPLACE_BTOWC = 1; then
-    gl_REPLACE_WCHAR_H
-    AC_LIBOBJ([btowc])
-    gl_PREREQ_BTOWC
   fi
 ])
 

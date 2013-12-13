@@ -1,5 +1,5 @@
-# isnand.m4 serial 6
-dnl Copyright (C) 2007-2010 Free Software Foundation, Inc.
+# isnand.m4 serial 11
+dnl Copyright (C) 2007-2013 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -24,7 +24,6 @@ AC_DEFUN([gl_FUNC_ISNAND],
   else
     gl_func_isnand=no
     HAVE_ISNAND=0
-    gl_BUILD_ISNAND
   fi
   AC_SUBST([ISNAND_LIBM])
 ])
@@ -34,19 +33,17 @@ dnl Check how to get or define isnand() without linking with libm.
 AC_DEFUN([gl_FUNC_ISNAND_NO_LIBM],
 [
   gl_HAVE_ISNAND_NO_LIBM
+  gl_func_isnand_no_libm=$gl_cv_func_isnand_no_libm
   if test $gl_cv_func_isnand_no_libm = yes; then
     AC_DEFINE([HAVE_ISNAND_IN_LIBC], [1],
       [Define if the isnan(double) function is available in libc.])
-  else
-    gl_BUILD_ISNAND
   fi
 ])
 
-dnl Pull in replacement isnand definition. It does not need -lm.
-AC_DEFUN([gl_BUILD_ISNAND],
+dnl Prerequisites of replacement isnand definition. It does not need -lm.
+AC_DEFUN([gl_PREREQ_ISNAND],
 [
-  AC_LIBOBJ([isnand])
-  gl_DOUBLE_EXPONENT_LOCATION
+  AC_REQUIRE([gl_DOUBLE_EXPONENT_LOCATION])
 ])
 
 dnl Test whether isnand() can be used with libm.
@@ -58,16 +55,18 @@ AC_DEFUN([gl_HAVE_ISNAND_IN_LIBM],
     [
       save_LIBS="$LIBS"
       LIBS="$LIBS -lm"
-      AC_TRY_LINK([#include <math.h>
-                   #if __GNUC__ >= 4
-                   # undef isnand
-                   # define isnand(x) __builtin_isnand ((double)(x))
-                   #elif defined isnan
-                   # undef isnand
-                   # define isnand(x) isnan ((double)(x))
-                   #endif
-                   double x;],
-                  [return isnand (x);],
+      AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM(
+           [[#include <math.h>
+             #if __GNUC__ >= 4
+             # undef isnand
+             # define isnand(x) __builtin_isnan ((double)(x))
+             #elif defined isnan
+             # undef isnand
+             # define isnand(x) isnan ((double)(x))
+             #endif
+             double x;]],
+           [[return isnand (x);]])],
         [gl_cv_func_isnand_in_libm=yes],
         [gl_cv_func_isnand_in_libm=no])
       LIBS="$save_LIBS"
@@ -79,16 +78,18 @@ AC_DEFUN([gl_HAVE_ISNAND_NO_LIBM],
   AC_CACHE_CHECK([whether isnan(double) can be used without linking with libm],
     [gl_cv_func_isnand_no_libm],
     [
-      AC_TRY_LINK([#include <math.h>
-                   #if __GNUC__ >= 4
-                   # undef isnand
-                   # define isnand(x) __builtin_isnan ((double)(x))
-                   #else
-                   # undef isnand
-                   # define isnand(x) isnan ((double)(x))
-                   #endif
-                   double x;],
-                  [return isnand (x);],
+      AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM(
+           [[#include <math.h>
+             #if __GNUC__ >= 4
+             # undef isnand
+             # define isnand(x) __builtin_isnan ((double)(x))
+             #else
+             # undef isnand
+             # define isnand(x) isnan ((double)(x))
+             #endif
+             double x;]],
+           [[return isnand (x);]])],
         [gl_cv_func_isnand_no_libm=yes],
         [gl_cv_func_isnand_no_libm=no])
     ])
