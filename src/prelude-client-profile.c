@@ -75,7 +75,7 @@ struct prelude_client_profile {
         prelude_gid_t gid;
         char *name;
         uint64_t analyzerid;
-        gnutls_certificate_credentials credentials;
+        gnutls_certificate_credentials_t credentials;
 };
 
 

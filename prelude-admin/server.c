@@ -56,11 +56,11 @@
 
 
 static const char *one_shot_passwd;
-static gnutls_anon_server_credentials anoncred;
+static gnutls_anon_server_credentials_t anoncred;
 
 
 #ifdef GNUTLS_SRP_ENABLED
- static gnutls_srp_server_credentials srpcred;
+ static gnutls_srp_server_credentials_t srpcred;
 #endif
 
 
@@ -100,10 +100,10 @@ static int anon_check_passwd(prelude_io_t *fd)
 }
 
 
-static inline gnutls_transport_ptr fd_to_ptr(int fd)
+static inline gnutls_transport_ptr_t fd_to_ptr(int fd)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -113,10 +113,10 @@ static inline gnutls_transport_ptr fd_to_ptr(int fd)
 }
 
 
-static inline int ptr_to_fd(gnutls_transport_ptr ptr)
+static inline int ptr_to_fd(gnutls_transport_ptr_t ptr)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -126,34 +126,38 @@ static inline int ptr_to_fd(gnutls_transport_ptr ptr)
 }
 
 
-static ssize_t tls_pull(gnutls_transport_ptr fd, void *buf, size_t count)
+static ssize_t tls_pull(gnutls_transport_ptr_t fd, void *buf, size_t count)
 {
         return read(ptr_to_fd(fd), buf, count);
 }
 
 
 
-static ssize_t tls_push(gnutls_transport_ptr fd, const void *buf, size_t count)
+static ssize_t tls_push(gnutls_transport_ptr_t fd, const void *buf, size_t count)
 {
         return write(ptr_to_fd(fd), buf, count);
 }
 
 
-static gnutls_session new_tls_session(int sock)
+static gnutls_session_t new_tls_session(int sock)
 {
         int ret;
-        gnutls_session session;
-        const int kx_priority[] = {
-                GNUTLS_KX_ANON_DH,
+        gnutls_session_t session;
+        const char *err;
 #ifdef GNUTLS_SRP_ENABLED
-                GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
+        const char *pstring = "NORMAL:-KX-ALL:+SRP:+SRP-DSS:+SRP-RSA:+ANON-DH";
+#else
+        const char *pstring = "NORMAL:-KX-ALL:+ANON-DH";
 #endif
-                0 };
 
         gnutls_init(&session, GNUTLS_SERVER);
-
         gnutls_set_default_priority(session);
-        gnutls_kx_set_priority(session, kx_priority);
+        
+        ret = gnutls_priority_set_direct(session, pstring, &err);
+        if (ret < 0) {
+                fprintf(stderr, "TLS priority syntax error at: %s\n", err);
+                return NULL;
+        }
 
 #ifdef GNUTLS_SRP_ENABLED
         gnutls_credentials_set(session, GNUTLS_CRD_SRP, srpcred);
@@ -178,9 +182,9 @@ static gnutls_session new_tls_session(int sock)
 
 
 static int handle_client_connection(const char *srcinfo, prelude_client_profile_t *cp, prelude_io_t *fd,
-                                    gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                                    gnutls_x509_privkey_t key, gnutls_x509_crt_t cacrt, gnutls_x509_crt_t crt)
 {
-        gnutls_session session;
+        gnutls_session_t session;
 
         session = new_tls_session(prelude_io_get_fd(fd));
         if ( ! session )
@@ -197,7 +201,7 @@ static int handle_client_connection(const char *srcinfo, prelude_client_profile_
 
 
 static int process_event(prelude_client_profile_t *cp, int server_sock, prelude_io_t *fd,
-                         gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                         gnutls_x509_privkey_t key, gnutls_x509_crt_t cacrt, gnutls_x509_crt_t crt)
 {
         char buf[512];
         void *inaddr;
@@ -245,7 +249,7 @@ static int process_event(prelude_client_profile_t *cp, int server_sock, prelude_
 
 static int wait_connection(prelude_client_profile_t *cp, int sock,
                            struct pollfd *pfd, size_t size, int keepalive,
-                           gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                           gnutls_x509_privkey_t key, gnutls_x509_crt_t cacrt, gnutls_x509_crt_t crt)
 {
         size_t i;
         prelude_io_t *fd;
@@ -370,7 +374,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
 
 #ifdef GNUTLS_SRP_ENABLED
 
-static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
+static int copy_datum(gnutls_datum_t *dst, const gnutls_datum_t *src)
 {
         dst->size = src->size;
 
@@ -387,8 +391,8 @@ static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
 
 
 
-static int srp_callback(gnutls_session session, const char *username, gnutls_datum *salt,
-                        gnutls_datum *verifier, gnutls_datum *generator, gnutls_datum *prime)
+static int srp_callback(gnutls_session_t session, const char *username, gnutls_datum_t *salt,
+                        gnutls_datum_t *verifier, gnutls_datum_t *generator, gnutls_datum_t *prime)
 {
         int ret;
 
@@ -420,12 +424,12 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 
 
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
-                  prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                  prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey_t key, gnutls_x509_crt_t cacrt, gnutls_x509_crt_t crt)
 {
         int sock;
         size_t size;
         struct pollfd pfd[128];
-        gnutls_dh_params dh_params;
+        gnutls_dh_params_t dh_params;
 
 #ifdef GNUTLS_SRP_ENABLED
         int ret;

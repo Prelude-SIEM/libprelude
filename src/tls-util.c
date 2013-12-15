@@ -48,12 +48,12 @@
 #define X509_BEGIN_STR1 "-----BEGIN X509 CERTIFICATE"
 #define X509_BEGIN_STR2 "-----BEGIN CERTIFICATE"
 
-int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
-                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format)
+int _prelude_tls_crt_list_import(gnutls_x509_crt_t *certs, unsigned int *cmax,
+                                 const gnutls_datum_t *indata, gnutls_x509_crt_fmt_t format)
 {
         int ret;
         size_t skiplen;
-        gnutls_datum data;
+        gnutls_datum_t data;
         unsigned int i = 0;
         unsigned char *ptr;
 
@@ -103,8 +103,8 @@ int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
 
 #else
 
-int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
-                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format)
+int _prelude_tls_crt_list_import(gnutls_x509_crt_t *certs, unsigned int *cmax,
+                                 const gnutls_datum_t *indata, gnutls_x509_crt_fmt_t format)
 {
         return gnutls_x509_crt_list_import(certs, cmax, indata, format, GNUTLS_X509_CRT_LIST_IMPORT_FAIL_IF_EXCEED);
 }
@@ -112,13 +112,13 @@ int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
 #endif
 
 
-int tls_certificates_load(gnutls_x509_privkey key, const char *certfname, gnutls_certificate_credentials cred)
+int tls_certificates_load(gnutls_x509_privkey_t key, const char *certfname, gnutls_certificate_credentials_t cred)
 {
         int ret;
         size_t size;
-        gnutls_datum certfile;
+        gnutls_datum_t certfile;
         unsigned int cert_max, i;
-        gnutls_x509_crt certs[1024];
+        gnutls_x509_crt_t certs[1024];
 
         ret = _prelude_load_file(certfname, &certfile.data, &size);
         if ( ret < 0 )
@@ -150,14 +150,14 @@ err:
 
 
 
-int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid)
+int tls_certificate_get_peer_analyzerid(gnutls_session_t session, uint64_t *analyzerid)
 {
         int ret;
         char buf[1024];
-        gnutls_x509_crt cert;
+        gnutls_x509_crt_t cert;
         size_t size = sizeof(buf);
         unsigned int cert_list_size;
-        const gnutls_datum *cert_list;
+        const gnutls_datum_t *cert_list;
 
         cert_list = gnutls_certificate_get_peers(session, &cert_list_size);
         if ( ! cert_list || cert_list_size != 1 )
@@ -193,14 +193,14 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
 
 
 
-int tls_certificate_get_permission(gnutls_session session,
+int tls_certificate_get_permission(gnutls_session_t session,
                                    prelude_connection_permission_t *permission)
 {
         int ret, tmp;
         char buf[1024];
-        gnutls_x509_crt cert;
+        gnutls_x509_crt_t cert;
         size_t size = sizeof(buf);
-        const gnutls_datum *data;
+        const gnutls_datum_t *data;
 
         data = gnutls_certificate_get_ours(session);
         if ( ! data )

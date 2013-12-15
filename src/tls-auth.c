@@ -98,7 +98,7 @@ static int read_auth_result(prelude_io_t *fd)
 
 
 
-static int verify_certificate(gnutls_session session)
+static int verify_certificate(gnutls_session_t session)
 {
         time_t now;
         int ret, alert = 0;
@@ -155,7 +155,7 @@ static int verify_certificate(gnutls_session session)
 
 
 
-static int handle_gnutls_error(gnutls_session session, int ret)
+static int handle_gnutls_error(gnutls_session_t session, int ret)
 {
         int last_alert;
 
@@ -180,10 +180,10 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
-static inline gnutls_transport_ptr fd_to_ptr(int fd)
+static inline gnutls_transport_ptr_t fd_to_ptr(int fd)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -193,10 +193,10 @@ static inline gnutls_transport_ptr fd_to_ptr(int fd)
 }
 
 
-static inline int ptr_to_fd(gnutls_transport_ptr ptr)
+static inline int ptr_to_fd(gnutls_transport_ptr_t ptr)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -206,7 +206,7 @@ static inline int ptr_to_fd(gnutls_transport_ptr ptr)
 }
 
 
-static void set_default_priority(gnutls_session session)
+static void set_default_priority(gnutls_session_t session)
 {
 #ifdef HAVE_GNUTLS_STRING_PRIORITY
         gnutls_priority_set(session, tls_priority);
@@ -250,14 +250,14 @@ int tls_auth_init_priority(const char *tlsopts)
 
 
 
-static ssize_t tls_pull(gnutls_transport_ptr fd, void *buf, size_t count)
+static ssize_t tls_pull(gnutls_transport_ptr_t fd, void *buf, size_t count)
 {
         return read(ptr_to_fd(fd), buf, count);
 }
 
 
 
-static ssize_t tls_push(gnutls_transport_ptr fd, const void *buf, size_t count)
+static ssize_t tls_push(gnutls_transport_ptr_t fd, const void *buf, size_t count)
 {
         return write(ptr_to_fd(fd), buf, count);
 }
@@ -268,7 +268,7 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
 {
         void *cred;
         int ret, fd;
-        gnutls_session session;
+        gnutls_session_t session;
 
         if ( ! priority_set ) {
                 ret = tls_auth_init_priority(NULL);
@@ -339,12 +339,12 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
 
 
 
-int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *cred)
+int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials_t *cred)
 {
         int ret;
         size_t size;
-        gnutls_datum data;
-        gnutls_x509_privkey key;
+        gnutls_datum_t data;
+        gnutls_x509_privkey_t key;
         char keyfile[PATH_MAX], certfile[PATH_MAX];
 
         *cred = NULL;

@@ -844,10 +844,10 @@ static int anon_check_passwd(prelude_io_t *fd, char *passwd)
 }
 
 
-static inline gnutls_transport_ptr fd_to_ptr(int fd)
+static inline gnutls_transport_ptr_t fd_to_ptr(int fd)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -857,10 +857,10 @@ static inline gnutls_transport_ptr fd_to_ptr(int fd)
 }
 
 
-static inline int ptr_to_fd(gnutls_transport_ptr ptr)
+static inline int ptr_to_fd(gnutls_transport_ptr_t ptr)
 {
         union {
-                gnutls_transport_ptr ptr;
+                gnutls_transport_ptr_t ptr;
                 int fd;
         } data;
 
@@ -870,40 +870,42 @@ static inline int ptr_to_fd(gnutls_transport_ptr ptr)
 }
 
 
-static ssize_t tls_pull(gnutls_transport_ptr fd, void *buf, size_t count)
+static ssize_t tls_pull(gnutls_transport_ptr_t fd, void *buf, size_t count)
 {
         return read(ptr_to_fd(fd), buf, count);
 }
 
 
 
-static ssize_t tls_push(gnutls_transport_ptr fd, const void *buf, size_t count)
+static ssize_t tls_push(gnutls_transport_ptr_t fd, const void *buf, size_t count)
 {
         return write(ptr_to_fd(fd), buf, count);
 }
 
 
-static gnutls_session new_tls_session(int sock, char *passwd)
+static gnutls_session_t new_tls_session(int sock, char *passwd)
 {
         int ret;
-        gnutls_session session;
-        gnutls_anon_client_credentials anoncred;
-
-        const int kx_priority[] = {
-                GNUTLS_KX_ANON_DH,
+        const char *err;
+        gnutls_session_t session;
+        gnutls_anon_client_credentials_t anoncred;
 #ifdef GNUTLS_SRP_ENABLED
-                GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
+        const char *pstring = "NORMAL:-KX-ALL:+SRP:+SRP-DSS:+SRP-RSA:+ANON-DH";
+#else
+        const char *pstring = "NORMAL:-KX-ALL:+ANON-DH";
 #endif
-                0
-        };
-
+        
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
-        gnutls_kx_set_priority(session, kx_priority);
+        ret = gnutls_priority_set_direct(session, pstring, &err);
+        if (ret < 0) {
+                fprintf(stderr, "TLS priority syntax error at: %s\n", err);
+                return NULL;
+        }
 
 #ifdef GNUTLS_SRP_ENABLED
         {
-                gnutls_srp_client_credentials srpcred;
+                gnutls_srp_client_credentials_t srpcred;
                 gnutls_srp_allocate_client_credentials(&srpcred);
                 gnutls_srp_set_client_credentials(srpcred, "prelude-adduser", passwd);
                 gnutls_credentials_set(session, GNUTLS_CRD_SRP, srpcred);
@@ -940,7 +942,7 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
 {
         int ret, sock;
         prelude_io_t *fd;
-        gnutls_session session;
+        gnutls_session_t session;
         char buf[sizeof("65535")];
         struct addrinfo hints, *ai;
 
@@ -1028,7 +1030,7 @@ static int create_directory(prelude_client_profile_t *profile, const char *dirna
 
 
 static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t *analyzerid,
-                                gnutls_x509_privkey *key, gnutls_x509_crt *crt)
+                                gnutls_x509_privkey_t *key, gnutls_x509_crt_t *crt)
 {
         int ret;
         char buf[256];
@@ -1302,8 +1304,8 @@ static int get_existing_profile_owner(const char *buf)
 
 
 
-static int add_analyzer(const char *name, uint64_t *analyzerid, gnutls_x509_privkey *key,
-                        gnutls_x509_crt *crt, gnutls_x509_crt *ca_crt)
+static int add_analyzer(const char *name, uint64_t *analyzerid, gnutls_x509_privkey_t *key,
+                        gnutls_x509_crt_t *crt, gnutls_x509_crt_t *ca_crt)
 {
         int ret;
         char buf[PATH_MAX];
@@ -1350,8 +1352,8 @@ static int add_cmd(int argc, char **argv)
         int ret, i;
         uint64_t analyzerid;
         prelude_string_t *err;
-        gnutls_x509_privkey key;
-        gnutls_x509_crt ca_crt, crt;
+        gnutls_x509_privkey_t key;
+        gnutls_x509_crt_t ca_crt, crt;
         prelude_client_profile_t *testprofile;
 
         ret = _prelude_client_profile_new(&profile);
@@ -1482,8 +1484,8 @@ static int register_cmd(int argc, char **argv)
         prelude_io_t *fd;
         uint64_t analyzerid;
         prelude_string_t *err;
-        gnutls_x509_privkey key;
-        gnutls_x509_crt crt, ca_crt;
+        gnutls_x509_privkey_t key;
+        gnutls_x509_crt_t crt, ca_crt;
         prelude_connection_permission_t permission_bits;
 
         ret = _prelude_client_profile_new(&profile);
@@ -1596,8 +1598,8 @@ static int registration_server_cmd(int argc, char **argv)
         int ret, i;
         uint64_t analyzerid;
         prelude_string_t *err;
-        gnutls_x509_privkey key;
-        gnutls_x509_crt ca_crt, crt;
+        gnutls_x509_privkey_t key;
+        gnutls_x509_crt_t ca_crt, crt;
 
         ret = _prelude_client_profile_new(&profile);
 
@@ -1680,8 +1682,8 @@ static int revoke_cmd(int argc, char **argv)
         char *eptr = NULL;
         uint64_t analyzerid;
         prelude_string_t *err;
-        gnutls_x509_privkey key;
-        gnutls_x509_crt ca_crt, crt;
+        gnutls_x509_privkey_t key;
+        gnutls_x509_crt_t ca_crt, crt;
 
         i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
         if ( ret < 0 ) {
@@ -2051,11 +2053,11 @@ static int list_cmd(int argc, char **argv)
         struct group *gr;
         struct passwd *pw;
 #endif
-        gnutls_datum data;
+        gnutls_datum_t data;
         prelude_string_t *str;
         unsigned int cert_max, i;
         int ret,  permission;
-        gnutls_x509_crt certs[1024];
+        gnutls_x509_crt_t certs[1024];
         char dirname[PATH_MAX];
         char buf[1024], analyzerid[128], uidbuf[128] = { 0 }, gidbuf[128] = { 0 };
 

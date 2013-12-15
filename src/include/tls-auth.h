@@ -31,7 +31,7 @@
 int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
                         uint64_t *peer_analyzerid, prelude_connection_permission_t *permission);
 
-int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *cred);
+int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials_t *cred);
 
 int tls_auth_init_priority(const char *tlsopts);
 
