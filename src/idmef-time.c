@@ -332,7 +332,7 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
 {
         time_t t;
         struct tm utc;
-        uint32_t hour_off, min_off, sec_off;
+        uint32_t hour_off, min_off;
 
         prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -344,7 +344,6 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
 
         hour_off = time->gmt_offset / 3600;
         min_off = time->gmt_offset % 3600 / 60;
-        sec_off = time->gmt_offset % 60;
 
         return prelude_string_sprintf(out, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u%+.2d:%.2d",
                                       utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,

@@ -557,7 +557,7 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
         unsigned int depth = 0;
         char *endptr, *ptr, *ptr2;
         idmef_class_child_id_t child = 0;
-        idmef_class_id_t class, prev_class = 0;
+        idmef_class_id_t class;
         idmef_value_type_id_t vtype;
 
         len = strlen(buffer) + 1;
@@ -605,8 +605,6 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 
                         path->elem[depth].index = index;
                 }
-
-                prev_class = class;
 
                 /* The last object may not be a structure */
                 vtype = path->elem[depth].value_type = idmef_class_get_child_value_type(class, child);

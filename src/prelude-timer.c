@@ -258,7 +258,6 @@ inline static prelude_timer_t *get_last_timer(void)
  */
 static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 {
-        time_t expire;
         prelude_timer_t *last, *first;
         time_t last_remaining, first_remaining;
 
@@ -292,7 +291,6 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
          *
          * compute expiration time for current, last, and first timer.
          */
-        expire = timer->expire + timer->start_time;
         last_remaining = time_remaining(last, timer->start_time);
         first_remaining = time_remaining(first, timer->start_time);
 
