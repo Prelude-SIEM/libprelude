@@ -457,13 +457,13 @@ dnl **************************************************
 
 AM_PATH_RUBY(,with_ruby=yes, with_ruby=no)
 if test x$with_ruby != xno; then
-    RUBY_ARCHDIR=`$RUBY -e 'require "rbconfig.rb"; puts Config::expand("\$(archdir)")'`
-    RUBY_LIBRUBYARG=`$RUBY -e 'require "rbconfig.rb"; puts Config::expand("\$(LIBRUBYARG)")'`
+    RUBY_ARCHDIR=`$RUBY -e 'require "rbconfig.rb"; puts RbConfig::expand("\$(archdir)")'`
+    RUBY_LIBRUBYARG=`$RUBY -e 'require "rbconfig.rb"; puts RbConfig::expand("\$(LIBRUBYARG)")'`
 
     RUBY_LIBS="-L$RUBY_ARCHDIR $RUBY_LIBRUBYARG"
     AC_SUBST(RUBY_LIBS)
 
-    RUBY_CCFLAGS=`$RUBY -rrbconfig -e "print Config::CONFIG[['CFLAGS']]"`
+    RUBY_CCFLAGS=`$RUBY -rrbconfig -e "print RbConfig::CONFIG[['CFLAGS']]"`
     AC_SUBST(RUBY_CCFLAGS)
 
     old_CPPFLAGS="$CPPFLAGS"

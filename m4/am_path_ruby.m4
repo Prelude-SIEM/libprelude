@@ -86,7 +86,7 @@ AC_DEFUN([AM_PATH_RUBY],
   dnl rubydir -- where to install ruby scripts.
   AC_CACHE_CHECK([for $am_display_RUBY script directory],
     [am_cv_ruby_rubydir],
-    [am_cv_ruby_rubydir=`$RUBY -rrbconfig -e "drive = File::PATH_SEPARATOR == ';' ? /\A\w:/ : /\A/; prefix = Regexp.new('\\A' + Regexp.quote(Config::CONFIG[['prefix']])); \\$prefix = Config::CONFIG[['prefix']].sub(drive, ''); \\$archdir = Config::CONFIG[['archdir']].sub(prefix, '\\$(prefix)').sub(drive, ''); print \\$archdir;"`])
+    [am_cv_ruby_rubydir=`$RUBY -rrbconfig -e "drive = File::PATH_SEPARATOR == ';' ? /\A\w:/ : /\A/; prefix = Regexp.new('\\A' + Regexp.quote(RbConfig::CONFIG[['prefix']])); \\$prefix = RbConfig::CONFIG[['prefix']].sub(drive, ''); \\$archdir = RbConfig::CONFIG[['archdir']].sub(prefix, '\\$(prefix)').sub(drive, ''); print \\$archdir;"`])
   AC_SUBST([rubydir], [$am_cv_ruby_rubydir])
 
   dnl pkgrubydir -- $PACKAGE directory under rubydir.
@@ -96,11 +96,11 @@ AC_DEFUN([AM_PATH_RUBY],
   dnl   (shared libraries)
   AC_CACHE_CHECK([for $am_display_RUBY extension module directory],
     [am_cv_ruby_rbexecdir],
-    [am_cv_ruby_rbexecdir=`$RUBY -rrbconfig -e "drive = File::PATH_SEPARATOR == ';' ? /\A\w:/ : /\A/; prefix = Regexp.new('\\A' + Regexp.quote(Config::CONFIG[['prefix']])); \\$prefix = Config::CONFIG[['prefix']].sub(drive, ''); \\$sitearchdir = Config::CONFIG[['sitearchdir']].sub(prefix, '\\$(prefix)').sub(drive, ''); print \\$sitearchdir;" 2>/dev/null || echo "${RUBY_EXEC_PREFIX}/local/lib/site_ruby/${RUBY_VERSION}/${RUBY_PLATFORM}"`])
+    [am_cv_ruby_rbexecdir=`$RUBY -rrbconfig -e "drive = File::PATH_SEPARATOR == ';' ? /\A\w:/ : /\A/; prefix = Regexp.new('\\A' + Regexp.quote(RbConfig::CONFIG[['prefix']])); \\$prefix = RbConfig::CONFIG[['prefix']].sub(drive, ''); \\$sitearchdir = RbConfig::CONFIG[['sitearchdir']].sub(prefix, '\\$(prefix)').sub(drive, ''); print \\$sitearchdir;" 2>/dev/null || echo "${RUBY_EXEC_PREFIX}/local/lib/site_ruby/${RUBY_VERSION}/${RUBY_PLATFORM}"`])
   AC_SUBST([rbexecdir], [$am_cv_ruby_rbexecdir])
 
-  RUBY_INCLUDES=`$RUBY -r rbconfig -e 'if Config::CONFIG[["archdir"]] then print " -I" + Config::CONFIG[["archdir"]] end
-                                       if Config::CONFIG[["rubyhdrdir"]] then print " -I" + Config::CONFIG[["rubyhdrdir"]] end'`
+  RUBY_INCLUDES=`$RUBY -r rbconfig -e 'if RbConfig::CONFIG[["archdir"]] then print " -I" + RbConfig::CONFIG[["archdir"]] end
+                                       if RbConfig::CONFIG[["rubyhdrdir"]] then print " -I" + RbConfig::CONFIG[["rubyhdrdir"]] end'`
   AC_SUBST([RUBY_INCLUDES])
 
   dnl pkgrbexecdir -- $(rbexecdir)/$(PACKAGE)
