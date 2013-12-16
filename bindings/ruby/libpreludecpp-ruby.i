@@ -44,7 +44,32 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 
 %{
 extern "C" {
-#include "rubyio.h"
+
+#include <ruby.h>
+
+#ifdef HAVE_RUBY_IO_H /* Ruby 1.9 */
+# include "ruby/io.h"
+# define GetReadFile(x) rb_io_stdio_file(x)
+# define GetWriteFile(x) rb_io_stdio_file(x)
+#else
+# include "rubyio.h" /* Ruby 1.8 */
+#endif
+
+#ifndef HAVE_RB_IO_T
+# define rb_io_t OpenFile
+#endif
+
+#ifndef StringValuePtr
+# define StringValuePtr(s) STR2CSTR(s)
+#endif
+
+#ifndef RARRAY_LEN
+# define RARRAY_LEN(s) RARRAY(s)->len
+#endif
+
+#ifndef RARRAY_PTR
+# define RARRAY_PTR(s) RARRAY(s)->ptr
+#endif
 }
 %};
 
@@ -65,15 +90,13 @@ static void _cb_ruby_log(int level, const char *str)
 
 static int _cb_ruby_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
-        FILE *f;
         ssize_t ret;
-        OpenFile *fptr;
+        rb_io_t *fptr;
         VALUE *io = (VALUE *) prelude_msgbuf_get_data(fd);
 
         GetOpenFile(*io, fptr);
-        f = fptr->f;
 
-        ret = fwrite((const char *) prelude_msg_get_message_data(msg), 1, prelude_msg_get_len(msg), f);
+        ret = fwrite((const char *) prelude_msg_get_message_data(msg), 1, prelude_msg_get_len(msg), GetWriteFile(fptr));
         if ( ret != prelude_msg_get_len(msg) )
                 return prelude_error_from_errno(errno);
 
@@ -85,15 +108,13 @@ static int _cb_ruby_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 
 static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 {
-        FILE *f;
         ssize_t ret;
-        OpenFile *fptr;
+        rb_io_t *fptr;
         VALUE *io = (VALUE *) prelude_io_get_fdptr(fd);
 
         GetOpenFile(*io, fptr);
-        f = fptr->f;
 
-        ret = fread(buf, 1, size, f);
+        ret = fread(buf, 1, size, GetReadFile(fptr));
         if ( ret < 0 )
                 ret = prelude_error_from_errno(errno);
 
@@ -140,8 +161,8 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 %fragment("IDMEFValueList_to_SWIG", "header") {
 VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 {
+        int ret;
         VALUE ary;
-        int ret, j = 0;
         std::vector<Prelude::IDMEFValue> result = value;
         std::vector<Prelude::IDMEFValue>::const_iterator i;
 
@@ -150,14 +171,13 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 VALUE val;
 
-                ret = IDMEFValue_to_SWIG(*i, &val);
+                ret = IDMEFValue_to_SWIG(*i, &val); 
                 if ( ret < 0 )
                         return Qnil;
-
-                RARRAY(ary)->ptr[j++] = val;
+                
+                if ( ! rb_ary_push(ary, val) )
+                        return Qnil;
         }
-
-        RARRAY(ary)->len = result.size();
 
         return ary;
 }
@@ -188,7 +208,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         __log_mutex = rb_mutex_new();
         
         rbargv = rb_const_get(rb_cObject, rb_intern("ARGV"));
-        argc = RARRAY(rbargv)->len + 1;
+        argc = RARRAY_LEN(rbargv) + 1;
 
         if ( argc + 1 < 0 )
                 throw PreludeError("Invalid argc length");
@@ -197,14 +217,14 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         if ( ! argv )
                 throw PreludeError("Allocation failure");
 
-        argv[0] = STR2CSTR(rb_gv_get("$0"));
+		VALUE tmp = rb_gv_get("$0");
+        argv[0] = StringValuePtr(tmp);
 
-        ptr = RARRAY(rbargv)->ptr;
-        for ( ptr = RARRAY(rbargv)->ptr, _i = 1; _i < argc; _i++, ptr++ )
-                argv[_i] =  STR2CSTR(*ptr);
+        for ( ptr = RARRAY_PTR(rbargv), _i = 1; _i < argc; _i++, ptr++ )
+                argv[_i] = StringValuePtr(*ptr);
 
         argv[_i] = NULL;
-
+        
         ret = prelude_init(&argc, argv);
         if ( ret < 0 ) {
                 free(argv);
