@@ -111,12 +111,12 @@ if test $want_libs = yes; then
       fi
 
       if test $thread_set = yes; then
-              thrlibs=@LTLIBMULTITHREAD@
+              thrlibs="@LTLIBMULTITHREAD@"
       else
-              thrlibs=@LTLIBTHREAD@
+              thrlibs="@LTLIBTHREAD@"
       fi
 
-      echo $cpplibs $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ $thrlibs @GETADDRINFO_LIB@ @GETHOSTNAME_LIB@ @HOSTENT_LIB@ @INET_NTOP_LIB@ @INET_PTON_LIB@ @LIBSOCKET@ @LTLIBINTL@ @SERVENT_LIB@
+      echo $cpplibs $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBLTDL_DECL@ @LIBADD_DL@ $thrlibs @GETADDRINFO_LIB@ @GETHOSTNAME_LIB@ @HOSTENT_LIB@ @INET_NTOP_LIB@ @INET_PTON_LIB@ @LIBSOCKET@ @LTLIBINTL@ @SERVENT_LIB@
 fi
 
 exit 0

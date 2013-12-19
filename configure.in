@@ -51,6 +51,11 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT([dlopen win32-dll disable-static])
 LTDL_INIT([recursive])
 
+if test x$LIBLTDL != x"\${top_build_prefix}libltdl/libltdlc.la"; then
+	LIBLTDL_DECL=$LIBLTDL
+fi
+
+AC_SUBST(LIBLTDL_DECL)
 
 dnl **********************************************************
 dnl * When cross compiling, we need to compile and run a program on the build machine.
