@@ -34,7 +34,9 @@
 
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
-#include <gnutls/abstract.h>
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
+# include <gnutls/abstract.h>
+#endif
 #include <gcrypt.h>
 
 #include "prelude-client.h"
@@ -51,6 +53,31 @@ extern int server_confirm;
 extern int generated_key_size;
 extern int authority_certificate_lifetime;
 extern int generated_certificate_lifetime;
+
+
+
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
+static gnutls_privkey_t get_privkey_from_x509(gnutls_x509_privkey_t x509key)
+{
+        int ret;
+        gnutls_privkey_t key;
+
+        ret = gnutls_privkey_init(&key);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error creating abstract key: %s.\n", gnutls_strerror(ret));
+                return NULL;
+        }
+
+        ret = gnutls_privkey_import_x509(key, x509key, GNUTLS_PRIVKEY_IMPORT_AUTO_RELEASE);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error importing x509 abstract key: %s.\n", gnutls_strerror(ret));
+                gnutls_privkey_deinit(key);
+                return NULL;
+        }
+
+        return key;
+}
+#endif
 
 
 static int cmp_certificate_dn(gnutls_x509_crt_t crt, uint64_t wanted_dn, uint64_t wanted_issuer_dn)
@@ -480,8 +507,10 @@ static gnutls_x509_crq_t generate_certificate_request(prelude_client_profile_t *
                                                       gnutls_x509_privkey_t x509key, unsigned char *buf, size_t *size)
 {
         int ret;
-        gnutls_privkey_t key;
         gnutls_x509_crq_t crq;
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
+        gnutls_privkey_t key;
+#endif
 
         ret = gnutls_x509_crq_init(&crq);
         if ( ret < 0 ) {
@@ -514,21 +543,14 @@ static gnutls_x509_crq_t generate_certificate_request(prelude_client_profile_t *
                 return NULL;
         }
 
-        ret = gnutls_privkey_init(&key);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error creating abstract key: %s.\n", gnutls_strerror(ret));
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
+        key = get_privkey_from_x509(x509key);
+        if ( ! key )
                 return NULL;
-        }
-        
-        ret = gnutls_privkey_import_x509(key, x509key, GNUTLS_PRIVKEY_IMPORT_AUTO_RELEASE);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error importing x509 abstract key: %s.\n", gnutls_strerror(ret));
-                gnutls_privkey_deinit(key);
-                return NULL;
-        }
-       
-	printf("HERE2\n"); 
         ret = gnutls_x509_crq_privkey_sign(crq, key, GNUTLS_DIG_SHA256, 0);
+#else
+        ret = gnutls_x509_crq_sign(crq, x509key);
+#endif
         if ( ret < 0 ) {
                 fprintf(stderr, "error signing certificate request: %s.\n", gnutls_strerror(ret));
                 gnutls_x509_crq_deinit(crq);
@@ -947,7 +969,9 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey_t x509
         int ret, i;
         size_t len, dsize;
         gnutls_datum_t data;
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
         gnutls_privkey_t key;
+#endif
         gnutls_x509_crl_t crl;
         uint64_t analyzerid;
         char crlfile[PATH_MAX], buf[65535];
@@ -990,21 +1014,14 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey_t x509
         gnutls_x509_crl_set_next_update(crl, time(NULL));
         gnutls_x509_crl_set_this_update(crl, time(NULL));
 
-        ret = gnutls_privkey_init(&key);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error creating abstract key: %s.\n", gnutls_strerror(ret));
+#ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
+        key = get_privkey_from_x509(x509key);
+        if ( ! key )
                 return -1;
-        }
-       
-	printf("HERE"); 
-        ret = gnutls_privkey_import_x509(key, x509key, GNUTLS_PRIVKEY_IMPORT_AUTO_RELEASE);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error importing x509 abstract key: %s.\n", gnutls_strerror(ret));
-                gnutls_privkey_deinit(key);
-                return -1;
-        }
-
         ret = gnutls_x509_crl_privkey_sign(crl, crt, key, GNUTLS_DIG_SHA256, 0);
+#else
+        ret = gnutls_x509_crl_sign(crl, crt, x509key);
+#endif
         if ( ret < 0 ) {
                 fprintf(stderr, "error signing CRL: %s.\n", gnutls_strerror(ret));
                 return -1;
