@@ -46,6 +46,13 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 extern "C" {
 
 #include <ruby.h>
+/*
+ * cannot put libmissing into the include path, as it will trigger
+ * a compilation failure here.
+ */
+#include "config.h"
+#include "../../libmissing/glthread/thread.h"
+
 
 #ifdef HAVE_RUBY_IO_H /* Ruby 1.9 */
 # include "ruby/io.h"
@@ -75,16 +82,17 @@ extern "C" {
 
 
 %fragment("TransitionFunc", "header") {
-static VALUE __log_mutex;
+static gl_thread_t __initial_thread;
 static VALUE __prelude_log_func = Qnil;
 
 static void _cb_ruby_log(int level, const char *str)
 {
         static int cid = rb_intern("call");
 
-        rb_mutex_lock(__log_mutex);
+        if ( (gl_thread_t) gl_thread_self() != __initial_thread )
+                return;
+
         rb_funcall(__prelude_log_func, cid, 2, SWIG_From_int(level), SWIG_FromCharPtr(str));
-        rb_mutex_unlock(__log_mutex);
 }
 
 
@@ -171,10 +179,10 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 VALUE val;
 
-                ret = IDMEFValue_to_SWIG(*i, &val); 
+                ret = IDMEFValue_to_SWIG(*i, &val);
                 if ( ret < 0 )
                         return Qnil;
-                
+
                 if ( ! rb_ary_push(ary, val) )
                         return Qnil;
         }
@@ -203,10 +211,10 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         int ret;
         char **argv;
         int _i, argc;
-        VALUE rbargv, *ptr;
+        VALUE rbargv, *ptr, tmp;
 
-        __log_mutex = rb_mutex_new();
-        
+        __initial_thread = (gl_thread_t) gl_thread_self();
+
         rbargv = rb_const_get(rb_cObject, rb_intern("ARGV"));
         argc = RARRAY_LEN(rbargv) + 1;
 
@@ -217,14 +225,14 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         if ( ! argv )
                 throw PreludeError("Allocation failure");
 
-		VALUE tmp = rb_gv_get("$0");
+        tmp = rb_gv_get("$0");
         argv[0] = StringValuePtr(tmp);
 
         for ( ptr = RARRAY_PTR(rbargv), _i = 1; _i < argc; _i++, ptr++ )
                 argv[_i] = StringValuePtr(*ptr);
 
         argv[_i] = NULL;
-        
+
         ret = prelude_init(&argc, argv);
         if ( ret < 0 ) {
                 free(argv);
