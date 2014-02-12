@@ -889,12 +889,19 @@ static gnutls_session_t new_tls_session(int sock, char *passwd)
         const char *err;
         gnutls_session_t session;
         gnutls_anon_client_credentials_t anoncred;
-#ifdef GNUTLS_SRP_ENABLED
-        const char *pstring = "NORMAL:-KX-ALL:+SRP:+SRP-DSS:+SRP-RSA:+ANON-DH";
+
+#if defined LIBGNUTLS_VERSION_MAJOR && LIBGNUTLS_VERSION_MAJOR >= 3
+# define TLS_DH_STR "+ANON-ECDH:+ANON-DH"
 #else
-        const char *pstring = "NORMAL:-KX-ALL:+ANON-DH";
+# define TLS_DH_STR "+ANON-DH"
 #endif
-        
+
+#ifdef GNUTLS_SRP_ENABLED
+        const char *pstring = "NORMAL:+SRP:+SRP-DSS:+SRP-RSA" TLS_DH_STR;
+#else
+        const char *pstring = "NORMAL:" TLS_DH_STR;
+#endif
+
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
         ret = gnutls_priority_set_direct(session, pstring, &err);
