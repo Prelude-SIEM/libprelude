@@ -46,7 +46,7 @@ int main(void)
         free(res);
 
         assert(idmef_message_set_number(idmef, "alert.assessment.confidence.confidence", 10.2) == 0);
-        assert(idmef_message_get_number(idmef, "alert.assessment.confidence.confidence", &resd) == 0);
+        assert(idmef_message_get_number(idmef, "alert.assessment.confidence.confidence", &resd) == 1);
         assert(reldif(resd, 10.2) <= FLOAT_TOLERANCE);
 
         assert(idmef_message_set_string(idmef, "alert.assessment.impact.severity", "Random value") < 0);
