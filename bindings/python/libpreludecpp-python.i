@@ -176,6 +176,12 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 };
 
 
+%feature("shadow") Clone() %{
+        def __deepcopy__(self, memo):
+                return $action(self.this)
+%}
+
+
 %init {
         int argc, ret, i;
         char **argv = NULL;
