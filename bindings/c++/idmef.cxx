@@ -144,12 +144,12 @@ IDMEFValue IDMEF::Get(const char *path)
 }
 
 
-IDMEF IDMEF::Clone(const IDMEF &idmef)
+IDMEF IDMEF::Clone()
 {
         int ret;
         idmef_message_t *clone;
 
-        ret = idmef_message_clone(idmef._message, &clone);
+        ret = idmef_message_clone(_message, &clone);
         if ( ret < 0 )
                 throw PreludeError(ret);
 

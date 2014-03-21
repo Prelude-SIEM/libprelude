@@ -53,7 +53,7 @@ namespace Prelude {
                 void _genericRead(ssize_t (read_cb)(prelude_io_t *fd, void *buf, size_t size), void *fd_data);
 #endif
 
-                IDMEF Clone(const IDMEF &idmef);
+                IDMEF Clone();
                 const std::string ToString() const;
 
                 operator const std::string() const;
