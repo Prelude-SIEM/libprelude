@@ -26,12 +26,6 @@
 #include "glthread/thread.h"
 %}
 
-# Exception map
-%typemap(throws) Prelude::PreludeError %{
-        SWIG_exception(SWIG_RuntimeError, $1.what());
-%};
-
-
 # Conversion not allowed
 %ignore *::operator =;
 %ignore *::operator int() const;
@@ -150,15 +144,29 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
         $1 = _cb_perl_log;
 };
 
+
+%exception Read(void *nocast_p) {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                        result = 0;
+                else
+                        SWIG_exception_fail(SWIG_RuntimeError, e.what());
+        }
+}
+
+
 %extend Prelude::IDMEF {
         void Write(void *nocast_p) {
                 PerlIO *io = IoIFP(sv_2io((SV *) nocast_p));
                 self->_genericWrite(_cb_perl_write, io);
         }
 
-        void Read(void *nocast_p) {
+        int Read(void *nocast_p) {
                 PerlIO *io = IoIFP(sv_2io((SV *) nocast_p));
                 self->_genericRead(_cb_perl_read, io);
+                return 1;
         }
 }
 

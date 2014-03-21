@@ -145,13 +145,39 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 };
 
 
+%exception {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                        rb_raise(rb_eEOFError, e.what());
+                else
+                        SWIG_exception(SWIG_RuntimeError, e.what());
+
+                SWIG_fail;
+        }
+}
+
+%exception Read(void *nocast_p) {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF ) {
+                        result = 0;
+                } else
+                        SWIG_exception_fail(SWIG_RuntimeError, e.what());
+        }
+}
+
+
 %extend Prelude::IDMEF {
         void Write(void *nocast_p) {
                 self->_genericWrite(_cb_ruby_write, nocast_p);
         }
 
-        void Read(void *nocast_p) {
+        int Read(void *nocast_p) {
                 self->_genericRead(_cb_ruby_read, nocast_p);
+                return 1;
         }
 
         Prelude::IDMEF &operator >> (void *nocast_p) {

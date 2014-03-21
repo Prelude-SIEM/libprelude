@@ -114,13 +114,40 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
+%exception {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                        PyErr_SetString(PyExc_EOFError, e.what());
+                else
+                        SWIG_exception(SWIG_RuntimeError, e.what());
+
+                SWIG_fail;
+        }
+}
+
+
+%exception Read(void *nocast_p) {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                        result = 0;
+                else
+                        SWIG_exception_fail(SWIG_RuntimeError, e.what());
+        }
+}
+
+
 %extend Prelude::IDMEF {
         void Write(void *nocast_file_p) {
                 self->_genericWrite(_cb_python_write, nocast_file_p);
         }
 
-        void Read(void *nocast_file_p) {
+        int Read(void *nocast_file_p) {
                 self->_genericRead(_cb_python_read, nocast_file_p);
+                return 1;
         }
 
         Prelude::IDMEF &operator >> (void *nocast_file_p) {

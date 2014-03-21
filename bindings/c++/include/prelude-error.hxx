@@ -44,9 +44,12 @@ namespace Prelude {
                 PreludeError(int error) throw();
                 PreludeError(const std::string message) throw();
 
+                int GetCode(void);
+
                 virtual const char *what() const throw();
                 operator const char *();
                 operator const std::string() const;
+                operator int () const;
         };
 };
 

@@ -26,11 +26,6 @@
 #include "glthread/thread.h"
 %}
 
-# Exception map
-%typemap(throws) Prelude::PreludeError %{
-        SWIG_exception(SWIG_RuntimeError, $1.what());
-%};
-
 # Lua overloading fixes
 %ignore IDMEFCriteria(std::string const &);
 %ignore IDMEFValue(int8_t);
@@ -200,14 +195,38 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
 };
 
 
+%exception {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                SWIG_exception(SWIG_RuntimeError, e.what());
+                SWIG_fail;
+        }
+}
+
+%exception Read(void *nocast_p) {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                        return 0;
+                else {
+                        SWIG_exception(SWIG_RuntimeError, e.what());
+                        SWIG_fail;
+                }
+	}
+}
+
+
 %extend Prelude::IDMEF {
         void Write(void *nocast_p) {
                 self->_genericWrite(_cb_lua_write, nocast_p);
         }
 
 
-        void Read(void *nocast_p) {
+        int Read(void *nocast_p) {
                 self->_genericRead(_cb_lua_read, nocast_p);
+                return 1;
         }
 }
 

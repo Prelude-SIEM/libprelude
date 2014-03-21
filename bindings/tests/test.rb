@@ -33,12 +33,26 @@ idmef >> fd
 #idmef.Write(fd)
 fd.close()
 
+print "\n*** IDMEF->Read() ***\n"
 fd2 = File.new("foo.bin", "r")
 idmef2 = PreludeEasy::IDMEF.new()
-idmef2 << fd2;
-#idmef2.Read(fd2)
+while true do
+	begin
+		idmef2 << fd2
+		print idmef2
+	rescue EOFError
+                print "Got EOF\n"
+		break
+	end
+end
 fd2.close()
-print idmef2
+
+fd2 = File.new("foo.bin", "r")
+idmef2 = PreludeEasy::IDMEF.new()
+while idmef2.Read(fd2) > 0 do
+	print idmef2
+end
+fd2.close()
 
 print "\n*** Client ***\n"
 c = PreludeEasy::ClientEasy.new("prelude-lml")

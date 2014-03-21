@@ -65,6 +65,16 @@ typedef unsigned long long uint64_t;
 typedef signed int prelude_error_t;
 
 
+%exception {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                SWIG_exception(SWIG_RuntimeError, e.what());
+                SWIG_fail;
+        }
+}
+
+
 #ifdef SWIGPERL
 %include perl/libpreludecpp-perl.i
 #endif
@@ -81,7 +91,6 @@ typedef signed int prelude_error_t;
 %include libpreludecpp-lua.i
 #endif
 
-%catches(Prelude::PreludeError);
 
 %ignore operator <<(std::ostream &os, const Prelude::IDMEF &idmef);
 %ignore operator >>(std::istream &is, const Prelude::IDMEF &idmef);

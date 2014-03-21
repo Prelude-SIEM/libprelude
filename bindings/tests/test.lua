@@ -36,11 +36,13 @@ fd = io.open("foo.bin","w")
 idmef:Write(fd)
 fd:close()
 
+print("\n*** IDMEF->Read() ***")
 fd2 = io.open("foo.bin","r")
 idmef2 = PreludeEasy.IDMEF()
-idmef2:Read(fd2)
+while idmef2:Read(fd2) do
+	print(idmef2)
+end
 fd2:close()
-print(idmef2)
 
 
 print("\n*** Client ***")

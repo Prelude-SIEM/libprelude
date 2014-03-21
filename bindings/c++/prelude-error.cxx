@@ -51,6 +51,12 @@ const char *PreludeError::what() const throw()
 }
 
 
+int PreludeError::GetCode()
+{
+        return prelude_error_get_code(_error);
+}
+
+
 PreludeError::operator const char *()
 {
         return _message.c_str();
@@ -60,4 +66,10 @@ PreludeError::operator const char *()
 PreludeError::operator const std::string() const
 {
         return _message;
+}
+
+
+PreludeError::operator int () const
+{
+	return prelude_error_get_code(_error);
 }

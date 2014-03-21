@@ -10,8 +10,6 @@ sub log_func {
 PreludeEasy::PreludeLog::SetCallback(\&log_func);
 
 $idmef = new PreludeEasy::IDMEF;
-$client = new PreludeEasy::ClientEasy("abc");
-$client->Start();
 
 print "*** IDMEF->Set() ***\n";
 $idmef->Set("alert.classification.text", "My Message");
@@ -41,11 +39,14 @@ open FILE, ">foo.bin" or die "arg";
 $idmef->Write(FILE);
 close FILE;
 
+print "\n*** IDMEF->Read() ***\n";
 open FILE2, "<foo.bin" or die "arg2";
 my $idmef2 = new PreludeEasy::IDMEF;
-$idmef2->Read(FILE2);
+while ( $idmef2->Read(FILE2) ) {
+	print $idmef2->ToString();
+}
+
 close FILE2;
-print $idmef2->ToString();
 
 print "\n*** Client ***";
 $client = new PreludeEasy::ClientEasy("prelude-lml");

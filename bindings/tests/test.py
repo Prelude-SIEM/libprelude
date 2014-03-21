@@ -35,12 +35,26 @@ idmef >> file
 #idmef.Write(file);
 file.close()
 
+
+print "\n*** IDMEF->Read() ***"
 file2 = open("foo.bin","r")
 idmef2 = PreludeEasy.IDMEF()
-idmef2 << file2
-#idmef2.Read(file2);
+while True:
+        try:
+		idmef2 << file2
+                print idmef2
+	except EOFError:
+		print "Got EOF"
+		break
 file2.close()
-print idmef2
+
+file2 = open("foo.bin","r")
+idmef2 = PreludeEasy.IDMEF()
+while idmef2.Read(file2):
+      print idmef2
+file2.close()
+
+
 
 
 print "\n*** Client ***"
