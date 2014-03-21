@@ -30,12 +30,12 @@ my %attributs = (NAME => 'PreludeEasy',
 		 LDDLFLAGS => "-L@top_builddir@/src/.libs $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
-    foreach my $filename ( qw/easy-idmef_wrap_perl.cxx PreludeEasy.pm/ ) {
+    foreach my $filename ( qw/PreludeEasy.cxx PreludeEasy.pm/ ) {
 	my $src = "@top_srcdir@/bindings/perl/$filename";
 	my $dst = "@top_builddir@/bindings/perl/$filename";
 	copy($src, $dst) if ( ! -e $dst );
     }
-    $attributs{"clean"} = {FILES => join(" ", map { "@top_builddir@/bindings/perl/$_" } qw/easy-idmef_wrap_perl.cxx PreludeEasy.pm Makefile/)};
+    $attributs{"clean"} = {FILES => join(" ", map { "@top_builddir@/bindings/perl/$_" } qw/PreludeEasy.cxx PreludeEasy.pm Makefile/)};
 }
 
 if ( -w $Config{"sitelib"} ) {
