@@ -90,7 +90,7 @@ void prelude_timer_destroy(prelude_timer_t *timer);
  * Wake up time that need it.
  * This function should be called every second to work properly.
  */
-void prelude_timer_wake_up(void);
+int prelude_timer_wake_up(void);
 
 /*
  *

@@ -42,6 +42,8 @@
 
 
 static PRELUDE_LIST(timer_list);
+static int next_wakeup = 0;
+static time_t last_wakeup = 0;
 static gl_lock_t mutex = gl_lock_initializer;
 
 
@@ -100,7 +102,7 @@ static int wake_up_if_needed(prelude_timer_t *timer, time_t now)
                 return 0;
         }
 
-        return -1;
+        return (int) time_remaining(timer, now);
 }
 
 
@@ -137,13 +139,15 @@ static void walk_and_wake_up_timer(time_t now)
         while ( (timer = get_next_timer()) ) {
 
                 ret = wake_up_if_needed(timer, now);
-                if ( ret < 0 )
+                if ( ret != 0 ) {
+                        next_wakeup = ret;
                         break;
+                }
 
                 woke++;
         }
 
-        prelude_log_debug(5, "woke up %d timer\n", woke);
+        prelude_log_debug(5, "woke up %d timer, next wakeup in %d seconds\n", woke, next_wakeup);
 }
 
 
@@ -403,18 +407,24 @@ void prelude_timer_destroy(prelude_timer_t *timer)
 
 
 
-
 /**
  * prelude_timer_wake_up:
  *
  * Wake up timer that need it.
  * This function should be called every second to work properly.
+ *
+ * Returns: Number of second in which prelude_timer_wake_up() should be called again.
  */
-void prelude_timer_wake_up(void)
+int prelude_timer_wake_up(void)
 {
         time_t now = time(NULL);
 
-        walk_and_wake_up_timer(now);
+        if ( now - last_wakeup >= next_wakeup ) {
+                walk_and_wake_up_timer(now);
+                last_wakeup = now;
+        }
+
+        return next_wakeup;
 }
 
 
