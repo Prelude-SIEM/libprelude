@@ -427,7 +427,7 @@ int idmef_additional_data_data_to_string(idmef_additional_data_t *ad, prelude_st
 
         case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
                 i = idmef_data_get_uint64(data);
-                ret = prelude_string_sprintf(out, "0x%08lux.0x%08lux", (unsigned long) (i >> 32), (unsigned long) i);
+                ret = prelude_string_sprintf(out, "0x%" PRELUDE_PRIx32 ".0x%" PRELUDE_PRIx32, (uint32_t) (i >> 32), (uint32_t) i);
                 break;
 
         default:

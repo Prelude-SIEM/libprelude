@@ -238,7 +238,29 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
                 if ( field ) {
                         print_indent(fd);
                         prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-                        print_data(field, fd);
+
+                        if ( idmef_additional_data_get_type(ptr) != IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP )
+                                print_data(field, fd);
+
+                        else {
+                                int ret;
+                                uint64_t i;
+                                prelude_string_t *out;
+
+                                ret = prelude_string_new(&out);
+                                if ( ret < 0 )
+                                        return;
+
+                                i = idmef_data_get_uint64(field);
+                                ret = prelude_string_sprintf(out, "0x%" PRELUDE_PRIx32 ".0x%" PRELUDE_PRIx32 "", (uint32_t) (i >> 32), (uint32_t) i);
+                                if ( ret < 0 ) {
+                                        prelude_string_destroy(out);
+                                        return;
+                                }
+
+                                prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+                                prelude_string_destroy(out);
+                        }
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
                 }
         }

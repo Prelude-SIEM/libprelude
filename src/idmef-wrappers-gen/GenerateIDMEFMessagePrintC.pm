@@ -267,8 +267,38 @@ sub        struct_field_normal
                 if ( field ) \{
                         print_indent(fd);
                         prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-                        print_$field->{value_type}(${refer}field, fd);
-                        prelude_io_write(fd, \"\\n\", sizeof(\"\\n\") - 1);
+");
+
+            if ( $struct->{short_typename} eq "additional_data" and $field->{typename} eq "idmef_data_t" ) {
+                $self->output("
+                        if ( idmef_additional_data_get_type(ptr) != IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP )
+                                print_$field->{value_type}(${refer}field, fd);\n
+                        else {
+                                int ret;
+                                uint64_t i;
+                                prelude_string_t *out;
+
+                                ret = prelude_string_new(&out);
+                                if ( ret < 0 )
+                                        return;
+
+                                i = idmef_data_get_uint64(field);
+                                ret = prelude_string_sprintf(out, \"0x%\" PRELUDE_PRIx32 \".0x%\" PRELUDE_PRIx32 \"\", (uint32_t) (i >> 32), (uint32_t) i);
+                                if ( ret < 0 ) {
+                                        prelude_string_destroy(out);
+                                        return;
+                                }
+
+                                prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+                                prelude_string_destroy(out);
+                        }
+");
+            }
+            else {
+                $self->output("                        print_$field->{value_type}(${refer}field, fd);\n");
+            }
+
+            $self->output("                        prelude_io_write(fd, \"\\n\", sizeof(\"\\n\") - 1);
                 \}
         \}
 ");
