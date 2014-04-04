@@ -31,6 +31,7 @@
 
 #include "prelude-log.h"
 #include "prelude-string.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "idmef.h"
 #include "idmef-tree-wrap.h"
@@ -180,19 +181,22 @@ static const struct {
 static int check_type(idmef_additional_data_type_t type, const unsigned char *buf, size_t len)
 {
         if ( type < 0 || (size_t) type >= sizeof(idmef_additional_data_type_table) / sizeof(*idmef_additional_data_type_table) )
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Invalid IDMEFAdditionalData type specified");
 
         if ( idmef_additional_data_type_table[type].len != 0 &&
              len != idmef_additional_data_type_table[type].len )
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Provided value length does not match specied type length");
 
         if ( idmef_additional_data_type_table[type].len == 0 && len < 1 )
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Invalid value length for this type");
 
-        if ( type == IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING )
-                return 0;
+        if ( type == IDMEF_ADDITIONAL_DATA_TYPE_STRING ||
+             type == IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME ||
+             type == IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST ||
+             type == IDMEF_ADDITIONAL_DATA_TYPE_XML )
+                return buf[len - 1] == '\0' ? 0 : prelude_error_verbose(PRELUDE_ERROR_GENERIC, "String is not nul terminated");
 
-        return buf[len - 1] == '\0' ? 0 : -1;
+        return 0;
 }
 
 
