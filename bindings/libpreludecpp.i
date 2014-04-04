@@ -188,6 +188,9 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 }
 }
 
+%ignore Prelude::IDMEFValue::operator const char*() const;
+%ignore Prelude::IDMEFValue::operator std::vector<IDMEFValue>() const;
+%ignore Prelude::IDMEFValue::operator Prelude::IDMEFTime() const;
 %ignore Prelude::IDMEFValue::operator int8_t() const;
 %ignore Prelude::IDMEFValue::operator uint8_t() const;
 %ignore Prelude::IDMEFValue::operator int16_t() const;
@@ -198,15 +201,16 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore Prelude::IDMEFValue::operator uint64_t() const;
 %ignore Prelude::IDMEFValue::operator float() const;
 %ignore Prelude::IDMEFValue::operator double() const;
-%ignore Prelude::IDMEFValue::operator const char*() const;
-%ignore Prelude::IDMEFValue::operator std::vector<IDMEFValue>() const;
-%ignore Prelude::IDMEFValue::operator Prelude::IDMEFTime() const;
 
 /*
  * Force SWIG to use the IDMEFValue * version of the Set() function,
  * so that the user might provide NULL IDMEFValue.
  */
+%ignore Prelude::IDMEF::Set(char const *, int8_t);
+%ignore Prelude::IDMEF::Set(char const *, uint8_t);
 %ignore Prelude::IDMEF::Set(char const *, Prelude::IDMEFValue &value);
+%ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, int8_t);
+%ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, uint8_t);
 %ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, Prelude::IDMEFValue &);
 
 %ignore idmef_path_t;
