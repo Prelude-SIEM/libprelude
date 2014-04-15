@@ -108,9 +108,9 @@
 #define PRELUDE_UINTMAX_MAX            UINT64_MAX
 
 
-/* 
+/*
  * Tandem NonStop R series and compatible platforms released before
- * July 2005 support %Ld but not %lld.  
+ * July 2005 support %Ld but not %lld.
  */
 # if defined _TNS_R_TARGET
 #  define _LONG_LONG_FORMAT_PREFIX "L"
@@ -165,15 +165,31 @@
 #define PRELUDE_SCNx64      __PRELUDE_64BIT_FORMAT_PREFIX "x"
 #define PRELUDE_SCNu64      __PRELUDE_64BIT_FORMAT_PREFIX "u"
 
+#define PRELUDE_SCNd32      "d"
+#define PRELUDE_SCNi32      "i"
+#define PRELUDE_SCNo32      "o"
+#define PRELUDE_SCNx32      "x"
+#define PRELUDE_SCNu32      "u"
 
+#define PRELUDE_SCNd16      "hd"
+#define PRELUDE_SCNi16      "hi"
+#define PRELUDE_SCNo16      "ho"
+#define PRELUDE_SCNx16      "hx"
+#define PRELUDE_SCNu16      "hu"
+
+#define PRELUDE_SCNd8       "hhd"
+#define PRELUDE_SCNi8       "hhi"
+#define PRELUDE_SCNo8       "hho"
+#define PRELUDE_SCNx8       "hhx"
+#define PRELUDE_SCNu8       "hhu"
 
 
 /*
  * Type definition
  */
-typedef enum { 
-	PRELUDE_BOOL_TRUE = TRUE, 
-	PRELUDE_BOOL_FALSE = FALSE 
+typedef enum {
+        PRELUDE_BOOL_TRUE = TRUE,
+        PRELUDE_BOOL_FALSE = FALSE
 } prelude_bool_t;
 
 
