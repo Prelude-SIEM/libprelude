@@ -51,6 +51,19 @@ typedef struct prelude_list {
 
 
 
+static inline void __prelude_list_splice(const prelude_list_t *list, prelude_list_t *prev, prelude_list_t *next)
+{
+         prelude_list_t *first = list->next, *last = list->prev;
+
+         first->prev = prev;
+         prev->next = first;
+
+         last->next = next;
+         next->prev = last;
+}
+
+
+
 static inline void __prelude_list_add(prelude_list_t *item, prelude_list_t *prev, prelude_list_t *next)
 {
         prev->next = item;
@@ -86,6 +99,36 @@ static inline void prelude_list_init(prelude_list_t *item)
 static inline prelude_bool_t prelude_list_is_empty(prelude_list_t *item)
 {
         return (item->next == item) ? PRELUDE_BOOL_TRUE : PRELUDE_BOOL_FALSE;
+}
+
+
+
+/**
+ * prelude_list_splice_tail:
+ * @head: Pointer to a #prelude_list_t list.
+ * @list: Pointer to a #prelude_list_t object to add to @head.
+ *
+ * All item from list @list are added at the beginning of @head.
+ */
+static inline void prelude_list_splice(prelude_list_t *head, prelude_list_t *list)
+{
+        if ( ! prelude_list_is_empty(list) )
+                 __prelude_list_splice(list, head, head->next);
+}
+
+
+
+/**
+ * prelude_list_splice_tail:
+ * @head: Pointer to a #prelude_list_t list.
+ * @list: Pointer to a #prelude_list_t object to add to @head.
+ *
+ * All item from list @list are added at the end of @head.
+ */
+static inline void prelude_list_splice_tail(prelude_list_t *head, prelude_list_t *list)
+{
+        if ( ! prelude_list_is_empty(list) )
+                 __prelude_list_splice(list, head->prev, head);
 }
 
 
@@ -200,7 +243,7 @@ static inline void prelude_list_del_init(prelude_list_t *item)
  * prelude_list_for_each_reversed_safe().
  */
 #define prelude_list_for_each_reversed(list, pos)                          \
-        for ( (pos) = (list)->prev; (pos) != (list); (pos) = (pos)->prev ) 
+        for ( (pos) = (list)->prev; (pos) != (list); (pos) = (pos)->prev )
 
 
 
@@ -237,7 +280,7 @@ static inline void prelude_list_del_init(prelude_list_t *item)
  * @list: Pointer to a #prelude_list_t list.
  * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
  * @bkp: Pointer to a #prelude_list_t object pointing to the next list member.
- * 
+ *
  * Iterate through all @list entry starting from @pos if it is not NULL, or from
  * the start of @list if it is. prelude_list_entry() can be used to retrieve
  * and entry from the @pos pointer. Calling prelude_list_del() while iterating the
