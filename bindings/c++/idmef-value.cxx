@@ -204,7 +204,13 @@ IDMEFValue::IDMEFValue(idmef_value_t *value)
 
 int IDMEFValue::Match(const IDMEFValue &value, int op)
 {
-        return idmef_value_match(this->_value, value._value, (idmef_criterion_operator_t) op);
+        int ret;
+
+        ret = idmef_value_match(this->_value, value._value, (idmef_criterion_operator_t) op);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        return ret;
 }
 
 

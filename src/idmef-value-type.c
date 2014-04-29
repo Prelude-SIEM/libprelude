@@ -663,7 +663,10 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
                         return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
         }
 
-        assert(op & ops_tbl[type1->id].operator);
+        if ( ! (op & ops_tbl[type1->id].operator) )
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
+                                             "Object type '%s' does not support operator '%s'",
+                                             idmef_value_type_to_string(type1->id), idmef_criterion_operator_to_string(op));
 
         if ( ! ops_tbl[type1->id].compare )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
