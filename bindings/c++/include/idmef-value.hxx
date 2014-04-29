@@ -76,6 +76,14 @@ namespace Prelude {
                 operator idmef_value_t *() const;
 
                 IDMEFValue & operator=(const IDMEFValue &p);
+
+                bool operator == (const std::vector<IDMEFValue> &vlist);
+                bool operator <= (const IDMEFValue &value);
+                bool operator >= (const IDMEFValue &value);
+                bool operator < (const IDMEFValue &value);
+                bool operator > (const IDMEFValue &value);
+                bool operator == (const IDMEFValue &value);
+                bool operator != (const IDMEFValue &value);
         };
 };
 

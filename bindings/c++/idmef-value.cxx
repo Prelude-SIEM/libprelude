@@ -26,6 +26,7 @@
 #include "prelude-error.hxx"
 #include "idmef.hxx"
 #include "idmef-value.hxx"
+#include "idmef-criteria.hxx"
 
 using namespace Prelude;
 
@@ -458,4 +459,46 @@ IDMEFValue::operator const char*() const
 IDMEFValue::operator idmef_value_t *() const
 {
         return _value;
+}
+
+
+bool IDMEFValue::operator <= (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_LESSER|IDMEFCriterion::OPERATOR_EQUAL);
+}
+
+
+bool IDMEFValue::operator >= (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_GREATER|IDMEFCriterion::OPERATOR_EQUAL);
+}
+
+
+bool IDMEFValue::operator < (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_LESSER);
+}
+
+
+bool IDMEFValue::operator > (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_GREATER);
+}
+
+
+bool IDMEFValue::operator == (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_EQUAL);
+}
+
+
+bool IDMEFValue::operator == (const std::vector<IDMEFValue> &vlist)
+{
+        return this->Match(vlist, IDMEFCriterion::OPERATOR_EQUAL);
+}
+
+
+bool IDMEFValue::operator != (const IDMEFValue &value)
+{
+        return this->Match(value, IDMEFCriterion::OPERATOR_NOT|IDMEFCriterion::OPERATOR_EQUAL);
 }
