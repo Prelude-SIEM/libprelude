@@ -66,6 +66,9 @@ typedef unsigned long long uint64_t;
 %ignore prelude_error_t;
 typedef signed int prelude_error_t;
 
+%ignore idmef_value_type_id_t;
+typedef signed int idmef_value_type_id_t;
+
 
 %exception {
         try {
