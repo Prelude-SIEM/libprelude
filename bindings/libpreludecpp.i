@@ -23,6 +23,8 @@
 
 %module PreludeEasy
 
+%feature("nothread");
+
 %include "std_string.i"
 %include "std_vector.i"
 %include "exception.i"
