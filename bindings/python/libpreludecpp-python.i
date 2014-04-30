@@ -140,6 +140,13 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
+%extend Prelude::IDMEFValue {
+        long __hash__() {
+                return $self->GetType();
+        }
+}
+
+
 %extend Prelude::IDMEF {
         void Write(void *nocast_file_p) {
                 self->_genericWrite(_cb_python_write, nocast_file_p);
