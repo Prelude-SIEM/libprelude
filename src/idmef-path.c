@@ -84,15 +84,9 @@ struct idmef_path {
 };
 
 
-typedef struct {
-        const idmef_path_t *path;
-        idmef_message_t *message;
-        prelude_bool_t reversed;
-        prelude_bool_t delete_list;
-} value_list_t;
 
-
-static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl);
+static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, size_t i,
+                           int index_override, void *ptr, idmef_value_t *value);
 
 
 static prelude_bool_t flush_cache = FALSE;
@@ -347,45 +341,85 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
         }
 }
 
-static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
+
+
+static int _idmef_path_set_undefined_not_last(const idmef_path_t *path, const idmef_path_element_t *elem,
+                                              idmef_class_id_t class, size_t i, void *ptr, idmef_value_t *value)
 {
-        size_t i;
-        void *ptr;
-        int ret, index;
+        int j = 0, ret;
+        idmef_value_t *val;
+        prelude_list_t *head, *tmp, *bkp;
+
+        assert(idmef_class_is_child_list(class, elem->position));
+
+        ret = idmef_class_get_child(ptr, class, elem->position, (void *) &head);
+        if ( ret < 0 )
+                return ret;
+
+        if ( prelude_list_is_empty(head) && value && ! idmef_value_is_list(value) )
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX,
+                                             "empty IDMEF object '%s' need explicit index",
+                                             idmef_class_get_name(elem->class));
+
+        prelude_list_for_each_safe(head, tmp, bkp) {
+                if ( value && idmef_value_is_list(value) )
+                        val = idmef_value_get_nth(value, j++);
+                else {
+                        j = 1;
+                        val = value;
+                }
+
+                ret = _idmef_path_set(path, elem->class, i + 1, 0, prelude_linked_object_get_object(tmp), val);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        for ( ; value && j < idmef_value_get_count(value); j++ ) {
+                ret = _idmef_path_set(path, class, i, IDMEF_LIST_APPEND, ptr, idmef_value_get_nth(value, j));
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        return ret;
+}
+
+static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, size_t i,
+                           int index_override, void *ptr, idmef_value_t *value)
+{
+        int ret, index, j;
+        prelude_bool_t is_last_element;
         idmef_value_type_id_t tid;
         const idmef_path_element_t *elem;
-        idmef_class_id_t class, parent_class;
+        idmef_class_id_t parent_class;
 
-        ptr = message;
-        parent_class = class = IDMEF_CLASS_ID_MESSAGE;
+        parent_class = (class == IDMEF_CLASS_ID_MESSAGE) ? class : path->elem[i - 1].class;
 
-        for ( i = 0; i < path->depth; i++ ) {
+        for ( ; i < path->depth; i++ ) {
+
                 elem = &path->elem[i];
-                index = elem->index;
+                index = (index_override) ? index_override : elem->index;
+                index_override = 0;
+                is_last_element = (i == (path->depth - 1));
 
-                /*
-                 * We don't want to allow the user to set a single field within a listed
-                 * object without specifying the object index: alert.source.interface = "blah".
-                 */
-                if ( i + 1 < path->depth && index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) )
-                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX,
-                                                     "IDMEF path element '%s' need indexing",
-                                                     idmef_class_get_name(elem->class));
-
-                if ( index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) ) {
-                        index = IDMEF_LIST_APPEND;
-                        if ( *delete_list ) {
-                                *delete_list = FALSE;
+                if ( index == INDEX_UNDEFINED ) {
+                        if ( ! is_last_element )
+                                return _idmef_path_set_undefined_not_last(path, elem, class, i, ptr, value);
+                        else {
                                 delete_listed_child(ptr, class, elem);
 
-                                if ( ! value )
-                                        return 0;
+                                for ( j = 0; value && j < idmef_value_get_count(value); j++ ) {
+                                        ret = _idmef_path_set(path, class, i, IDMEF_LIST_APPEND, ptr, idmef_value_get_nth(value, j));
+                                        if ( ret < 0 )
+                                                return ret;
+                                }
+
+                                return 0;
                         }
                 }
 
                 parent_class = class;
 
-                if ( value || i < (path->depth - 1) ) {
+                if ( value || ! is_last_element ) {
                         ret = idmef_class_new_child(ptr, class, elem->position, index, &ptr);
                         if ( ret < 0 )
                                 return ret;
@@ -395,39 +429,13 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                 }
         }
 
+        elem = &path->elem[path->depth - 1];
         if ( ! value )
-                return idmef_class_destroy_child(ptr, parent_class,
-                                                 path->elem[path->depth - 1].position,
-                                                 path->elem[path->depth - 1].index);
+                return idmef_class_destroy_child(ptr, parent_class, elem->position, elem->index);
 
-        tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
+        tid = idmef_class_get_child_value_type(parent_class, elem->position);
         return _idmef_value_copy_internal(value, tid, class, ptr);
 }
-
-
-static int unroll_listed_value(idmef_value_t *value, void *extra)
-{
-        value_list_t *val = extra;
-
-        if ( idmef_value_is_list(value) )
-                return do_idmef_value_iterate(value, extra);
-
-        return _idmef_path_set(val->path, val->message, value, &val->delete_list);
-}
-
-
-static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl)
-{
-        int ret;
-
-        if ( vl->reversed )
-                ret = idmef_value_iterate_reversed(value, unroll_listed_value, vl);
-        else
-                ret = idmef_value_iterate(value, unroll_listed_value, vl);
-
-        return ret;
-}
-
 
 
 
@@ -461,28 +469,10 @@ int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_val
  */
 int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
-        prelude_bool_t delete_list = TRUE;
-
         if ( path->depth < 1 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Path with depth of 0 are not allowed");
 
-        /*
-         * Allow raw list copy (example: alert.source = alert.source,
-         * alert.source(>>) = alert.source, alert.source(<<) = alert.source.
-         */
-        if ( value && idmef_value_is_list(value) ) {
-                value_list_t vl;
-
-                vl.path = path;
-                vl.message = message;
-                vl.delete_list = TRUE;
-                vl.reversed = (path->elem[path->depth - 1].index == IDMEF_LIST_PREPEND) ? TRUE : FALSE;
-
-                return do_idmef_value_iterate(value, &vl);
-        }
-
-
-        return _idmef_path_set(path, message, value, &delete_list);
+        return _idmef_path_set(path, IDMEF_CLASS_ID_MESSAGE, 0, 0, message, value);
 }
 
 
