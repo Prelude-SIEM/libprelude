@@ -945,6 +945,8 @@ void prelude_string_clear(prelude_string_t *string)
  * @str1: Pointer to a #prelude_string_t object to compare with @str2.
  * @str2: Pointer to a #prelude_string_t object to compare with @str1.
  *
+ * Compare @str1 and @str2.
+ *
  * Returns: 0 if @str1 and @str2 value are equal, a negative value otherwise.
  */
 int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t *str2)
@@ -961,5 +963,5 @@ int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t 
         if ( str1->index == 0 )
                 return 0;
 
-        return strcmp(str1->data.robuf, str2->data.robuf);
+        return strcmp(str1->data.robuf, str2->data.robuf) == 0 ? 0 : -1;
 }
