@@ -57,9 +57,14 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         SV *svret, **svs = new SV*[result.size()];
 
         for ( i = result.begin(); i != result.end(); i++ ) {
-                ret = IDMEFValue_to_SWIG(*i, &svs[j++]);
-                if ( ret < 0 )
-                        return NULL;
+                if ( (*i).IsNull() ) {
+                        SvREFCNT_inc(& PL_sv_undef);
+                        svs[j++] = &PL_sv_undef;
+                } else {
+                        ret = IDMEFValue_to_SWIG(*i, &svs[j++]);
+                        if ( ret < 0 )
+                                return NULL;
+                }
         }
 
         myav = av_make(result.size(), svs);

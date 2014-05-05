@@ -13,27 +13,36 @@ $idmef = new PreludeEasy::IDMEF;
 
 print "*** IDMEF->Set() ***\n";
 $idmef->Set("alert.classification.text", "My Message");
-$idmef->Set("alert.source(0).node.address(0).address", "x.x.x.x");
-$idmef->Set("alert.source(0).node.address(1).address", "y.y.y.y");
-$idmef->Set("alert.target(0).node.address(0).address", "z.z.z.z");
+$idmef->Set("alert.source(0).node.address(0).address", "s0a0");
+$idmef->Set("alert.source(0).node.address(1).address", "s0a1");
+$idmef->Set("alert.source(1).node.address(0).address", "s1a0");
+$idmef->Set("alert.source(1).node.address(1).address", "s1a1");
+$idmef->Set("alert.source(1).node.address(2).address", undef);
+$idmef->Set("alert.source(1).node.address(3).address", "s1a3");
 print $idmef->ToString();
 
 
 print "\n*** IDMEF->Get() ***\n";
 print $idmef->Get("alert.classification.text") . "\n";
 
-sub print_list(@) {
-        foreach(@_) {
-                if ( ref $_ eq 'ARRAY' ) {
-                        print_list(@$_);
-                } else {
-                        print $_ . "\n";
-                }
+sub print_array($)
+{
+    my $arrRef = shift;
+    for (my $i = 0; $i < scalar(@$arrRef); ++$i) {
+        if (ref($arrRef->[$i]) eq 'ARRAY') {
+            print ', ' if ($i);
+            print '[';
+            print_array($arrRef->[$i]);
+            print ']';
+        } else {
+            print ', ' if ($i);
+            print $arrRef->[$i];
         }
+    }
+    print ' ' if (!scalar(@$arrRef));
 }
 
-$l = $idmef->Get("alert.source(*).node.address(*).address");
-print_list(@$l);
+print_array($idmef->Get("alert.source(*).node.address(*).address"));
 
 open FILE, ">foo.bin" or die "arg";
 $idmef->Write(FILE);

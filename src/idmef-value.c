@@ -405,7 +405,6 @@ int idmef_value_new_list(idmef_value_t **value)
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item)
 {
         prelude_return_val_if_fail(list, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(item, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( list->list_elems == list->list_max ) {
 
@@ -513,8 +512,10 @@ static int idmef_value_set_own_data(idmef_value_t *value, prelude_bool_t own_dat
         if ( ! value->list )
                 value->own_data = own_data;
 
-        else for ( cnt = 0 ; cnt < value->list_elems; cnt++ )
-                idmef_value_set_own_data(value->list[cnt], own_data);
+        else for ( cnt = 0 ; cnt < value->list_elems; cnt++ ) {
+                if ( value->list[cnt] )
+                        idmef_value_set_own_data(value->list[cnt], own_data);
+        }
 
         return 0;
 }
@@ -627,16 +628,42 @@ int idmef_value_iterate_reversed(const idmef_value_t *value,
 
 
 
-idmef_value_t *idmef_value_get_nth(const idmef_value_t *val, int n)
+int idmef_value_get_nth2(const idmef_value_t *val, int index, idmef_value_t **ret)
 {
-        prelude_return_val_if_fail(val, NULL);
+        prelude_return_val_if_fail(val, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(index <= val->list_elems, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        if ( ! val->list )
-                return (n == 0) ? value_ro2rw(val) : NULL;
+        if ( index == 0 && ! val->list ) {
+                *ret = value_ro2rw(val);
+                return 1;
+        }
 
-        return (n >= 0 && n < val->list_elems) ? val->list[n] : NULL;
+        else if ( index >= 0 && index < val->list_elems ) {
+                *ret = val->list[index];
+                return 1;
+        }
+
+        else if ( index >= val->list_elems )
+                return 0;
+
+        else return -1;
 }
 
+
+
+idmef_value_t *idmef_value_get_nth(const idmef_value_t *val, int n)
+{
+        int ret;
+        idmef_value_t *rv;
+
+        prelude_return_val_if_fail(val, NULL);
+
+        ret = idmef_value_get_nth2(val, n, &rv);
+        if ( ret != 1 )
+                return NULL;
+
+        return rv;
+}
 
 
 
@@ -662,11 +689,17 @@ static int idmef_value_list_clone(const idmef_value_t *val, idmef_value_t **dst)
         (*dst)->list = malloc(((*dst)->list_elems + 1) * sizeof((*dst)->list));
 
         for ( cnt = 0; cnt < (*dst)->list_elems; cnt++ ) {
+                if ( ! val->list[cnt] ) {
+                        (*dst)->list[cnt] = NULL;
+                        continue;
+                }
 
                 ret = idmef_value_clone(val->list[cnt], &((*dst)->list[cnt]));
                 if ( ret < 0 ) {
-                        while ( --cnt >= 0 )
-                                idmef_value_destroy((*dst)->list[cnt]);
+                        while ( --cnt >= 0 ) {
+                                if ( (*dst)->list[cnt] )
+                                        idmef_value_destroy((*dst)->list[cnt]);
+                        }
                 }
 
                 free((*dst)->list);
@@ -866,8 +899,10 @@ void idmef_value_destroy(idmef_value_t *val)
                 return;
 
         if ( val->list ) {
-                for ( i = 0; i < val->list_elems; i++ )
-                        idmef_value_destroy(val->list[i]);
+                for ( i = 0; i < val->list_elems; i++ ) {
+                        if ( val->list[i] )
+                                idmef_value_destroy(val->list[i]);
+                }
 
                 free(val->list);
         }

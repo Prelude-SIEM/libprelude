@@ -12,23 +12,17 @@ idmef = PreludeEasy.IDMEF()
 
 print "*** IDMEF->Set() ***"
 idmef.Set("alert.classification.text", "My Message")
-idmef.Set("alert.source(0).node.address(0).address", "x.x.x.x")
-idmef.Set("alert.source(0).node.address(1).address", "y.y.y.y")
-idmef.Set("alert.target(0).node.address(0).address", "z.z.z.z")
+idmef.Set("alert.source(0).node.address(0).address", "s0a0")
+idmef.Set("alert.source(0).node.address(1).address", "s0a1")
+idmef.Set("alert.source(1).node.address(0).address", "s1a0")
+idmef.Set("alert.source(1).node.address(1).address", "s1a1")
+idmef.Set("alert.source(1).node.address(2).address", None)
+idmef.Set("alert.source(1).node.address(3).address", "s1a3")
 print idmef
-
 
 print "\n*** IDMEF->Get() ***"
 print idmef.Get("alert.classification.text")
-
-def print_list(x):
-   for i in x:
-       if type(i) is tuple:
-	   print_list(i)
-       else:
-	   print i
-
-print_list(idmef.Get("alert.source(*).node.address(*).address"))
+print idmef.Get("alert.source(*).node.address(*).address")
 
 file = open("foo.bin","w")
 idmef >> file

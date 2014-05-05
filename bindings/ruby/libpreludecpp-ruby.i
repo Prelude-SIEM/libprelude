@@ -205,9 +205,13 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 VALUE val;
 
-                ret = IDMEFValue_to_SWIG(*i, &val);
-                if ( ret < 0 )
-                        return Qnil;
+                if ( (*i).IsNull() )
+                        val = Qnil;
+                else {
+                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        if ( ret < 0 )
+                                return Qnil;
+                }
 
                 if ( ! rb_ary_push(ary, val) )
                         return Qnil;

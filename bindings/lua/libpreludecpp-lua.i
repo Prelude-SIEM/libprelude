@@ -245,18 +245,23 @@ int IDMEFValueList_to_SWIG(lua_State *L, const Prelude::IDMEFValue &value)
                 if ( ret < 0 )
                         return ret;
 
-                is_list = (i->GetType() == IDMEF_VALUE_TYPE_LIST);
-                if ( is_list )
-                        lua_pushnumber(L, ++index);
-
-                ret = IDMEFValue_to_SWIG(L, *i);
-                if ( ret < 0 )
-                        return -1;
-
-                if ( is_list )
-                        lua_settable(L, -3);
-                else
+                if ( (*i).IsNull() ) {
+                        lua_pushnil(L);
                         lua_rawseti(L, -2, ++index);
+                } else {
+                        is_list = (i->GetType() == IDMEF_VALUE_TYPE_LIST);
+                        if ( is_list )
+                                lua_pushnumber(L, ++index);
+
+                        ret = IDMEFValue_to_SWIG(L, *i);
+                        if ( ret < 0 )
+                                return -1;
+
+                        if ( is_list )
+                                lua_settable(L, -3);
+                        else
+                                lua_rawseti(L, -2, ++index);
+                }
         }
 
         return 1;

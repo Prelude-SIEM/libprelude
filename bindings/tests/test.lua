@@ -11,26 +11,35 @@ idmef = PreludeEasy.IDMEF()
 
 print("*** IDMEF->Set() ***")
 idmef:Set("alert.classification.text", "My Message")
-idmef:Set("alert.source(0).node.address(0).address", "x.x.x.x")
-idmef:Set("alert.source(0).node.address(1).address", "y.y.y.y")
-idmef:Set("alert.target(0).node.address(0).address", "z.z.z.z")
+idmef:Set("alert.source(0).node.address(0).address", "s0a0")
+idmef:Set("alert.source(0).node.address(1).address", "s0a1")
+idmef:Set("alert.source(1).node.address(0).address", "s1a0")
+idmef:Set("alert.source(1).node.address(1).address", "s1a1")
+idmef:Set("alert.source(1).node.address(2).address", nil)
+idmef:Set("alert.source(1).node.address(3).address", "s1a3")
 print(idmef)
-
 
 print("\n*** IDMEF->Get() ***")
 print(idmef:Get("alert.classification.text"))
 
-function print_list(x)
-   for key,i in pairs(x) do
-       if type(i) == "table" then 
-	   print_list(i)
-       else
-	   print(i)
-       end
-   end
+function tprint (tbl, indent)
+  if not indent then indent = 0 end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      tprint(v, indent+1)
+    elseif not v then
+      print(formatting .. 'NUL')
+    elseif type(v) == 'boolean' then
+      print(formatting .. tostring(v))
+    else
+      print(formatting .. v)
+    end
+  end
 end
 
-print_list(idmef:Get("alert.source(*).node.address(*).address"))
+tprint(idmef:Get("alert.source(*).node.address(*).address"))
 
 fd = io.open("foo.bin","w")
 idmef:Write(fd)

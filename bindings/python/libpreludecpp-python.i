@@ -181,9 +181,14 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 PyObject *val;
 
-                ret = IDMEFValue_to_SWIG(*i, &val);
-                if ( ret < 0 )
-                        return NULL;
+                if ( (*i).IsNull() ) {
+                        Py_INCREF(Py_None);
+                        val = Py_None;
+                } else {
+                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        if ( ret < 0 )
+                                return NULL;
+                }
 
                 PyTuple_SetItem(pytuple, j++, val);
         }

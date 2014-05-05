@@ -287,8 +287,10 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
                 if ( ret < 0 )
                         return ret;
 
-                if ( ! child )
-                        return 0;
+                if ( ! child ) {
+                        *value = NULL;
+                        return (depth == path->depth - 1) ? 1 : 0;
+                }
 
                 child_class = idmef_class_get_child_class(parent_class, child_id);
                 which = path->elem[depth].index;
@@ -362,9 +364,11 @@ static int _idmef_path_set_undefined_not_last(const idmef_path_t *path, const id
                                              idmef_class_get_name(elem->class));
 
         prelude_list_for_each_safe(head, tmp, bkp) {
-                if ( value && idmef_value_is_list(value) )
-                        val = idmef_value_get_nth(value, j++);
-                else {
+                if ( value && idmef_value_is_list(value) ) {
+                        ret = idmef_value_get_nth2(value, j++, &val);
+                        if ( ret <= 0 )
+                                return ret;
+                } else {
                         j = 1;
                         val = value;
                 }

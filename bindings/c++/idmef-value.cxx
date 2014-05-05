@@ -232,7 +232,10 @@ static int iterate_cb(idmef_value_t *value, void *extra)
 {
         std::vector<IDMEFValue> *vlist = (std::vector<IDMEFValue> *) extra;
 
-        vlist->push_back(IDMEFValue(idmef_value_ref(value)));
+        if ( value )
+                value = idmef_value_ref(value);
+
+        vlist->push_back(IDMEFValue(value));
 
         return 0;
 }
