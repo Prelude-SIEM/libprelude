@@ -105,6 +105,23 @@ typedef signed int idmef_value_type_id_t;
 %template() std::vector<Prelude::IDMEFValue>;
 %template() std::vector<Prelude::Connection>;
 
+%extend Prelude::IDMEF {
+        Prelude::IDMEFValue Get(const char *path) {
+                Prelude::IDMEFValue value;
+                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(path);
+
+                value = ipath.Get(*self);
+                if ( value.IsNull() && ipath.IsAmbiguous() ) {
+                        std::vector<Prelude::IDMEFValue> v;
+                        return Prelude::IDMEFValue(v);
+                }
+
+                return value;
+        }
+}
+
+%ignore Prelude::IDMEF::Get;
+
 
 %fragment("IDMEFValue_to_SWIG", "header", fragment="IDMEFValueList_to_SWIG", fragment="SWIG_From_float") {
 
