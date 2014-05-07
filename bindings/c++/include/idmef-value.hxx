@@ -62,6 +62,7 @@ namespace Prelude {
 
                 int Match(const IDMEFValue &value, int op);
                 IDMEFValue Clone() const;
+                const std::string ToString() const;
 
                 operator int32_t() const;
                 operator uint32_t() const;

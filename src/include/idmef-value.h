@@ -124,7 +124,7 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val);
 
 int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd);
 
-int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out);
+int idmef_value_to_string(const idmef_value_t *value, prelude_string_t *out);
 
 int idmef_value_get(const idmef_value_t *val, void *res);
 

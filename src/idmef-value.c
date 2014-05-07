@@ -746,12 +746,55 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
-int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out)
+int idmef_value_to_string(const idmef_value_t *value, prelude_string_t *out)
 {
-        prelude_return_val_if_fail(val, prelude_error(PRELUDE_ERROR_ASSERTION));
+        int i, ret;
+        idmef_value_t *val;
+
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        return idmef_value_type_write(&val->type, out);
+        if ( idmef_value_is_list(value) ) {
+                ret = prelude_string_cat(out, "(");
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        for ( i = 0; i < idmef_value_get_count(value); i++ ) {
+                val = idmef_value_get_nth(value, i);
+
+                if ( idmef_value_is_list(val) ) {
+                        ret = prelude_string_cat(out, "(");
+                        if ( ret < 0 )
+                                return ret;
+
+                        ret = idmef_value_to_string(val, out);
+                        if ( ret < 0 )
+                                return ret;
+
+                        ret = prelude_string_cat(out, ")");
+                        if ( ret < 0 )
+                                return ret;
+                } else {
+                        if ( i ) {
+                                ret = prelude_string_cat(out, ", ");
+                                if ( ret < 0 )
+                                        return ret;
+                        }
+
+                        ret = idmef_value_type_write(&val->type, out);
+                        if ( ret < 0 )
+                                return ret;
+                }
+        }
+
+        if ( idmef_value_is_list(value) ) {
+                ret = prelude_string_cat(out, ")");
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        return 0;
 }
 
 

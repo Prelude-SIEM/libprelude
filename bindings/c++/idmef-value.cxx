@@ -228,6 +228,29 @@ IDMEFValue IDMEFValue::Clone() const
 }
 
 
+const std::string IDMEFValue::ToString() const
+{
+        int ret;
+        std::string s;
+        prelude_string_t *str;
+
+        ret = prelude_string_new(&str);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        ret = idmef_value_to_string(_value, str);
+        if ( ret < 0 ) {
+                prelude_string_destroy(str);
+                throw PreludeError(ret);
+        }
+
+        s = prelude_string_get_string(str);
+        prelude_string_destroy(str);
+
+        return s;
+}
+
+
 static int iterate_cb(idmef_value_t *value, void *extra)
 {
         std::vector<IDMEFValue> *vlist = (std::vector<IDMEFValue> *) extra;
