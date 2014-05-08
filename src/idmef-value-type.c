@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 
 #include "prelude-inttypes.h"
@@ -34,6 +35,7 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_VALUE_TYPE
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
+#include "prelude-linked-object.h"
 
 #include "idmef-time.h"
 #include "idmef-data.h"
@@ -409,7 +411,7 @@ static void string_destroy(idmef_value_type_t *type)
 static int string_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
         return prelude_string_sprintf(out, "%s",
-                                      prelude_string_get_string(src->data.string_val));
+                       prelude_string_get_string_or_default(src->data.string_val, "<empty>"));
 }
 
 
@@ -497,7 +499,7 @@ static void data_destroy(idmef_value_type_t *type)
 
 
 /*
- *
+ * class specific
  */
 static int class_compare(const idmef_value_type_t *c1,
                          const idmef_value_type_t *c2, size_t len, idmef_criterion_operator_t op)
@@ -529,6 +531,87 @@ static int class_ref(const idmef_value_type_t *src)
 static void class_destroy(idmef_value_type_t *type)
 {
         idmef_class_destroy(type->data.class_val.class_id, type->data.class_val.object);
+}
+
+
+static int class_to_string(idmef_class_id_t parent_class, void *parent, prelude_string_t *out)
+{
+        int ret, i, j;
+        void *childptr;
+        prelude_list_t *tmp;
+        idmef_class_id_t childclass;
+        idmef_value_type_id_t vtype;
+        const char *pname = idmef_class_get_name(parent_class);
+
+        ret = prelude_string_sprintf(out, "<IDMEF%c%s",  toupper(*pname), pname + 1);
+        if ( ret < 0 )
+                return ret;
+
+        for ( i = 0; ; i++ ) {
+                ret = idmef_class_get_child(parent, parent_class, i, &childptr);
+                if ( ret < 0 )
+                        break;
+
+                if ( ! childptr )
+                        continue;
+
+                vtype = idmef_class_get_child_value_type(parent_class, i);
+                childclass = idmef_class_get_child_class(parent_class, i);
+
+                if ( vtype != IDMEF_VALUE_TYPE_CLASS ) {
+                        ret = prelude_string_sprintf(out, " %s:", idmef_class_get_child_name(parent_class, i));
+                        if ( ret < 0 ) {
+                                idmef_value_destroy(childptr);
+                                return ret;
+                        }
+
+                        ret = idmef_value_to_string(childptr, out);
+                        idmef_value_destroy(childptr);
+                        if ( ret < 0 )
+                                return ret;
+
+                        continue;
+                }
+
+                if ( ! idmef_class_is_child_list(parent_class, i) ) {
+                        ret = prelude_string_cat(out, " ");
+                        if ( ret < 0 )
+                                return ret;
+
+                        ret = class_to_string(childclass, childptr, out);
+                        if ( ret < 0 )
+                                return ret;
+                } else if ( ! prelude_list_is_empty((prelude_list_t *) childptr) ) {
+                        ret = prelude_string_cat(out, " (");
+                        if ( ret < 0 )
+                                return ret;
+
+                        j = 0;
+                        prelude_list_for_each((prelude_list_t *)childptr, tmp) {
+                                if ( j++ > 0 ) {
+                                        ret = prelude_string_cat(out, ", ");
+                                        if ( ret < 0 )
+                                                return ret;
+                                }
+
+                                ret = class_to_string(childclass, prelude_linked_object_get_object(tmp), out);
+                                if ( ret < 0 )
+                                        return ret;
+                        }
+
+                        ret = prelude_string_cat(out, ")");
+                        if ( ret < 0 )
+                                return ret;
+                }
+        }
+
+        return prelude_string_cat(out, ">");
+}
+
+
+static int class_write(const idmef_value_type_t *src, prelude_string_t *out)
+{
+        return class_to_string(src->data.class_val.class_id, src->data.class_val.object, out);
 }
 
 
@@ -564,7 +647,7 @@ static const idmef_value_type_operation_t ops_tbl[] = {
           generic_clone, NULL, NULL, enum_compare, enum_read, enum_write,               },
         { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL                        },
         { "class", 0, CLASS_OPERATOR, class_copy, class_clone,
-          class_ref, class_destroy, class_compare, NULL, NULL                   },
+          class_ref, class_destroy, class_compare, NULL, class_write                    },
 };
 
 
