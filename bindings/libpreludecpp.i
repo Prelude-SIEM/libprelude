@@ -116,7 +116,22 @@ typedef signed int prelude_error_t;
         }
 }
 
+%extend Prelude::IDMEFPath {
+        Prelude::IDMEFValue Get(Prelude::IDMEF &message) {
+                Prelude::IDMEFValue value;
+
+                value = self->Get(message);
+                if ( value.IsNull() && self->IsAmbiguous() ) {
+                        std::vector<Prelude::IDMEFValue> v;
+                        return Prelude::IDMEFValue(v);
+                }
+
+                return value;
+        }
+}
+
 %ignore Prelude::IDMEF::Get;
+%ignore Prelude::IDMEFPath::Get;
 
 
 %fragment("IDMEFValue_to_SWIG", "header", fragment="IDMEFValueList_to_SWIG", fragment="SWIG_From_float") {
