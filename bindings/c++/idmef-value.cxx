@@ -38,9 +38,9 @@ IDMEFValue::~IDMEFValue()
 }
 
 
-idmef_value_type_id_t IDMEFValue::GetType() const
+IDMEFValue::IDMEFValueTypeEnum IDMEFValue::GetType() const
 {
-        return idmef_value_get_type(_value);
+        return (IDMEFValue::IDMEFValueTypeEnum) idmef_value_get_type(_value);
 }
 
 
@@ -271,9 +271,9 @@ IDMEFValue::operator std::vector<IDMEFValue> () const
         if ( ! _value )
                 return vlist;
 
-        if ( GetType() != IDMEF_VALUE_TYPE_LIST ) {
+        if ( GetType() != TYPE_LIST ) {
                 std::stringstream s;
-                s << "Left value doesn't fit '" << idmef_value_type_to_string(GetType()) << "' requirement";
+                s << "Left value doesn't fit '" << idmef_value_type_to_string((idmef_value_type_id_t) GetType()) << "' requirement";
                 throw PreludeError(s.str());
         }
 
@@ -287,9 +287,9 @@ IDMEFValue::operator IDMEFTime () const
 {
         prelude_except_if_fail(_value);
 
-        if ( GetType() != IDMEF_VALUE_TYPE_TIME ) {
+        if ( GetType() != TYPE_TIME ) {
                 std::stringstream s;
-                s << "Left value doesn't fit '" << idmef_value_type_to_string(GetType()) << "' requirement";
+                s << "Left value doesn't fit '" << idmef_value_type_to_string((idmef_value_type_id_t) GetType()) << "' requirement";
                 throw PreludeError(s.str());
         }
 
@@ -300,43 +300,40 @@ IDMEFValue::operator IDMEFTime () const
 
 IDMEFValue::operator int32_t () const
 {
-        idmef_value_type_id_t vtype;
+        IDMEFValueTypeEnum vtype;
 
         prelude_except_if_fail(_value);
         vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_INT8 )
+        if ( vtype == TYPE_INT8 )
                 return idmef_value_get_int8(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_UINT8 )
+        else if ( vtype == TYPE_UINT8 )
                 return idmef_value_get_uint8(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_INT16 )
+        else if ( vtype == TYPE_INT16 )
                 return idmef_value_get_int16(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_UINT16 )
+        else if ( vtype == TYPE_UINT16 )
                 return idmef_value_get_uint16(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_INT32 )
+        else if ( vtype == TYPE_INT32 )
                 return idmef_value_get_int32(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_ENUM )
+        else if ( vtype == TYPE_ENUM )
                 return idmef_value_get_enum(_value);
 
         std::stringstream s;
-        s << "Left value doesn't fit '" << idmef_value_type_to_string(vtype) << "' requirement";
+        s << "Left value doesn't fit '" << idmef_value_type_to_string((idmef_value_type_id_t) vtype) << "' requirement";
         throw PreludeError(s.str());
 }
 
 
 IDMEFValue::operator uint32_t () const
 {
-        idmef_value_type_id_t vtype;
-
         prelude_except_if_fail(_value);
-        vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_UINT32 )
+        if ( GetType() == TYPE_UINT32 )
                 return idmef_value_get_uint32(_value);
         else
                 return (int32_t) *this;
@@ -345,12 +342,9 @@ IDMEFValue::operator uint32_t () const
 
 IDMEFValue::operator int64_t () const
 {
-        idmef_value_type_id_t vtype;
-
         prelude_except_if_fail(_value);
-        vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_INT64 )
+        if ( GetType() == TYPE_INT64 )
                 return idmef_value_get_int64(_value);
         else
                 return (uint32_t) *this;
@@ -359,12 +353,9 @@ IDMEFValue::operator int64_t () const
 
 IDMEFValue::operator uint64_t () const
 {
-        idmef_value_type_id_t vtype;
-
         prelude_except_if_fail(_value);
-        vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_UINT64 )
+        if ( GetType() == TYPE_UINT64 )
                 return idmef_value_get_uint64(_value);
         else
                 return (int64_t) *this;
@@ -373,15 +364,15 @@ IDMEFValue::operator uint64_t () const
 
 IDMEFValue::operator float () const
 {
-        idmef_value_type_id_t vtype;
+        IDMEFValueTypeEnum vtype;
 
         prelude_except_if_fail(_value);
         vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_FLOAT )
+        if ( vtype == TYPE_FLOAT )
                 return idmef_value_get_float(_value);
 
-        else if ( vtype == IDMEF_VALUE_TYPE_DATA ) {
+        else if ( vtype == TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(_value);
 
                 if ( idmef_data_get_type(d) == IDMEF_DATA_TYPE_FLOAT )
@@ -389,21 +380,17 @@ IDMEFValue::operator float () const
         }
 
         std::stringstream s;
-        s << "Left value doesn't fit '" << idmef_value_type_to_string(vtype) << "' requirement";
+        s << "Left value doesn't fit '" << idmef_value_type_to_string((idmef_value_type_id_t) vtype) << "' requirement";
         throw PreludeError(s.str());
 }
 
 
 IDMEFValue::operator double () const
 {
-        idmef_value_type_id_t vtype;
-
         prelude_except_if_fail(_value);
-        vtype = GetType();
 
-        if ( vtype == IDMEF_VALUE_TYPE_DOUBLE )
+        if ( GetType() == TYPE_DOUBLE )
                 return idmef_value_get_double(_value);
-
         else
                 return (float) *this;
 }
@@ -414,16 +401,16 @@ std::string IDMEFValue::convert_string() const
         std::stringstream s;
         prelude_except_if_fail(_value);
 
-        if ( GetType() == IDMEF_VALUE_TYPE_STRING )
+        if ( GetType() == TYPE_STRING )
                 return prelude_string_get_string(idmef_value_get_string(_value));
 
-        else if ( GetType() == IDMEF_VALUE_TYPE_TIME )
+        else if ( GetType() == TYPE_TIME )
                 return IDMEFTime(idmef_time_ref(idmef_value_get_time(_value)));
 
-        else if ( GetType() == IDMEF_VALUE_TYPE_ENUM )
+        else if ( GetType() == TYPE_ENUM )
                 return idmef_class_enum_to_string(idmef_value_get_class(_value), idmef_value_get_enum(_value));
 
-        else if ( GetType() == IDMEF_VALUE_TYPE_DATA ) {
+        else if ( GetType() == TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(_value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
@@ -456,7 +443,7 @@ std::string IDMEFValue::convert_string() const
                 }
         }
 
-        s << "Left value doesn't fit '" << idmef_value_type_to_string(GetType()) << "' requirement";
+        s << "Left value doesn't fit '" << idmef_value_type_to_string((idmef_value_type_id_t) GetType()) << "' requirement";
         throw PreludeError(s.str());
 }
 

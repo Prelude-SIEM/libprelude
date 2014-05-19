@@ -38,7 +38,27 @@ namespace Prelude {
                 std::string _myconv;
 
             public:
-                idmef_value_type_id_t GetType() const;
+                enum IDMEFValueTypeEnum {
+                        TYPE_UNKNOWN    = IDMEF_VALUE_TYPE_UNKNOWN,
+                        TYPE_INT8       = IDMEF_VALUE_TYPE_INT8,
+                        TYPE_UINT8      = IDMEF_VALUE_TYPE_UINT8,
+                        TYPE_INT16      = IDMEF_VALUE_TYPE_INT16,
+                        TYPE_UINT16     = IDMEF_VALUE_TYPE_UINT16,
+                        TYPE_INT32      = IDMEF_VALUE_TYPE_INT32,
+                        TYPE_UINT32     = IDMEF_VALUE_TYPE_UINT32,
+                        TYPE_INT64      = IDMEF_VALUE_TYPE_INT64,
+                        TYPE_UINT64     = IDMEF_VALUE_TYPE_UINT64,
+                        TYPE_FLOAT      = IDMEF_VALUE_TYPE_FLOAT,
+                        TYPE_DOUBLE     = IDMEF_VALUE_TYPE_DOUBLE,
+                        TYPE_STRING     = IDMEF_VALUE_TYPE_STRING,
+                        TYPE_TIME       = IDMEF_VALUE_TYPE_TIME,
+                        TYPE_DATA       = IDMEF_VALUE_TYPE_DATA,
+                        TYPE_ENUM       = IDMEF_VALUE_TYPE_ENUM,
+                        TYPE_LIST       = IDMEF_VALUE_TYPE_LIST,
+                        TYPE_CLASS      = IDMEF_VALUE_TYPE_CLASS
+                };
+
+                IDMEFValueTypeEnum GetType() const;
                 bool IsNull() const;
 
                 IDMEFValue();

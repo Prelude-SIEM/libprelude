@@ -214,7 +214,7 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
                         SWIG_exception(SWIG_RuntimeError, e.what());
                         SWIG_fail;
                 }
-	}
+        }
 }
 
 
@@ -249,7 +249,7 @@ int IDMEFValueList_to_SWIG(lua_State *L, const Prelude::IDMEFValue &value)
                         lua_pushnil(L);
                         lua_rawseti(L, -2, ++index);
                 } else {
-                        is_list = (i->GetType() == IDMEF_VALUE_TYPE_LIST);
+                        is_list = (i->GetType() == IDMEFValue::TYPE_LIST);
                         if ( is_list )
                                 lua_pushnumber(L, ++index);
 
@@ -274,57 +274,57 @@ int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result)
         int ret = 1;
         std::stringstream s;
         idmef_value_t *value = result;
-        idmef_value_type_id_t type = result.GetType();
+        IDMEFValue::IDMEFValueTypeEnum type = result.GetType();
 
-        if ( type == IDMEF_VALUE_TYPE_STRING ) {
+        if ( type == IDMEFValue::TYPE_STRING ) {
                 prelude_string_t *str = idmef_value_get_string(value);
                 SWIG_FromCharPtrAndSize(prelude_string_get_string(str), prelude_string_get_len(str));
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_INT8 )
+        else if ( type == IDMEFValue::TYPE_INT8 )
                 SWIG_From_int(idmef_value_get_int8(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT8 )
+        else if ( type == IDMEFValue::TYPE_UINT8 )
                 SWIG_From_unsigned_SS_int(idmef_value_get_uint8(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT16 )
+        else if ( type == IDMEFValue::TYPE_INT16 )
                 SWIG_From_int(idmef_value_get_int16(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT16 )
+        else if ( type == IDMEFValue::TYPE_UINT16 )
                 SWIG_From_unsigned_SS_int(idmef_value_get_uint16(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT32 )
+        else if ( type == IDMEFValue::TYPE_INT32 )
                 SWIG_From_int(idmef_value_get_int32(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT32 )
+        else if ( type == IDMEFValue::TYPE_UINT32 )
                 SWIG_From_unsigned_SS_int(idmef_value_get_uint32(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT64 )
+        else if ( type == IDMEFValue::TYPE_INT64 )
                 SWIG_From_long_SS_long(idmef_value_get_int64(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT64 )
+        else if ( type == IDMEFValue::TYPE_UINT64 )
                 SWIG_From_unsigned_SS_long_SS_long(idmef_value_get_uint64(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_FLOAT )
+        else if ( type == IDMEFValue::TYPE_FLOAT )
                 SWIG_From_float(idmef_value_get_float(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_DOUBLE )
+        else if ( type == IDMEFValue::TYPE_DOUBLE )
                 SWIG_From_double(idmef_value_get_double(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_ENUM ) {
+        else if ( type == IDMEFValue::TYPE_ENUM ) {
                 const char *s = idmef_class_enum_to_string(idmef_value_get_class(value), idmef_value_get_enum(value));
                 SWIG_FromCharPtr(s);
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_TIME ) {
+        else if ( type == IDMEFValue::TYPE_TIME ) {
                 Prelude::IDMEFTime *time = new Prelude::IDMEFTime(idmef_time_ref(idmef_value_get_time(value)));
                 SWIG_NewPointerObj(L, time, SWIGTYPE_p_Prelude__IDMEFTime, 1);
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_LIST )
+        else if ( type == IDMEFValue::TYPE_LIST )
                 ret = IDMEFValueList_to_SWIG(L, result);
 
-        else if ( type == IDMEF_VALUE_TYPE_DATA ) {
+        else if ( type == IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
@@ -359,7 +359,7 @@ int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result)
                 SWIG_arg = IDMEFValue_to_SWIG(L, $1);
                 if ( SWIG_arg < 0 ) {
                         std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string($1.GetType()) << "'";
+                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";
                         SWIG_exception(SWIG_ValueError, s.str().c_str());
                 }
         }

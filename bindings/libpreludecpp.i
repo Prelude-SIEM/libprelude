@@ -66,10 +66,6 @@ typedef unsigned long long uint64_t;
 %ignore prelude_error_t;
 typedef signed int prelude_error_t;
 
-%ignore idmef_value_type_id_t;
-typedef signed int idmef_value_type_id_t;
-
-
 %exception {
         try {
                 $action
@@ -130,57 +126,57 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 {
         std::stringstream s;
         idmef_value_t *value = result;
-        idmef_value_type_id_t type = result.GetType();
+        IDMEFValue::IDMEFValueTypeEnum type = result.GetType();
 
-        if ( type == IDMEF_VALUE_TYPE_STRING ) {
+        if ( type == IDMEFValue::TYPE_STRING ) {
                 prelude_string_t *str = idmef_value_get_string(value);
                 *ret = SWIG_FromCharPtrAndSize(prelude_string_get_string(str), prelude_string_get_len(str));
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_INT8 )
+        else if ( type == IDMEFValue::TYPE_INT8 )
                 *ret = SWIG_From_int(idmef_value_get_int8(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT8 )
+        else if ( type == IDMEFValue::TYPE_UINT8 )
                 *ret = SWIG_From_unsigned_SS_int(idmef_value_get_uint8(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT16 )
+        else if ( type == IDMEFValue::TYPE_INT16 )
                 *ret = SWIG_From_int(idmef_value_get_int16(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT16 )
+        else if ( type == IDMEFValue::TYPE_UINT16 )
                 *ret = SWIG_From_unsigned_SS_int(idmef_value_get_uint16(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT32 )
+        else if ( type == IDMEFValue::TYPE_INT32 )
                 *ret = SWIG_From_int(idmef_value_get_int32(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT32 )
+        else if ( type == IDMEFValue::TYPE_UINT32 )
                 *ret = SWIG_From_unsigned_SS_int(idmef_value_get_uint32(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_INT64 )
+        else if ( type == IDMEFValue::TYPE_INT64 )
                 *ret = SWIG_From_long_SS_long(idmef_value_get_int64(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_UINT64 )
+        else if ( type == IDMEFValue::TYPE_UINT64 )
                 *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_value_get_uint64(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_FLOAT )
+        else if ( type == IDMEFValue::TYPE_FLOAT )
                 *ret = SWIG_From_float(idmef_value_get_float(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_DOUBLE )
+        else if ( type == IDMEFValue::TYPE_DOUBLE )
                 *ret = SWIG_From_double(idmef_value_get_double(value));
 
-        else if ( type == IDMEF_VALUE_TYPE_ENUM ) {
+        else if ( type == IDMEFValue::TYPE_ENUM ) {
                 const char *s = idmef_class_enum_to_string(idmef_value_get_class(value), idmef_value_get_enum(value));
                 *ret = SWIG_FromCharPtr(s);
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_TIME ) {
+        else if ( type == IDMEFValue::TYPE_TIME ) {
                 IDMEFTime time = result;
                 *ret = SWIG_NewPointerObj(new IDMEFTime(time), SWIGTYPE_p_Prelude__IDMEFTime, 1);
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_LIST )
+        else if ( type == IDMEFValue::TYPE_LIST )
                 *ret = IDMEFValueList_to_SWIG(result);
 
-        else if ( type == IDMEF_VALUE_TYPE_DATA ) {
+        else if ( type == IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
@@ -201,7 +197,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
-        else if ( type == IDMEF_VALUE_TYPE_CLASS )
+        else if ( type == IDMEFValue::TYPE_CLASS )
                 *ret = SWIG_NewPointerObj(new IDMEFValue(idmef_value_ref(value)), SWIGTYPE_p_Prelude__IDMEFValue, 1);
 
         else return -1;

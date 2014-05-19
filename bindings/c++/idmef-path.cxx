@@ -73,9 +73,9 @@ IDMEFValue IDMEFPath::Get(IDMEF &message)
 
 
 
-idmef_value_type_id_t IDMEFPath::GetValueType(int depth)
+Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath::GetValueType(int depth)
 {
-        return idmef_path_get_value_type(_path, depth);
+        return (Prelude::IDMEFValue::IDMEFValueTypeEnum) idmef_path_get_value_type(_path, depth);
 }
 
 

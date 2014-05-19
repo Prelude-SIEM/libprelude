@@ -188,7 +188,7 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
                 ret = IDMEFValue_to_SWIG($1, &mysv);
                 if ( ret < 0 ) {
                         std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string($1.GetType()) << "'";
+                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";
                         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
                 }
 

@@ -62,7 +62,7 @@ namespace Prelude {
                 void Set(Prelude::IDMEF &message, double value);
 
                 idmef_class_id_t GetClass(int depth=-1);
-                idmef_value_type_id_t GetValueType(int depth=-1);
+                Prelude::IDMEFValue::IDMEFValueTypeEnum GetValueType(int depth=-1);
                 int SetIndex(unsigned int index, int depth=-1);
                 int UndefineIndex(int depth=-1);
                 int GetIndex(int depth=-1);
