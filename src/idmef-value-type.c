@@ -534,11 +534,56 @@ static void class_destroy(idmef_value_type_t *type)
 }
 
 
+
+static int list_to_string(const char *cname, idmef_class_id_t class, prelude_list_t *head, prelude_string_t *out,
+                          int (*item_to_string_cb)(int class, void *item, prelude_string_t *out))
+{
+        int ret, j;
+        prelude_list_t *tmp;
+
+        if ( prelude_list_is_empty(head) )
+                return 0;
+
+        if ( cname )
+                ret = prelude_string_sprintf(out, " %s:", cname);
+        else
+                ret = prelude_string_cat(out, " ");
+
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_cat(out, "(");
+        if ( ret < 0 )
+                return ret;
+
+        j = 0;
+        prelude_list_for_each(head, tmp) {
+                if ( j++ > 0 ) {
+                        ret = prelude_string_cat(out, ", ");
+                        if ( ret < 0 )
+                                return ret;
+                }
+
+                ret = item_to_string_cb(class, prelude_linked_object_get_object(tmp), out);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        return prelude_string_cat(out, ")");
+}
+
+
+
+static int listed_str_to_string(idmef_class_id_t parent_class, void *parent, prelude_string_t *out)
+{
+        return prelude_string_cat(out, prelude_string_get_string(parent));
+}
+
+
 static int class_to_string(idmef_class_id_t parent_class, void *parent, prelude_string_t *out)
 {
-        int ret, i, j;
+        int ret, i;
         void *childptr;
-        prelude_list_t *tmp;
         idmef_class_id_t childclass;
         idmef_value_type_id_t vtype;
         const char *pname = idmef_class_get_name(parent_class);
@@ -559,16 +604,26 @@ static int class_to_string(idmef_class_id_t parent_class, void *parent, prelude_
                 childclass = idmef_class_get_child_class(parent_class, i);
 
                 if ( vtype != IDMEF_VALUE_TYPE_CLASS ) {
-                        ret = prelude_string_sprintf(out, " %s:", idmef_class_get_child_name(parent_class, i));
-                        if ( ret < 0 ) {
+                        const char *cname = idmef_class_get_child_name(parent_class, i);
+
+                        if ( ! idmef_class_is_child_list(parent_class, i) ) {
+                                ret = prelude_string_sprintf(out, " %s:", cname);
+                                if ( ret < 0 ) {
+                                        idmef_value_destroy(childptr);
+                                        return ret;
+                                }
+
+                                ret = idmef_value_to_string(childptr, out);
                                 idmef_value_destroy(childptr);
-                                return ret;
+                                if ( ret < 0 )
+                                        return ret;
                         }
 
-                        ret = idmef_value_to_string(childptr, out);
-                        idmef_value_destroy(childptr);
-                        if ( ret < 0 )
-                                return ret;
+                        else {
+                                ret = list_to_string(cname, childclass, childptr, out, listed_str_to_string);
+                                if ( ret < 0 )
+                                        return ret;
+                        }
 
                         continue;
                 }
@@ -581,25 +636,10 @@ static int class_to_string(idmef_class_id_t parent_class, void *parent, prelude_
                         ret = class_to_string(childclass, childptr, out);
                         if ( ret < 0 )
                                 return ret;
-                } else if ( ! prelude_list_is_empty((prelude_list_t *) childptr) ) {
-                        ret = prelude_string_cat(out, " (");
-                        if ( ret < 0 )
-                                return ret;
+                }
 
-                        j = 0;
-                        prelude_list_for_each((prelude_list_t *)childptr, tmp) {
-                                if ( j++ > 0 ) {
-                                        ret = prelude_string_cat(out, ", ");
-                                        if ( ret < 0 )
-                                                return ret;
-                                }
-
-                                ret = class_to_string(childclass, prelude_linked_object_get_object(tmp), out);
-                                if ( ret < 0 )
-                                        return ret;
-                        }
-
-                        ret = prelude_string_cat(out, ")");
+                else {
+                        ret = list_to_string(NULL, childclass, childptr, out, class_to_string);
                         if ( ret < 0 )
                                 return ret;
                 }
