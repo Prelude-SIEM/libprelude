@@ -214,13 +214,8 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                                 ret = idmef_value_type_ref(&vt);
                                 if ( ret < 0 )
                                         idmef_value_destroy(value);
-                                else
-                                        ret = 1;
                         }
                 }
-
-                if ( ret == 0 )
-                        continue;
 
                 if ( ret < 0 ) {
                         idmef_value_destroy(*value_list);
@@ -236,8 +231,10 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                 cnt++;
         }
 
-        if ( ! cnt )
+        if ( ! cnt ) {
                 idmef_value_destroy(*value_list);
+                *value_list = NULL;
+        }
 
         return cnt;
 }
@@ -289,7 +286,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
 
                 if ( ! child ) {
                         *value = NULL;
-                        return (depth == path->depth - 1) ? 1 : 0;
+                        return 0;
                 }
 
                 child_class = idmef_class_get_child_class(parent_class, child_id);
