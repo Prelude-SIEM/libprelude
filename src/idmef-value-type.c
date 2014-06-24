@@ -60,38 +60,42 @@
 #define ENUM_OPERATOR    STRING_OPERATOR|INTEGER_OPERATOR
 
 
-#define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
-        static int name ## _read(idmef_value_type_t *dst, const char *buf)               \
-        {                                                                                \
-                int ret;                                                                 \
-                ret = sscanf(buf, (scanfmt), &(dst)->data. name ##_val);                 \
-                return (ret == 1) ? 0 : prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
-                                                              "Reading " #name " value failed");    \
-        }                                                                                \
-                                                                                         \
-        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)  \
-        {                                                                                \
-                return prelude_string_sprintf(out, (printfmt), src->data.name ##_val);   \
+#define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                            \
+        static int name ## _read(idmef_value_type_t *dst, const char *buf)                 \
+        {                                                                                  \
+                char *endptr;                                                              \
+                                                                                           \
+                (dst)->data. name ##_val = strtod(buf, &endptr);                           \
+                if ( buf == endptr || *endptr != '\0' || errno == ERANGE )                 \
+                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
+                        "Reading " #name " value failed with '%s'", buf);                  \
+                return 1;                                                                  \
+        }                                                                                  \
+                                                                                           \
+        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)    \
+        {                                                                                  \
+                return prelude_string_sprintf(out, (printfmt), src->data.name ##_val);     \
         }
 
 
-#define GENERIC_TWO_BASES_RW_FUNC(fmt_dec, fmt_hex, name, type)                         \
-        static int name ## _read(idmef_value_type_t *dst, const char *buf)              \
-        {                                                                               \
-                int ret;                                                                \
-                                                                                        \
-                if ( strncasecmp(buf, "0x", 2) == 0 )                                   \
-                        ret = sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);        \
-                else                                                                    \
-                        ret = sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);        \
-                                                                                        \
-                return (ret == 1) ? 0 : prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
-                                                              "Reading " #name " value failed");    \
-        }                                                                               \
-                                                                                        \
-        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out) \
-        {                                                                               \
-                return prelude_string_sprintf(out, (fmt_dec), src->data.name ##_val);   \
+#define GENERIC_TWO_BASES_RW_FUNC(rfunc, fmt_dec, name, type, min, max)                              \
+        static int name ## _read(idmef_value_type_t *dst, const char *buf)                           \
+        {                                                                                            \
+                type tmp;                                                                            \
+                char *endptr;                                                                        \
+                                                                                                     \
+                tmp = rfunc(buf, &endptr, 0);                                                        \
+                if ( buf == endptr || *endptr != '\0' || tmp < min || tmp > max || errno == ERANGE ) \
+                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,           \
+                        "Value out of range, required: [" # min " - " # max "], got '%s'", buf);     \
+                                                                                                     \
+                dst->data.name ##_val = tmp;                                                         \
+                return 0;                                                                            \
+        }                                                                                            \
+                                                                                                     \
+        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)              \
+        {                                                                                            \
+                return prelude_string_sprintf(out, (fmt_dec), src->data.name ##_val);                \
         }
 
 
@@ -117,51 +121,17 @@ typedef struct {
 
 
 
-static int byte_read(idmef_value_type_t *dst, const char *buf, unsigned int min, unsigned int max)
-{
-        char *endptr;
-        long int tmp;
-
-        tmp = strtol(buf, &endptr, 0);
-        if ( buf == endptr || tmp < min || tmp > max )
-                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,
-                                             "Value out of range, required: [%u-%u], got %s",
-                                             min, max, buf);
-
-        dst->data.int8_val = (int8_t) tmp;
-
-        return 0;
-}
-
-
-static int int8_write(const idmef_value_type_t *src, prelude_string_t *out)
-{
-        return prelude_string_sprintf(out, "%d", (int) src->data.int8_val);
-}
-
-static int uint8_write(const idmef_value_type_t *src, prelude_string_t *out)
-{
-        return prelude_string_sprintf(out, "%u", (int) src->data.int8_val);
-}
-
-static int int8_read(idmef_value_type_t *dst, const char *buf)
-{
-        return byte_read(dst, buf, PRELUDE_INT8_MIN, PRELUDE_INT8_MAX);
-}
-
-static int uint8_read(idmef_value_type_t *dst, const char *buf)
-{
-        return byte_read(dst, buf, 0, PRELUDE_UINT8_MAX);
-}
-
-
-
-GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
-GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
-GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
-GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
-GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRId64, "%" PRELUDE_PRIx64, int64, int64_t)
-GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRIu64, "%" PRELUDE_PRIx64, uint64, uint64_t)
+/*
+ * We specify a type bigger than the one handled, in order to catch min/max error.
+ */
+GENERIC_TWO_BASES_RW_FUNC(strtol, "%d", int8, int, PRELUDE_INT8_MIN, PRELUDE_INT8_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtol, "%d", uint8, unsigned int, 0, PRELUDE_UINT8_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtol, "%hd", int16, int, PRELUDE_INT16_MIN, PRELUDE_INT16_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtoul, "%hu", uint16, unsigned int, 0, PRELUDE_UINT16_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtol, "%d", int32, int64_t, PRELUDE_INT32_MIN, PRELUDE_INT32_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtoul, "%u", uint32, uint64_t, 0, PRELUDE_UINT32_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtoll, "%" PRELUDE_PRId64, int64, int64_t, PRELUDE_INT64_MIN, PRELUDE_INT64_MAX)
+GENERIC_TWO_BASES_RW_FUNC(strtoull, "%" PRELUDE_PRIu64, uint64, uint64_t, 0, PRELUDE_UINT64_MAX)
 
 GENERIC_ONE_BASE_RW_FUNC("%f", "%f", float, float)
 GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
