@@ -8,7 +8,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 34
+#define YY_FLEX_SUBMINOR_VERSION 37
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -53,7 +53,6 @@ typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
-#endif /* ! C99 */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -83,6 +82,8 @@ typedef unsigned int flex_uint32_t;
 #ifndef UINT32_MAX
 #define UINT32_MAX             (4294967295U)
 #endif
+
+#endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */
 
@@ -152,7 +153,12 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-extern int yyleng;
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
+extern yy_size_t yyleng;
 
 extern FILE *yyin, *yyout;
 
@@ -178,18 +184,6 @@ extern FILE *yyin, *yyout;
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
 
-/* The following is because we cannot portably get our hands on size_t
- * (without autoconf's help, which isn't available because we want
- * flex-generated scanners to compile on their own).
- * Given that the standard has decreed that size_t exists since 1989,
- * I guess we can afford to depend on it. Manoj.
- */
-
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
-
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
@@ -207,7 +201,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -277,8 +271,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -306,7 +300,7 @@ static void yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE yy_scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 void *yyalloc (yy_size_t  );
 void *yyrealloc (void *,yy_size_t  );
@@ -338,7 +332,7 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
-#define yywrap(n) 1
+#define yywrap() 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;
@@ -560,27 +554,14 @@ char *yytext;
 #include "common.h"
 #include "idmef-criteria-string.yac.h"
 
-#define YY_NO_UNPUT
+#define YY_NO_INPUT
 #define YY_NO_TOP_STATE
 
 #ifndef MIN
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-int yylex(void);
-int yyget_lineno(void);
-FILE *yyget_in(void);
-FILE *yyget_out(void);
-int yyget_leng(void);
-char *yyget_text(void);
-void yyset_lineno(int line_number);
-void yyset_in(FILE *in_str);
-void yyset_out(FILE *out_str);
-int yyget_debug(void);
-void yyset_debug(int bdebug);
-int yylex_destroy(void);
 static void do_pop(void);
-
 
 static unsigned int inp = 0;
 
@@ -607,7 +588,7 @@ static char *escape_str(char *str)
 
 
 
-#line 611 "idmef-criteria-string.lex.c"
+#line 592 "idmef-criteria-string.lex.c"
 
 #define INITIAL 0
 #define IDMEF_VALUE 1
@@ -626,6 +607,35 @@ static char *escape_str(char *str)
 
 static int yy_init_globals (void );
 
+/* Accessor methods to globals.
+   These are made visible to non-reentrant scanners for convenience. */
+
+int yylex_destroy (void );
+
+int yyget_debug (void );
+
+void yyset_debug (int debug_flag  );
+
+YY_EXTRA_TYPE yyget_extra (void );
+
+void yyset_extra (YY_EXTRA_TYPE user_defined  );
+
+FILE *yyget_in (void );
+
+void yyset_in  (FILE * in_str  );
+
+FILE *yyget_out (void );
+
+void yyset_out  (FILE * out_str  );
+
+yy_size_t yyget_leng (void );
+
+char *yyget_text (void );
+
+int yyget_lineno (void );
+
+void yyset_lineno (int line_number  );
+
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
@@ -638,8 +648,6 @@ extern int yywrap (void );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  );
-    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int );
 #endif
@@ -678,7 +686,7 @@ static int input (void );
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO fwrite( yytext, yyleng, 1, yyout )
+#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -689,7 +697,7 @@ static int input (void );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -771,10 +779,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 91 "idmef-criteria-string.lex.l"
+#line 79 "idmef-criteria-string.lex.l"
 
 
-#line 778 "idmef-criteria-string.lex.c"
+#line 786 "idmef-criteria-string.lex.c"
 
 	if ( !(yy_init) )
 		{
@@ -859,27 +867,27 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 93 "idmef-criteria-string.lex.l"
+#line 81 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 94 "idmef-criteria-string.lex.l"
+#line 82 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 95 "idmef-criteria-string.lex.l"
+#line 83 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 96 "idmef-criteria-string.lex.l"
+#line 84 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 98 "idmef-criteria-string.lex.l"
+#line 86 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = strdup(yytext);
                                 return TOK_IDMEF_PATH;
@@ -887,128 +895,128 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 103 "idmef-criteria-string.lex.l"
+#line 91 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 104 "idmef-criteria-string.lex.l"
+#line 92 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 105 "idmef-criteria-string.lex.l"
+#line 93 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 106 "idmef-criteria-string.lex.l"
+#line 94 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 108 "idmef-criteria-string.lex.l"
+#line 96 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 109 "idmef-criteria-string.lex.l"
+#line 97 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER_OR_EQUAL; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 110 "idmef-criteria-string.lex.l"
+#line 98 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 111 "idmef-criteria-string.lex.l"
+#line 99 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS_OR_EQUAL; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 113 "idmef-criteria-string.lex.l"
+#line 101 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 114 "idmef-criteria-string.lex.l"
+#line 102 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP_NOCASE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 115 "idmef-criteria-string.lex.l"
+#line 103 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 116 "idmef-criteria-string.lex.l"
+#line 104 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP_NOCASE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 118 "idmef-criteria-string.lex.l"
+#line 106 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 119 "idmef-criteria-string.lex.l"
+#line 107 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 120 "idmef-criteria-string.lex.l"
+#line 108 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL_NOCASE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 121 "idmef-criteria-string.lex.l"
+#line 109 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 122 "idmef-criteria-string.lex.l"
+#line 110 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL_NOCASE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 123 "idmef-criteria-string.lex.l"
+#line 111 "idmef-criteria-string.lex.l"
 { return TOK_NOT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 125 "idmef-criteria-string.lex.l"
+#line 113 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 126 "idmef-criteria-string.lex.l"
+#line 114 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 127 "idmef-criteria-string.lex.l"
+#line 115 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 128 "idmef-criteria-string.lex.l"
+#line 116 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 130 "idmef-criteria-string.lex.l"
+#line 118 "idmef-criteria-string.lex.l"
 { return '('; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 131 "idmef-criteria-string.lex.l"
+#line 119 "idmef-criteria-string.lex.l"
 { return ')'; }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 133 "idmef-criteria-string.lex.l"
+#line 121 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
@@ -1021,7 +1029,7 @@ YY_RULE_SETUP
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 142 "idmef-criteria-string.lex.l"
+#line 130 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
@@ -1034,7 +1042,7 @@ YY_RULE_SETUP
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 151 "idmef-criteria-string.lex.l"
+#line 139 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strdup(yytext));
 
@@ -1047,14 +1055,14 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 160 "idmef-criteria-string.lex.l"
+#line 148 "idmef-criteria-string.lex.l"
 {
                                 /* nop */;
                         }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 164 "idmef-criteria-string.lex.l"
+#line 152 "idmef-criteria-string.lex.l"
 {
                                 inp++;
                                 return '(';
@@ -1062,7 +1070,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 169 "idmef-criteria-string.lex.l"
+#line 157 "idmef-criteria-string.lex.l"
 {
                                 do_pop();
                                 return ')';
@@ -1070,27 +1078,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 174 "idmef-criteria-string.lex.l"
+#line 162 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 175 "idmef-criteria-string.lex.l"
+#line 163 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 176 "idmef-criteria-string.lex.l"
+#line 164 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 177 "idmef-criteria-string.lex.l"
+#line 165 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 179 "idmef-criteria-string.lex.l"
+#line 167 "idmef-criteria-string.lex.l"
 {
                                 /* invalid token */
                                 return TOK_ERROR;
@@ -1099,14 +1107,14 @@ YY_RULE_SETUP
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 184 "idmef-criteria-string.lex.l"
+#line 172 "idmef-criteria-string.lex.l"
 {
                                 /* nop */;
                         }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 188 "idmef-criteria-string.lex.l"
+#line 176 "idmef-criteria-string.lex.l"
 {
                                 /* invalid token */
                                 yylval.str = strdup(yytext);
@@ -1115,10 +1123,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 196 "idmef-criteria-string.lex.l"
+#line 184 "idmef-criteria-string.lex.l"
 ECHO;
 	YY_BREAK
-#line 1122 "idmef-criteria-string.lex.c"
+#line 1130 "idmef-criteria-string.lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IDMEF_VALUE):
 	yyterminate();
@@ -1305,21 +1313,21 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) ((yy_c_buf_p) - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1350,7 +1358,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -1445,44 +1453,7 @@ static int yy_get_next_buffer (void)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 82);
 
-	return yy_is_jam ? 0 : yy_current_state;
-}
-
-    static void yyunput (int c, register char * yy_bp )
-{
-	register char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
-		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		register char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
+		return yy_is_jam ? 0 : yy_current_state;
 }
 
 #ifndef YY_NO_INPUT
@@ -1509,7 +1480,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -1669,10 +1640,6 @@ static void yy_load_buffer_state  (void)
 	yyfree((void *) b  );
 }
 
-#ifndef __cplusplus
-extern int isatty (int );
-#endif /* __cplusplus */
-    
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a yyrestart() or at EOF.
@@ -1785,7 +1752,7 @@ void yypop_buffer_state (void)
  */
 static void yyensure_buffer_stack (void)
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -1877,17 +1844,17 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
 
 /** Setup the input buffer state to scan the given bytes. The next call to yylex() will
  * scan from a @e copy of @a bytes.
- * @param bytes the byte buffer to scan
- * @param len the number of bytes in the buffer pointed to by @a bytes.
+ * @param yybytes the byte buffer to scan
+ * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -2006,7 +1973,7 @@ FILE *yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int yyget_leng  (void)
+yy_size_t yyget_leng  (void)
 {
         return yyleng;
 }
@@ -2162,7 +2129,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 196 "idmef-criteria-string.lex.l"
+#line 184 "idmef-criteria-string.lex.l"
 
 
 
