@@ -1068,7 +1068,9 @@ static int cast_to_data(idmef_value_t *input)
                 return idmef_value_set_data(input, data);
         }
 
-        return -1;
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
+                                     "Unable to cast input type '%s' to 'data'",
+                                     idmef_value_type_to_string(vtype));
 }
 
 
