@@ -1265,6 +1265,8 @@ int _idmef_value_copy_internal(const idmef_value_t *val,
                         return ret;
 
                 ret = idmef_value_type_copy(&copy.type, res);
+                if ( val->own_data )
+                        idmef_value_type_destroy(&copy.type);
         }
 
         return ret;
