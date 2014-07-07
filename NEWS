@@ -1,3 +1,77 @@
+* 2014-07-07, libprelude-1.2.5:
+
+- Various improvements
+
+    - Improved error handling
+
+    - In high level language, return an empty list if the path is ambiguous
+
+    - Allow NULL idmef_value_t in list
+
+        When retrieving value from a path, like alert.source(*).node.address(*).address,
+        we also want to return undefined values, so that the returned list conforms
+        to the number of item/index in the retrieved path.
+
+    - Improved idmef_path_set() implementation
+
+        It is now possible to set undefined elements, or override them.
+        Additionally, append and prepend operation is now much faster.
+
+    - Map idmef_value_type_id_t to a C++ enumeration
+
+    - Provide __hash__ function for IDMEFValue class
+      This allow Python sets() operation on IDMEFValue instance.
+
+    - Explicitly activate thread support
+
+    - Comparison operator support for IDMEFValue()
+
+        Allow to directly compare two values together,
+        without calling the IDMEFValue.Match() method.
+        Add support of the Python "in" operator (item in valuelist).
+
+    - New prelude_list_splice() / prelude_list_splice_tail() function
+
+    - Add missing PRELUDE_SCN* definition
+
+    - Improve AdditionalData type checking
+
+    - Prelude-Timer optimisation
+
+- Corrections
+
+    - Various string conversion fixes
+
+    - Fix leak for all methods returning an idmef_value_type_id_t
+
+    - Fix float value corruption when writing to a prelude_message
+
+    - Fix high level bindings ambiguity on IDMEFPath.Set() and IDMEF.Set() methods
+
+    - NTP timestamps were not correctly printed
+
+    - Corrected IDMEF Clone() method
+
+    - Fix idmef-message-helper units tests
+
+- Compilation fixes
+
+    - Various compilation warning fixes
+
+    - Ruby high level bindings compilation fixes
+      Fixed #513: make the Ruby binding code compatible with Ruby 1.9
+
+    - Update to latest GnuTLS API
+      Fix compilation if GnuTLS-Extra is not available
+
+    - Fix Perl high level bindings compilation
+
+    - Fixed #386: build failure with libtool 2.4
+
+    - Fix configure script generation, and update GnuLib code
+
+
+
 * 2012-06-04, libprelude-1.0.1:
 
 - Fixed typo in setup.py.in

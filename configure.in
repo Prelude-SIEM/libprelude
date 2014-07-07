@@ -1,4 +1,4 @@
-AC_INIT(libprelude, 1.0.1)
+AC_INIT(libprelude, 1.2.5)
 
 dnl **********************************************************
 dnl * Library soname (http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91)
