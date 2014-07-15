@@ -22,6 +22,10 @@
 *
 *****/
 
+%top{
+#include "libmissing.h"
+}
+
 %{
 #include <stdlib.h>
 #include <string.h>

@@ -1,5 +1,9 @@
+#line 26 "idmef-criteria-string.lex.l"
+#include "libmissing.h"
 
-#line 3 "idmef-criteria-string.lex.c"
+
+
+#line 7 "idmef-criteria-string.lex.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -546,7 +550,8 @@ char *yytext;
 * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 *****/
-#line 26 "idmef-criteria-string.lex.l"
+
+#line 30 "idmef-criteria-string.lex.l"
 #include <stdlib.h>
 #include <string.h>
 
@@ -588,7 +593,7 @@ static char *escape_str(char *str)
 
 
 
-#line 592 "idmef-criteria-string.lex.c"
+#line 597 "idmef-criteria-string.lex.c"
 
 #define INITIAL 0
 #define IDMEF_VALUE 1
@@ -779,10 +784,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 79 "idmef-criteria-string.lex.l"
+#line 83 "idmef-criteria-string.lex.l"
 
 
-#line 786 "idmef-criteria-string.lex.c"
+#line 791 "idmef-criteria-string.lex.c"
 
 	if ( !(yy_init) )
 		{
@@ -867,27 +872,27 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 81 "idmef-criteria-string.lex.l"
+#line 85 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 82 "idmef-criteria-string.lex.l"
+#line 86 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 83 "idmef-criteria-string.lex.l"
+#line 87 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 84 "idmef-criteria-string.lex.l"
+#line 88 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 86 "idmef-criteria-string.lex.l"
+#line 90 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = strdup(yytext);
                                 return TOK_IDMEF_PATH;
@@ -895,128 +900,128 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 91 "idmef-criteria-string.lex.l"
+#line 95 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 92 "idmef-criteria-string.lex.l"
+#line 96 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 93 "idmef-criteria-string.lex.l"
+#line 97 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 94 "idmef-criteria-string.lex.l"
+#line 98 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 96 "idmef-criteria-string.lex.l"
+#line 100 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 97 "idmef-criteria-string.lex.l"
+#line 101 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER_OR_EQUAL; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 98 "idmef-criteria-string.lex.l"
+#line 102 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 99 "idmef-criteria-string.lex.l"
+#line 103 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS_OR_EQUAL; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 101 "idmef-criteria-string.lex.l"
+#line 105 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 102 "idmef-criteria-string.lex.l"
+#line 106 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP_NOCASE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 103 "idmef-criteria-string.lex.l"
+#line 107 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 104 "idmef-criteria-string.lex.l"
+#line 108 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP_NOCASE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 106 "idmef-criteria-string.lex.l"
+#line 110 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 107 "idmef-criteria-string.lex.l"
+#line 111 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 108 "idmef-criteria-string.lex.l"
+#line 112 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL_NOCASE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 109 "idmef-criteria-string.lex.l"
+#line 113 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 110 "idmef-criteria-string.lex.l"
+#line 114 "idmef-criteria-string.lex.l"
 { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL_NOCASE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 111 "idmef-criteria-string.lex.l"
+#line 115 "idmef-criteria-string.lex.l"
 { return TOK_NOT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 113 "idmef-criteria-string.lex.l"
+#line 117 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 114 "idmef-criteria-string.lex.l"
+#line 118 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 115 "idmef-criteria-string.lex.l"
+#line 119 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 116 "idmef-criteria-string.lex.l"
+#line 120 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 118 "idmef-criteria-string.lex.l"
+#line 122 "idmef-criteria-string.lex.l"
 { return '('; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 119 "idmef-criteria-string.lex.l"
+#line 123 "idmef-criteria-string.lex.l"
 { return ')'; }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 121 "idmef-criteria-string.lex.l"
+#line 125 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
@@ -1029,7 +1034,7 @@ YY_RULE_SETUP
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 130 "idmef-criteria-string.lex.l"
+#line 134 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
@@ -1042,7 +1047,7 @@ YY_RULE_SETUP
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 139 "idmef-criteria-string.lex.l"
+#line 143 "idmef-criteria-string.lex.l"
 {
                                 yylval.str = escape_str(strdup(yytext));
 
@@ -1055,14 +1060,14 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 148 "idmef-criteria-string.lex.l"
+#line 152 "idmef-criteria-string.lex.l"
 {
                                 /* nop */;
                         }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 152 "idmef-criteria-string.lex.l"
+#line 156 "idmef-criteria-string.lex.l"
 {
                                 inp++;
                                 return '(';
@@ -1070,7 +1075,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 157 "idmef-criteria-string.lex.l"
+#line 161 "idmef-criteria-string.lex.l"
 {
                                 do_pop();
                                 return ')';
@@ -1078,27 +1083,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 162 "idmef-criteria-string.lex.l"
+#line 166 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 163 "idmef-criteria-string.lex.l"
+#line 167 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_AND; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 164 "idmef-criteria-string.lex.l"
+#line 168 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 165 "idmef-criteria-string.lex.l"
+#line 169 "idmef-criteria-string.lex.l"
 { return TOK_OPERATOR_OR; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 167 "idmef-criteria-string.lex.l"
+#line 171 "idmef-criteria-string.lex.l"
 {
                                 /* invalid token */
                                 return TOK_ERROR;
@@ -1107,14 +1112,14 @@ YY_RULE_SETUP
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 172 "idmef-criteria-string.lex.l"
+#line 176 "idmef-criteria-string.lex.l"
 {
                                 /* nop */;
                         }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 176 "idmef-criteria-string.lex.l"
+#line 180 "idmef-criteria-string.lex.l"
 {
                                 /* invalid token */
                                 yylval.str = strdup(yytext);
@@ -1123,10 +1128,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 184 "idmef-criteria-string.lex.l"
+#line 188 "idmef-criteria-string.lex.l"
 ECHO;
 	YY_BREAK
-#line 1130 "idmef-criteria-string.lex.c"
+#line 1135 "idmef-criteria-string.lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IDMEF_VALUE):
 	yyterminate();
@@ -2129,7 +2134,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 184 "idmef-criteria-string.lex.l"
+#line 188 "idmef-criteria-string.lex.l"
 
 
 

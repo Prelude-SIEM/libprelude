@@ -23,6 +23,10 @@
 *****/
 
 %{
+#include "libmissing.h"
+%}
+
+%{
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA
 
 #include <stdio.h>

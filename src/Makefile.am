@@ -60,22 +60,4 @@ libprelude_la_SOURCES = 		\
 	idmef-value.c			\
 	idmef-value-type.c		
 
-
-
-IDMEF_CRITERIA_STRING_LEX_O=idmef-criteria-string.lex.o
-$(IDMEF_CRITERIA_STRING_LEX_O): idmef-criteria-string.lex.c
-	$(MAKE) idmef-criteria-string.lex.o CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_LEX_O=dummy-idmef-criteria-string.lex.o
-
-IDMEF_CRITERIA_STRING_LEX_LO=idmef-criteria-string.lex.lo
-$(IDMEF_CRITERIA_STRING_LEX_LO): idmef-criteria-string.lex.c
-	$(MAKE) idmef-criteria-string.lex.lo CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_LEX_LO=dummy-idmef-criteria-string.lex.lo
-
-IDMEF_CRITERIA_STRING_YAC_O=idmef-criteria-string.yac.o
-$(IDMEF_CRITERIA_STRING_YAC_O): idmef-criteria-string.yac.c
-	$(MAKE) idmef-criteria-string.yac.o CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_YAC_O=dummy-idmef-criteria-string.yac.o
-
-IDMEF_CRITERIA_STRING_YAC_LO=idmef-criteria-string.yac.lo
-$(IDMEF_CRITERIA_STRING_YAC_LO): idmef-criteria-string.yac.c
-	$(MAKE) idmef-criteria-string.yac.lo CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_YAC_LO=dummy-idmef-criteria-string.yac.lo
-
 -include $(top_srcdir)/git.mk
