@@ -4,254 +4,255 @@
 typedef struct {
         const char *name;
         prelude_bool_t list;
+        prelude_bool_t keyed_list;
         idmef_value_type_id_t type;
         idmef_class_id_t class;
 } children_list_t;
 
 const children_list_t idmef_additional_data_children_list[] = {
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE },
-        { "meaning", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "data", 0, IDMEF_VALUE_TYPE_DATA, 0 },
+        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE },
+        { "data", 0, 0, IDMEF_VALUE_TYPE_DATA, 0 },
 };
 
 const children_list_t idmef_reference_children_list[] = {
-        { "origin", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_REFERENCE_ORIGIN },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "url", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "meaning", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "origin", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_REFERENCE_ORIGIN },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_classification_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "text", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "reference", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_REFERENCE },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "text", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "reference", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_REFERENCE },
 };
 
 const children_list_t idmef_user_id_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_ID_TYPE },
-        { "tty", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "number", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_ID_TYPE },
+        { "tty", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
 };
 
 const children_list_t idmef_user_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_CATEGORY },
-        { "user_id", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_CATEGORY },
+        { "user_id", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID },
 };
 
 const children_list_t idmef_address_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDRESS_CATEGORY },
-        { "vlan_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "vlan_num", 0, IDMEF_VALUE_TYPE_INT32, 0 },
-        { "address", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "netmask", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDRESS_CATEGORY },
+        { "vlan_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "vlan_num", 0, 0, IDMEF_VALUE_TYPE_INT32, 0 },
+        { "address", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "netmask", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_process_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "pid", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "path", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "arg", 1, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "env", 1, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "pid", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "env", 1, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_web_service_children_list[] = {
-        { "url", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "cgi", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "http_method", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "arg", 1, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "cgi", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "http_method", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_snmp_service_children_list[] = {
-        { "oid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "message_processing_model", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "security_model", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "security_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "security_level", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "context_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "context_engine_id", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "command", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "community", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "oid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "message_processing_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "security_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "security_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "security_level", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "context_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "context_engine_id", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "community", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_service_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "ip_version", 0, IDMEF_VALUE_TYPE_UINT8, 0 },
-        { "iana_protocol_number", 0, IDMEF_VALUE_TYPE_UINT8, 0 },
-        { "iana_protocol_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "port", 0, IDMEF_VALUE_TYPE_UINT16, 0 },
-        { "portlist", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "protocol", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "web_service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_WEB_SERVICE },
-        { "snmp_service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SNMP_SERVICE },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ip_version", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0 },
+        { "iana_protocol_number", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0 },
+        { "iana_protocol_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "port", 0, 0, IDMEF_VALUE_TYPE_UINT16, 0 },
+        { "portlist", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "protocol", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "web_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_WEB_SERVICE },
+        { "snmp_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SNMP_SERVICE },
 };
 
 const children_list_t idmef_node_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_NODE_CATEGORY },
-        { "location", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "address", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDRESS },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_NODE_CATEGORY },
+        { "location", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "address", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDRESS },
 };
 
 const children_list_t idmef_source_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "spoofed", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_SOURCE_SPOOFED },
-        { "interface", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "node", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
-        { "user", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER },
-        { "process", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
-        { "service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "spoofed", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_SOURCE_SPOOFED },
+        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
+        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
+        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE },
 };
 
 const children_list_t idmef_file_access_children_list[] = {
-        { "user_id", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID },
-        { "permission", 1, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "user_id", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID },
+        { "permission", 1, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_inode_children_list[] = {
-        { "change_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "number", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "major_device", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "minor_device", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "c_major_device", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "c_minor_device", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "change_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "c_major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "c_minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
 };
 
 const children_list_t idmef_checksum_children_list[] = {
-        { "value", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "key", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "algorithm", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CHECKSUM_ALGORITHM },
+        { "value", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "key", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "algorithm", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CHECKSUM_ALGORITHM },
 };
 
 const children_list_t idmef_file_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "path", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "modify_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "access_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "data_size", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
-        { "disk_size", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
-        { "file_access", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE_ACCESS },
-        { "linkage", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_LINKAGE },
-        { "inode", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_INODE },
-        { "checksum", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CHECKSUM },
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_CATEGORY },
-        { "fstype", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_FSTYPE },
-        { "file_type", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "modify_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "access_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "data_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "disk_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "file_access", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE_ACCESS },
+        { "linkage", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_LINKAGE },
+        { "inode", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_INODE },
+        { "checksum", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CHECKSUM },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_CATEGORY },
+        { "fstype", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_FSTYPE },
+        { "file_type", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_linkage_children_list[] = {
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_LINKAGE_CATEGORY },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "path", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "file", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_LINKAGE_CATEGORY },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "file", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE },
 };
 
 const children_list_t idmef_target_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "decoy", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_TARGET_DECOY },
-        { "interface", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "node", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
-        { "user", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER },
-        { "process", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
-        { "service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE },
-        { "file", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "decoy", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_TARGET_DECOY },
+        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
+        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
+        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE },
+        { "file", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE },
 };
 
 const children_list_t idmef_analyzer_children_list[] = {
-        { "analyzerid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "manufacturer", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "model", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "version", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "class", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "ostype", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "osversion", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "node", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
-        { "process", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
+        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "manufacturer", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "model", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "class", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ostype", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "osversion", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS },
 };
 
 const children_list_t idmef_alertident_children_list[] = {
-        { "alertident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "analyzerid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "alertident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_impact_children_list[] = {
-        { "severity", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_SEVERITY },
-        { "completion", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_COMPLETION },
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_TYPE },
-        { "description", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "severity", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_SEVERITY },
+        { "completion", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_COMPLETION },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_TYPE },
+        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_action_children_list[] = {
-        { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ACTION_CATEGORY },
-        { "description", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ACTION_CATEGORY },
+        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
 };
 
 const children_list_t idmef_confidence_children_list[] = {
-        { "rating", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CONFIDENCE_RATING },
-        { "confidence", 0, IDMEF_VALUE_TYPE_FLOAT, 0 },
+        { "rating", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CONFIDENCE_RATING },
+        { "confidence", 0, 0, IDMEF_VALUE_TYPE_FLOAT, 0 },
 };
 
 const children_list_t idmef_assessment_children_list[] = {
-        { "impact", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_IMPACT },
-        { "action", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ACTION },
-        { "confidence", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CONFIDENCE },
+        { "impact", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_IMPACT },
+        { "action", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ACTION },
+        { "confidence", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CONFIDENCE },
 };
 
 const children_list_t idmef_tool_alert_children_list[] = {
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "command", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "alertident", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT },
 };
 
 const children_list_t idmef_correlation_alert_children_list[] = {
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "alertident", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT },
 };
 
 const children_list_t idmef_overflow_alert_children_list[] = {
-        { "program", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "size", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "buffer", 0, IDMEF_VALUE_TYPE_DATA, 0 },
+        { "program", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "size", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "buffer", 0, 0, IDMEF_VALUE_TYPE_DATA, 0 },
 };
 
 const children_list_t idmef_alert_children_list[] = {
-        { "messageid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "analyzer", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER },
-        { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "classification", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CLASSIFICATION },
-        { "detect_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "analyzer_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "source", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SOURCE },
-        { "target", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TARGET },
-        { "assessment", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ASSESSMENT },
-        { "additional_data", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA },
-        { "tool_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TOOL_ALERT },
-        { "correlation_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CORRELATION_ALERT },
-        { "overflow_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_OVERFLOW_ALERT },
+        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "classification", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CLASSIFICATION },
+        { "detect_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "source", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SOURCE },
+        { "target", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TARGET },
+        { "assessment", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ASSESSMENT },
+        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA },
+        { "tool_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TOOL_ALERT },
+        { "correlation_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CORRELATION_ALERT },
+        { "overflow_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_OVERFLOW_ALERT },
 };
 
 const children_list_t idmef_heartbeat_children_list[] = {
-        { "messageid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "analyzer", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER },
-        { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "analyzer_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
-        { "heartbeat_interval", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
-        { "additional_data", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA },
+        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "heartbeat_interval", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA },
 };
 
 const children_list_t idmef_message_children_list[] = {
-        { "version", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERT },
-        { "heartbeat", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_HEARTBEAT },
+        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERT },
+        { "heartbeat", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_HEARTBEAT },
 };
 
 

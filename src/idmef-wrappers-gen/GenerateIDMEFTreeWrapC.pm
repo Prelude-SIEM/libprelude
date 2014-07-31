@@ -88,8 +88,10 @@ sub     header
 
 
 #define LISTED_OBJECT(name, type) prelude_list_t name
+#define KEYLISTED_OBJECT(name, type) prelude_list_t name
 
 #define IS_LISTED prelude_list_t list
+#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
 
 #define UNION(type, var) type var; union
 

@@ -75,6 +75,8 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth);
 
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth);
 
+int idmef_path_get_key(const idmef_path_t *path, unsigned int depth, const char **key);
+
 int idmef_path_make_child(idmef_path_t *path, const char *child_name, int index);
 
 int idmef_path_make_parent(idmef_path_t *path);

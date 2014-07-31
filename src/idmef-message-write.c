@@ -200,11 +200,11 @@ int idmef_additional_data_write(idmef_additional_data_t *additional_data, prelud
         ret = prelude_msgbuf_set(msg, IDMEF_MSG_ADDITIONAL_DATA_TAG, 0, NULL);
         if ( ret < 0 )
                 return ret;
-        ret = uint32_write(idmef_additional_data_get_type(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_TYPE);
+        ret = prelude_string_write(idmef_additional_data_get_meaning(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_MEANING);
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_string_write(idmef_additional_data_get_meaning(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_MEANING);
+        ret = uint32_write(idmef_additional_data_get_type(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_TYPE);
         if ( ret < 0 )
                 return ret;
 

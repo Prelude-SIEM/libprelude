@@ -35,6 +35,7 @@ sub     header
 typedef struct \{
         const char *name;
         prelude_bool_t list;
+        prelude_bool_t keyed_list;
         idmef_value_type_id_t type;
         idmef_class_id_t class;
 \} children_list_t;
@@ -49,6 +50,7 @@ sub     struct
     my  $struct = shift;
     my  $name;
     my  $list;
+    my  $keyed_list;
     my  $object;
     my  $object_type;
 
@@ -60,12 +62,13 @@ sub     struct
 
             foreach my $member ( @{ $field->{member_list} } ) {
 
-                $self->output("        \{ \"$member->{name}\", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . " \},\n");
+                $self->output("        \{ \"$member->{name}\", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . " \},\n");
             }
 
         } else {
 
             $list = 0;
+            $keyed_list = 0;
             $name = $field->{name};
 
             if ( $field->{metatype} & &METATYPE_NORMAL) {
@@ -87,6 +90,10 @@ sub     struct
                 $list = 1;
                 $name = $field->{short_name};
 
+                if ( $field->{metatype} & &METATYPE_KEYED_LIST ) {
+                        $keyed_list = 1;
+                }
+
                 if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
                     $object = "IDMEF_VALUE_TYPE_" . uc("$field->{value_type}");
                     $object_type = 0;
@@ -97,7 +104,7 @@ sub     struct
                 }
             }
 
-            $self->output("        \{ \"$name\", $list, $object, $object_type \},\n");
+            $self->output("        \{ \"$name\", $list, $keyed_list, $object, $object_type \},\n");
         }
     }
     $self->output("\};\n\n");

@@ -201,17 +201,6 @@ int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude
 
 		switch ( tag ) {
 
-			case IDMEF_MSG_ADDITIONAL_DATA_TYPE: {
-                                int32_t tmp = 0;
-
-                                ret = prelude_extract_int32_safe(&tmp, buf, len);
-                                if ( ret < 0 )
-                                        return ret;
-
-				idmef_additional_data_set_type(additional_data, tmp);
-				break;
-			}
-
 			case IDMEF_MSG_ADDITIONAL_DATA_MEANING: {
                                 prelude_string_t *tmp = NULL;
 
@@ -220,6 +209,17 @@ int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude
                                         return ret;
 
 				idmef_additional_data_set_meaning(additional_data, tmp);
+				break;
+			}
+
+			case IDMEF_MSG_ADDITIONAL_DATA_TYPE: {
+                                int32_t tmp = 0;
+
+                                ret = prelude_extract_int32_safe(&tmp, buf, len);
+                                if ( ret < 0 )
+                                        return ret;
+
+				idmef_additional_data_set_type(additional_data, tmp);
 				break;
 			}
 

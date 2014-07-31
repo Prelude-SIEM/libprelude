@@ -203,19 +203,6 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
         indent += 8;
 
         {
-                int i = idmef_additional_data_get_type(ptr);
-
-
-
-                {
-                        print_indent(fd);
-                        prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
-                        print_enum(idmef_additional_data_type_to_string(i), i, fd);
-                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
-                }
-        }
-
-        {
                 prelude_string_t *field;
                 const char tmp[] = "meaning: ";
 
@@ -225,6 +212,19 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
                         print_indent(fd);
                         prelude_io_write(fd, tmp, sizeof(tmp) - 1);
                         print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                int i = idmef_additional_data_get_type(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
+                        print_enum(idmef_additional_data_type_to_string(i), i, fd);
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
                 }
         }

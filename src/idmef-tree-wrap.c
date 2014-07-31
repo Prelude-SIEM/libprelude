@@ -56,8 +56,10 @@
 
 
 #define LISTED_OBJECT(name, type) prelude_list_t name
+#define KEYLISTED_OBJECT(name, type) prelude_list_t name
 
 #define IS_LISTED prelude_list_t list
+#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
 
 #define UNION(type, var) type var; union
 
@@ -328,10 +330,9 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 
 
 struct idmef_additional_data { 
-         IS_LISTED;
+         IS_KEY_LISTED(meaning);
          REFCOUNT;
          idmef_additional_data_type_t type;
-         prelude_string_t *meaning;
          REQUIRED(idmef_data_t, *data);
  
 };
@@ -1775,7 +1776,7 @@ struct idmef_alert {
  
          idmef_assessment_t *assessment;
  
-         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+         KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
  
          UNION(idmef_alert_type_t, type) {
                  UNION_MEMBER(IDMEF_ALERT_TYPE_TOOL, idmef_tool_alert_t, *tool_alert);
@@ -1798,7 +1799,7 @@ struct idmef_heartbeat {
          idmef_time_t *analyzer_time;
  
          OPTIONAL_INT(uint32_t, heartbeat_interval);
-         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+         KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
  
 };
 
@@ -1930,11 +1931,11 @@ int _idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void
         switch ( child ) {
 
                 case 0:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning, TRUE);
+                case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr,
                                                                 IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE, ptr->type);
 
-                case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning, TRUE);
                 case 2:
                        return get_value_from_data((idmef_value_t **) childptr,  ptr->data, TRUE);
                 default:
@@ -1951,10 +1952,10 @@ int _idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int 
         switch ( child ) {
 
                 case 0:
-                        return idmef_additional_data_new_type(ptr, (idmef_additional_data_type_t **) ret);
+                        return idmef_additional_data_new_meaning(ptr, (prelude_string_t **) ret);
 
                 case 1:
-                        return idmef_additional_data_new_meaning(ptr, (prelude_string_t **) ret);
+                        return idmef_additional_data_new_type(ptr, (idmef_additional_data_type_t **) ret);
 
                 case 2:
                         return idmef_additional_data_new_data(ptr, (idmef_data_t **) ret);
@@ -1973,15 +1974,15 @@ int _idmef_additional_data_destroy_child(void *p, idmef_class_child_id_t child, 
         switch ( child ) {
 
                 case 0:
-                        ptr->type = 0;
-                        return 0;
-
-                case 1:
                         if ( ptr->meaning ) {
                                 prelude_string_destroy(ptr->meaning);
                                 ptr->meaning = NULL;
                         }
 
+                        return 0;
+
+                case 1:
+                        ptr->type = 0;
                         return 0;
 
                 case 2:
@@ -2035,55 +2036,6 @@ void idmef_additional_data_destroy(idmef_additional_data_t *ptr)
 
         idmef_additional_data_destroy_internal(ptr);
         free(ptr);
-}
-
-/**
- * idmef_additional_data_get_type:
- * @ptr: pointer to a #idmef_additional_data_t object.
- *
- * Get type children of the #idmef_additional_data_t object.
- *
- * Returns: a pointer to a idmef_additional_data_type_t object, or NULL if the children object is not set.
- */
-idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr)
-{
-        prelude_return_val_if_fail(ptr, 0); /* FIXME */
-
-        return ptr->type;
-}
-
-/**
- * idmef_additional_data_set_type:
- * @ptr: pointer to a #idmef_additional_data_t object.
- * @type: pointer to a #idmef_additional_data_type_t object.
- *
- * Set @type object as a children of @ptr.
- * if @ptr already contain an @type object, then it is destroyed,
- * and updated to point to the provided @type object.
- */
-
-void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type)
-{
-        prelude_return_if_fail(ptr);
-        ptr->type = type;
-}
-
-/**
- * idmef_additional_data_new_type:
- * @ptr: pointer to a #idmef_additional_data_t object.
- * @ret: pointer to an address where to store the created #idmef_additional_data_type_t object.
- *
- * Create a new type object, children of #idmef_additional_data_t.
- * If @ptr already contain a #idmef_additional_data_type_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret)
-{
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        *ret = &ptr->type;
-        return 0;
 }
 
 /**
@@ -2144,6 +2096,55 @@ int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_stri
         }
 
         *ret = ptr->meaning;
+        return 0;
+}
+
+/**
+ * idmef_additional_data_get_type:
+ * @ptr: pointer to a #idmef_additional_data_t object.
+ *
+ * Get type children of the #idmef_additional_data_t object.
+ *
+ * Returns: a pointer to a idmef_additional_data_type_t object, or NULL if the children object is not set.
+ */
+idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr)
+{
+        prelude_return_val_if_fail(ptr, 0); /* FIXME */
+
+        return ptr->type;
+}
+
+/**
+ * idmef_additional_data_set_type:
+ * @ptr: pointer to a #idmef_additional_data_t object.
+ * @type: pointer to a #idmef_additional_data_type_t object.
+ *
+ * Set @type object as a children of @ptr.
+ * if @ptr already contain an @type object, then it is destroyed,
+ * and updated to point to the provided @type object.
+ */
+
+void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type)
+{
+        prelude_return_if_fail(ptr);
+        ptr->type = type;
+}
+
+/**
+ * idmef_additional_data_new_type:
+ * @ptr: pointer to a #idmef_additional_data_t object.
+ * @ret: pointer to an address where to store the created #idmef_additional_data_type_t object.
+ *
+ * Create a new type object, children of #idmef_additional_data_t.
+ * If @ptr already contain a #idmef_additional_data_type_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret)
+{
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        *ret = &ptr->type;
         return 0;
 }
 
@@ -2226,13 +2227,13 @@ int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additio
 
         ret = 0;
 
-        dst->type = src->type;
-
         if ( src->meaning ) {
                 ret = prelude_string_clone(src->meaning, &dst->meaning);
                 if ( ret < 0 )
                         return ret;
         }
+
+        dst->type = src->type;
 
         if ( src->data ) {
                 ret = idmef_data_copy(src->data, dst->data);
@@ -2284,12 +2285,12 @@ int idmef_additional_data_compare(const idmef_additional_data_t *obj1, const idm
         else if ( obj1 == NULL || obj2 == NULL )
                 return -1;
 
-        if ( obj1->type != obj2->type )
-                return -1;
-
         ret = prelude_string_compare(obj1->meaning, obj2->meaning);
         if ( ret != 0 )
                 return ret;
+
+        if ( obj1->type != obj2->type )
+                return -1;
 
         ret = idmef_data_compare(obj1->data, obj2->data);
         if ( ret != 0 )

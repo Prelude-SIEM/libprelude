@@ -65,6 +65,8 @@
 
 #define IS_LISTED prelude_list_t list
 
+#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
+
 #define UNION(type, var) type var; union
 
 #define UNION_MEMBER(value, type, name) type name
@@ -139,10 +141,9 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IS_KEY_LISTED(meaning);
         REFCOUNT;
         idmef_additional_data_type_t type;
-        prelude_string_t *meaning;
         REQUIRED(idmef_data_t, *data);
 } TYPE_ID(idmef_additional_data_t, 4);
 
@@ -802,7 +803,7 @@ struct {
 
         idmef_assessment_t *assessment;
         
-        LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+        KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 
         UNION(idmef_alert_type_t, type) {
                 UNION_MEMBER(IDMEF_ALERT_TYPE_TOOL, idmef_tool_alert_t, *tool_alert);
@@ -829,7 +830,7 @@ struct {
         idmef_time_t *analyzer_time;
 
         OPTIONAL_INT(uint32_t, heartbeat_interval);
-        LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+        KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 } TYPE_ID(idmef_heartbeat_t, 47);
 
 

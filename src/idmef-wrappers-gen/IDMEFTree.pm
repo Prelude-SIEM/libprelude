@@ -25,7 +25,7 @@ BEGIN
 
     @ISA = qw/Exporter/;
     @EXPORT = qw(METATYPE_PRIMITIVE METATYPE_OPTIONAL_INT METATYPE_STRUCT
-		 METATYPE_ENUM METATYPE_NORMAL METATYPE_LIST METATYPE_UNION
+		 METATYPE_ENUM METATYPE_NORMAL METATYPE_LIST METATYPE_KEYED_LIST METATYPE_UNION
 		 OBJ_STRUCT OBJ_ENUM OBJ_PRE_DECLARED);
 }
 
@@ -37,7 +37,8 @@ sub	METATYPE_STRUCT			{ 0x04 }
 sub	METATYPE_ENUM			{ 0x08 }
 sub	METATYPE_NORMAL			{ 0x10 }
 sub	METATYPE_LIST			{ 0x20 }
-sub	METATYPE_UNION			{ 0x40 }
+sub	METATYPE_KEYED_LIST             { 0x40 }
+sub	METATYPE_UNION			{ 0x80 }
 
 sub	OBJ_STRUCT			{ 0 }
 sub	OBJ_ENUM			{ 1 }
@@ -166,11 +167,12 @@ sub	parse_struct
 {
     my	$self = shift;
     my	$line = shift;
-    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, refcount => 0, desc => [ $line ] };
+    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, is_key_listed => 0, refcount => 0, desc => [ $line ] };
     my	@field_list;
     my	$ptr;
     my	$typename;
     my	$name;
+    my  $key;
     my	$id;
     my	$var;
 
@@ -187,7 +189,6 @@ sub	parse_struct
 	} elsif ( $line =~ /^\s*IS_LISTED\s*\;\s*$/ ) {
 	    $struct->{is_listed} = 1;
 	    $self->debug("struct is listed\n");
-
 	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*struct\s+(\w+)\s+(\**)(\w+)\;$/ ) {
 	    push(@field_list, { metatype => &METATYPE_NORMAL | &METATYPE_STRUCT,
 				typename => $typename . "_t",
@@ -276,7 +277,8 @@ sub	parse_struct
 
 	    $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
 	    
-	} elsif ( ($name, $typename) = $line =~ /\s*LISTED_OBJECT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
+	} elsif ( (($key, $name, $typename) = $line =~ /\s*(KEYLISTED_OBJECT)\(\s*(\w+)\s*,\s*(\w+)\s*\)/) || 
+                  (($name, $typename) = $line =~ /\s*LISTED_OBJECT\(\s*(\w+)\s*,\s*(\w+)\s*\)/) ) {
 	    my $short_name;
 	    my $extra_metatype = 0;
 	    my $value_type;
@@ -284,11 +286,15 @@ sub	parse_struct
 	    $short_name = $name;
 	    $short_name =~ s/_list$//;
 
+            if ( defined $key ) {
+                 $extra_metatype |= &METATYPE_KEYED_LIST;
+            }
+
 	    if ( $self->{primitives}->{$typename} ) {
-		$extra_metatype = &METATYPE_PRIMITIVE;
+		$extra_metatype |= &METATYPE_PRIMITIVE;
 		$value_type = get_value_type($typename);
 	    }
-	    
+
 	    push(@field_list, { metatype => &METATYPE_LIST | $extra_metatype,
 				typename => $typename,
 				short_typename => get_idmef_name($typename),
@@ -341,7 +347,40 @@ sub	parse_struct
 		   dynamic_ident => 1 });
 	    $self->debug("parse struct field metatype:normal name:$name dynamic_ident\n");
 
-	} elsif ( ($typename, $name) = $line =~ /\s*OPTIONAL_INT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
+	} 
+
+	elsif ( ($name) = $line =~ /\s*IS_KEY_LISTED\(\s*(\w+)\s*\)/ ) {
+	    $struct->{is_listed} = 1;
+	    $struct->{is_key_listed} = 1;
+            my $typename = "prelude_string_t";
+            my $metatype;
+            my $short_typename;
+            my $value_type;
+
+            if ( defined $self->{primitives}->{$typename} ) {
+                $metatype = $self->{primitives}->{$typename};
+                $short_typename = $typename;
+                $short_typename =~ s/_t$//;
+                $value_type = get_value_type($short_typename);
+
+            } elsif ( defined $self->{structs}->{$typename} ) {
+                $metatype = &METATYPE_STRUCT;
+                $short_typename = get_idmef_name($typename);
+            }
+            push(@field_list, { metatype => &METATYPE_NORMAL | $metatype,
+                                typename => $typename,
+                                short_typename => $short_typename,
+                                value_type => $value_type,
+                                name => $name,
+                                short_name => $name,
+                                ptr => 1,
+                                required => 0,
+                                is_listed => 1,
+                                is_key_listed => 1,
+                                dynamic_ident => 0 });
+
+        }
+        elsif ( ($typename, $name) = $line =~ /\s*OPTIONAL_INT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
 	    my $metatype;
 	    my $short_typename;
 	    my $value_type;

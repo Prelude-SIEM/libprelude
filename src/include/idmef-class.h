@@ -39,6 +39,8 @@ typedef int idmef_class_child_id_t;
  */
 prelude_bool_t idmef_class_is_child_list(idmef_class_id_t classid, idmef_class_child_id_t child);
 
+prelude_bool_t idmef_class_is_child_keyed_list(idmef_class_id_t classid, idmef_class_child_id_t child);
+
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t classid, idmef_class_child_id_t child);
 
 idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t classid, idmef_class_child_id_t child);

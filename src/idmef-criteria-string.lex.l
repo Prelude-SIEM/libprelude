@@ -69,7 +69,7 @@ static char *escape_str(char *str)
 
 %}
 
-IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(\-?[0-9\*]+\))?\.?)+
+IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(((\-?[0-9\*]+)|(\"[^"]+\")|(\'[^']+\'))\))?\.?)+
 SQSTRING        \'([^\\\']|\\.)*\'
 DQSTRING        \"([^\\\"]|\\.)*\"
 BLANK           [ \t\n]+

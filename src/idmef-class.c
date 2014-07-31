@@ -114,6 +114,18 @@ prelude_bool_t idmef_class_is_child_list(idmef_class_id_t class, idmef_class_chi
 
 
 
+prelude_bool_t idmef_class_is_child_keyed_list(idmef_class_id_t class, idmef_class_child_id_t child)
+{
+        int ret;
+
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+
+        return object_data[class].children_list[child].keyed_list;
+}
+
+
 
 idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, idmef_class_child_id_t child)
 {

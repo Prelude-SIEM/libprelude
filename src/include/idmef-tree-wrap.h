@@ -70,10 +70,9 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 
 /*
  * struct {
- *         IS_LISTED;
+ *         IS_KEY_LISTED(meaning);
  *         REFCOUNT;
  *         idmef_additional_data_type_t type;
- *         prelude_string_t *meaning;
  *         REQUIRED(idmef_data_t, *data);
  * } TYPE_ID(idmef_additional_data_t, 4);
  */
@@ -94,13 +93,13 @@ int _idmef_additional_data_destroy_child(void *p, idmef_class_child_id_t child, 
 #endif
 
 void idmef_additional_data_destroy(idmef_additional_data_t *ptr);
-idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr);
-void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type);
-int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret);
-
 prelude_string_t *idmef_additional_data_get_meaning(idmef_additional_data_t *ptr);
 void idmef_additional_data_set_meaning(idmef_additional_data_t *ptr, prelude_string_t *meaning);
 int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_string_t **ret);
+
+idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr);
+void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type);
+int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret);
 
 idmef_data_t *idmef_additional_data_get_data(idmef_additional_data_t *ptr);
 void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *data);
@@ -1744,7 +1743,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val);
  * 
  *         idmef_assessment_t *assessment;
  * 
- *         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+ *         KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
  * 
  *         UNION(idmef_alert_type_t, type) {
  *                 UNION_MEMBER(IDMEF_ALERT_TYPE_TOOL, idmef_tool_alert_t, *tool_alert);
@@ -1837,7 +1836,7 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
  *         idmef_time_t *analyzer_time;
  * 
  *         OPTIONAL_INT(uint32_t, heartbeat_interval);
- *         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+ *         KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
  * } TYPE_ID(idmef_heartbeat_t, 47);
  */
 
