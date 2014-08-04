@@ -1,6 +1,9 @@
 if HAVE_EASY_BINDINGS
 if HAVE_PYTHON
 
+swigdatadir = @SWIG_DATA_DIR@/python
+dist_swigdata_DATA = libpreludecpp-python.i
+
 EXTRA_DIST = libpreludecpp-python.i PreludeEasy.py _PreludeEasy.cxx
 
 all-am: python-build

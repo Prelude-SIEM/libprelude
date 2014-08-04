@@ -1,6 +1,9 @@
 if HAVE_EASY_BINDINGS
 if HAVE_RUBY
 
+swigdatadir = @SWIG_DATA_DIR@/ruby
+dist_swigdata_DATA = libpreludecpp-ruby.i
+
 EXTRA_DIST = libpreludecpp-ruby.i PreludeEasy.cxx
 
 rbexec_LTLIBRARIES = PreludeEasy.la

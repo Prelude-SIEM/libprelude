@@ -14,6 +14,12 @@ MAINTAINERCLEANFILES =   \
 			python/PreludeEasy.py	     \
 			ruby/PreludeEasy.cxx
 
+swigdatadir = @SWIG_DATA_DIR@
+dist_swigdata_DATA = libpreludecpp.i
+
+swigperldatadir = @SWIG_DATA_DIR@/perl
+dist_swigperldata_DATA = perl/libpreludecpp-perl.i
+
 all-am: perl
 
 if HAVE_EASY_BINDINGS
