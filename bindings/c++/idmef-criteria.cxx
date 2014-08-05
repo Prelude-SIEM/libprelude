@@ -142,6 +142,14 @@ IDMEFCriteria::operator const std::string() const
 }
 
 
+
+IDMEFCriteria::operator idmef_criteria_t *() const
+{
+        return _criteria;
+}
+
+
+
 IDMEFCriteria &IDMEFCriteria::operator=(const IDMEFCriteria &criteria)
 {
         if ( this != &criteria && _criteria != criteria._criteria ) {

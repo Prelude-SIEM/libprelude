@@ -80,6 +80,7 @@ namespace Prelude {
                 const std::string ToString() const;
 
                 operator const std::string() const;
+                operator idmef_criteria_t *() const;
                 IDMEFCriteria &operator=(const IDMEFCriteria &criteria);
         };
 };
