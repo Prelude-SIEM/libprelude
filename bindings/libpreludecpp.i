@@ -25,6 +25,7 @@
 
 %feature("nothread");
 
+%include "pystrings.swg"
 %include "std_string.i"
 %include "std_vector.i"
 %include "exception.i"
