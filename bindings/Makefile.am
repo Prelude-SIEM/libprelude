@@ -27,7 +27,7 @@ perl-makefile:
 
 perl/PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i perl/libpreludecpp-perl.i
 if HAVE_SWIG
-	$(SWIG) -c++ -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -perl5 -o $@ libpreludecpp.i
+	$(SWIG) -c++ -DSWIG_COMPILE_LIBPRELUDE -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -perl5 -o $@ libpreludecpp.i
 endif
 
 

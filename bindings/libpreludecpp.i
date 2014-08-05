@@ -81,15 +81,15 @@ typedef signed int prelude_error_t;
 #endif
 
 #ifdef SWIGPYTHON
-%include libpreludecpp-python.i
+%include python/libpreludecpp-python.i
 #endif
 
 #ifdef SWIGRUBY
-%include libpreludecpp-ruby.i
+%include ruby/libpreludecpp-ruby.i
 #endif
 
 #ifdef SWIGLUA
-%include libpreludecpp-lua.i
+%include lua/libpreludecpp-lua.i
 #endif
 
 
@@ -259,6 +259,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore operator idmef_value_t *() const;
 %ignore operator prelude_client_profile_t *() const;
 
+#ifdef SWIG_COMPILE_LIBPRELUDE
 %include prelude.hxx
 %include prelude-log.hxx
 %include prelude-error.hxx
@@ -272,3 +273,4 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %include idmef-path.hxx
 %include idmef-time.hxx
 %include idmef.hxx
+#endif
