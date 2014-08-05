@@ -185,8 +185,8 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
         }
 
         else if ( type == IDMEFValue::TYPE_TIME ) {
-                IDMEFTime time = result;
-                *ret = SWIG_NewPointerObj(new IDMEFTime(time), SWIGTYPE_p_Prelude__IDMEFTime, 1);
+                Prelude::IDMEFTime t = result;
+                *ret = SWIG_NewPointerObj(new Prelude::IDMEFTime(t), $descriptor(Prelude::IDMEFTime *), 1);
         }
 
         else if ( type == IDMEFValue::TYPE_LIST )
@@ -214,7 +214,7 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
         }
 
         else if ( type == IDMEFValue::TYPE_CLASS )
-                *ret = SWIG_NewPointerObj(new IDMEFValue(idmef_value_ref(value)), SWIGTYPE_p_Prelude__IDMEFValue, 1);
+                *ret = SWIG_NewPointerObj(new Prelude::IDMEFValue(idmef_value_ref(value)), $descriptor(Prelude::IDMEFValue *), 1);
 
         else return -1;
 
