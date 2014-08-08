@@ -1,7 +1,7 @@
 /*****
 *
-* Copyright (C) 2005-2012 CS-SI. All Rights Reserved.
-* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
+* Copyright (C) 2005-2014 CS-SI. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoannv@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
@@ -22,8 +22,7 @@
 *****/
 
 %module PreludeEasy
-
-%feature("nothread");
+%feature("nothread", "1");
 
 %include "pystrings.swg"
 %include "std_string.i"
@@ -260,14 +259,50 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %ignore operator idmef_value_t *() const;
 %ignore operator prelude_client_profile_t *() const;
 
+
+/*
+ * We need to unlock the interpreter lock before calling certain methods
+ * because they might acquire internal libprelude mutex that may also be
+ * acquired undirectly through the libprelude asynchronous stack.
+ *
+ * [Thread 2]: Libprelude async stack
+ * -> Lock internal mutexX
+ *    -> prelude_log()
+ *       -> SWIG/C log callback
+ *          -> Wait on Interpreter lock [DEADLOCK]
+ *             -> Python logging callback (never called)
+ *
+ * [Thread 1] ConnectionPool::Recv()
+ *  -> Acquire Interpreter lock
+ *      *** At this time, thread 2 lock internal mutexX
+ *      -> Wait on internal mutexX [DEADLOCK]
+ *
+ * In this situation, [Thread 1] hold the Interpreter lock and is
+ * waiting on mutexX, which itself cannot be released by [Thread 2]
+ * until [Thread 1] unlock the Interpreter lock.
+ *
+ * One rule to prevent deadlock is to always acquire mutex in the same
+ * order. We thus need to make sure the interpreter lock is released
+ * before calling C++ method that are susceptible to lock a mutex that
+ * is also triggered from the asynchronous interface.
+ *
+ * Note that we are not releasing the Interpreter lock in all C++ call,
+ * because it come at a performance cost, so we only try to do it when
+ * needed.
+ */
+
 #ifdef SWIG_COMPILE_LIBPRELUDE
 %include prelude.hxx
-%include prelude-log.hxx
-%include prelude-error.hxx
+%include prelude-client-profile.hxx
+
+%feature("nothread", "0");
 %include prelude-connection.hxx
 %include prelude-connection-pool.hxx
-%include prelude-client-profile.hxx
 %include prelude-client.hxx
+%feature("nothread", "1");
+
+%include prelude-log.hxx
+%include prelude-error.hxx
 %include prelude-client-easy.hxx
 %include idmef-criteria.hxx
 %include idmef-value.hxx
