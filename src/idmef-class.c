@@ -95,7 +95,7 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
                                 return i;
         }
 
-        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s'", name);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s' for class '%s'", name, idmef_class_get_name(class));
 }
 
 
