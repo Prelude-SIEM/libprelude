@@ -194,20 +194,10 @@ void prelude_hash_destroy(prelude_hash_t *hash)
 
 
 
-int prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
+int prelude_hash_add(prelude_hash_t *hash, void *key, void *value)
 {
         hash_elem_t *hash_elem;
         prelude_list_t *list;
-
-        hash_elem = hash_elem_get(hash, key);
-
-        if ( hash_elem ) {
-                hash_elem_key_destroy(hash, hash_elem);
-                hash_elem_value_destroy(hash, hash_elem);
-                hash_elem->key = key;
-                hash_elem->value = value;
-                return 0;
-        }
 
         hash_elem = calloc(1, sizeof(*hash_elem));
         if ( ! hash_elem )
@@ -220,6 +210,23 @@ int prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
         prelude_list_add(list, &hash_elem->list);
 
         return 1;
+}
+
+
+
+int prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
+{
+        hash_elem_t *hash_elem = hash_elem_get(hash, key);
+
+        if ( hash_elem ) {
+                hash_elem_key_destroy(hash, hash_elem);
+                hash_elem_value_destroy(hash, hash_elem);
+                hash_elem->key = key;
+                hash_elem->value = value;
+                return 0;
+        }
+
+        return prelude_hash_add(hash, key, value);
 }
 
 

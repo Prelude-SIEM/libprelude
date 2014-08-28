@@ -730,7 +730,7 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 
         gl_lock_lock(cached_path_mutex);
 
-        if ( prelude_hash_set(cached_path, (*path)->name, *path) < 0 ) {
+        if ( prelude_hash_add(cached_path, (*path)->name, *path) < 0 ) {
 
                 gl_lock_destroy((*path)->mutex);
                 free(*path);
