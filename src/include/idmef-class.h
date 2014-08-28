@@ -90,6 +90,8 @@ int idmef_class_compare(idmef_class_id_t classid, const void *c1, const void *c2
 
 int idmef_class_ref(idmef_class_id_t classid, void *obj);
 
+int idmef_class_print(idmef_class_id_t classid, void *obj, prelude_io_t *fd);
+
 int idmef_class_destroy(idmef_class_id_t classid, void *obj);
 
 #ifdef __cplusplus
