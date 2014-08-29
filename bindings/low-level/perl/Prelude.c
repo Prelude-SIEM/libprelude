@@ -39061,8 +39061,9 @@ XS(_wrap_idmef_value_destroy) {
 XS(_wrap_idmef_path_get) {
   {
     idmef_path_t *arg1 = (idmef_path_t *) 0 ;
-    idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+    void *arg2 = (void *) 0 ;
     idmef_value_t **arg3 = (idmef_value_t **) 0 ;
+    int res2 ;
     idmef_value_t *tmp3 ;
     int argvi = 0;
     SV * _saved[1] ;
@@ -39070,7 +39071,7 @@ XS(_wrap_idmef_path_get) {
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: idmef_path_get(path,message,ret);");
+      SWIG_croak("Usage: idmef_path_get(path,object,ret);");
     }
     {
       if ( ! SvROK(ST(0)) ) {
@@ -39083,16 +39084,9 @@ XS(_wrap_idmef_path_get) {
         return;
       }
     }
-    {
-      if ( ! SvROK(ST(1)) ) {
-        croak("Argument 2 is null.");
-        return;
-      }
-      
-      if ( SWIG_ConvertPtr(ST(1), (void **)&arg2, SWIGTYPE_p_idmef_message, 0) ) {
-        croak("Expected type idmef_message_t * for argument 2.");
-        return;
-      }
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_path_get" "', argument " "2"" of type '" "void *""'"); 
     }
     {
       arg3 = (idmef_value_t **) &tmp3;
@@ -39136,14 +39130,15 @@ XS(_wrap_idmef_path_get) {
 XS(_wrap_idmef_path_set) {
   {
     idmef_path_t *arg1 = (idmef_path_t *) 0 ;
-    idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+    void *arg2 = (void *) 0 ;
     idmef_value_t *arg3 = (idmef_value_t *) 0 ;
+    int res2 ;
     int argvi = 0;
     int result;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: idmef_path_set(path,message,value);");
+      SWIG_croak("Usage: idmef_path_set(path,object,value);");
     }
     {
       if ( ! SvROK(ST(0)) ) {
@@ -39156,16 +39151,9 @@ XS(_wrap_idmef_path_set) {
         return;
       }
     }
-    {
-      if ( ! SvROK(ST(1)) ) {
-        croak("Argument 2 is null.");
-        return;
-      }
-      
-      if ( SWIG_ConvertPtr(ST(1), (void **)&arg2, SWIGTYPE_p_idmef_message, 0) ) {
-        croak("Expected type idmef_message_t * for argument 2.");
-        return;
-      }
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_path_set" "', argument " "2"" of type '" "void *""'"); 
     }
     {
       if ( ! SvROK(ST(2)) ) {
@@ -39246,6 +39234,70 @@ XS(_wrap_idmef_path_new) {
   fail:
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_path_new_from_root_fast) {
+  {
+    idmef_path_t **arg1 = (idmef_path_t **) 0 ;
+    idmef_class_id_t arg2 ;
+    char *arg3 = (char *) 0 ;
+    idmef_path_t *tmp1 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    SV * _saved[1] ;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: idmef_path_new_from_root_fast(path,rootclass,buffer);");
+    }
+    {
+      arg1 = (idmef_path_t **) &tmp1;
+    }
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "idmef_path_new_from_root_fast" "', argument " "2"" of type '" "idmef_class_id_t""'");
+    } 
+    arg2 = (idmef_class_id_t)(val2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "idmef_path_new_from_root_fast" "', argument " "3"" of type '" "char const *""'");
+    }
+    arg3 = (char *)(buf3);
+    _saved[0] = ST(0);
+    result = (int)idmef_path_new_from_root_fast(arg1,arg2,(char const *)arg3);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    {
+      SV *sv;
+      
+      if ( result >= 0 ) {
+        if ( ! SvROK(_saved[0]) ) {
+          croak("Argument 1 is not a reference.");
+          return;
+        }
+        
+        sv = SvRV(_saved[0]);
+        sv_setsv(sv, SWIG_NewPointerObj((void *) * arg1, SWIGTYPE_p_idmef_path, 0));
+      }
+    }
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
     SWIG_croak_null();
   }
 }
@@ -45553,31 +45605,25 @@ XS(_wrap_idmef_criterion_get_operator) {
 XS(_wrap_idmef_criterion_match) {
   {
     idmef_criterion_t *arg1 = (idmef_criterion_t *) 0 ;
-    idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+    void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     int result;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: idmef_criterion_match(criterion,message);");
+      SWIG_croak("Usage: idmef_criterion_match(criterion,object);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_criterion, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_criterion_match" "', argument " "1"" of type '" "idmef_criterion_t const *""'"); 
     }
     arg1 = (idmef_criterion_t *)(argp1);
-    {
-      if ( ! SvROK(ST(1)) ) {
-        croak("Argument 2 is null.");
-        return;
-      }
-      
-      if ( SWIG_ConvertPtr(ST(1), (void **)&arg2, SWIGTYPE_p_idmef_message, 0) ) {
-        croak("Expected type idmef_message_t * for argument 2.");
-        return;
-      }
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_criterion_match" "', argument " "2"" of type '" "void *""'"); 
     }
     result = (int)idmef_criterion_match((struct idmef_criterion const *)arg1,arg2);
     {
@@ -46028,13 +46074,14 @@ XS(_wrap_idmef_criteria_and_criteria) {
 XS(_wrap_idmef_criteria_match) {
   {
     idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-    idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+    void *arg2 = (void *) 0 ;
+    int res2 ;
     int argvi = 0;
     int result;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: idmef_criteria_match(criteria,message);");
+      SWIG_croak("Usage: idmef_criteria_match(criteria,object);");
     }
     {
       if ( ! SvROK(ST(0)) ) {
@@ -46047,16 +46094,9 @@ XS(_wrap_idmef_criteria_match) {
         return;
       }
     }
-    {
-      if ( ! SvROK(ST(1)) ) {
-        croak("Argument 2 is null.");
-        return;
-      }
-      
-      if ( SWIG_ConvertPtr(ST(1), (void **)&arg2, SWIGTYPE_p_idmef_message, 0) ) {
-        croak("Expected type idmef_message_t * for argument 2.");
-        return;
-      }
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_criteria_match" "', argument " "2"" of type '" "void *""'"); 
     }
     result = (int)idmef_criteria_match((struct idmef_criteria const *)arg1,arg2);
     {
@@ -65020,6 +65060,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_path_get", _wrap_idmef_path_get},
 {"Prelude::idmef_path_set", _wrap_idmef_path_set},
 {"Prelude::idmef_path_new", _wrap_idmef_path_new},
+{"Prelude::idmef_path_new_from_root_fast", _wrap_idmef_path_new_from_root_fast},
 {"Prelude::idmef_path_new_fast", _wrap_idmef_path_new_fast},
 {"Prelude::idmef_path_get_class", _wrap_idmef_path_get_class},
 {"Prelude::idmef_path_get_value_type", _wrap_idmef_path_get_value_type},

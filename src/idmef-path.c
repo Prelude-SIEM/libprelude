@@ -89,6 +89,7 @@ struct idmef_path {
         char name[MAX_NAME_LEN];
         int refcount;
         unsigned int depth;
+        idmef_class_id_t top_class;
 
         idmef_path_element_t elem[MAX_DEPTH];
 };
@@ -135,15 +136,39 @@ static void flush_cache_if_wanted(void *ptr)
 
 
 
-/*
- * call with mutex held.
- */
+static unsigned int path_hash_func(const void *path)
+{
+        const char *ptr = ((const idmef_path_t *) path)->name;
+        unsigned int hv = *ptr;
+
+        if ( hv )
+                for ( ptr += 1; *ptr; ptr++ )
+                        hv = (hv << 5) - hv + *ptr;
+
+        return hv;
+
+}
+
+
+static int path_key_cmp_func(const void *p1, const void *p2)
+{
+        const idmef_path_t *path1 = p1;
+        const idmef_path_t *path2 = p2;
+
+        if ( path1->top_class != path2->top_class )
+                return -1;
+
+        return strcmp(path1->name, path2->name);
+}
+
+
+
 static int initialize_path_cache_if_needed(void)
 {
         if ( cached_path )
                 return 0;
 
-        return prelude_hash_new2(&cached_path, HASH_DEFAULT_SIZE, NULL, NULL, NULL, flush_cache_if_wanted);
+        return prelude_hash_new2(&cached_path, HASH_DEFAULT_SIZE, path_hash_func, path_key_cmp_func, NULL, flush_cache_if_wanted);
 }
 
 
@@ -509,9 +534,15 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, siz
  *
  * Returns: The number of element retrieved, or a negative value if an error occured.
  */
-int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
+int idmef_path_get(const idmef_path_t *path, void *obj, idmef_value_t **ret)
 {
-        return idmef_path_get_internal(ret, path, 0, message, IDMEF_CLASS_ID_MESSAGE);
+        idmef_object_t *object = obj;
+
+        if ( object->_idmef_object_id != path->top_class )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "path for object '%s' used with '%s' object root",
+                                             idmef_class_get_name(path->top_class), idmef_class_get_name(object->_idmef_object_id));
+
+        return idmef_path_get_internal(ret, path, 0, object, object->_idmef_object_id);
 }
 
 
@@ -526,12 +557,34 @@ int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_val
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
+int idmef_path_set(const idmef_path_t *path, void *obj, idmef_value_t *value)
 {
+        idmef_object_t *object = obj;
+
         if ( path->depth < 1 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Path with depth of 0 are not allowed");
 
-        return _idmef_path_set(path, IDMEF_CLASS_ID_MESSAGE, 0, 0, message, value);
+        if ( object->_idmef_object_id != path->top_class )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "path for object '%s' used with '%s' object root",
+                                             idmef_class_get_name(path->top_class), idmef_class_get_name(object->_idmef_object_id));
+
+
+        return _idmef_path_set(path, object->_idmef_object_id, 0, 0, object, value);
+}
+
+
+
+static int copy_path_name(idmef_path_t *path, const char *buffer)
+{
+        size_t len;
+
+        len = strlen(buffer) + 1;
+        if ( len >= sizeof(path->name) )
+                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
+
+        memcpy(path->name, buffer, len);
+
+        return 0;
 }
 
 
@@ -542,9 +595,16 @@ int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_val
  * 0 for a new empty object
  * 1 for an existing object already in the cache
  */
-static int idmef_path_create(idmef_path_t **path, const char *buffer)
+static int idmef_path_create(idmef_path_t **path, idmef_class_id_t rootclass, const char *buffer)
 {
         int ret;
+        idmef_path_t tmp;
+
+        ret = copy_path_name(&tmp, buffer);
+        if ( ret < 0 )
+                return ret;
+
+        tmp.top_class = rootclass;
 
         gl_lock_lock(cached_path_mutex);
 
@@ -554,7 +614,7 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
                 return ret;
         }
 
-        *path = prelude_hash_get(cached_path, buffer);
+        *path = prelude_hash_get(cached_path, &tmp);
         gl_lock_unlock(cached_path_mutex);
 
         if ( *path )
@@ -598,26 +658,22 @@ static int parse_path_token(char **sptr, char **out)
 
 
 
-
-static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
+static int idmef_path_parse_new(idmef_path_t *path, idmef_class_id_t rootclass, const char *buffer)
 {
-        size_t len;
-        int index = -1, is_last;
+        int ret, index = -1, is_last;
         unsigned int depth = 0;
         char *endptr, *ptr, *ptr2, *end;
         idmef_class_child_id_t child = 0;
         idmef_class_id_t class;
         idmef_value_type_id_t vtype;
 
-        len = strlen(buffer) + 1;
-        if ( len >= sizeof(path->name) )
-                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
-
-        memcpy(path->name, buffer, len);
+        ret = copy_path_name(path, buffer);
+        if ( ret < 0 )
+                return ret;
 
         end = ptr = NULL;
         endptr = path->name;
-        class = IDMEF_CLASS_ID_MESSAGE;
+        path->top_class = class = rootclass;
 
         do {
                 index = INDEX_UNDEFINED;
@@ -697,21 +753,23 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 
 
 /**
- * idmef_path_new_fast:
+ * idmef_path_new_from_root_fast:
  * @path: Address where to store the created #idmef_path_t object.
+ * @rootclass: #idmef_class_id_t ID of the root path.
  * @buffer: Name of the path to create.
  *
- * Creates a #idmef_path_t object pointing to @buffer, and stores it within @path.
+ * Creates a #idmef_path_t object whom root is @rootclass pointing
+ * to @buffer, and stores it within @path.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
+int idmef_path_new_from_root_fast(idmef_path_t **path, idmef_class_id_t rootclass, const char *buffer)
 {
         int ret;
 
         prelude_return_val_if_fail(buffer, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        ret = idmef_path_create(path, buffer);
+        ret = idmef_path_create(path, rootclass, buffer);
         if ( ret < 0 )
                 return ret;
 
@@ -723,7 +781,7 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
         if ( *buffer == '\0' )
                 (*path)->elem[0].class = IDMEF_CLASS_ID_MESSAGE;
         else {
-                ret = idmef_path_parse_new(*path, buffer);
+                ret = idmef_path_parse_new(*path, rootclass, buffer);
                 if ( ret < 0 ) {
                         gl_lock_destroy((*path)->mutex);
                         free(*path);
@@ -733,7 +791,7 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 
         gl_lock_lock(cached_path_mutex);
 
-        if ( prelude_hash_add(cached_path, (*path)->name, *path) < 0 ) {
+        if ( prelude_hash_add(cached_path, *path, *path) < 0 ) {
 
                 gl_lock_destroy((*path)->mutex);
                 free(*path);
@@ -746,6 +804,23 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
         idmef_path_ref(*path);
 
         return 0;
+}
+
+
+
+
+/**
+ * idmef_path_new_fast:
+ * @path: Address where to store the created #idmef_path_t object.
+ * @buffer: Name of the path to create.
+ *
+ * Creates a #idmef_path_t object pointing to @buffer, and stores it within @path.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
+{
+        return idmef_path_new_from_root_fast(path, IDMEF_CLASS_ID_MESSAGE, buffer);
 }
 
 
@@ -889,7 +964,7 @@ static inline int invalidate(idmef_path_t *path)
 
         if ( path->refcount == 2 ) {
                 gl_lock_lock(cached_path_mutex);
-                ret = prelude_hash_elem_destroy(cached_path, path->name);
+                ret = prelude_hash_elem_destroy(cached_path, path);
                 gl_lock_unlock(cached_path_mutex);
 
                 if ( ret == 0 )

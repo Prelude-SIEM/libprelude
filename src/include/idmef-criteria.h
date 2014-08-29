@@ -77,7 +77,7 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
 idmef_path_t *idmef_criterion_get_path(const idmef_criterion_t *criterion);
 idmef_criterion_value_t *idmef_criterion_get_value(const idmef_criterion_t *criterion);
 idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t *criterion);
-int idmef_criterion_match(const idmef_criterion_t *criterion, idmef_message_t *message);
+int idmef_criterion_match(const idmef_criterion_t *criterion, void *object);
 
 int idmef_criteria_new(idmef_criteria_t **criteria);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
@@ -92,7 +92,7 @@ void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
 
 int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
-int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *message);
+int idmef_criteria_match(const idmef_criteria_t *criteria, void *object);
 
 idmef_criteria_t *idmef_criteria_get_or(const idmef_criteria_t *criteria);
 

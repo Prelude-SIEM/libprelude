@@ -323,7 +323,7 @@ idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t 
 /**
  * idmef_criterion_match:
  * @criterion: Pointer to a #idmef_criterion_t object.
- * @message: Pointer to a #idmef_message_t object to match against @criterion.
+ * @object: Pointer to a #idmef_object_t object to match against @criterion.
  *
  * Matches @message against the provided @criterion. This implies retrieving the
  * value associated with @criterion path, and matching it with the @idmef_criterion_value_t
@@ -331,16 +331,15 @@ idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t 
  *
  * Returns: 1 for a match, 0 for no match, or a negative value if an error occured.
  */
-int idmef_criterion_match(const idmef_criterion_t *criterion, idmef_message_t *message)
+int idmef_criterion_match(const idmef_criterion_t *criterion, void *object)
 {
         int ret;
         idmef_value_t *value;
 
         prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(message, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-
-        ret = idmef_path_get(criterion->path, message, &value);
+        ret = idmef_path_get(criterion->path, object, &value);
         if ( ret < 0 )
                 return ret;
 
@@ -640,28 +639,28 @@ void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t 
 /**
  * idmef_criteria_match:
  * @criteria: Pointer to a #idmef_criteria_t object.
- * @message: Pointer to a #idmef_message_t message.
+ * @object: Pointer to a #idmef_object_t object.
  *
- * Matches @message against the provided criteria.
+ * Matches @object against the provided criteria.
  *
  * Returns: 1 if criteria match, 0 if it did not, a negative value if an error occured.
  */
-int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *message)
+int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
 {
         int ret;
 
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(message, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        ret = idmef_criterion_match(criteria->criterion, message);
+        ret = idmef_criterion_match(criteria->criterion, object);
         if ( ret < 0 )
                 return ret;
 
         if ( ret == 1 && criteria->and )
-                ret = idmef_criteria_match(criteria->and, message);
+                ret = idmef_criteria_match(criteria->and, object);
 
         if ( ret == 0 && criteria->or )
-                ret = idmef_criteria_match(criteria->or, message);
+                ret = idmef_criteria_match(criteria->or, object);
 
         if ( ret < 0 )
                 return ret;

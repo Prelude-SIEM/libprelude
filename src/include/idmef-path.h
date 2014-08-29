@@ -53,15 +53,18 @@ typedef struct idmef_path idmef_path_t;
 #include "idmef-value.h"
 #include "idmef-tree-wrap.h"
 
-int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret);
+int idmef_path_get(const idmef_path_t *path, void *object, idmef_value_t **ret);
 
-int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value);
+int idmef_path_set(const idmef_path_t *path, void *object, idmef_value_t *value);
 
 int idmef_path_new(idmef_path_t **path, const char *format, ...)
                    __attribute__ ((__format__ (__printf__, 2, 3)));
 
 int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
                      __attribute__ ((__format__ (__printf__, 2, 0)));
+
+
+int idmef_path_new_from_root_fast(idmef_path_t **path, idmef_class_id_t rootclass, const char *buffer);
 
 int idmef_path_new_fast(idmef_path_t **path, const char *buffer);
 

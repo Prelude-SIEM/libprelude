@@ -34051,8 +34051,9 @@ fail:
 SWIGINTERN PyObject *_wrap_idmef_path_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   idmef_path_t *arg1 = (idmef_path_t *) 0 ;
-  idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+  void *arg2 = (void *) 0 ;
   idmef_value_t **arg3 = (idmef_value_t **) 0 ;
+  int res2 ;
   idmef_value_t *tmp3 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -34069,12 +34070,9 @@ SWIGINTERN PyObject *_wrap_idmef_path_get(PyObject *SWIGUNUSEDPARM(self), PyObje
     if ( SWIG_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_idmef_path, SWIG_POINTER_EXCEPTION|0) )
     return NULL;
   }
-  {
-    if ( obj1 == Py_None )
-    return NULL;
-    
-    if ( SWIG_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_idmef_message, SWIG_POINTER_EXCEPTION|0) )
-    return NULL;
+  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_path_get" "', argument " "2"" of type '" "void *""'"); 
   }
   {
     Py_BEGIN_ALLOW_THREADS
@@ -34107,8 +34105,9 @@ fail:
 SWIGINTERN PyObject *_wrap_idmef_path_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   idmef_path_t *arg1 = (idmef_path_t *) 0 ;
-  idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+  void *arg2 = (void *) 0 ;
   idmef_value_t *arg3 = (idmef_value_t *) 0 ;
+  int res2 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -34122,12 +34121,9 @@ SWIGINTERN PyObject *_wrap_idmef_path_set(PyObject *SWIGUNUSEDPARM(self), PyObje
     if ( SWIG_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_idmef_path, SWIG_POINTER_EXCEPTION|0) )
     return NULL;
   }
-  {
-    if ( obj1 == Py_None )
-    return NULL;
-    
-    if ( SWIG_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_idmef_message, SWIG_POINTER_EXCEPTION|0) )
-    return NULL;
+  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_path_set" "', argument " "2"" of type '" "void *""'"); 
   }
   {
     if ( obj2 == Py_None )
@@ -34213,6 +34209,61 @@ SWIGINTERN PyObject *_wrap_idmef_path_new(PyObject *SWIGUNUSEDPARM(self), PyObje
   Py_XDECREF(newargs);
   Py_XDECREF(varargs);
   return resultobj;
+}
+
+
+SWIGINTERN PyObject *_wrap_idmef_path_new_from_root_fast(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  idmef_path_t **arg1 = (idmef_path_t **) 0 ;
+  idmef_class_id_t arg2 ;
+  char *arg3 = (char *) 0 ;
+  idmef_path_t *tmp1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  {
+    arg1 = (idmef_path_t **) &tmp1;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"OO:idmef_path_new_from_root_fast",&obj0,&obj1)) SWIG_fail;
+  ecode2 = SWIG_AsVal_int(obj0, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "idmef_path_new_from_root_fast" "', argument " "2"" of type '" "idmef_class_id_t""'");
+  } 
+  arg2 = (idmef_class_id_t)(val2);
+  {
+    if ( obj1 == Py_None )
+    arg3 = NULL;
+    else if ( PyString_Check(obj1) )
+    arg3 = PyString_AsString(obj1);
+    else {
+      PyErr_Format(PyExc_TypeError,
+        "expected None or string, %s found", obj1->ob_type->tp_name);
+      return NULL;
+    }
+  }
+  {
+    Py_BEGIN_ALLOW_THREADS
+    result = (int)idmef_path_new_from_root_fast(arg1,arg2,(char const *)arg3);
+    Py_END_ALLOW_THREADS
+  }
+  {
+    if ( result < 0 ) {
+      swig_python_raise_exception(result);
+      resultobj = NULL;
+    } else {
+      resultobj = PyInt_FromLong(result);
+    }
+  }
+  {
+    if ( result >= 0 )
+    resultobj = SWIG_NewPointerObj((void *) * arg1, SWIGTYPE_p_idmef_path, 0);
+  }
+  return resultobj;
+fail:
+  return NULL;
 }
 
 
@@ -39598,9 +39649,10 @@ fail:
 SWIGINTERN PyObject *_wrap_idmef_criterion_match(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   idmef_criterion_t *arg1 = (idmef_criterion_t *) 0 ;
-  idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+  void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  int res2 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   int result;
@@ -39611,12 +39663,9 @@ SWIGINTERN PyObject *_wrap_idmef_criterion_match(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_criterion_match" "', argument " "1"" of type '" "idmef_criterion_t const *""'"); 
   }
   arg1 = (idmef_criterion_t *)(argp1);
-  {
-    if ( obj1 == Py_None )
-    return NULL;
-    
-    if ( SWIG_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_idmef_message, SWIG_POINTER_EXCEPTION|0) )
-    return NULL;
+  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_criterion_match" "', argument " "2"" of type '" "void *""'"); 
   }
   {
     Py_BEGIN_ALLOW_THREADS
@@ -39993,7 +40042,8 @@ fail:
 SWIGINTERN PyObject *_wrap_idmef_criteria_match(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-  idmef_message_t *arg2 = (idmef_message_t *) 0 ;
+  void *arg2 = (void *) 0 ;
+  int res2 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   int result;
@@ -40006,12 +40056,9 @@ SWIGINTERN PyObject *_wrap_idmef_criteria_match(PyObject *SWIGUNUSEDPARM(self), 
     if ( SWIG_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_idmef_criteria, SWIG_POINTER_EXCEPTION|0) )
     return NULL;
   }
-  {
-    if ( obj1 == Py_None )
-    return NULL;
-    
-    if ( SWIG_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_idmef_message, SWIG_POINTER_EXCEPTION|0) )
-    return NULL;
+  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_criteria_match" "', argument " "2"" of type '" "void *""'"); 
   }
   {
     Py_BEGIN_ALLOW_THREADS
@@ -56537,6 +56584,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_path_get", _wrap_idmef_path_get, METH_VARARGS, NULL},
 	 { (char *)"idmef_path_set", _wrap_idmef_path_set, METH_VARARGS, NULL},
 	 { (char *)"idmef_path_new", _wrap_idmef_path_new, METH_VARARGS, NULL},
+	 { (char *)"idmef_path_new_from_root_fast", _wrap_idmef_path_new_from_root_fast, METH_VARARGS, NULL},
 	 { (char *)"idmef_path_new_fast", _wrap_idmef_path_new_fast, METH_VARARGS, NULL},
 	 { (char *)"idmef_path_get_class", _wrap_idmef_path_get_class, METH_VARARGS, NULL},
 	 { (char *)"idmef_path_get_value_type", _wrap_idmef_path_get_value_type, METH_VARARGS, NULL},
