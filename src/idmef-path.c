@@ -47,6 +47,7 @@
 #include "idmef-class.h"
 #include "idmef-value.h"
 
+#include "idmef-object-prv.h"
 #include "idmef-tree-wrap.h"
 #include "idmef-path.h"
 #include "prelude-string.h"
@@ -64,6 +65,7 @@
 
 
 typedef struct idmef_key_listed_object {
+        IDMEF_OBJECT;
         prelude_list_t list;
         prelude_string_t *objkey;
 } idmef_key_listed_object_t;
@@ -218,6 +220,7 @@ static int set_index_key(const idmef_path_element_t *elem, void *ptr)
 }
 
 
+
 static int idmef_path_get_list_internal(idmef_value_t **value_list,
                                         const idmef_path_t *path, int depth,
                                         prelude_list_t *list, idmef_class_id_t parent_class)
@@ -238,7 +241,7 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                         continue;
 
                 if ( parent_class >= 0 )
-                        ret = idmef_path_get_internal(&value, path, depth, tmp, parent_class);
+                        ret = idmef_path_get_internal(&value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
                 else {
                         idmef_value_type_id_t type = path->elem[depth - 1].value_type;
 
@@ -288,7 +291,7 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t
         if ( which >= 0 ) {
                 prelude_list_for_each(list, tmp) {
                         if ( cnt++ == which )
-                                return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+                                return idmef_path_get_internal(value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
                 }
         } else {
                 which = -which;
@@ -296,7 +299,7 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t
 
                 prelude_list_for_each_reversed(list, tmp) {
                         if ( cnt++ == which )
-                                return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+                                return idmef_path_get_internal(value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
                 }
         }
 
@@ -362,7 +365,7 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
                 return;
 
         prelude_list_for_each_safe(head, tmp, bkp) {
-                obj = prelude_linked_object_get_object(tmp);
+                obj = idmef_linked_object_get_object(tmp);
 
                 if ( elem->index_key && ! has_index_key(obj, elem->index_key) )
                         continue;
@@ -408,7 +411,7 @@ static int _idmef_path_set_undefined_not_last(const idmef_path_t *path, const id
                         val = value;
                 }
 
-                ret = _idmef_path_set(path, elem->class, i + 1, 0, prelude_linked_object_get_object(tmp), val);
+                ret = _idmef_path_set(path, elem->class, i + 1, 0, idmef_linked_object_get_object(tmp), val);
                 if ( ret < 0 )
                         return ret;
         }
@@ -418,7 +421,7 @@ static int _idmef_path_set_undefined_not_last(const idmef_path_t *path, const id
                 if ( ret < 0 )
                         return ret;
 
-                ret = set_index_key(elem, prelude_linked_object_get_object(head->prev));
+                ret = set_index_key(elem, idmef_linked_object_get_object(head->prev));
                 if ( ret < 0 )
                         return ret;
         }

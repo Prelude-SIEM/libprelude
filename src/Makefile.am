@@ -54,6 +54,7 @@ libprelude_la_SOURCES = 		\
 	idmef-message-print.c		\
 	idmef-message-read.c		\
 	idmef-message-write.c		\
+	idmef-object.c			\
 	idmef-path.c			\
 	idmef-time.c			\
 	idmef-tree-wrap.c		\

@@ -77,6 +77,7 @@ sub     header
 #include \"idmef-data.h\"
 #include \"idmef-class.h\"
 #include \"idmef-value.h\"
+#include \"idmef-object-prv.h\"
 
 #include \"idmef-tree-wrap.h\"
 #include \"libmissing.h\"
@@ -90,8 +91,7 @@ sub     header
 #define LISTED_OBJECT(name, type) prelude_list_t name
 #define KEYLISTED_OBJECT(name, type) prelude_list_t name
 
-#define IS_LISTED prelude_list_t list
-#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
+#define IS_KEY_LISTED(keyfield) IDMEF_LINKED_OBJECT; prelude_string_t *keyfield
 
 #define UNION(type, var) type var; union
 
@@ -300,7 +300,8 @@ sub     struct_desc
     my  $struct = shift;
     my $line;
 
-    $self->output("\n\nstruct idmef_$struct->{short_typename} \{");
+    $self->output("\n\nstruct idmef_$struct->{short_typename} \{
+");
 
     foreach ( @{ $struct->{desc} } ) {
         $line = $_;
@@ -319,6 +320,8 @@ sub     struct_constructor
     my  $tree = shift;
     my  $struct = shift;
 
+    my $maj = uc($struct->{short_typename});
+
     $self->output("
 /**
  * idmef_$struct->{short_typename}_new:
@@ -333,6 +336,8 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_$maj;
 ");
 
     if ( $struct->{is_listed} ) {

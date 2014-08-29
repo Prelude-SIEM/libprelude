@@ -1537,145 +1537,147 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_idmef_message_type_t swig_types[50]
 #define SWIGTYPE_p_idmef_node swig_types[51]
 #define SWIGTYPE_p_idmef_node_category_t swig_types[52]
-#define SWIGTYPE_p_idmef_overflow_alert swig_types[53]
-#define SWIGTYPE_p_idmef_path swig_types[54]
-#define SWIGTYPE_p_idmef_process swig_types[55]
-#define SWIGTYPE_p_idmef_reference swig_types[56]
-#define SWIGTYPE_p_idmef_reference_origin_t swig_types[57]
-#define SWIGTYPE_p_idmef_service swig_types[58]
-#define SWIGTYPE_p_idmef_service_type_t swig_types[59]
-#define SWIGTYPE_p_idmef_snmp_service swig_types[60]
-#define SWIGTYPE_p_idmef_source swig_types[61]
-#define SWIGTYPE_p_idmef_source_spoofed_t swig_types[62]
-#define SWIGTYPE_p_idmef_target swig_types[63]
-#define SWIGTYPE_p_idmef_target_decoy_t swig_types[64]
-#define SWIGTYPE_p_idmef_time swig_types[65]
-#define SWIGTYPE_p_idmef_tool_alert swig_types[66]
-#define SWIGTYPE_p_idmef_user swig_types[67]
-#define SWIGTYPE_p_idmef_user_category_t swig_types[68]
-#define SWIGTYPE_p_idmef_user_id swig_types[69]
-#define SWIGTYPE_p_idmef_user_id_type_t swig_types[70]
-#define SWIGTYPE_p_idmef_value swig_types[71]
-#define SWIGTYPE_p_idmef_value_type_class_t swig_types[72]
-#define SWIGTYPE_p_idmef_value_type_data_t swig_types[73]
-#define SWIGTYPE_p_idmef_value_type_enum_t swig_types[74]
-#define SWIGTYPE_p_idmef_value_type_id_t swig_types[75]
-#define SWIGTYPE_p_idmef_value_type_t swig_types[76]
-#define SWIGTYPE_p_idmef_web_service swig_types[77]
-#define SWIGTYPE_p_int swig_types[78]
-#define SWIGTYPE_p_long_long swig_types[79]
-#define SWIGTYPE_p_p_char swig_types[80]
-#define SWIGTYPE_p_p_float swig_types[81]
-#define SWIGTYPE_p_p_idmef_action swig_types[82]
-#define SWIGTYPE_p_p_idmef_action_category_t swig_types[83]
-#define SWIGTYPE_p_p_idmef_additional_data swig_types[84]
-#define SWIGTYPE_p_p_idmef_additional_data_type_t swig_types[85]
-#define SWIGTYPE_p_p_idmef_address swig_types[86]
-#define SWIGTYPE_p_p_idmef_address_category_t swig_types[87]
-#define SWIGTYPE_p_p_idmef_alert swig_types[88]
-#define SWIGTYPE_p_p_idmef_alertident swig_types[89]
-#define SWIGTYPE_p_p_idmef_analyzer swig_types[90]
-#define SWIGTYPE_p_p_idmef_assessment swig_types[91]
-#define SWIGTYPE_p_p_idmef_checksum swig_types[92]
-#define SWIGTYPE_p_p_idmef_checksum_algorithm_t swig_types[93]
-#define SWIGTYPE_p_p_idmef_classification swig_types[94]
-#define SWIGTYPE_p_p_idmef_confidence swig_types[95]
-#define SWIGTYPE_p_p_idmef_confidence_rating_t swig_types[96]
-#define SWIGTYPE_p_p_idmef_correlation_alert swig_types[97]
-#define SWIGTYPE_p_p_idmef_criteria swig_types[98]
-#define SWIGTYPE_p_p_idmef_criterion swig_types[99]
-#define SWIGTYPE_p_p_idmef_data_t swig_types[100]
-#define SWIGTYPE_p_p_idmef_file swig_types[101]
-#define SWIGTYPE_p_p_idmef_file_access swig_types[102]
-#define SWIGTYPE_p_p_idmef_file_category_t swig_types[103]
-#define SWIGTYPE_p_p_idmef_file_fstype_t swig_types[104]
-#define SWIGTYPE_p_p_idmef_heartbeat swig_types[105]
-#define SWIGTYPE_p_p_idmef_impact swig_types[106]
-#define SWIGTYPE_p_p_idmef_impact_completion_t swig_types[107]
-#define SWIGTYPE_p_p_idmef_impact_severity_t swig_types[108]
-#define SWIGTYPE_p_p_idmef_impact_type_t swig_types[109]
-#define SWIGTYPE_p_p_idmef_inode swig_types[110]
-#define SWIGTYPE_p_p_idmef_linkage swig_types[111]
-#define SWIGTYPE_p_p_idmef_linkage_category_t swig_types[112]
-#define SWIGTYPE_p_p_idmef_message swig_types[113]
-#define SWIGTYPE_p_p_idmef_node swig_types[114]
-#define SWIGTYPE_p_p_idmef_node_category_t swig_types[115]
-#define SWIGTYPE_p_p_idmef_overflow_alert swig_types[116]
-#define SWIGTYPE_p_p_idmef_path swig_types[117]
-#define SWIGTYPE_p_p_idmef_process swig_types[118]
-#define SWIGTYPE_p_p_idmef_reference swig_types[119]
-#define SWIGTYPE_p_p_idmef_reference_origin_t swig_types[120]
-#define SWIGTYPE_p_p_idmef_service swig_types[121]
-#define SWIGTYPE_p_p_idmef_snmp_service swig_types[122]
-#define SWIGTYPE_p_p_idmef_source swig_types[123]
-#define SWIGTYPE_p_p_idmef_source_spoofed_t swig_types[124]
-#define SWIGTYPE_p_p_idmef_target swig_types[125]
-#define SWIGTYPE_p_p_idmef_target_decoy_t swig_types[126]
-#define SWIGTYPE_p_p_idmef_time swig_types[127]
-#define SWIGTYPE_p_p_idmef_tool_alert swig_types[128]
-#define SWIGTYPE_p_p_idmef_user swig_types[129]
-#define SWIGTYPE_p_p_idmef_user_category_t swig_types[130]
-#define SWIGTYPE_p_p_idmef_user_id swig_types[131]
-#define SWIGTYPE_p_p_idmef_user_id_type_t swig_types[132]
-#define SWIGTYPE_p_p_idmef_value swig_types[133]
-#define SWIGTYPE_p_p_idmef_web_service swig_types[134]
-#define SWIGTYPE_p_p_int swig_types[135]
-#define SWIGTYPE_p_p_prelude_client swig_types[136]
-#define SWIGTYPE_p_p_prelude_client_profile swig_types[137]
-#define SWIGTYPE_p_p_prelude_connection swig_types[138]
-#define SWIGTYPE_p_p_prelude_connection_pool swig_types[139]
-#define SWIGTYPE_p_p_prelude_msg swig_types[140]
-#define SWIGTYPE_p_p_prelude_msgbuf swig_types[141]
-#define SWIGTYPE_p_p_prelude_option swig_types[142]
-#define SWIGTYPE_p_p_prelude_option_context swig_types[143]
-#define SWIGTYPE_p_p_prelude_string_t swig_types[144]
-#define SWIGTYPE_p_p_unsigned_char swig_types[145]
-#define SWIGTYPE_p_p_unsigned_int swig_types[146]
-#define SWIGTYPE_p_p_unsigned_long_long swig_types[147]
-#define SWIGTYPE_p_p_unsigned_short swig_types[148]
-#define SWIGTYPE_p_p_void swig_types[149]
-#define SWIGTYPE_p_prelude_bool_t swig_types[150]
-#define SWIGTYPE_p_prelude_client swig_types[151]
-#define SWIGTYPE_p_prelude_client_exit_status_t swig_types[152]
-#define SWIGTYPE_p_prelude_client_flags_t swig_types[153]
-#define SWIGTYPE_p_prelude_client_profile swig_types[154]
-#define SWIGTYPE_p_prelude_connection swig_types[155]
-#define SWIGTYPE_p_prelude_connection_permission_t swig_types[156]
-#define SWIGTYPE_p_prelude_connection_pool swig_types[157]
-#define SWIGTYPE_p_prelude_connection_pool_event_t swig_types[158]
-#define SWIGTYPE_p_prelude_connection_pool_flags_t swig_types[159]
-#define SWIGTYPE_p_prelude_connection_state_t swig_types[160]
-#define SWIGTYPE_p_prelude_error_code_t swig_types[161]
-#define SWIGTYPE_p_prelude_error_source_t swig_types[162]
-#define SWIGTYPE_p_prelude_ident_t swig_types[163]
-#define SWIGTYPE_p_prelude_io_t swig_types[164]
-#define SWIGTYPE_p_prelude_list_t swig_types[165]
-#define SWIGTYPE_p_prelude_log_flags_t swig_types[166]
-#define SWIGTYPE_p_prelude_log_t swig_types[167]
-#define SWIGTYPE_p_prelude_msg swig_types[168]
-#define SWIGTYPE_p_prelude_msg_priority_t swig_types[169]
-#define SWIGTYPE_p_prelude_msgbuf swig_types[170]
-#define SWIGTYPE_p_prelude_msgbuf_flags_t swig_types[171]
-#define SWIGTYPE_p_prelude_option swig_types[172]
-#define SWIGTYPE_p_prelude_option_argument_t swig_types[173]
-#define SWIGTYPE_p_prelude_option_context swig_types[174]
-#define SWIGTYPE_p_prelude_option_input_type_t swig_types[175]
-#define SWIGTYPE_p_prelude_option_priority_t swig_types[176]
-#define SWIGTYPE_p_prelude_option_type_t swig_types[177]
-#define SWIGTYPE_p_prelude_option_warning_t swig_types[178]
-#define SWIGTYPE_p_prelude_string_t swig_types[179]
-#define SWIGTYPE_p_prelude_timer_t swig_types[180]
-#define SWIGTYPE_p_short swig_types[181]
-#define SWIGTYPE_p_ssize_t swig_types[182]
-#define SWIGTYPE_p_time_t swig_types[183]
-#define SWIGTYPE_p_timeval swig_types[184]
-#define SWIGTYPE_p_unsigned_char swig_types[185]
-#define SWIGTYPE_p_unsigned_int swig_types[186]
-#define SWIGTYPE_p_unsigned_long_long swig_types[187]
-#define SWIGTYPE_p_unsigned_short swig_types[188]
-#define SWIGTYPE_p_void swig_types[189]
-static swig_type_info *swig_types[191];
-static swig_module_info swig_module = {swig_types, 190, 0, 0, 0, 0};
+#define SWIGTYPE_p_idmef_object swig_types[53]
+#define SWIGTYPE_p_idmef_overflow_alert swig_types[54]
+#define SWIGTYPE_p_idmef_path swig_types[55]
+#define SWIGTYPE_p_idmef_process swig_types[56]
+#define SWIGTYPE_p_idmef_reference swig_types[57]
+#define SWIGTYPE_p_idmef_reference_origin_t swig_types[58]
+#define SWIGTYPE_p_idmef_service swig_types[59]
+#define SWIGTYPE_p_idmef_service_type_t swig_types[60]
+#define SWIGTYPE_p_idmef_snmp_service swig_types[61]
+#define SWIGTYPE_p_idmef_source swig_types[62]
+#define SWIGTYPE_p_idmef_source_spoofed_t swig_types[63]
+#define SWIGTYPE_p_idmef_target swig_types[64]
+#define SWIGTYPE_p_idmef_target_decoy_t swig_types[65]
+#define SWIGTYPE_p_idmef_time swig_types[66]
+#define SWIGTYPE_p_idmef_tool_alert swig_types[67]
+#define SWIGTYPE_p_idmef_user swig_types[68]
+#define SWIGTYPE_p_idmef_user_category_t swig_types[69]
+#define SWIGTYPE_p_idmef_user_id swig_types[70]
+#define SWIGTYPE_p_idmef_user_id_type_t swig_types[71]
+#define SWIGTYPE_p_idmef_value swig_types[72]
+#define SWIGTYPE_p_idmef_value_type_class_t swig_types[73]
+#define SWIGTYPE_p_idmef_value_type_data_t swig_types[74]
+#define SWIGTYPE_p_idmef_value_type_enum_t swig_types[75]
+#define SWIGTYPE_p_idmef_value_type_id_t swig_types[76]
+#define SWIGTYPE_p_idmef_value_type_t swig_types[77]
+#define SWIGTYPE_p_idmef_web_service swig_types[78]
+#define SWIGTYPE_p_int swig_types[79]
+#define SWIGTYPE_p_long_long swig_types[80]
+#define SWIGTYPE_p_p_char swig_types[81]
+#define SWIGTYPE_p_p_float swig_types[82]
+#define SWIGTYPE_p_p_idmef_action swig_types[83]
+#define SWIGTYPE_p_p_idmef_action_category_t swig_types[84]
+#define SWIGTYPE_p_p_idmef_additional_data swig_types[85]
+#define SWIGTYPE_p_p_idmef_additional_data_type_t swig_types[86]
+#define SWIGTYPE_p_p_idmef_address swig_types[87]
+#define SWIGTYPE_p_p_idmef_address_category_t swig_types[88]
+#define SWIGTYPE_p_p_idmef_alert swig_types[89]
+#define SWIGTYPE_p_p_idmef_alertident swig_types[90]
+#define SWIGTYPE_p_p_idmef_analyzer swig_types[91]
+#define SWIGTYPE_p_p_idmef_assessment swig_types[92]
+#define SWIGTYPE_p_p_idmef_checksum swig_types[93]
+#define SWIGTYPE_p_p_idmef_checksum_algorithm_t swig_types[94]
+#define SWIGTYPE_p_p_idmef_classification swig_types[95]
+#define SWIGTYPE_p_p_idmef_confidence swig_types[96]
+#define SWIGTYPE_p_p_idmef_confidence_rating_t swig_types[97]
+#define SWIGTYPE_p_p_idmef_correlation_alert swig_types[98]
+#define SWIGTYPE_p_p_idmef_criteria swig_types[99]
+#define SWIGTYPE_p_p_idmef_criterion swig_types[100]
+#define SWIGTYPE_p_p_idmef_data_t swig_types[101]
+#define SWIGTYPE_p_p_idmef_file swig_types[102]
+#define SWIGTYPE_p_p_idmef_file_access swig_types[103]
+#define SWIGTYPE_p_p_idmef_file_category_t swig_types[104]
+#define SWIGTYPE_p_p_idmef_file_fstype_t swig_types[105]
+#define SWIGTYPE_p_p_idmef_heartbeat swig_types[106]
+#define SWIGTYPE_p_p_idmef_impact swig_types[107]
+#define SWIGTYPE_p_p_idmef_impact_completion_t swig_types[108]
+#define SWIGTYPE_p_p_idmef_impact_severity_t swig_types[109]
+#define SWIGTYPE_p_p_idmef_impact_type_t swig_types[110]
+#define SWIGTYPE_p_p_idmef_inode swig_types[111]
+#define SWIGTYPE_p_p_idmef_linkage swig_types[112]
+#define SWIGTYPE_p_p_idmef_linkage_category_t swig_types[113]
+#define SWIGTYPE_p_p_idmef_message swig_types[114]
+#define SWIGTYPE_p_p_idmef_node swig_types[115]
+#define SWIGTYPE_p_p_idmef_node_category_t swig_types[116]
+#define SWIGTYPE_p_p_idmef_object swig_types[117]
+#define SWIGTYPE_p_p_idmef_overflow_alert swig_types[118]
+#define SWIGTYPE_p_p_idmef_path swig_types[119]
+#define SWIGTYPE_p_p_idmef_process swig_types[120]
+#define SWIGTYPE_p_p_idmef_reference swig_types[121]
+#define SWIGTYPE_p_p_idmef_reference_origin_t swig_types[122]
+#define SWIGTYPE_p_p_idmef_service swig_types[123]
+#define SWIGTYPE_p_p_idmef_snmp_service swig_types[124]
+#define SWIGTYPE_p_p_idmef_source swig_types[125]
+#define SWIGTYPE_p_p_idmef_source_spoofed_t swig_types[126]
+#define SWIGTYPE_p_p_idmef_target swig_types[127]
+#define SWIGTYPE_p_p_idmef_target_decoy_t swig_types[128]
+#define SWIGTYPE_p_p_idmef_time swig_types[129]
+#define SWIGTYPE_p_p_idmef_tool_alert swig_types[130]
+#define SWIGTYPE_p_p_idmef_user swig_types[131]
+#define SWIGTYPE_p_p_idmef_user_category_t swig_types[132]
+#define SWIGTYPE_p_p_idmef_user_id swig_types[133]
+#define SWIGTYPE_p_p_idmef_user_id_type_t swig_types[134]
+#define SWIGTYPE_p_p_idmef_value swig_types[135]
+#define SWIGTYPE_p_p_idmef_web_service swig_types[136]
+#define SWIGTYPE_p_p_int swig_types[137]
+#define SWIGTYPE_p_p_prelude_client swig_types[138]
+#define SWIGTYPE_p_p_prelude_client_profile swig_types[139]
+#define SWIGTYPE_p_p_prelude_connection swig_types[140]
+#define SWIGTYPE_p_p_prelude_connection_pool swig_types[141]
+#define SWIGTYPE_p_p_prelude_msg swig_types[142]
+#define SWIGTYPE_p_p_prelude_msgbuf swig_types[143]
+#define SWIGTYPE_p_p_prelude_option swig_types[144]
+#define SWIGTYPE_p_p_prelude_option_context swig_types[145]
+#define SWIGTYPE_p_p_prelude_string_t swig_types[146]
+#define SWIGTYPE_p_p_unsigned_char swig_types[147]
+#define SWIGTYPE_p_p_unsigned_int swig_types[148]
+#define SWIGTYPE_p_p_unsigned_long_long swig_types[149]
+#define SWIGTYPE_p_p_unsigned_short swig_types[150]
+#define SWIGTYPE_p_p_void swig_types[151]
+#define SWIGTYPE_p_prelude_bool_t swig_types[152]
+#define SWIGTYPE_p_prelude_client swig_types[153]
+#define SWIGTYPE_p_prelude_client_exit_status_t swig_types[154]
+#define SWIGTYPE_p_prelude_client_flags_t swig_types[155]
+#define SWIGTYPE_p_prelude_client_profile swig_types[156]
+#define SWIGTYPE_p_prelude_connection swig_types[157]
+#define SWIGTYPE_p_prelude_connection_permission_t swig_types[158]
+#define SWIGTYPE_p_prelude_connection_pool swig_types[159]
+#define SWIGTYPE_p_prelude_connection_pool_event_t swig_types[160]
+#define SWIGTYPE_p_prelude_connection_pool_flags_t swig_types[161]
+#define SWIGTYPE_p_prelude_connection_state_t swig_types[162]
+#define SWIGTYPE_p_prelude_error_code_t swig_types[163]
+#define SWIGTYPE_p_prelude_error_source_t swig_types[164]
+#define SWIGTYPE_p_prelude_ident_t swig_types[165]
+#define SWIGTYPE_p_prelude_io_t swig_types[166]
+#define SWIGTYPE_p_prelude_list_t swig_types[167]
+#define SWIGTYPE_p_prelude_log_flags_t swig_types[168]
+#define SWIGTYPE_p_prelude_log_t swig_types[169]
+#define SWIGTYPE_p_prelude_msg swig_types[170]
+#define SWIGTYPE_p_prelude_msg_priority_t swig_types[171]
+#define SWIGTYPE_p_prelude_msgbuf swig_types[172]
+#define SWIGTYPE_p_prelude_msgbuf_flags_t swig_types[173]
+#define SWIGTYPE_p_prelude_option swig_types[174]
+#define SWIGTYPE_p_prelude_option_argument_t swig_types[175]
+#define SWIGTYPE_p_prelude_option_context swig_types[176]
+#define SWIGTYPE_p_prelude_option_input_type_t swig_types[177]
+#define SWIGTYPE_p_prelude_option_priority_t swig_types[178]
+#define SWIGTYPE_p_prelude_option_type_t swig_types[179]
+#define SWIGTYPE_p_prelude_option_warning_t swig_types[180]
+#define SWIGTYPE_p_prelude_string_t swig_types[181]
+#define SWIGTYPE_p_prelude_timer_t swig_types[182]
+#define SWIGTYPE_p_short swig_types[183]
+#define SWIGTYPE_p_ssize_t swig_types[184]
+#define SWIGTYPE_p_time_t swig_types[185]
+#define SWIGTYPE_p_timeval swig_types[186]
+#define SWIGTYPE_p_unsigned_char swig_types[187]
+#define SWIGTYPE_p_unsigned_int swig_types[188]
+#define SWIGTYPE_p_unsigned_long_long swig_types[189]
+#define SWIGTYPE_p_unsigned_short swig_types[190]
+#define SWIGTYPE_p_void swig_types[191]
+static swig_type_info *swig_types[193];
+static swig_module_info swig_module = {swig_types, 192, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5004,6 +5006,225 @@ XS(_wrap_prelude_client_profile_get_prefix) {
   fail:
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_ref) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    idmef_object_t *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: idmef_object_ref(object);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_ref" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    result = (idmef_object_t *)idmef_object_ref(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_idmef_object, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_destroy) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: idmef_object_destroy(object);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_destroy" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    idmef_object_destroy(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_print) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: idmef_object_print(object,fd);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_print" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_prelude_io_t, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_object_print" "', argument " "2"" of type '" "prelude_io_t *""'"); 
+    }
+    arg2 = (prelude_io_t *)(argp2);
+    result = (int)idmef_object_print(arg1,arg2);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_clone) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    idmef_object_t **arg2 = (idmef_object_t **) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: idmef_object_clone(src,dst);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_clone" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_object_clone" "', argument " "2"" of type '" "idmef_object_t **""'"); 
+    }
+    arg2 = (idmef_object_t **)(argp2);
+    result = (int)idmef_object_clone(arg1,arg2);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_copy) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    idmef_object_t *arg2 = (idmef_object_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: idmef_object_copy(src,dst);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_copy" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_object_copy" "', argument " "2"" of type '" "idmef_object_t *""'"); 
+    }
+    arg2 = (idmef_object_t *)(argp2);
+    result = (int)idmef_object_copy(arg1,arg2);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_idmef_object_compare) {
+  {
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
+    idmef_object_t *arg2 = (idmef_object_t *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: idmef_object_compare(obj1,obj2);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "idmef_object_compare" "', argument " "1"" of type '" "idmef_object_t *""'"); 
+    }
+    arg1 = (idmef_object_t *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_idmef_object, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "idmef_object_compare" "', argument " "2"" of type '" "idmef_object_t *""'"); 
+    }
+    arg2 = (idmef_object_t *)(argp2);
+    result = (int)idmef_object_compare(arg1,arg2);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
     
     SWIG_croak_null();
   }
@@ -63205,6 +63426,7 @@ static swig_type_info _swigt__p_idmef_message = {"_p_idmef_message", "struct idm
 static swig_type_info _swigt__p_idmef_message_type_t = {"_p_idmef_message_type_t", "enum idmef_message_type_t *|idmef_message_type_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_node = {"_p_idmef_node", "struct idmef_node *|idmef_node_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_node_category_t = {"_p_idmef_node_category_t", "enum idmef_node_category_t *|idmef_node_category_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_idmef_object = {"_p_idmef_object", "idmef_object_t *|struct idmef_object *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_overflow_alert = {"_p_idmef_overflow_alert", "idmef_overflow_alert_t *|struct idmef_overflow_alert *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_path = {"_p_idmef_path", "idmef_path_t *|struct idmef_path *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_process = {"_p_idmef_process", "struct idmef_process *|idmef_process_t *", 0, 0, (void*)0, 0};
@@ -63268,6 +63490,7 @@ static swig_type_info _swigt__p_p_idmef_linkage_category_t = {"_p_p_idmef_linkag
 static swig_type_info _swigt__p_p_idmef_message = {"_p_p_idmef_message", "idmef_message_t **|struct idmef_message **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_idmef_node = {"_p_p_idmef_node", "struct idmef_node **|idmef_node_t **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_idmef_node_category_t = {"_p_p_idmef_node_category_t", "enum idmef_node_category_t **|idmef_node_category_t **", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_p_idmef_object = {"_p_p_idmef_object", "idmef_object_t **|struct idmef_object **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_idmef_overflow_alert = {"_p_p_idmef_overflow_alert", "struct idmef_overflow_alert **|idmef_overflow_alert_t **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_idmef_path = {"_p_p_idmef_path", "idmef_path_t **|struct idmef_path **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_idmef_process = {"_p_p_idmef_process", "idmef_process_t **|struct idmef_process **", 0, 0, (void*)0, 0};
@@ -63397,6 +63620,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_idmef_message_type_t,
   &_swigt__p_idmef_node,
   &_swigt__p_idmef_node_category_t,
+  &_swigt__p_idmef_object,
   &_swigt__p_idmef_overflow_alert,
   &_swigt__p_idmef_path,
   &_swigt__p_idmef_process,
@@ -63460,6 +63684,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_p_idmef_message,
   &_swigt__p_p_idmef_node,
   &_swigt__p_p_idmef_node_category_t,
+  &_swigt__p_p_idmef_object,
   &_swigt__p_p_idmef_overflow_alert,
   &_swigt__p_p_idmef_path,
   &_swigt__p_p_idmef_process,
@@ -63589,6 +63814,7 @@ static swig_cast_info _swigc__p_idmef_message[] = {  {&_swigt__p_idmef_message, 
 static swig_cast_info _swigc__p_idmef_message_type_t[] = {  {&_swigt__p_idmef_message_type_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_node[] = {  {&_swigt__p_idmef_node, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_node_category_t[] = {  {&_swigt__p_idmef_node_category_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_idmef_object[] = {  {&_swigt__p_idmef_object, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_overflow_alert[] = {  {&_swigt__p_idmef_overflow_alert, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_path[] = {  {&_swigt__p_idmef_path, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_process[] = {  {&_swigt__p_idmef_process, 0, 0, 0},{0, 0, 0, 0}};
@@ -63652,6 +63878,7 @@ static swig_cast_info _swigc__p_p_idmef_linkage_category_t[] = {  {&_swigt__p_p_
 static swig_cast_info _swigc__p_p_idmef_message[] = {  {&_swigt__p_p_idmef_message, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_idmef_node[] = {  {&_swigt__p_p_idmef_node, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_idmef_node_category_t[] = {  {&_swigt__p_p_idmef_node_category_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_p_idmef_object[] = {  {&_swigt__p_p_idmef_object, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_idmef_overflow_alert[] = {  {&_swigt__p_p_idmef_overflow_alert, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_idmef_path[] = {  {&_swigt__p_p_idmef_path, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_idmef_process[] = {  {&_swigt__p_p_idmef_process, 0, 0, 0},{0, 0, 0, 0}};
@@ -63781,6 +64008,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_idmef_message_type_t,
   _swigc__p_idmef_node,
   _swigc__p_idmef_node_category_t,
+  _swigc__p_idmef_object,
   _swigc__p_idmef_overflow_alert,
   _swigc__p_idmef_path,
   _swigc__p_idmef_process,
@@ -63844,6 +64072,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_p_idmef_message,
   _swigc__p_p_idmef_node,
   _swigc__p_p_idmef_node_category_t,
+  _swigc__p_p_idmef_object,
   _swigc__p_p_idmef_overflow_alert,
   _swigc__p_p_idmef_path,
   _swigc__p_p_idmef_process,
@@ -63994,6 +64223,12 @@ static swig_command_info swig_commands[] = {
 {"Prelude::prelude_client_profile_get_credentials", _wrap_prelude_client_profile_get_credentials},
 {"Prelude::prelude_client_profile_set_prefix", _wrap_prelude_client_profile_set_prefix},
 {"Prelude::prelude_client_profile_get_prefix", _wrap_prelude_client_profile_get_prefix},
+{"Prelude::idmef_object_ref", _wrap_idmef_object_ref},
+{"Prelude::idmef_object_destroy", _wrap_idmef_object_destroy},
+{"Prelude::idmef_object_print", _wrap_idmef_object_print},
+{"Prelude::idmef_object_clone", _wrap_idmef_object_clone},
+{"Prelude::idmef_object_copy", _wrap_idmef_object_copy},
+{"Prelude::idmef_object_compare", _wrap_idmef_object_compare},
 {"Prelude::idmef_additional_data_type_to_numeric", _wrap_idmef_additional_data_type_to_numeric},
 {"Prelude::idmef_additional_data_type_to_string", _wrap_idmef_additional_data_type_to_string},
 {"Prelude::idmef_additional_data_new", _wrap_idmef_additional_data_new},

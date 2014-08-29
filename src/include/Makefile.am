@@ -45,6 +45,6 @@ include_HEADERS = common.h			\
 
 nodist_include_HEADERS = prelude.h prelude-inttypes.h
 
-noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h variable.h
+noinst_HEADERS = config-engine.h idmef-object-prv.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h variable.h
 
 -include $(top_srcdir)/git.mk

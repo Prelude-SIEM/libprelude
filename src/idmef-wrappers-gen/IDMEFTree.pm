@@ -186,7 +186,7 @@ sub	parse_struct
 	    $struct->{refcount} = 1;
 	    $self->debug("struct is refcounted\n");
 
-	} elsif ( $line =~ /^\s*IS_LISTED\s*\;\s*$/ ) {
+	} elsif ( $line =~ /^\s*IDMEF_LINKED_OBJECT\s*\;\s*$/ ) {
 	    $struct->{is_listed} = 1;
 	    $self->debug("struct is listed\n");
 	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*struct\s+(\w+)\s+(\**)(\w+)\;$/ ) {

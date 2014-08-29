@@ -45,6 +45,7 @@
 #include "idmef-data.h"
 #include "idmef-class.h"
 #include "idmef-value.h"
+#include "idmef-object-prv.h"
 
 #include "idmef-tree-wrap.h"
 #include "libmissing.h"
@@ -58,8 +59,7 @@
 #define LISTED_OBJECT(name, type) prelude_list_t name
 #define KEYLISTED_OBJECT(name, type) prelude_list_t name
 
-#define IS_LISTED prelude_list_t list
-#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
+#define IS_KEY_LISTED(keyfield) IDMEF_LINKED_OBJECT; prelude_string_t *keyfield
 
 #define UNION(type, var) type var; union
 
@@ -329,7 +329,8 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 }
 
 
-struct idmef_additional_data { 
+struct idmef_additional_data {
+ 
          IS_KEY_LISTED(meaning);
          REFCOUNT;
          idmef_additional_data_type_t type;
@@ -398,8 +399,9 @@ const char *idmef_reference_origin_to_string(idmef_reference_origin_t val)
 }
 
 
-struct idmef_reference { 
-         IS_LISTED;
+struct idmef_reference {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          idmef_reference_origin_t origin;
  
@@ -411,7 +413,9 @@ struct idmef_reference {
 
 
 
-struct idmef_classification { 
+struct idmef_classification {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          REQUIRED(prelude_string_t, *text);
@@ -483,8 +487,9 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val)
 }
 
 
-struct idmef_user_id { 
-         IS_LISTED;
+struct idmef_user_id {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          idmef_user_id_type_t type;
@@ -549,7 +554,9 @@ const char *idmef_user_category_to_string(idmef_user_category_t val)
 }
 
 
-struct idmef_user { 
+struct idmef_user {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          idmef_user_category_t category;
@@ -636,8 +643,9 @@ const char *idmef_address_category_to_string(idmef_address_category_t val)
 }
 
 
-struct idmef_address { 
-         IS_LISTED;
+struct idmef_address {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          idmef_address_category_t category;
@@ -650,7 +658,9 @@ struct idmef_address {
 
 
 
-struct idmef_process { 
+struct idmef_process {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          REQUIRED(prelude_string_t, *name);
@@ -664,7 +674,9 @@ struct idmef_process {
 
 
 
-struct idmef_web_service { 
+struct idmef_web_service {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          REQUIRED(prelude_string_t, *url);
          prelude_string_t *cgi;
@@ -675,7 +687,9 @@ struct idmef_web_service {
 
 
 
-struct idmef_snmp_service { 
+struct idmef_snmp_service {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *oid;
          OPTIONAL_INT(uint32_t, message_processing_model);
@@ -748,7 +762,9 @@ const char *idmef_service_type_to_string(idmef_service_type_t val)
 }
 
 
-struct idmef_service { 
+struct idmef_service {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
  
@@ -844,7 +860,9 @@ const char *idmef_node_category_to_string(idmef_node_category_t val)
 }
 
 
-struct idmef_node { 
+struct idmef_node {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
          idmef_node_category_t category;
@@ -909,8 +927,9 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val)
 }
 
 
-struct idmef_source { 
-         IS_LISTED;
+struct idmef_source {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
  
@@ -927,8 +946,9 @@ struct idmef_source {
 
 
 
-struct idmef_file_access { 
-         IS_LISTED;
+struct idmef_file_access {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
  
          REQUIRED(idmef_user_id_t, *user_id);
@@ -938,7 +958,9 @@ struct idmef_file_access {
 
 
 
-struct idmef_inode { 
+struct idmef_inode {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          idmef_time_t *change_time;
          OPTIONAL_INT(uint32_t, number);
@@ -1018,8 +1040,9 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val)
 }
 
 
-struct idmef_checksum { 
-         IS_LISTED;
+struct idmef_checksum {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          REQUIRED(prelude_string_t, *value);
          prelude_string_t *key;
@@ -1147,8 +1170,9 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val)
 }
 
 
-struct idmef_file { 
-         IS_LISTED;
+struct idmef_file {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
  
@@ -1237,8 +1261,9 @@ const char *idmef_linkage_category_to_string(idmef_linkage_category_t val)
 }
 
 
-struct idmef_linkage { 
-         IS_LISTED;
+struct idmef_linkage {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
  
          idmef_linkage_category_t category;
@@ -1303,8 +1328,9 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val)
 }
 
 
-struct idmef_target { 
-         IS_LISTED;
+struct idmef_target {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
  
@@ -1321,8 +1347,9 @@ struct idmef_target {
 
 
 
-struct idmef_analyzer { 
-         IS_LISTED;
+struct idmef_analyzer {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
          prelude_string_t *analyzerid;
  
@@ -1342,8 +1369,9 @@ struct idmef_analyzer {
 
 
 
-struct idmef_alertident { 
-         IS_LISTED;
+struct idmef_alertident {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
  
          REQUIRED(prelude_string_t, *alertident);
@@ -1519,7 +1547,9 @@ const char *idmef_impact_type_to_string(idmef_impact_type_t val)
 }
 
 
-struct idmef_impact { 
+struct idmef_impact {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          OPTIONAL_INT(idmef_impact_severity_t, severity);
@@ -1586,8 +1616,9 @@ const char *idmef_action_category_to_string(idmef_action_category_t val)
 }
 
 
-struct idmef_action { 
-         IS_LISTED;
+struct idmef_action {
+ 
+         IDMEF_LINKED_OBJECT;
          REFCOUNT;
  
          idmef_action_category_t category;
@@ -1652,7 +1683,9 @@ const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val)
 }
 
 
-struct idmef_confidence { 
+struct idmef_confidence {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          idmef_confidence_rating_t rating;
@@ -1662,7 +1695,9 @@ struct idmef_confidence {
 
 
 
-struct idmef_assessment { 
+struct idmef_assessment {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          idmef_impact_t *impact;
@@ -1673,7 +1708,9 @@ struct idmef_assessment {
 
 
 
-struct idmef_tool_alert { 
+struct idmef_tool_alert {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          REQUIRED(prelude_string_t, *name);
@@ -1684,7 +1721,9 @@ struct idmef_tool_alert {
 
 
 
-struct idmef_correlation_alert { 
+struct idmef_correlation_alert {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          REQUIRED(prelude_string_t, *name);
@@ -1694,7 +1733,9 @@ struct idmef_correlation_alert {
 
 
 
-struct idmef_overflow_alert { 
+struct idmef_overflow_alert {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          REQUIRED(prelude_string_t, *program);
@@ -1760,7 +1801,9 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val)
 }
 
 
-struct idmef_alert { 
+struct idmef_alert {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *messageid;
  
@@ -1789,7 +1832,9 @@ struct idmef_alert {
 
 
 
-struct idmef_heartbeat { 
+struct idmef_heartbeat {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          prelude_string_t *messageid;
@@ -1856,7 +1901,9 @@ const char *idmef_message_type_to_string(idmef_message_type_t val)
 }
 
 
-struct idmef_message { 
+struct idmef_message {
+ 
+         IDMEF_OBJECT;
          REFCOUNT;
  
          REQUIRED(prelude_string_t, *version);
@@ -1885,6 +1932,8 @@ int idmef_additional_data_new(idmef_additional_data_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ADDITIONAL_DATA;
 
         prelude_list_init(&(*ret)->list);
 
@@ -2312,6 +2361,8 @@ int idmef_reference_new(idmef_reference_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_REFERENCE;
 
         prelude_list_init(&(*ret)->list);
 
@@ -2838,6 +2889,8 @@ int idmef_classification_new(idmef_classification_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_CLASSIFICATION;
 
         (*ret)->refcount = 1;
 
@@ -3392,6 +3445,8 @@ int idmef_user_id_new(idmef_user_id_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_USER_ID;
 
         prelude_list_init(&(*ret)->list);
 
@@ -3978,6 +4033,8 @@ int idmef_user_new(idmef_user_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_USER;
+
         (*ret)->refcount = 1;
 
         prelude_list_init(&(*ret)->user_id_list);
@@ -4497,6 +4554,8 @@ int idmef_address_new(idmef_address_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ADDRESS;
 
         prelude_list_init(&(*ret)->list);
 
@@ -5181,6 +5240,8 @@ int idmef_process_new(idmef_process_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_PROCESS;
 
         (*ret)->refcount = 1;
 
@@ -6101,6 +6162,8 @@ int idmef_web_service_new(idmef_web_service_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_WEB_SERVICE;
+
         (*ret)->refcount = 1;
 
         prelude_list_init(&(*ret)->arg_list);
@@ -6743,6 +6806,8 @@ int idmef_snmp_service_new(idmef_snmp_service_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_SNMP_SERVICE;
 
         (*ret)->refcount = 1;
 
@@ -7683,6 +7748,8 @@ int idmef_service_new(idmef_service_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_SERVICE;
 
         (*ret)->refcount = 1;
 
@@ -8805,6 +8872,8 @@ int idmef_node_new(idmef_node_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_NODE;
+
         (*ret)->refcount = 1;
 
         prelude_list_init(&(*ret)->address_list);
@@ -9502,6 +9571,8 @@ int idmef_source_new(idmef_source_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_SOURCE;
 
         prelude_list_init(&(*ret)->list);
 
@@ -10284,6 +10355,8 @@ int idmef_file_access_new(idmef_file_access_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_FILE_ACCESS;
+
         prelude_list_init(&(*ret)->list);
 
         (*ret)->refcount = 1;
@@ -10755,6 +10828,8 @@ int idmef_inode_new(idmef_inode_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_INODE;
 
         (*ret)->refcount = 1;
 
@@ -11409,6 +11484,8 @@ int idmef_checksum_new(idmef_checksum_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_CHECKSUM;
+
         prelude_list_init(&(*ret)->list);
 
         (*ret)->refcount = 1;
@@ -11835,6 +11912,8 @@ int idmef_file_new(idmef_file_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_FILE;
 
         prelude_list_init(&(*ret)->list);
 
@@ -13640,6 +13719,8 @@ int idmef_linkage_new(idmef_linkage_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_LINKAGE;
+
         prelude_list_init(&(*ret)->list);
 
         (*ret)->refcount = 1;
@@ -14177,6 +14258,8 @@ int idmef_target_new(idmef_target_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_TARGET;
 
         prelude_list_init(&(*ret)->list);
 
@@ -15155,6 +15238,8 @@ int idmef_analyzer_new(idmef_analyzer_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ANALYZER;
 
         prelude_list_init(&(*ret)->list);
 
@@ -16224,6 +16309,8 @@ int idmef_alertident_new(idmef_alertident_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ALERTIDENT;
+
         prelude_list_init(&(*ret)->list);
 
         (*ret)->refcount = 1;
@@ -16585,6 +16672,8 @@ int idmef_impact_new(idmef_impact_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_IMPACT;
 
         (*ret)->refcount = 1;
 
@@ -17073,6 +17162,8 @@ int idmef_action_new(idmef_action_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ACTION;
+
         prelude_list_init(&(*ret)->list);
 
         (*ret)->refcount = 1;
@@ -17401,6 +17492,8 @@ int idmef_confidence_new(idmef_confidence_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_CONFIDENCE;
+
         (*ret)->refcount = 1;
 
         return 0;
@@ -17692,6 +17785,8 @@ int idmef_assessment_new(idmef_assessment_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ASSESSMENT;
 
         (*ret)->refcount = 1;
 
@@ -18240,6 +18335,8 @@ int idmef_tool_alert_new(idmef_tool_alert_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_TOOL_ALERT;
 
         (*ret)->refcount = 1;
 
@@ -18795,6 +18892,8 @@ int idmef_correlation_alert_new(idmef_correlation_alert_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_CORRELATION_ALERT;
+
         (*ret)->refcount = 1;
 
         prelude_list_init(&(*ret)->alertident_list);
@@ -19260,6 +19359,8 @@ int idmef_overflow_alert_new(idmef_overflow_alert_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_OVERFLOW_ALERT;
+
         (*ret)->refcount = 1;
 
         {
@@ -19695,6 +19796,8 @@ int idmef_alert_new(idmef_alert_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ALERT;
 
         (*ret)->refcount = 1;
 
@@ -21622,6 +21725,8 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_HEARTBEAT;
+
         (*ret)->refcount = 1;
 
         prelude_list_init(&(*ret)->analyzer_list);
@@ -22542,6 +22647,8 @@ int idmef_message_new(idmef_message_t **ret)
         *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
+
+        (*ret)->_idmef_object_id = IDMEF_CLASS_ID_MESSAGE;
 
         (*ret)->refcount = 1;
 

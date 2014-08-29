@@ -36,6 +36,7 @@
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-linked-object.h"
+#include "idmef-object-prv.h"
 
 #include "idmef-time.h"
 #include "idmef-data.h"
@@ -508,6 +509,7 @@ static void class_destroy(idmef_value_type_t *type)
 static int list_to_string(const char *cname, idmef_class_id_t class, prelude_list_t *head, prelude_string_t *out,
                           int (*item_to_string_cb)(int class, void *item, prelude_string_t *out))
 {
+        void *obj;
         int ret, j;
         prelude_list_t *tmp;
 
@@ -534,7 +536,12 @@ static int list_to_string(const char *cname, idmef_class_id_t class, prelude_lis
                                 return ret;
                 }
 
-                ret = item_to_string_cb(class, prelude_linked_object_get_object(tmp), out);
+                if ( ! cname )
+                        obj = idmef_linked_object_get_object(tmp);
+                else
+                        obj = prelude_linked_object_get_object(tmp);
+
+                ret = item_to_string_cb(class, obj, out);
                 if ( ret < 0 )
                         return ret;
         }

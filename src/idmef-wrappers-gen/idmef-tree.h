@@ -24,26 +24,23 @@
 
 /*
  * NOTE ON GENERATION TIME MACROS:
- *  
- *  - IS_LISTED: use within object that will be a member of the list
- *    always put this field as the first field of the struct, idmef-object.c
- *    access idmef structure as a void * and therefore cannot use list_entry
- *    to retrieve the list entry, thus it assumes that the prelude_list_t
- *    is the first field of the struct
  *
- *  - LISTED_OBJECT(name, type): include list named 'name' consisted of objects 
- *    named 'type' (objects must have IS_LISTED member). 'name' should end with '_list'. 
+ *  - IDMEF_LINKED_OBJECT: use within object that will be a member of the list
+ *    always put this field as the first field of the struct.
  *
- *  - UNION_MEMBER(union, var, val, type, name): use within 'union' clause. 
- *    Parameters: 'union' - name of the union macro is used within 
+ *  - LISTED_OBJECT(name, type): include list named 'name' consisted of objects
+ *    named 'type' (objects must have IDMEF_LINKED_OBJECT member). 'name' should end with '_list'.
+ *
+ *  - UNION_MEMBER(union, var, val, type, name): use within 'union' clause.
+ *    Parameters: 'union' - name of the union macro is used within
  *                'var' - variable controlling selection of memeber form the union
  *                'val' - value of variable 'var' for which this member will be used
  *                'type' - type of member variable
- *                'name' - name of member variable    
+ *                'name' - name of member variable
  *
- * - FORCE_REGISTER(type, class): force parser to treat type 'type' as a 'class', 
+ * - FORCE_REGISTER(type, class): force parser to treat type 'type' as a 'class',
  *   even if it was not (yet) defined; example: FORCE_REGISTER(my_struct_t, struct)
- *   registers my_struct_t as struct. 
+ *   registers my_struct_t as struct.
  *
  * - TYPE_ID(type, id): set ID number of type 'type' to 'id'
  */
@@ -63,9 +60,7 @@
 
 #define LISTED_OBJECT(name, type) prelude_list_t name
 
-#define IS_LISTED prelude_list_t list
-
-#define IS_KEY_LISTED(keyfield) prelude_list_t list; prelude_string_t *keyfield
+#define IS_KEY_LISTED(keyfield) IDMEF_LINKED_OBJECT; prelude_string_t *keyfield
 
 #define UNION(type, var) type var; union
 
@@ -164,10 +159,10 @@ ENUM(origin) {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         idmef_reference_origin_t origin;
-        
+
         REQUIRED(prelude_string_t, *name);
         REQUIRED(prelude_string_t, *url);
         prelude_string_t *meaning;
@@ -181,11 +176,12 @@ struct {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         REQUIRED(prelude_string_t, *text);
         LISTED_OBJECT(reference_list, idmef_reference_t);
-        
+
 } TYPE_ID(idmef_classification_t, 6);
 
 
@@ -208,7 +204,7 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         idmef_user_id_type_t type;
@@ -235,6 +231,7 @@ ENUM(cat) {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         idmef_user_category_t category;
@@ -270,7 +267,7 @@ ENUM(addr) {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         idmef_address_category_t category;
@@ -287,6 +284,7 @@ struct {
  */
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         REQUIRED(prelude_string_t, *name);
@@ -300,6 +298,7 @@ struct {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         REQUIRED(prelude_string_t, *url);
         prelude_string_t *cgi;
@@ -314,6 +313,7 @@ struct {
  * SNMPService class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *oid;
         OPTIONAL_INT(uint32_t, message_processing_model);
@@ -330,7 +330,7 @@ struct {
         prelude_string_t *community;
 } TYPE_ID(idmef_snmp_service_t, 15);
 
-        
+
 
 ENUM() {
         IDMEF_SERVICE_TYPE_ERROR   = -1,
@@ -345,13 +345,14 @@ ENUM() {
  * Service class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
-        
+
         OPTIONAL_INT(uint8_t, ip_version);
         OPTIONAL_INT(uint8_t, iana_protocol_number);
         prelude_string_t *iana_protocol_name;
-        
+
         prelude_string_t *name;
         OPTIONAL_INT(uint16_t, port);
         prelude_string_t *portlist;
@@ -361,7 +362,7 @@ struct {
                 UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
                 UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
         } specific;
-        
+
 } TYPE_ID(idmef_service_t, 17);
 
 
@@ -371,7 +372,7 @@ struct {
  * Node class
  */
 ENUM(node) {
-        IDMEF_NODE_CATEGORY_ERROR        = -1,        
+        IDMEF_NODE_CATEGORY_ERROR        = -1,
         IDMEF_NODE_CATEGORY_UNKNOWN      =  0,
         IDMEF_NODE_CATEGORY_ADS          =  1,
         IDMEF_NODE_CATEGORY_AFS          =  2,
@@ -389,6 +390,7 @@ ENUM(node) {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
         idmef_node_category_t category;
@@ -413,10 +415,10 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
-        
+
         idmef_source_spoofed_t spoofed;
         prelude_string_t *interface;
 
@@ -424,14 +426,14 @@ struct {
         idmef_user_t *user;
         idmef_process_t *process;
         idmef_service_t *service;
-        
+
 } TYPE_ID(idmef_source_t, 21);
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
-        
+
         REQUIRED(idmef_user_id_t, *user_id);
         LISTED_OBJECT(permission_list, prelude_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
@@ -442,6 +444,7 @@ struct {
  * Inode class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         idmef_time_t *change_time;
         OPTIONAL_INT(uint32_t, number);
@@ -477,7 +480,7 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         REQUIRED(prelude_string_t, *value);
         prelude_string_t *key;
@@ -512,31 +515,31 @@ ENUM(fstype) {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
-        
+
         REQUIRED(prelude_string_t, *name);
         REQUIRED(prelude_string_t, *path);
-        
+
         idmef_time_t *create_time;
         idmef_time_t *modify_time;
         idmef_time_t *access_time;
 
-        
+
         OPTIONAL_INT(uint64_t, data_size);
         OPTIONAL_INT(uint64_t, disk_size);
-        
+
         LISTED_OBJECT(file_access_list, idmef_file_access_t);
         LISTED_OBJECT(linkage_list, idmef_linkage_t);
 
         idmef_inode_t *inode;
         LISTED_OBJECT(checksum_list, idmef_checksum_t);
-        
+
         idmef_file_category_t category;
         OPTIONAL_INT(idmef_file_fstype_t, fstype);
         prelude_string_t *file_type;
-        
+
 } TYPE_ID(idmef_file_t, 26);
 
 
@@ -555,9 +558,9 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
-        
+
         idmef_linkage_category_t category;
         REQUIRED(prelude_string_t, *name);
         REQUIRED(prelude_string_t, *path);
@@ -580,10 +583,10 @@ ENUM() {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
-        
+
         idmef_target_decoy_t decoy;
         prelude_string_t *interface;
 
@@ -602,10 +605,10 @@ struct {
  * Analyzer class
  */
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
         prelude_string_t *analyzerid;
-        
+
         prelude_string_t *name;
         prelude_string_t *manufacturer;
         prelude_string_t *model;
@@ -613,10 +616,10 @@ struct {
         prelude_string_t *class;
         prelude_string_t *ostype;
         prelude_string_t *osversion;
-        
+
         idmef_node_t *node;
         idmef_process_t *process;
-        
+
 } TYPE_ID(idmef_analyzer_t, 31);
 
 
@@ -627,12 +630,12 @@ struct {
  */
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
 
         REQUIRED(prelude_string_t, *alertident);
         prelude_string_t *analyzerid;
-        
+
 } TYPE_ID(idmef_alertident_t, 32);
 
 
@@ -668,6 +671,7 @@ ENUM() {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         OPTIONAL_INT(idmef_impact_severity_t, severity);
@@ -690,7 +694,7 @@ ENUM(action) {
 
 
 struct {
-        IS_LISTED;
+        IDMEF_LINKED_OBJECT;
         REFCOUNT;
 
         idmef_action_category_t category;
@@ -712,6 +716,7 @@ ENUM() {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         idmef_confidence_rating_t rating;
@@ -723,6 +728,7 @@ struct {
  * Assessment class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         idmef_impact_t *impact;
@@ -736,6 +742,7 @@ struct {
  * Toolalert class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         REQUIRED(prelude_string_t, *name);
@@ -751,6 +758,7 @@ struct {
  * CorrelationAlert class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         REQUIRED(prelude_string_t, *name);
@@ -764,6 +772,7 @@ struct {
  * OverflowAlert class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
 
         REQUIRED(prelude_string_t, *program);
@@ -788,21 +797,22 @@ ENUM(idmef) {
 
 
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *messageid;
 
         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
-        
+
         REQUIRED(idmef_time_t, *create_time);
         REQUIRED(idmef_classification_t, *classification);
         idmef_time_t *detect_time;
         idmef_time_t *analyzer_time;
-        
+
         LISTED_OBJECT(source_list, idmef_source_t);
         LISTED_OBJECT(target_list, idmef_target_t);
 
         idmef_assessment_t *assessment;
-        
+
         KEYLISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 
         UNION(idmef_alert_type_t, type) {
@@ -810,7 +820,7 @@ struct {
                 UNION_MEMBER(IDMEF_ALERT_TYPE_CORRELATION, idmef_correlation_alert_t, *correlation_alert);
                 UNION_MEMBER(IDMEF_ALERT_TYPE_OVERFLOW, idmef_overflow_alert_t, *overflow_alert);
         } detail;
-        
+
 } TYPE_ID(idmef_alert_t, 46);
 
 
@@ -821,8 +831,9 @@ struct {
  * Heartbeat class
  */
 struct {
+        IDMEF_OBJECT;
         REFCOUNT;
-        
+
         prelude_string_t *messageid;
         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
 
@@ -846,9 +857,10 @@ ENUM() {
 } TYPE_ID(idmef_message_type_t, 48);
 
 
-struct {        
+struct {
+        IDMEF_OBJECT;
         REFCOUNT;
-        
+
         REQUIRED(prelude_string_t, *version);
 
         UNION(idmef_message_type_t, type) {
@@ -857,7 +869,7 @@ struct {
         } message;
 
         HIDE(prelude_msg_t *, pmsg);
-        
+
 } TYPE_ID(idmef_message_t, 49);
 
 #endif /* _LIBPRELUDE_IDMEF_TREE_H */
