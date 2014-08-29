@@ -4,20 +4,20 @@
 #include <prelude.h>
 #include <idmef-path.h>
 #include <idmef-message-print.h>
+#include <idmef-object-prv.h>
 
 #include "prelude-error.hxx"
 #include "idmef-path.hxx"
 #include "idmef.hxx"
 
-
 using namespace Prelude;
 
 
-IDMEF::IDMEF() : _message(NULL)
+IDMEF::IDMEF() : _object(NULL)
 {
         int ret;
 
-        ret = idmef_message_new(&_message);
+        ret = idmef_message_new((idmef_message_t **) &_object);
         if ( ret < 0 )
                 throw PreludeError(ret);
 }
@@ -25,131 +25,131 @@ IDMEF::IDMEF() : _message(NULL)
 
 IDMEF::IDMEF(const IDMEF &idmef)
 {
-        _message = (idmef._message) ? idmef_message_ref(idmef._message) : NULL;
+        _object = (idmef._object) ? idmef_object_ref(idmef._object) : NULL;
 }
 
 
-IDMEF::IDMEF(idmef_message_t *message)
+IDMEF::IDMEF(idmef_object_t *object)
 {
-        _message = message;
+        _object = object;
 }
 
 
 IDMEF::~IDMEF()
 {
-        if ( _message )
-                idmef_message_destroy(_message);
+        if ( _object )
+                idmef_object_destroy(_object);
 }
 
 
 void IDMEF::Set(const char *path, std::vector<IDMEFValue> value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, IDMEFValue *value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, IDMEFValue &value)
 {
-        IDMEFPath(path).Set(*this, &value);
+        IDMEFPath(*this, path).Set(*this, &value);
 }
 
 
 void IDMEF::Set(const char *path, std::string value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, const char *value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, int8_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, uint8_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, int16_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, uint16_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, int32_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, uint32_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, int64_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, uint64_t value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, float value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, double value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 void IDMEF::Set(const char *path, IDMEFTime &value)
 {
-        IDMEFPath(path).Set(*this, value);
+        IDMEFPath(*this, path).Set(*this, value);
 }
 
 
 IDMEFValue IDMEF::Get(const char *path)
 {
-        return IDMEFPath(path).Get(*this);
+        return IDMEFPath(*this, path).Get(*this);
 }
 
 
 IDMEF IDMEF::Clone()
 {
         int ret;
-        idmef_message_t *clone;
+        idmef_object_t *clone;
 
-        ret = idmef_message_clone(_message, &clone);
+        ret = idmef_object_clone(_object, &clone);
         if ( ret < 0 )
                 throw PreludeError(ret);
 
@@ -168,7 +168,7 @@ const std::string IDMEF::ToString() const
                 throw PreludeError(ret);
 
         prelude_io_set_buffer_io(fd);
-        idmef_message_print(_message, fd);
+        idmef_object_print(_object, fd);
 
         str.assign((const char *) prelude_io_get_fdptr(fd), prelude_io_pending(fd));
 
@@ -207,6 +207,9 @@ void IDMEF::_genericRead(ssize_t (read_cb)(prelude_io_t *fd, void *buf, size_t s
         prelude_io_t *fd;
         prelude_msg_t *msg = NULL;
 
+        if ( this->_object->_idmef_object_id != IDMEF_CLASS_ID_MESSAGE )
+                throw PreludeError("read operation only supported on root IDMEF object");
+
         ret = prelude_io_new(&fd);
         if ( ret < 0 )
                 throw PreludeError(ret);
@@ -219,13 +222,13 @@ void IDMEF::_genericRead(ssize_t (read_cb)(prelude_io_t *fd, void *buf, size_t s
         if ( ret < 0 )
                 throw PreludeError(ret);
 
-        ret = idmef_message_read(this->_message, msg);
+        ret = idmef_message_read((idmef_message_t *) this->_object, msg);
         if ( ret < 0 ) {
                 prelude_msg_destroy(msg);
                 throw PreludeError(ret);
         }
 
-        idmef_message_set_pmsg(this->_message, msg);
+        idmef_message_set_pmsg((idmef_message_t *) this->_object, msg);
 }
 
 
@@ -242,6 +245,9 @@ size_t IDMEF::_genericWrite(int (write_cb)(prelude_msgbuf_t *msgbuf, prelude_msg
         int ret;
         prelude_msgbuf_t *fd;
 
+        if ( this->_object->_idmef_object_id != IDMEF_CLASS_ID_MESSAGE )
+                throw PreludeError("write operation only supported on root IDMEF object");
+
         ret = prelude_msgbuf_new(&fd);
         if ( ret < 0 )
                 throw PreludeError(ret);
@@ -249,7 +255,7 @@ size_t IDMEF::_genericWrite(int (write_cb)(prelude_msgbuf_t *msgbuf, prelude_msg
         prelude_msgbuf_set_data(fd, fd_data);
         prelude_msgbuf_set_callback(fd, write_cb);
 
-        ret = idmef_message_write(this->_message, fd);
+        ret = idmef_message_write((idmef_message_t *) this->_object, fd);
         if ( ret < 0 ) {
                 prelude_msgbuf_destroy(fd);
                 throw PreludeError(ret);
@@ -273,19 +279,19 @@ IDMEF::operator const std::string() const
 }
 
 
-IDMEF::operator idmef_message_t *() const
+IDMEF::operator idmef_object_t *() const
 {
-        return _message;
+        return (idmef_object_t *) _object;
 }
 
 
 IDMEF &IDMEF::operator = (const IDMEF &idmef)
 {
-        if ( this != &idmef && _message != idmef._message ) {
-                if ( _message )
-                        idmef_message_destroy(_message);
+        if ( this != &idmef && _object != idmef._object ) {
+                if ( _object )
+                        idmef_object_destroy(_object);
 
-                _message = (idmef._message) ? idmef_message_ref(idmef._message) : NULL;
+                _object = (idmef._object) ? idmef_object_ref(idmef._object) : NULL;
         }
 
         return *this;

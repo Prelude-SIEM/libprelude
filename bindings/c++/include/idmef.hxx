@@ -22,13 +22,13 @@ namespace Prelude {
                 friend std::istream & ::operator >>(std::istream &is, IDMEF &idmef);
 
             protected:
-                idmef_message_t *_message;
+                idmef_object_t *_object;
 
             public:
                 ~IDMEF();
                 IDMEF();
                 IDMEF(const IDMEF &idmef);
-                IDMEF(idmef_message_t *message);
+                IDMEF(idmef_object_t *message);
 
                 void Set(const char *path, std::vector<Prelude::IDMEFValue> value);
                 void Set(const char *path, Prelude::IDMEFValue *value);
@@ -57,7 +57,7 @@ namespace Prelude {
                 const std::string ToString() const;
 
                 operator const std::string() const;
-                operator idmef_message_t *() const;
+                operator idmef_object_t *() const;
                 IDMEF &operator = (const IDMEF &idmef);
         };
 };

@@ -1533,7 +1533,7 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_idmef_class_id_t swig_types[15]
 #define SWIGTYPE_p_idmef_criteria_t swig_types[16]
 #define SWIGTYPE_p_idmef_criterion_operator_t swig_types[17]
-#define SWIGTYPE_p_idmef_message_t swig_types[18]
+#define SWIGTYPE_p_idmef_object_t swig_types[18]
 #define SWIGTYPE_p_idmef_path_t swig_types[19]
 #define SWIGTYPE_p_idmef_time_t swig_types[20]
 #define SWIGTYPE_p_idmef_value_t swig_types[21]
@@ -2474,8 +2474,10 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
-        else if ( type == Prelude::IDMEFValue::TYPE_CLASS )
-                *ret = SWIG_NewPointerObj(new Prelude::IDMEFValue(idmef_value_ref(value)), SWIGTYPE_p_Prelude__IDMEFValue, 1);
+        else if ( type == Prelude::IDMEFValue::TYPE_CLASS ) {
+                idmef_object_t *obj = (idmef_object_t *) idmef_value_get_object(value);
+                *ret = SWIG_NewPointerObj(new Prelude::IDMEF(idmef_object_ref(obj)), SWIGTYPE_p_Prelude__IDMEF, 1);
+        }
 
         else return -1;
 
@@ -2504,7 +2506,7 @@ SWIGINTERN int Prelude_IDMEF_Read(Prelude::IDMEF *self,void *nocast_p){
         }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_Get(Prelude::IDMEF *self,char const *path){
                 Prelude::IDMEFValue value;
-                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(path);
+                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
                 value = ipath.Get(*self);
                 if ( value.IsNull() && ipath.IsAmbiguous() ) {
@@ -10019,6 +10021,55 @@ XS(_wrap_new_IDMEFPath__SWIG_0) {
 
 XS(_wrap_new_IDMEFPath__SWIG_1) {
   {
+    Prelude::IDMEF *arg1 = 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    Prelude::IDMEFPath *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: new_IDMEFPath(idmef,buffer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_Prelude__IDMEF,  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_IDMEFPath" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = reinterpret_cast< char * >(buf2);
+    {
+      try {
+        result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(*arg1,(char const *)arg2);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_IDMEFPath__SWIG_2) {
+  {
     idmef_path_t *arg1 = (idmef_path_t *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -10052,7 +10103,7 @@ XS(_wrap_new_IDMEFPath__SWIG_1) {
 }
 
 
-XS(_wrap_new_IDMEFPath__SWIG_2) {
+XS(_wrap_new_IDMEFPath__SWIG_3) {
   {
     Prelude::IDMEFPath *arg1 = 0 ;
     void *argp1 ;
@@ -10158,14 +10209,45 @@ XS(_wrap_new_IDMEFPath) {
     }
   check_3:
     
+    if (items == 2) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        int res = SWIG_AsCharPtrAndSize(ST(1), 0, NULL, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 4;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_4:
+    
   dispatch:
     switch(_index) {
     case 1:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFPath__SWIG_1); return;
-    case 2:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFPath__SWIG_2); return;
+    case 2:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFPath__SWIG_3); return;
     case 3:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFPath__SWIG_0); return;
+    case 4:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFPath__SWIG_1); return;
     }
   }
   
@@ -14608,7 +14690,7 @@ XS(_wrap_new_IDMEF__SWIG_1) {
 
 XS(_wrap_new_IDMEF__SWIG_2) {
   {
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+    idmef_object_t *arg1 = (idmef_object_t *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -14618,11 +14700,11 @@ XS(_wrap_new_IDMEF__SWIG_2) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: new_IDMEF(message);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_message_t, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_idmef_object_t, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "idmef_message_t *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "idmef_object_t *""'"); 
     }
-    arg1 = reinterpret_cast< idmef_message_t * >(argp1);
+    arg1 = reinterpret_cast< idmef_object_t * >(argp1);
     {
       try {
         result = (Prelude::IDMEF *)new Prelude::IDMEF(arg1);
@@ -14683,7 +14765,7 @@ XS(_wrap_new_IDMEF) {
       int _v = 0;
       {
         void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_idmef_message_t, 0);
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_idmef_object_t, 0);
         _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_3;
@@ -16273,7 +16355,7 @@ static swig_type_info _swigt__p_f_int_p_q_const__char__void = {"_p_f_int_p_q_con
 static swig_type_info _swigt__p_idmef_class_id_t = {"_p_idmef_class_id_t", "idmef_class_id_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criteria_t = {"_p_idmef_criteria_t", "idmef_criteria_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criterion_operator_t = {"_p_idmef_criterion_operator_t", "idmef_criterion_operator_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_idmef_message_t = {"_p_idmef_message_t", "idmef_message_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_idmef_object_t = {"_p_idmef_object_t", "idmef_object_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_path_t = {"_p_idmef_path_t", "idmef_path_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_time_t = {"_p_idmef_time_t", "idmef_time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_value_t = {"_p_idmef_value_t", "idmef_value_t *", 0, 0, (void*)0, 0};
@@ -16314,7 +16396,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_idmef_class_id_t,
   &_swigt__p_idmef_criteria_t,
   &_swigt__p_idmef_criterion_operator_t,
-  &_swigt__p_idmef_message_t,
+  &_swigt__p_idmef_object_t,
   &_swigt__p_idmef_path_t,
   &_swigt__p_idmef_time_t,
   &_swigt__p_idmef_value_t,
@@ -16355,7 +16437,7 @@ static swig_cast_info _swigc__p_f_int_p_q_const__char__void[] = {  {&_swigt__p_f
 static swig_cast_info _swigc__p_idmef_class_id_t[] = {  {&_swigt__p_idmef_class_id_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criteria_t[] = {  {&_swigt__p_idmef_criteria_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criterion_operator_t[] = {  {&_swigt__p_idmef_criterion_operator_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_idmef_message_t[] = {  {&_swigt__p_idmef_message_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_idmef_object_t[] = {  {&_swigt__p_idmef_object_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_path_t[] = {  {&_swigt__p_idmef_path_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_time_t[] = {  {&_swigt__p_idmef_time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_value_t[] = {  {&_swigt__p_idmef_value_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -16396,7 +16478,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_idmef_class_id_t,
   _swigc__p_idmef_criteria_t,
   _swigc__p_idmef_criterion_operator_t,
-  _swigc__p_idmef_message_t,
+  _swigc__p_idmef_object_t,
   _swigc__p_idmef_path_t,
   _swigc__p_idmef_time_t,
   _swigc__p_idmef_value_t,

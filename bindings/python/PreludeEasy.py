@@ -535,6 +535,13 @@ class IDMEF(_object):
 
     def ToString(self): return _PreludeEasy.IDMEF_ToString(self)
     def __repr__(self): return _PreludeEasy.IDMEF___repr__(self)
+    def __getitem__(self, key):
+            try:
+                    return self.Get(key)
+            except:
+                    raise IndexError
+
+
     def Write(self, *args): return _PreludeEasy.IDMEF_Write(self, *args)
     def Read(self, *args): return _PreludeEasy.IDMEF_Read(self, *args)
     def __rshift__(self, *args): return _PreludeEasy.IDMEF___rshift__(self, *args)

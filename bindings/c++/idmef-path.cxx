@@ -25,6 +25,8 @@
 #include "idmef-path.hxx"
 #include "prelude-error.hxx"
 
+#include "idmef-object-prv.h"
+
 using namespace Prelude;
 
 
@@ -36,6 +38,19 @@ IDMEFPath::IDMEFPath(const char *buffer)
         if ( ret < 0 )
                 throw PreludeError(ret);
 }
+
+
+
+IDMEFPath::IDMEFPath(IDMEF &idmef, const char *buffer)
+{
+        int ret;
+        idmef_object_t *obj = (idmef_object_t *) idmef;
+
+        ret = idmef_path_new_from_root_fast(&_path, obj->_idmef_object_id, buffer);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
 
 
 IDMEFPath::IDMEFPath(idmef_path_t *path)

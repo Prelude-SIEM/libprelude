@@ -2663,7 +2663,7 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p_idmef_class_id_t swig_types[15]
 #define SWIGTYPE_p_idmef_criteria_t swig_types[16]
 #define SWIGTYPE_p_idmef_criterion_operator_t swig_types[17]
-#define SWIGTYPE_p_idmef_message_t swig_types[18]
+#define SWIGTYPE_p_idmef_object_t swig_types[18]
 #define SWIGTYPE_p_idmef_path_t swig_types[19]
 #define SWIGTYPE_p_idmef_time_t swig_types[20]
 #define SWIGTYPE_p_idmef_value_t swig_types[21]
@@ -2877,7 +2877,7 @@ SWIGINTERN int Prelude_IDMEF_Read(Prelude::IDMEF *self,void *nocast_p){
         }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_Get(Prelude::IDMEF *self,char const *path){
                 Prelude::IDMEFValue value;
-                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(path);
+                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
                 value = ipath.Get(*self);
                 if ( value.IsNull() && ipath.IsAmbiguous() ) {
@@ -8606,6 +8606,40 @@ fail:
 
 static int _wrap_new_IDMEFPath__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = 0 ;
+  char *arg2 = (char *) 0 ;
+  Prelude::IDMEFPath *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::IDMEFPath",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::IDMEFPath",1,"Prelude::IDMEF &");
+  if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::IDMEFPath",2,"char const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("new_IDMEFPath",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  {
+    try {
+      result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(*arg1,(char const *)arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__IDMEFPath,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_IDMEFPath__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
   idmef_path_t *arg1 = (idmef_path_t *) 0 ;
   Prelude::IDMEFPath *result = 0 ;
   
@@ -8635,7 +8669,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFPath__SWIG_2(lua_State* L) {
+static int _wrap_new_IDMEFPath__SWIG_3(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = 0 ;
   Prelude::IDMEFPath *result = 0 ;
@@ -8668,8 +8702,8 @@ fail:
 
 static int _wrap_new_IDMEFPath(lua_State* L) {
   int argc;
-  int argv[2]={
-    1,2
+  int argv[3]={
+    1,2,3
   };
   
   argc = lua_gettop(L);
@@ -8684,7 +8718,7 @@ static int _wrap_new_IDMEFPath(lua_State* L) {
       }
     }
     if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_1(L);
+      return _wrap_new_IDMEFPath__SWIG_2(L);
     }
   }
   if (argc == 1) {
@@ -8698,7 +8732,7 @@ static int _wrap_new_IDMEFPath(lua_State* L) {
       }
     }
     if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_2(L);
+      return _wrap_new_IDMEFPath__SWIG_3(L);
     }
   }
   if (argc == 1) {
@@ -8710,10 +8744,30 @@ static int _wrap_new_IDMEFPath(lua_State* L) {
       return _wrap_new_IDMEFPath__SWIG_0(L);
     }
   }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = SWIG_lua_isnilstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_new_IDMEFPath__SWIG_1(L);
+      }
+    }
+  }
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'new_IDMEFPath'\n"
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::IDMEFPath::IDMEFPath(char const *)\n"
+    "    Prelude::IDMEFPath::IDMEFPath(Prelude::IDMEF &,char const *)\n"
     "    Prelude::IDMEFPath::IDMEFPath(idmef_path_t *)\n"
     "    Prelude::IDMEFPath::IDMEFPath(Prelude::IDMEFPath const &)\n");
   lua_error(L);return 0;
@@ -11495,14 +11549,14 @@ fail:
 
 static int _wrap_new_IDMEF__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
-  idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+  idmef_object_t *arg1 = (idmef_object_t *) 0 ;
   Prelude::IDMEF *result = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEF::IDMEF",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::IDMEF",1,"idmef_message_t *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::IDMEF",1,"idmef_object_t *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_idmef_message_t,0))){
-    SWIG_fail_ptr("new_IDMEF",1,SWIGTYPE_p_idmef_message_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_idmef_object_t,0))){
+    SWIG_fail_ptr("new_IDMEF",1,SWIGTYPE_p_idmef_object_t);
   }
   
   {
@@ -11552,7 +11606,7 @@ static int _wrap_new_IDMEF(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_idmef_message_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_idmef_object_t, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -11567,7 +11621,7 @@ static int _wrap_new_IDMEF(lua_State* L) {
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::IDMEF::IDMEF()\n"
     "    Prelude::IDMEF::IDMEF(Prelude::IDMEF const &)\n"
-    "    Prelude::IDMEF::IDMEF(idmef_message_t *)\n");
+    "    Prelude::IDMEF::IDMEF(idmef_object_t *)\n");
   lua_error(L);return 0;
 }
 
@@ -12349,7 +12403,7 @@ static swig_type_info _swigt__p_f_int_p_q_const__char__void = {"_p_f_int_p_q_con
 static swig_type_info _swigt__p_idmef_class_id_t = {"_p_idmef_class_id_t", "idmef_class_id_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criteria_t = {"_p_idmef_criteria_t", "idmef_criteria_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criterion_operator_t = {"_p_idmef_criterion_operator_t", "idmef_criterion_operator_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_idmef_message_t = {"_p_idmef_message_t", "idmef_message_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_idmef_object_t = {"_p_idmef_object_t", "idmef_object_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_path_t = {"_p_idmef_path_t", "idmef_path_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_time_t = {"_p_idmef_time_t", "idmef_time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_value_t = {"_p_idmef_value_t", "idmef_value_t *", 0, 0, (void*)0, 0};
@@ -12391,7 +12445,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_idmef_class_id_t,
   &_swigt__p_idmef_criteria_t,
   &_swigt__p_idmef_criterion_operator_t,
-  &_swigt__p_idmef_message_t,
+  &_swigt__p_idmef_object_t,
   &_swigt__p_idmef_path_t,
   &_swigt__p_idmef_time_t,
   &_swigt__p_idmef_value_t,
@@ -12433,7 +12487,7 @@ static swig_cast_info _swigc__p_f_int_p_q_const__char__void[] = {  {&_swigt__p_f
 static swig_cast_info _swigc__p_idmef_class_id_t[] = {  {&_swigt__p_idmef_class_id_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criteria_t[] = {  {&_swigt__p_idmef_criteria_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criterion_operator_t[] = {  {&_swigt__p_idmef_criterion_operator_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_idmef_message_t[] = {  {&_swigt__p_idmef_message_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_idmef_object_t[] = {  {&_swigt__p_idmef_object_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_path_t[] = {  {&_swigt__p_idmef_path_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_time_t[] = {  {&_swigt__p_idmef_time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_value_t[] = {  {&_swigt__p_idmef_value_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -12475,7 +12529,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_idmef_class_id_t,
   _swigc__p_idmef_criteria_t,
   _swigc__p_idmef_criterion_operator_t,
-  _swigc__p_idmef_message_t,
+  _swigc__p_idmef_object_t,
   _swigc__p_idmef_path_t,
   _swigc__p_idmef_time_t,
   _swigc__p_idmef_value_t,

@@ -104,7 +104,7 @@ typedef signed int prelude_error_t;
 %extend Prelude::IDMEF {
         Prelude::IDMEFValue Get(const char *path) {
                 Prelude::IDMEFValue value;
-                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(path);
+                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
                 value = ipath.Get(*self);
                 if ( value.IsNull() && ipath.IsAmbiguous() ) {
@@ -212,8 +212,10 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
-        else if ( type == Prelude::IDMEFValue::TYPE_CLASS )
-                *ret = SWIG_NewPointerObj(new Prelude::IDMEFValue(idmef_value_ref(value)), $descriptor(Prelude::IDMEFValue *), 1);
+        else if ( type == Prelude::IDMEFValue::TYPE_CLASS ) {
+                idmef_object_t *obj = (idmef_object_t *) idmef_value_get_object(value);
+                *ret = SWIG_NewPointerObj(new Prelude::IDMEF(idmef_object_ref(obj)), $descriptor(Prelude::IDMEF *), 1);
+        }
 
         else return -1;
 

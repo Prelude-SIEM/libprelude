@@ -39,6 +39,8 @@ namespace Prelude {
 
             public:
                 IDMEFPath(const char *buffer);
+                IDMEFPath(Prelude::IDMEF &idmef, const char *buffer);
+
                 IDMEFPath(idmef_path_t *path);
                 IDMEFPath(const IDMEFPath &path);
                 ~IDMEFPath();

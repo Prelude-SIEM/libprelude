@@ -66,7 +66,7 @@ prelude_client_t *Client::GetClient()
 
 void Client::SendIDMEF(const IDMEF &message)
 {
-        prelude_client_send_idmef(_client, message);
+        prelude_client_send_idmef(_client, (idmef_message_t *) (idmef_object_t *) message);
 }
 
 
@@ -82,7 +82,7 @@ int Client::RecvIDMEF(Prelude::IDMEF &idmef, int timeout)
         else if ( ret == 0 )
                 return 0;
 
-        idmef = IDMEF(idmef_p);
+        idmef = IDMEF((idmef_object_t *)idmef_p);
 
         return 1;
 }

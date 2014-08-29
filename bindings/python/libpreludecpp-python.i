@@ -25,6 +25,8 @@
 
 %rename (__str__) *::operator const std::string() const;
 %rename (__str__) *::operator const char *() const;
+%rename (__repr__) *::operator const std::string() const;
+%rename (__repr__) *::operator const char *() const;
 %rename (__int__) *::operator int() const;
 %rename (__long__) *::operator long() const;
 %rename (__float__) *::operator double() const;
@@ -148,6 +150,15 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %extend Prelude::IDMEF {
+        %insert("python") %{
+        def __getitem__(self, key):
+                try:
+                        return self.Get(key)
+                except:
+                        raise IndexError
+
+        %}
+
         void Write(void *nocast_file_p) {
                 self->_genericWrite(_cb_python_write, nocast_file_p);
         }

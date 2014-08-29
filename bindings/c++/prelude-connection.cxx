@@ -171,7 +171,7 @@ Prelude::IDMEF Connection::RecvIDMEF()
         if ( ret < 0 )
                 throw PreludeError(ret);
 
-        return IDMEF(idmef);
+        return IDMEF((idmef_object_t *) idmef);
 }
 
 

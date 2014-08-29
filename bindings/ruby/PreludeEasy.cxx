@@ -1824,7 +1824,7 @@ int SWIG_Ruby_arity( VALUE proc, int minimal )
 #define SWIGTYPE_p_idmef_class_id_t swig_types[17]
 #define SWIGTYPE_p_idmef_criteria_t swig_types[18]
 #define SWIGTYPE_p_idmef_criterion_operator_t swig_types[19]
-#define SWIGTYPE_p_idmef_message_t swig_types[20]
+#define SWIGTYPE_p_idmef_object_t swig_types[20]
 #define SWIGTYPE_p_idmef_path_t swig_types[21]
 #define SWIGTYPE_p_idmef_time_t swig_types[22]
 #define SWIGTYPE_p_idmef_value_t swig_types[23]
@@ -4618,8 +4618,10 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
                         *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
         }
 
-        else if ( type == Prelude::IDMEFValue::TYPE_CLASS )
-                *ret = SWIG_NewPointerObj(new Prelude::IDMEFValue(idmef_value_ref(value)), SWIGTYPE_p_Prelude__IDMEFValue, 1);
+        else if ( type == Prelude::IDMEFValue::TYPE_CLASS ) {
+                idmef_object_t *obj = (idmef_object_t *) idmef_value_get_object(value);
+                *ret = SWIG_NewPointerObj(new Prelude::IDMEF(idmef_object_ref(obj)), SWIGTYPE_p_Prelude__IDMEF, 1);
+        }
 
         else return -1;
 
@@ -4654,7 +4656,7 @@ SWIGINTERN Prelude::IDMEF &Prelude_IDMEF_operator_Sl__Sl_(Prelude::IDMEF *self,v
         }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_Get(Prelude::IDMEF *self,char const *path){
                 Prelude::IDMEFValue value;
-                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(path);
+                Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
                 value = ipath.Get(*self);
                 if ( value.IsNull() && ipath.IsAmbiguous() ) {
@@ -12451,6 +12453,54 @@ fail:
 
 SWIGINTERN VALUE
 _wrap_new_IDMEFPath__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Prelude::IDMEF *arg1 = 0 ;
+  char *arg2 = (char *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  Prelude::IDMEFPath *result = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF &","IDMEFPath", 1, argv[0] )); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","IDMEFPath", 1, argv[0])); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_AsCharPtrAndSize(argv[1], &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","IDMEFPath", 2, argv[1] ));
+  }
+  arg2 = reinterpret_cast< char * >(buf2);
+  {
+    try {
+      result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(*arg1,(char const *)arg2);
+      DATA_PTR(self) = result;
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      rb_raise(rb_eEOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return self;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_IDMEFPath__SWIG_2(int argc, VALUE *argv, VALUE self) {
   idmef_path_t *arg1 = (idmef_path_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -12501,7 +12551,7 @@ _wrap_IDMEFPath_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_IDMEFPath__SWIG_2(int argc, VALUE *argv, VALUE self) {
+_wrap_new_IDMEFPath__SWIG_3(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = 0 ;
   void *argp1 ;
   int res1 = 0 ;
@@ -12539,11 +12589,11 @@ fail:
 
 SWIGINTERN VALUE _wrap_new_IDMEFPath(int nargs, VALUE *args, VALUE self) {
   int argc;
-  VALUE argv[1];
+  VALUE argv[2];
   int ii;
   
   argc = nargs;
-  if (argc > 1) SWIG_fail;
+  if (argc > 2) SWIG_fail;
   for (ii = 0; (ii < argc); ++ii) {
     argv[ii] = args[ii];
   }
@@ -12553,7 +12603,7 @@ SWIGINTERN VALUE _wrap_new_IDMEFPath(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_path_t, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_1(nargs, args, self);
+      return _wrap_new_IDMEFPath__SWIG_2(nargs, args, self);
     }
   }
   if (argc == 1) {
@@ -12562,7 +12612,7 @@ SWIGINTERN VALUE _wrap_new_IDMEFPath(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_2(nargs, args, self);
+      return _wrap_new_IDMEFPath__SWIG_3(nargs, args, self);
     }
   }
   if (argc == 1) {
@@ -12573,10 +12623,24 @@ SWIGINTERN VALUE _wrap_new_IDMEFPath(int nargs, VALUE *args, VALUE self) {
       return _wrap_new_IDMEFPath__SWIG_0(nargs, args, self);
     }
   }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_new_IDMEFPath__SWIG_1(nargs, args, self);
+      }
+    }
+  }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 1, "IDMEFPath.new", 
+  Ruby_Format_OverloadedError( argc, 2, "IDMEFPath.new", 
     "    IDMEFPath.new(char const *buffer)\n"
+    "    IDMEFPath.new(Prelude::IDMEF &idmef, char const *buffer)\n"
     "    IDMEFPath.new(idmef_path_t *path)\n"
     "    IDMEFPath.new(Prelude::IDMEFPath const &path)\n");
   
@@ -16280,7 +16344,7 @@ _wrap_IDMEF_allocate(VALUE self) {
 
 SWIGINTERN VALUE
 _wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
-  idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+  idmef_object_t *arg1 = (idmef_object_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   Prelude::IDMEF *result = 0 ;
@@ -16288,11 +16352,11 @@ _wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
   if ((argc < 1) || (argc > 1)) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
   }
-  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_idmef_message_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_idmef_object_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "idmef_message_t *","IDMEF", 1, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "idmef_object_t *","IDMEF", 1, argv[0] )); 
   }
-  arg1 = reinterpret_cast< idmef_message_t * >(argp1);
+  arg1 = reinterpret_cast< idmef_object_t * >(argp1);
   {
     try {
       result = (Prelude::IDMEF *)new Prelude::IDMEF(arg1);
@@ -16337,7 +16401,7 @@ SWIGINTERN VALUE _wrap_new_IDMEF(int nargs, VALUE *args, VALUE self) {
   if (argc == 1) {
     int _v;
     void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_message_t, 0);
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_object_t, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
       return _wrap_new_IDMEF__SWIG_2(nargs, args, self);
@@ -16348,7 +16412,7 @@ fail:
   Ruby_Format_OverloadedError( argc, 1, "IDMEF.new", 
     "    IDMEF.new()\n"
     "    IDMEF.new(Prelude::IDMEF const &idmef)\n"
-    "    IDMEF.new(idmef_message_t *message)\n");
+    "    IDMEF.new(idmef_object_t *message)\n");
   
   return Qnil;
 }
@@ -17673,7 +17737,7 @@ static swig_type_info _swigt__p_f_int_p_q_const__char__void = {"_p_f_int_p_q_con
 static swig_type_info _swigt__p_idmef_class_id_t = {"_p_idmef_class_id_t", "idmef_class_id_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criteria_t = {"_p_idmef_criteria_t", "idmef_criteria_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_criterion_operator_t = {"_p_idmef_criterion_operator_t", "idmef_criterion_operator_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_idmef_message_t = {"_p_idmef_message_t", "idmef_message_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_idmef_object_t = {"_p_idmef_object_t", "idmef_object_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_path_t = {"_p_idmef_path_t", "idmef_path_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_time_t = {"_p_idmef_time_t", "idmef_time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_value_t = {"_p_idmef_value_t", "idmef_value_t *", 0, 0, (void*)0, 0};
@@ -17719,7 +17783,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_idmef_class_id_t,
   &_swigt__p_idmef_criteria_t,
   &_swigt__p_idmef_criterion_operator_t,
-  &_swigt__p_idmef_message_t,
+  &_swigt__p_idmef_object_t,
   &_swigt__p_idmef_path_t,
   &_swigt__p_idmef_time_t,
   &_swigt__p_idmef_value_t,
@@ -17765,7 +17829,7 @@ static swig_cast_info _swigc__p_f_int_p_q_const__char__void[] = {  {&_swigt__p_f
 static swig_cast_info _swigc__p_idmef_class_id_t[] = {  {&_swigt__p_idmef_class_id_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criteria_t[] = {  {&_swigt__p_idmef_criteria_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_criterion_operator_t[] = {  {&_swigt__p_idmef_criterion_operator_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_idmef_message_t[] = {  {&_swigt__p_idmef_message_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_idmef_object_t[] = {  {&_swigt__p_idmef_object_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_path_t[] = {  {&_swigt__p_idmef_path_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_time_t[] = {  {&_swigt__p_idmef_time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_idmef_value_t[] = {  {&_swigt__p_idmef_value_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -17811,7 +17875,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_idmef_class_id_t,
   _swigc__p_idmef_criteria_t,
   _swigc__p_idmef_criterion_operator_t,
-  _swigc__p_idmef_message_t,
+  _swigc__p_idmef_object_t,
   _swigc__p_idmef_path_t,
   _swigc__p_idmef_time_t,
   _swigc__p_idmef_value_t,
