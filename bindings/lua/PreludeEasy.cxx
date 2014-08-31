@@ -3159,12 +3159,12 @@ static int _wrap_CheckVersion__SWIG_0(lua_State* L) {
   char *arg1 = (char *) 0 ;
   char *result = 0 ;
   
-  SWIG_check_num_args("CheckVersion",1,1)
-  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("CheckVersion",1,"char const *");
+  SWIG_check_num_args("Prelude::CheckVersion",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("Prelude::CheckVersion",1,"char const *");
   arg1 = (char *)lua_tostring(L, 1);
   {
     try {
-      result = (char *)CheckVersion((char const *)arg1);
+      result = (char *)Prelude::CheckVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -3185,10 +3185,10 @@ static int _wrap_CheckVersion__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   char *result = 0 ;
   
-  SWIG_check_num_args("CheckVersion",0,0)
+  SWIG_check_num_args("Prelude::CheckVersion",0,0)
   {
     try {
-      result = (char *)CheckVersion();
+      result = (char *)Prelude::CheckVersion();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -3227,8 +3227,8 @@ static int _wrap_CheckVersion(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'CheckVersion'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    CheckVersion(char const *)\n"
-    "    CheckVersion()\n");
+    "    Prelude::CheckVersion(char const *)\n"
+    "    Prelude::CheckVersion()\n");
   lua_error(L);return 0;
 }
 

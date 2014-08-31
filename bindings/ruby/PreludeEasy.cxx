@@ -5918,12 +5918,12 @@ _wrap_CheckVersion__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_AsCharPtrAndSize(argv[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","CheckVersion", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","Prelude::CheckVersion", 1, argv[0] ));
   }
   arg1 = reinterpret_cast< char * >(buf1);
   {
     try {
-      result = (char *)CheckVersion((char const *)arg1);
+      result = (char *)Prelude::CheckVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
@@ -5952,7 +5952,7 @@ _wrap_CheckVersion__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      result = (char *)CheckVersion();
+      result = (char *)Prelude::CheckVersion();
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());

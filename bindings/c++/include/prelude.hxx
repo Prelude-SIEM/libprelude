@@ -36,6 +36,8 @@
 #include "idmef-value.hxx"
 #include "idmef-criteria.hxx"
 
-const char *CheckVersion(const char *version = NULL);
+namespace Prelude {
+        const char *CheckVersion(const char *version = NULL);
+}
 
 #endif

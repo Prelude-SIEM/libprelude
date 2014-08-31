@@ -6169,7 +6169,7 @@ SWIGINTERN PyObject *_wrap_CheckVersion__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
   arg1 = reinterpret_cast< char * >(buf1);
   {
     try {
-      result = (char *)CheckVersion((char const *)arg1);
+      result = (char *)Prelude::CheckVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       PyErr_SetString(PyExc_EOFError, e.what());
@@ -6195,7 +6195,7 @@ SWIGINTERN PyObject *_wrap_CheckVersion__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
   if (!PyArg_ParseTuple(args,(char *)":CheckVersion")) SWIG_fail;
   {
     try {
-      result = (char *)CheckVersion();
+      result = (char *)Prelude::CheckVersion();
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       PyErr_SetString(PyExc_EOFError, e.what());
@@ -6237,8 +6237,8 @@ SWIGINTERN PyObject *_wrap_CheckVersion(PyObject *self, PyObject *args) {
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'CheckVersion'.\n"
     "  Possible C/C++ prototypes are:\n"
-    "    CheckVersion(char const *)\n"
-    "    CheckVersion()\n");
+    "    Prelude::CheckVersion(char const *)\n"
+    "    Prelude::CheckVersion()\n");
   return 0;
 }
 

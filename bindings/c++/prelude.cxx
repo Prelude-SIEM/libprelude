@@ -24,8 +24,20 @@
 #include <prelude.h>
 #include "prelude.hxx"
 
-const char *CheckVersion(const char *version)
+const char *Prelude::CheckVersion(const char *wanted)
 {
-        return prelude_check_version(version);
+        const char *ret;
+
+        ret = prelude_check_version(wanted);
+        if ( wanted && ! ret ) {
+                std::string s = "libprelude ";
+                s += wanted;
+                s += " or higher is required (";
+                s += prelude_check_version(NULL);
+                s += " found).";
+                throw PreludeError(s);
+        }
+
+        return ret;
 }
 

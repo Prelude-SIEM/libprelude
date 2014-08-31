@@ -2563,7 +2563,7 @@ XS(_wrap_CheckVersion__SWIG_0) {
     arg1 = reinterpret_cast< char * >(buf1);
     {
       try {
-        result = (char *)CheckVersion((char const *)arg1);
+        result = (char *)Prelude::CheckVersion((char const *)arg1);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -2590,7 +2590,7 @@ XS(_wrap_CheckVersion__SWIG_1) {
     }
     {
       try {
-        result = (char *)CheckVersion();
+        result = (char *)Prelude::CheckVersion();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
