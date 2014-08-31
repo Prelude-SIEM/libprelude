@@ -30,19 +30,6 @@
  extern "C" {
 #endif
 
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
-/* The __-protected variants of `format' and `printf' attributes
-   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
-#  define __format__ format
-#  define __printf__ printf
-# endif
-#endif
-
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
@@ -50,6 +37,7 @@
 typedef struct idmef_path idmef_path_t;
 
 #include <stdarg.h>
+#include "prelude-macros.h"
 #include "idmef-value.h"
 #include "idmef-tree-wrap.h"
 
@@ -57,12 +45,9 @@ int idmef_path_get(const idmef_path_t *path, void *object, idmef_value_t **ret);
 
 int idmef_path_set(const idmef_path_t *path, void *object, idmef_value_t *value);
 
-int idmef_path_new(idmef_path_t **path, const char *format, ...)
-                   __attribute__ ((__format__ (__printf__, 2, 3)));
+int idmef_path_new(idmef_path_t **path, const char *format, ...) PRELUDE_FMT_PRINTF(2, 3);
 
-int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
-                     __attribute__ ((__format__ (__printf__, 2, 0)));
-
+int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args) PRELUDE_FMT_PRINTF(2, 0);
 
 int idmef_path_new_from_root_fast(idmef_path_t **path, idmef_class_id_t rootclass, const char *buffer);
 

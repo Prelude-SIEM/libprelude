@@ -33,6 +33,7 @@ include_HEADERS = common.h			\
 		  prelude-failover.h		\
 		  prelude-ident.h		\
 		  prelude-io.h			\
+                  prelude-macros.h		\
 		  prelude-msg.h			\
 		  prelude-msgbuf.h		\
 		  prelude-message-id.h		\

@@ -237,6 +237,7 @@ typedef enum {
 
 
 %include "prelude.h"
+%include "prelude-macros.h"
 %include "prelude-client.h"
 %include "prelude-client-profile.h"
 %include "idmef-tree-wrap.h"

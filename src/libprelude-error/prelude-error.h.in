@@ -33,27 +33,13 @@
 #include <stdarg.h>
 #include <errno.h>
 
-
+#include "prelude-macros.h"
 #include "prelude-thread.h"
 #include "prelude-string.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
-/* The __-protected variants of `format' and `printf' attributes
-   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
-#  define __format__ format
-#  define __printf__ printf
-# endif
-#endif
-
 
 /*
  * This is inspired from the GPG error interface.
@@ -96,7 +82,8 @@ prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_
 
 prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err);
 
-void prelude_perror(prelude_error_t error, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
+void prelude_perror(prelude_error_t error, const char *fmt, ...) 
+                   PRELUDE_FMT_PRINTF(2, 3);
 
 const char *prelude_strerror(prelude_error_t err);
 
@@ -106,11 +93,11 @@ int prelude_error_code_to_errno(prelude_error_code_t code);
 
 prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source,
                                              prelude_error_code_t code, const char *fmt, va_list ap)
-                                             __attribute__ ((__format__ (__printf__, 3, 0)));
+                                             PRELUDE_FMT_PRINTF(3, 0);
 
 prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
                                            prelude_error_code_t code, const char *fmt, ...)
-                                           __attribute__ ((__format__ (__printf__, 3, 4)));
+                                           PRELUDE_FMT_PRINTF(3, 4);
 
 
 static inline prelude_error_t prelude_error(prelude_error_code_t code)
@@ -120,7 +107,7 @@ static inline prelude_error_t prelude_error(prelude_error_code_t code)
 
 
 static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
-                                                    __attribute__ ((__format__ (__printf__, 2, 3)));
+                                                    PRELUDE_FMT_PRINTF(2, 3);
 
 static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
 {

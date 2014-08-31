@@ -34,6 +34,7 @@
 #define LIBPRELUDE_VERSION "@VERSION@"
 
 #include "prelude-inttypes.h"
+#include "prelude-macros.h"
 #include "common.h"
 #include "prelude-client.h"
 #include "prelude-connection.h"

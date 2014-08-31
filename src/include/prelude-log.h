@@ -30,26 +30,12 @@
 # include "config.h"
 #endif
 
+#include "prelude-macros.h"
 #include <stdarg.h>
 
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
-/* The __-protected variants of `format' and `printf' attributes
-   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
-#  define __format__ format
-#  define __printf__ printf
-# endif
-#endif
-
 
 typedef enum {
         PRELUDE_LOG_CRIT  = -1,
@@ -69,11 +55,11 @@ typedef enum {
 
 void _prelude_log_v(prelude_log_t level, const char *file,
                     const char *function, int line, const char *fmt, va_list ap)
-                    __attribute__ ((__format__ (__printf__, 5, 0)));
+                    PRELUDE_FMT_PRINTF(5, 0);
 
 void _prelude_log(prelude_log_t level, const char *file,
                   const char *function, int line, const char *fmt, ...)
-                  __attribute__ ((__format__ (__printf__, 5, 6)));
+                  PRELUDE_FMT_PRINTF(5, 6);
 
 
 #ifdef HAVE_VARIADIC_MACROS
@@ -86,10 +72,10 @@ void _prelude_log(prelude_log_t level, const char *file,
 #else
 
 void prelude_log(prelude_log_t level, const char *fmt, ...)
-                 __attribute__ ((__format__ (__printf__, 2, 3)));
+                 PRELUDE_FMT_PRINTF(2, 3);
 
 void prelude_log_debug(prelude_log_t level, const char *fmt, ...)
-                       __attribute__ ((__format__ (__printf__, 2, 3)));
+                       PRELUDE_FMT_PRINTF(2, 3);
 
 #endif
 
