@@ -10351,7 +10351,7 @@ SWIGINTERN PyObject *_wrap_PreludeError___repr__(PyObject *SWIGUNUSEDPARM(self),
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  std::string result;
+  char *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:PreludeError___repr__",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
@@ -10361,7 +10361,7 @@ SWIGINTERN PyObject *_wrap_PreludeError___repr__(PyObject *SWIGUNUSEDPARM(self),
   arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
   {
     try {
-      result = ((Prelude::PreludeError const *)arg1)->operator const std::string();
+      result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       PyErr_SetString(PyExc_EOFError, e.what());
@@ -10371,7 +10371,7 @@ SWIGINTERN PyObject *_wrap_PreludeError___repr__(PyObject *SWIGUNUSEDPARM(self),
       SWIG_fail;
     }
   }
-  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  resultobj = SWIG_FromCharPtr((const char *)result);
   return resultobj;
 fail:
   return NULL;

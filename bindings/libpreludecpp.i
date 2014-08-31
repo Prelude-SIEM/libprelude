@@ -249,11 +249,14 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
 %ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, Prelude::IDMEFValue &);
 
 %ignore idmef_path_t;
+%ignore idmef_object_t;
 %ignore idmef_criteria_t;
 %ignore prelude_client_t;
 %ignore prelude_client_profile_t;
 %ignore prelude_connection_t;
 %ignore prelude_connection_pool_t;
+%ignore operator idmef_criteria_t *() const;
+%ignore operator idmef_object_t *() const;
 %ignore operator prelude_connection_t *();
 %ignore operator prelude_connection_pool_t *();
 %ignore operator idmef_message_t *() const;

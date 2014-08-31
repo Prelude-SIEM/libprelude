@@ -9879,7 +9879,7 @@ _wrap_PreludeError___str__(int argc, VALUE *argv, VALUE self) {
   Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  std::string result;
+  char *result = 0 ;
   VALUE vresult = Qnil;
   
   if ((argc < 0) || (argc > 0)) {
@@ -9887,12 +9887,12 @@ _wrap_PreludeError___str__(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::PreludeError const *","operator const std::string", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::PreludeError const *","operator const char*", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
   {
     try {
-      result = ((Prelude::PreludeError const *)arg1)->operator const std::string();
+      result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
@@ -9902,7 +9902,7 @@ _wrap_PreludeError___str__(int argc, VALUE *argv, VALUE self) {
       SWIG_fail;
     }
   }
-  vresult = SWIG_From_std_string(static_cast< std::string >(result));
+  vresult = SWIG_FromCharPtr((const char *)result);
   return vresult;
 fail:
   return Qnil;

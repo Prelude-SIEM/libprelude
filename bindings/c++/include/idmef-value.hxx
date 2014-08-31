@@ -89,7 +89,6 @@ namespace Prelude {
                 operator int64_t() const;
                 operator uint64_t() const;
                 operator double() const;
-                //operator std::string();
                 operator std::vector<IDMEFValue>() const;
                 operator const char*() const;
                 operator float() const;

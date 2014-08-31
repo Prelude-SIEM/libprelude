@@ -57,15 +57,9 @@ int PreludeError::GetCode()
 }
 
 
-PreludeError::operator const char *()
+PreludeError::operator const char *() const
 {
         return _message.c_str();
-}
-
-
-PreludeError::operator const std::string() const
-{
-        return _message;
 }
 
 

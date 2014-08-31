@@ -47,8 +47,7 @@ namespace Prelude {
                 int GetCode(void);
 
                 virtual const char *what() const throw();
-                operator const char *();
-                operator const std::string() const;
+                operator const char *() const;
                 operator int () const;
         };
 };

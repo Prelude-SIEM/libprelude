@@ -6749,6 +6749,37 @@ fail:
 }
 
 
+static int _wrap_PreludeError___str__(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
+  char *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::PreludeError::operator const char*",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::PreludeError::operator const char*",1,"Prelude::PreludeError const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__PreludeError,0))){
+    SWIG_fail_ptr("PreludeError___str__",1,SWIGTYPE_p_Prelude__PreludeError);
+  }
+  
+  {
+    try {
+      result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  lua_pushstring(L,(const char *)result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static void swig_delete_PreludeError(void *obj) {
 Prelude::PreludeError *arg1 = (Prelude::PreludeError *) obj;
 delete arg1;
@@ -6767,9 +6798,11 @@ static swig_lua_attribute swig_PreludeError_attributes[] = {
 static swig_lua_method swig_PreludeError_methods[]= {
     { "GetCode", _wrap_PreludeError_GetCode},
     { "what", _wrap_PreludeError_what},
+    { "__str__", _wrap_PreludeError___str__},
     {0,0}
 };
 static swig_lua_method swig_PreludeError_meta[] = {
+    { "__str__", _wrap_PreludeError___str__},
     {0,0}
 };
 
