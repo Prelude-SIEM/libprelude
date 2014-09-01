@@ -24,7 +24,6 @@
 %module PreludeEasy
 %feature("nothread", "1");
 
-%include "pystrings.swg"
 %include "std_string.i"
 %include "std_vector.i"
 %include "exception.i"
@@ -134,10 +133,14 @@ typedef signed int prelude_error_t;
 %ignore Prelude::IDMEFPath::Get;
 
 
-%fragment("IDMEFValue_to_SWIG", "header", fragment="IDMEFValueList_to_SWIG", fragment="SWIG_From_float") {
+%fragment("IDMEFValue_to_SWIG", "header", fragment="SWIG_From_double",
+                                          fragment="SWIG_From_float",
+                                          fragment="SWIG_From_int", fragment="SWIG_From_unsigned_SS_int",
+                                          fragment="SWIG_From_long_SS_long", fragment="SWIG_From_unsigned_SS_long_SS_long",
+                                          fragment="SWIG_FromCharPtr", fragment="SWIG_FromCharPtrAndSize",
+                                          fragment="IDMEFValueList_to_SWIG") {
 
-
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -189,7 +192,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result);
+                *ret = IDMEFValueList_to_SWIG(result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
@@ -219,7 +222,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
 
         else return -1;
 
-        return 0;
+        return 1;
 }
 }
 

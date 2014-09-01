@@ -76,6 +76,10 @@
 
 %rename (__str__) *::operator const char *() const;
 
+%begin %{
+#define TARGET_LANGUAGE_OUTPUT_TYPE int *
+%}
+
 %header {
         char *my_strdup(const char *in)
         {
@@ -106,20 +110,30 @@
 
 
 %header %{
-#define SWIG_From_int(result) lua_pushnumber(L, (lua_Number) result)
-#define SWIG_From_float(result) lua_pushnumber(L, (lua_Number) result)
-#define SWIG_From_double(result) lua_pushnumber(L, (lua_Number) result)
-#define SWIG_From_unsigned_SS_int(result) lua_pushnumber(L, (lua_Number) result)
-#define SWIG_From_long_SS_long(result) lua_pushnumber(L, (lua_Number) result)
-#define SWIG_From_unsigned_SS_long_SS_long(result) lua_pushnumber(L, (lua_Number) result)
-
-#define SWIG_FromCharPtr(result) lua_pushstring(L, result)
-#define SWIG_FromCharPtrAndSize(result, len) lua_pushlstring(L, result, len)
-
-extern "C" {
-int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result);
+int integer2lua(lua_State *L, lua_Number result)
+{
+        lua_pushnumber(L, (lua_Number) result);
+        return 0;
 }
 
+int str2lua(lua_State *L, const char *str)
+{
+        lua_pushstring(L, str);
+        return 0;
+}
+
+int strsize2lua(lua_State *L, const char *str, size_t len)
+{
+        lua_pushlstring(L, str, len);
+        return 0;
+}
+
+
+int _SWIG_Prelude_NewPointerObj(lua_State *L, void *obj, swig_type_info *objtype, int val)
+{
+        SWIG_NewPointerObj(L, obj, objtype, val);
+        return 0;
+}
 %}
 
 /* tell squid not to cast void * value */
@@ -230,37 +244,78 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
         }
 }
 
+
+%fragment("SWIG_NewPointerObj", "header") {
+#define SWIG_NewPointerObj(obj, objtype, val) _SWIG_Prelude_NewPointerObj((lua_State *) extra, obj, objtype, val);
+}
+
+%fragment("SWIG_FromCharPtr", "header") {
+#define SWIG_FromCharPtr(result) str2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_FromCharPtrAndSize", "header") {
+#define SWIG_FromCharPtrAndSize(result, len) strsize2lua((lua_State *) extra, result, len)
+}
+
+%fragment("SWIG_From_float", "header") {
+#define SWIG_From_float(result) integer2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_From_int", "header") {
+#define SWIG_From_int(result) integer2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_From_double", "header") {
+#define SWIG_From_double(result) integer2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_From_unsigned_SS_int", "header") {
+#define SWIG_From_unsigned_SS_int(result) integer2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_From_long_SS_long", "header") {
+#define SWIG_From_long_SS_long(result) integer2lua((lua_State *) extra, result)
+}
+
+%fragment("SWIG_From_unsigned_SS_long_SS_long", "header") {
+#define SWIG_From_unsigned_SS_long_SS_long(result) integer2lua((lua_State *) extra, result)
+}
+
+
+
 %fragment("IDMEFValueList_to_SWIG", "header") {
-int IDMEFValueList_to_SWIG(lua_State *L, const Prelude::IDMEFValue &value)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         bool is_list;
-        int index = 0, ret;
+        int index = 0, ret, unused;
         std::vector<Prelude::IDMEFValue> result = value;
         std::vector<Prelude::IDMEFValue>::const_iterator i;
 
-        lua_newtable(L);
+        lua_newtable((lua_State *) extra);
 
         for ( i = result.begin(); i != result.end(); i++ ) {
-                ret = lua_checkstack(L, 2);
+                ret = lua_checkstack((lua_State *) extra, 2);
                 if ( ret < 0 )
                         return ret;
 
                 if ( (*i).IsNull() ) {
-                        lua_pushnil(L);
-                        lua_rawseti(L, -2, ++index);
+                        lua_pushnil((lua_State *) extra);
+                        lua_rawseti((lua_State *) extra, -2, ++index);
                 } else {
                         is_list = (i->GetType() == IDMEFValue::TYPE_LIST);
                         if ( is_list )
-                                lua_pushnumber(L, ++index);
+                                lua_pushnumber((lua_State *) extra, ++index);
 
-                        ret = IDMEFValue_to_SWIG(L, *i);
+                        ret = IDMEFValue_to_SWIG(*i, extra, &unused);
                         if ( ret < 0 )
                                 return -1;
 
                         if ( is_list )
-                                lua_settable(L, -3);
+                                lua_settable((lua_State *) extra, -3);
                         else
-                                lua_rawseti(L, -2, ++index);
+                                lua_rawseti((lua_State *) extra, -2, ++index);
                 }
         }
 
@@ -268,95 +323,14 @@ int IDMEFValueList_to_SWIG(lua_State *L, const Prelude::IDMEFValue &value)
 }
 }
 
-%fragment("IDMEFValue_to_SWIG", "wrapper", fragment="IDMEFValueList_to_SWIG") {
-int IDMEFValue_to_SWIG(lua_State* L, const IDMEFValue &result)
-{
-        int ret = 1;
-        std::stringstream s;
-        idmef_value_t *value = result;
-        IDMEFValue::IDMEFValueTypeEnum type = result.GetType();
-
-        if ( type == IDMEFValue::TYPE_STRING ) {
-                prelude_string_t *str = idmef_value_get_string(value);
-                SWIG_FromCharPtrAndSize(prelude_string_get_string(str), prelude_string_get_len(str));
-        }
-
-        else if ( type == IDMEFValue::TYPE_INT8 )
-                SWIG_From_int(idmef_value_get_int8(value));
-
-        else if ( type == IDMEFValue::TYPE_UINT8 )
-                SWIG_From_unsigned_SS_int(idmef_value_get_uint8(value));
-
-        else if ( type == IDMEFValue::TYPE_INT16 )
-                SWIG_From_int(idmef_value_get_int16(value));
-
-        else if ( type == IDMEFValue::TYPE_UINT16 )
-                SWIG_From_unsigned_SS_int(idmef_value_get_uint16(value));
-
-        else if ( type == IDMEFValue::TYPE_INT32 )
-                SWIG_From_int(idmef_value_get_int32(value));
-
-        else if ( type == IDMEFValue::TYPE_UINT32 )
-                SWIG_From_unsigned_SS_int(idmef_value_get_uint32(value));
-
-        else if ( type == IDMEFValue::TYPE_INT64 )
-                SWIG_From_long_SS_long(idmef_value_get_int64(value));
-
-        else if ( type == IDMEFValue::TYPE_UINT64 )
-                SWIG_From_unsigned_SS_long_SS_long(idmef_value_get_uint64(value));
-
-        else if ( type == IDMEFValue::TYPE_FLOAT )
-                SWIG_From_float(idmef_value_get_float(value));
-
-        else if ( type == IDMEFValue::TYPE_DOUBLE )
-                SWIG_From_double(idmef_value_get_double(value));
-
-        else if ( type == IDMEFValue::TYPE_ENUM ) {
-                const char *s = idmef_class_enum_to_string(idmef_value_get_class(value), idmef_value_get_enum(value));
-                SWIG_FromCharPtr(s);
-        }
-
-        else if ( type == IDMEFValue::TYPE_TIME ) {
-                Prelude::IDMEFTime *time = new Prelude::IDMEFTime(idmef_time_ref(idmef_value_get_time(value)));
-                SWIG_NewPointerObj(L, time, SWIGTYPE_p_Prelude__IDMEFTime, 1);
-        }
-
-        else if ( type == IDMEFValue::TYPE_LIST )
-                ret = IDMEFValueList_to_SWIG(L, result);
-
-        else if ( type == IDMEFValue::TYPE_DATA ) {
-                idmef_data_t *d = idmef_value_get_data(value);
-                idmef_data_type_t t = idmef_data_get_type(d);
-
-                if ( t == IDMEF_DATA_TYPE_CHAR || t == IDMEF_DATA_TYPE_CHAR_STRING ||
-                     t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
-                        SWIG_FromCharPtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
-
-                else if ( t == IDMEF_DATA_TYPE_FLOAT )
-                        SWIG_From_float(idmef_data_get_float(d));
-
-                else if ( t == IDMEF_DATA_TYPE_UINT32 )
-                        SWIG_From_unsigned_SS_int(idmef_data_get_uint32(d));
-
-                else if ( t == IDMEF_DATA_TYPE_UINT64 )
-                        SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
-        }
-
-        else return -1;
-
-        return ret;
-}
-}
-
-
 %typemap(out, fragment="IDMEFValue_to_SWIG") Prelude::IDMEFValue {
-        int ret;
+        int ret, unused;
 
         if ( $1.IsNull() ) {
                 lua_pushnil(L);
                 SWIG_arg = 1;
         } else {
-                SWIG_arg = IDMEFValue_to_SWIG(L, $1);
+                SWIG_arg = IDMEFValue_to_SWIG($1, L, &unused);
                 if ( SWIG_arg < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";

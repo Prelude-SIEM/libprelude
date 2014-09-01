@@ -7,6 +7,24 @@ sub log_func {
 	print("log: " . $str);
 }
 
+sub print_array($)
+{
+    my $arrRef = shift;
+    for (my $i = 0; $i < scalar(@$arrRef); ++$i) {
+        if (ref($arrRef->[$i]) eq 'ARRAY') {
+            print ', ' if ($i);
+            print '[';
+            print_array($arrRef->[$i]);
+            print ']';
+        } else {
+            print ', ' if ($i);
+            print $arrRef->[$i];
+        }
+    }
+    print ' ' if (!scalar(@$arrRef));
+}
+
+
 PreludeEasy::PreludeLog::SetCallback(\&log_func);
 
 $idmef = new PreludeEasy::IDMEF;
@@ -25,30 +43,24 @@ print $idmef->ToString();
 print "\n*** IDMEF->Get() ***\n";
 print $idmef->Get("alert.classification.text") . "\n";
 
-sub print_array($)
-{
-    my $arrRef = shift;
-    for (my $i = 0; $i < scalar(@$arrRef); ++$i) {
-        if (ref($arrRef->[$i]) eq 'ARRAY') {
-            print ', ' if ($i);
-            print '[';
-            print_array($arrRef->[$i]);
-            print ']';
-        } else {
-            print ', ' if ($i);
-            print $arrRef->[$i];
-        }
-    }
-    print ' ' if (!scalar(@$arrRef));
-}
+print "\n\n*** Value IDMEF->Get() ***\n";
+print $idmef->Get("alert.classification.text");
 
+print "\n\n*** Listed Value IDMEF->Get() ***\n";
 print_array($idmef->Get("alert.source(*).node.address(*).address"));
+
+print "\n\n*** Object IDMEF->Get() ***\n";
+print $idmef->Get("alert.source(0).node.address(0)");
+
+print "\n\n*** Listed Object IDMEF->Get() ***\n";
+print_array($idmef->Get("alert.source(*).node.address(*)"));
+
 
 open FILE, ">foo.bin" or die "arg";
 $idmef->Write(FILE);
 close FILE;
 
-print "\n*** IDMEF->Read() ***\n";
+print "\n\n*** IDMEF->Read() ***\n";
 open FILE2, "<foo.bin" or die "arg2";
 my $idmef2 = new PreludeEasy::IDMEF;
 while ( $idmef2->Read(FILE2) ) {

@@ -8,6 +8,9 @@
  * interface file instead.
  * ----------------------------------------------------------------------------- */
 
+#define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
+
+
 #define SWIGPYTHON
 #define SWIG_PYTHON_THREADS
 #define SWIG_PYTHON_DIRECTOR_NO_VTABLE
@@ -3475,10 +3478,6 @@ using namespace Prelude;
 #include <list>
 
 
-#define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
-int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret);
-
-
 PyObject *__prelude_log_func = NULL;
 
 static void _cb_python_log(int level, const char *str)
@@ -5141,7 +5140,19 @@ SWIG_AsVal_float (PyObject * obj, float *val)
 }
 
 
-PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
+}
+
+
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         int j = 0, ret;
         PyObject *pytuple;
@@ -5157,7 +5168,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                         Py_INCREF(Py_None);
                         val = Py_None;
                 } else {
-                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        ret = IDMEFValue_to_SWIG(*i, NULL, &val);
                         if ( ret < 0 )
                                 return NULL;
                 }
@@ -5169,19 +5180,8 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 }
 
 
-  #define SWIG_From_double   PyFloat_FromDouble 
 
-
-SWIGINTERNINLINE PyObject *
-SWIG_From_float  (float value)
-{    
-  return SWIG_From_double  (value);
-}
-
-
-
-
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -5233,7 +5233,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result);
+                *ret = IDMEFValueList_to_SWIG(result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
@@ -5263,7 +5263,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
 
         else return -1;
 
-        return 0;
+        return 1;
 }
 
 SWIGINTERN long Prelude_IDMEFValue___hash__(Prelude::IDMEFValue *self){
@@ -12477,7 +12477,7 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_Clone(PyObject *SWIGUNUSEDPARM(self), PyOb
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(result, &resultobj);
+      ret = IDMEFValue_to_SWIG(result, NULL, &resultobj);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -15510,7 +15510,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Get(PyObject *SWIGUNUSEDPARM(self), PyObjec
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(result, &resultobj);
+      ret = IDMEFValue_to_SWIG(result, NULL, &resultobj);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -18201,7 +18201,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Get(PyObject *SWIGUNUSEDPARM(self), PyObject *a
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(result, &resultobj);
+      ret = IDMEFValue_to_SWIG(result, NULL, &resultobj);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";

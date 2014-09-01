@@ -15,10 +15,18 @@ idmef.Set("alert.source(1).node.address(2).address", nil)
 idmef.Set("alert.source(1).node.address(3).address", "s1a3")
 print idmef
 
+print "\n*** Value IDMEF->Get() ***\n"
+print idmef.Get("alert.classification.text")
 
-print "\n*** IDMEF->Get() ***\n"
-print idmef.Get("alert.classification.text") + "\n"
-print(idmef.Get("alert.source(*).node.address(*).address"))
+print "\n\n*** Listed Value IDMEF->Get() ***\n"
+print idmef.Get("alert.source(*).node.address(*).address")
+
+print "\n\n*** Object IDMEF->Get() ***\n"
+print idmef.Get("alert.source(0).node.address(0)")
+
+print "\n\n*** Listed Object IDMEF->Get() ***\n"
+print idmef.Get("alert.source(*).node.address(*)")
+print "\n\n"
 
 fd = File.new("foo.bin", "w")
 idmef >> fd

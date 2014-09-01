@@ -21,6 +21,7 @@
 *
 *****/
 
+//%include pystrings.swg
 %include std_list.i
 
 %rename (__str__) *::operator const std::string() const;
@@ -33,9 +34,8 @@
 
 %ignore *::operator =;
 
-%header %{
+%begin %{
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
-int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 %}
 
 
@@ -179,8 +179,10 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         }
 }
 
-%fragment("IDMEFValueList_to_SWIG", "header") {
-PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
+%fragment("IDMEFValueList_to_SWIG", "header", fragment="IDMEFValue_to_SWIG") {
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         int j = 0, ret;
         PyObject *pytuple;
@@ -196,7 +198,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                         Py_INCREF(Py_None);
                         val = Py_None;
                 } else {
-                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        ret = IDMEFValue_to_SWIG(*i, NULL, &val);
                         if ( ret < 0 )
                                 return NULL;
                 }
@@ -216,7 +218,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                 Py_INCREF(Py_None);
                 $result = Py_None;
         } else {
-                ret = IDMEFValue_to_SWIG($1, &$result);
+                ret = IDMEFValue_to_SWIG($1, NULL, &$result);
                 if ( ret < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";

@@ -2564,7 +2564,6 @@ using namespace Prelude;
 
 
 #define TARGET_LANGUAGE_OUTPUT_TYPE VALUE *
-int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
 
 extern "C" {
@@ -4503,7 +4502,19 @@ SWIG_AsVal_float (VALUE obj, float *val)
 }
 
 
-VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
+  #define SWIG_From_double   rb_float_new 
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
+}
+
+
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         int ret;
         VALUE ary;
@@ -4518,7 +4529,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                 if ( (*i).IsNull() )
                         val = Qnil;
                 else {
-                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        ret = IDMEFValue_to_SWIG(*i, extra, &val);
                         if ( ret < 0 )
                                 return Qnil;
                 }
@@ -4531,19 +4542,8 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 }
 
 
-  #define SWIG_From_double   rb_float_new 
 
-
-SWIGINTERNINLINE VALUE
-SWIG_From_float  (float value)
-{    
-  return SWIG_From_double  (value);
-}
-
-
-
-
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -4595,7 +4595,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result);
+                *ret = IDMEFValueList_to_SWIG(result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
@@ -4625,7 +4625,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
 
         else return -1;
 
-        return 0;
+        return 1;
 }
 
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_Get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
@@ -11979,7 +11979,7 @@ _wrap_IDMEFValue_Clone(int argc, VALUE *argv, VALUE self) {
     if ( (&result)->IsNull() )
     vresult = Qnil;
     else {
-      ret = IDMEFValue_to_SWIG(result, &vresult);
+      ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -15006,7 +15006,7 @@ _wrap_IDMEFPath_Get(int argc, VALUE *argv, VALUE self) {
     if ( (&result)->IsNull() )
     vresult = Qnil;
     else {
-      ret = IDMEFValue_to_SWIG(result, &vresult);
+      ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -17683,7 +17683,7 @@ _wrap_IDMEF_Get(int argc, VALUE *argv, VALUE self) {
     if ( (&result)->IsNull() )
     vresult = Qnil;
     else {
-      ret = IDMEFValue_to_SWIG(result, &vresult);
+      ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";

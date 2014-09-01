@@ -1637,7 +1637,6 @@ using namespace Prelude;
 
 
 #define TARGET_LANGUAGE_OUTPUT_TYPE SV **
-int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
 
 SWIGINTERN swig_type_info*
@@ -2353,7 +2352,23 @@ SWIG_AsVal_float SWIG_PERL_DECL_ARGS_2(SV * obj, float *val)
 }
 
 
-SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{
+  return sv_2mortal(newSVnv(value));
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_float  SWIG_PERL_DECL_ARGS_1(float value)
+{    
+  return SWIG_From_double  SWIG_PERL_CALL_ARGS_1(value);
+}
+
+
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         int j = 0, ret;
         std::vector<Prelude::IDMEFValue> result = value;
@@ -2367,7 +2382,7 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                         SvREFCNT_inc(& PL_sv_undef);
                         svs[j++] = &PL_sv_undef;
                 } else {
-                        ret = IDMEFValue_to_SWIG(*i, &svs[j++]);
+                        ret = IDMEFValue_to_SWIG(*i, NULL, &svs[j++]);
                         if ( ret < 0 )
                                 return NULL;
                 }
@@ -2383,23 +2398,8 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{
-  return sv_2mortal(newSVnv(value));
-}
 
-
-SWIGINTERNINLINE SV *
-SWIG_From_float  SWIG_PERL_DECL_ARGS_1(float value)
-{    
-  return SWIG_From_double  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
-
-
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -2451,7 +2451,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result);
+                *ret = IDMEFValueList_to_SWIG(result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
@@ -2481,7 +2481,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, TARGET_LANGUAGE_OUTPUT
 
         else return -1;
 
-        return 0;
+        return 1;
 }
 
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_Get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
@@ -9462,7 +9462,7 @@ XS(_wrap_IDMEFValue_Clone) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, &mysv);
+        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -13294,7 +13294,7 @@ XS(_wrap_IDMEFPath_Get) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, &mysv);
+        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
@@ -16302,7 +16302,7 @@ XS(_wrap_IDMEF_Get) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, &mysv);
+        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";

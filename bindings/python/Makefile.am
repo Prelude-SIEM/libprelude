@@ -4,7 +4,7 @@ if HAVE_PYTHON
 swigdatadir = @SWIG_DATA_DIR@/python
 dist_swigdata_DATA = libpreludecpp-python.i
 
-EXTRA_DIST = libpreludecpp-python.i PreludeEasy.py _PreludeEasy.cxx
+EXTRA_DIST = libpreludecpp-python.i PreludeEasy.py _PreludeEasy.cxx pystrings.swg
 
 all-am: python-build
 

@@ -33,7 +33,6 @@
 
 %header %{
 #define TARGET_LANGUAGE_OUTPUT_TYPE VALUE *
-int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 %}
 
 /* tell squid not to cast void * value */
@@ -193,7 +192,9 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %fragment("IDMEFValueList_to_SWIG", "header") {
-VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
+int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+
+VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 {
         int ret;
         VALUE ary;
@@ -208,7 +209,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
                 if ( (*i).IsNull() )
                         val = Qnil;
                 else {
-                        ret = IDMEFValue_to_SWIG(*i, &val);
+                        ret = IDMEFValue_to_SWIG(*i, extra, &val);
                         if ( ret < 0 )
                                 return Qnil;
                 }
@@ -228,7 +229,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value)
         if ( $1.IsNull() )
                 $result = Qnil;
         else {
-                ret = IDMEFValue_to_SWIG($1, &$result);
+                ret = IDMEFValue_to_SWIG($1, NULL, &$result);
                 if ( ret < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";

@@ -20,9 +20,17 @@ idmef.Set("alert.source(1).node.address(2).address", None)
 idmef.Set("alert.source(1).node.address(3).address", "s1a3")
 print idmef
 
-print "\n*** IDMEF->Get() ***"
+print "\n*** Value IDMEF->Get() ***"
 print idmef.Get("alert.classification.text")
+
+print "\n*** Listed Value IDMEF->Get() ***"
 print idmef.Get("alert.source(*).node.address(*).address")
+
+print "\n*** Object IDMEF->Get() ***"
+print idmef.Get("alert.source(0).node.address(0)")
+
+print "\n*** Listed Object IDMEF->Get() ***"
+print idmef.Get("alert.source(*).node.address(*)")
 
 file = open("foo.bin","w")
 idmef >> file
