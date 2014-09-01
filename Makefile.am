@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --with-swig
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 SUBDIRS = libltdl libmissing m4 src prelude-admin bindings docs tests
