@@ -96,5 +96,7 @@ int main(void)
         set_value_check(idmef, "alert.assessment.impact.severity", "high", TRUE);
         set_value_check(idmef, "alert.assessment.impact.severity", "Invalid enumeration", FALSE);
 
+        idmef_message_destroy(idmef);
+
         exit(0);
 }
