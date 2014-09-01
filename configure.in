@@ -377,6 +377,7 @@ dnl **************************************************
 AC_ARG_WITH(swig, AC_HELP_STRING(--with-swig@<:@=PATH@:>@, Regenerate bindings sources using local SWIG installation @<:@default=auto@:>@),
             [swig_required=true; if test x$withval = xyes; then with_swig="swig"; fi], with_swig="no")
 
+SWIG="no"
 if test x$with_swig != xno; then
    AC_PATH_PROG(SWIG, `basename $with_swig`, no, `dirname $with_swig`:$PATH)
 
