@@ -6363,7 +6363,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetAnalyzerId__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_GetAnalyzerId(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6398,7 +6398,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetAnalyzerId__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_SetAnalyzerId(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t arg2 ;
   void *argp1 = 0 ;
@@ -6411,17 +6411,17 @@ _wrap_ClientProfile_GetAnalyzerId__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetAnalyzerId", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","SetAnalyzerId", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","GetAnalyzerId", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","SetAnalyzerId", 2, argv[0] ));
   } 
   arg2 = static_cast< uint64_t >(val2);
   {
     try {
-      (arg1)->GetAnalyzerId(arg2);
+      (arg1)->SetAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
@@ -6433,51 +6433,6 @@ _wrap_ClientProfile_GetAnalyzerId__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   return Qnil;
 fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE _wrap_ClientProfile_GetAnalyzerId(int nargs, VALUE *args, VALUE self) {
-  int argc;
-  VALUE argv[3];
-  int ii;
-  
-  argc = nargs + 1;
-  argv[0] = self;
-  if (argc > 3) SWIG_fail;
-  for (ii = 1; (ii < argc); ++ii) {
-    argv[ii] = args[ii-1];
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_ClientProfile_GetAnalyzerId__SWIG_0(nargs, args, self);
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_ClientProfile_GetAnalyzerId__SWIG_1(nargs, args, self);
-      }
-    }
-  }
-  
-fail:
-  Ruby_Format_OverloadedError( argc, 3, "ClientProfile.GetAnalyzerId", 
-    "    void ClientProfile.GetAnalyzerId()\n"
-    "    void ClientProfile.GetAnalyzerId(uint64_t id)\n");
-  
   return Qnil;
 }
 
@@ -18245,6 +18200,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   rb_define_method(SwigClassClientProfile.klass, "GetName", VALUEFUNC(_wrap_ClientProfile_GetName), -1);
   rb_define_method(SwigClassClientProfile.klass, "SetName", VALUEFUNC(_wrap_ClientProfile_SetName), -1);
   rb_define_method(SwigClassClientProfile.klass, "GetAnalyzerId", VALUEFUNC(_wrap_ClientProfile_GetAnalyzerId), -1);
+  rb_define_method(SwigClassClientProfile.klass, "SetAnalyzerId", VALUEFUNC(_wrap_ClientProfile_SetAnalyzerId), -1);
   rb_define_method(SwigClassClientProfile.klass, "GetConfigFilename", VALUEFUNC(_wrap_ClientProfile_GetConfigFilename), -1);
   rb_define_method(SwigClassClientProfile.klass, "GetAnalyzeridFilename", VALUEFUNC(_wrap_ClientProfile_GetAnalyzeridFilename), -1);
   rb_define_method(SwigClassClientProfile.klass, "GetTlsKeyFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsKeyFilename), -1);

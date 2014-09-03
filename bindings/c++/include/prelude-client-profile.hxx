@@ -25,7 +25,7 @@ namespace Prelude {
 
                 /* XXX uint64_t has to be converted */
                 uint64_t GetAnalyzerId() { return prelude_client_profile_get_analyzerid(_profile); }
-                void GetAnalyzerId(uint64_t id) { prelude_client_profile_set_analyzerid(_profile,id); }
+                void SetAnalyzerId(uint64_t id) { prelude_client_profile_set_analyzerid(_profile,id); }
 
                 const std::string GetConfigFilename();
                 const std::string GetAnalyzeridFilename();

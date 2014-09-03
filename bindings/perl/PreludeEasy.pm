@@ -80,6 +80,7 @@ sub DESTROY {
 *GetName = *PreludeEasyc::ClientProfile_GetName;
 *SetName = *PreludeEasyc::ClientProfile_SetName;
 *GetAnalyzerId = *PreludeEasyc::ClientProfile_GetAnalyzerId;
+*SetAnalyzerId = *PreludeEasyc::ClientProfile_SetAnalyzerId;
 *GetConfigFilename = *PreludeEasyc::ClientProfile_GetConfigFilename;
 *GetAnalyzeridFilename = *PreludeEasyc::ClientProfile_GetAnalyzeridFilename;
 *GetTlsKeyFilename = *PreludeEasyc::ClientProfile_GetTlsKeyFilename;

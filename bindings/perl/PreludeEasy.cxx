@@ -3067,7 +3067,7 @@ XS(_wrap_ClientProfile_SetName) {
 }
 
 
-XS(_wrap_ClientProfile_GetAnalyzerId__SWIG_0) {
+XS(_wrap_ClientProfile_GetAnalyzerId) {
   {
     Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
     void *argp1 = 0 ;
@@ -3102,7 +3102,7 @@ XS(_wrap_ClientProfile_GetAnalyzerId__SWIG_0) {
 }
 
 
-XS(_wrap_ClientProfile_GetAnalyzerId__SWIG_1) {
+XS(_wrap_ClientProfile_SetAnalyzerId) {
   {
     Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
     uint64_t arg2 ;
@@ -3114,21 +3114,21 @@ XS(_wrap_ClientProfile_GetAnalyzerId__SWIG_1) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: ClientProfile_GetAnalyzerId(self,id);");
+      SWIG_croak("Usage: ClientProfile_SetAnalyzerId(self,id);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_GetAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_SetAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
     ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ClientProfile_GetAnalyzerId" "', argument " "2"" of type '" "uint64_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ClientProfile_SetAnalyzerId" "', argument " "2"" of type '" "uint64_t""'");
     } 
     arg2 = static_cast< uint64_t >(val2);
     {
       try {
-        (arg1)->GetAnalyzerId(arg2);
+        (arg1)->SetAnalyzerId(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -3143,78 +3143,6 @@ XS(_wrap_ClientProfile_GetAnalyzerId__SWIG_1) {
     
     SWIG_croak_null();
   }
-}
-
-
-XS(_wrap_ClientProfile_GetAnalyzerId) {
-  dXSARGS;
-  
-  {
-    unsigned long _index = 0;
-    SWIG_TypeRank _rank = 0; 
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_1;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 1;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_1:
-    
-    if (items == 2) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(1), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 2;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_2:
-    
-  dispatch:
-    switch(_index) {
-    case 1:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_ClientProfile_GetAnalyzerId__SWIG_0); return;
-    case 2:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_ClientProfile_GetAnalyzerId__SWIG_1); return;
-    }
-  }
-  
-  croak("No matching function for overloaded 'ClientProfile_GetAnalyzerId'");
-  XSRETURN(0);
 }
 
 
@@ -16522,6 +16450,7 @@ static swig_command_info swig_commands[] = {
 {"PreludeEasyc::ClientProfile_GetName", _wrap_ClientProfile_GetName},
 {"PreludeEasyc::ClientProfile_SetName", _wrap_ClientProfile_SetName},
 {"PreludeEasyc::ClientProfile_GetAnalyzerId", _wrap_ClientProfile_GetAnalyzerId},
+{"PreludeEasyc::ClientProfile_SetAnalyzerId", _wrap_ClientProfile_SetAnalyzerId},
 {"PreludeEasyc::ClientProfile_GetConfigFilename", _wrap_ClientProfile_GetConfigFilename},
 {"PreludeEasyc::ClientProfile_GetAnalyzeridFilename", _wrap_ClientProfile_GetAnalyzeridFilename},
 {"PreludeEasyc::ClientProfile_GetTlsKeyFilename", _wrap_ClientProfile_GetTlsKeyFilename},

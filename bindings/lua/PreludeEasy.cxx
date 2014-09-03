@@ -3657,7 +3657,7 @@ fail:
 }
 
 
-static int _wrap_ClientProfile_GetAnalyzerId__SWIG_0(lua_State* L) {
+static int _wrap_ClientProfile_GetAnalyzerId(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t result;
@@ -3688,23 +3688,23 @@ fail:
 }
 
 
-static int _wrap_ClientProfile_GetAnalyzerId__SWIG_1(lua_State* L) {
+static int _wrap_ClientProfile_SetAnalyzerId(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t arg2 ;
   
-  SWIG_check_num_args("Prelude::ClientProfile::GetAnalyzerId",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ClientProfile::GetAnalyzerId",1,"Prelude::ClientProfile *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::ClientProfile::GetAnalyzerId",2,"uint64_t");
+  SWIG_check_num_args("Prelude::ClientProfile::SetAnalyzerId",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ClientProfile::SetAnalyzerId",1,"Prelude::ClientProfile *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::ClientProfile::SetAnalyzerId",2,"uint64_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__ClientProfile,0))){
-    SWIG_fail_ptr("ClientProfile_GetAnalyzerId",1,SWIGTYPE_p_Prelude__ClientProfile);
+    SWIG_fail_ptr("ClientProfile_SetAnalyzerId",1,SWIGTYPE_p_Prelude__ClientProfile);
   }
   
   arg2 = (uint64_t)lua_tonumber(L, 2);
   {
     try {
-      (arg1)->GetAnalyzerId(arg2);
+      (arg1)->SetAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -3718,55 +3718,6 @@ static int _wrap_ClientProfile_GetAnalyzerId__SWIG_1(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
-}
-
-
-static int _wrap_ClientProfile_GetAnalyzerId(lua_State* L) {
-  int argc;
-  int argv[3]={
-    1,2,3
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__ClientProfile, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_ClientProfile_GetAnalyzerId__SWIG_0(L);
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__ClientProfile, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        return _wrap_ClientProfile_GetAnalyzerId__SWIG_1(L);
-      }
-    }
-  }
-  
-  SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'ClientProfile_GetAnalyzerId'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    Prelude::ClientProfile::GetAnalyzerId()\n"
-    "    Prelude::ClientProfile::GetAnalyzerId(uint64_t)\n");
-  lua_error(L);return 0;
 }
 
 
@@ -4165,6 +4116,7 @@ static swig_lua_method swig_ClientProfile_methods[]= {
     { "GetName", _wrap_ClientProfile_GetName},
     { "SetName", _wrap_ClientProfile_SetName},
     { "GetAnalyzerId", _wrap_ClientProfile_GetAnalyzerId},
+    { "SetAnalyzerId", _wrap_ClientProfile_SetAnalyzerId},
     { "GetConfigFilename", _wrap_ClientProfile_GetConfigFilename},
     { "GetAnalyzeridFilename", _wrap_ClientProfile_GetAnalyzeridFilename},
     { "GetTlsKeyFilename", _wrap_ClientProfile_GetTlsKeyFilename},

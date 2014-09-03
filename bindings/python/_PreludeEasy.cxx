@@ -6600,7 +6600,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
@@ -6633,7 +6633,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_SetAnalyzerId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t arg2 ;
@@ -6644,20 +6644,20 @@ SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId__SWIG_1(PyObject *SWIGUNU
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ClientProfile_GetAnalyzerId",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:ClientProfile_SetAnalyzerId",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_GetAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_SetAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ClientProfile_GetAnalyzerId" "', argument " "2"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ClientProfile_SetAnalyzerId" "', argument " "2"" of type '" "uint64_t""'");
   } 
   arg2 = static_cast< uint64_t >(val2);
   {
     try {
-      (arg1)->GetAnalyzerId(arg2);
+      (arg1)->SetAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       PyErr_SetString(PyExc_EOFError, e.what());
@@ -6671,50 +6671,6 @@ SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId__SWIG_1(PyObject *SWIGUNU
   return resultobj;
 fail:
   return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_ClientProfile_GetAnalyzerId(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[3];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_ClientProfile_GetAnalyzerId__SWIG_0(self, args);
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_ClientProfile_GetAnalyzerId__SWIG_1(self, args);
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'ClientProfile_GetAnalyzerId'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    Prelude::ClientProfile::GetAnalyzerId()\n"
-    "    Prelude::ClientProfile::GetAnalyzerId(uint64_t)\n");
-  return 0;
 }
 
 
@@ -18252,6 +18208,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ClientProfile_GetName", _wrap_ClientProfile_GetName, METH_VARARGS, NULL},
 	 { (char *)"ClientProfile_SetName", _wrap_ClientProfile_SetName, METH_VARARGS, NULL},
 	 { (char *)"ClientProfile_GetAnalyzerId", _wrap_ClientProfile_GetAnalyzerId, METH_VARARGS, NULL},
+	 { (char *)"ClientProfile_SetAnalyzerId", _wrap_ClientProfile_SetAnalyzerId, METH_VARARGS, NULL},
 	 { (char *)"ClientProfile_GetConfigFilename", _wrap_ClientProfile_GetConfigFilename, METH_VARARGS, NULL},
 	 { (char *)"ClientProfile_GetAnalyzeridFilename", _wrap_ClientProfile_GetAnalyzeridFilename, METH_VARARGS, NULL},
 	 { (char *)"ClientProfile_GetTlsKeyFilename", _wrap_ClientProfile_GetTlsKeyFilename, METH_VARARGS, NULL},
