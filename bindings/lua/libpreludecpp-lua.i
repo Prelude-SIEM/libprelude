@@ -253,6 +253,10 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
 #define SWIG_FromCharPtr(result) str2lua((lua_State *) extra, result)
 }
 
+%fragment("SWIG_FromBytePtrAndSize", "header") {
+#define SWIG_FromBytePtrAndSize(result, len) strsize2lua((lua_State *) extra, result, len)
+}
+
 %fragment("SWIG_FromCharPtrAndSize", "header") {
 #define SWIG_FromCharPtrAndSize(result, len) strsize2lua((lua_State *) extra, result, len)
 }

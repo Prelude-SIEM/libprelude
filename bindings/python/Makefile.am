@@ -9,17 +9,35 @@ EXTRA_DIST = libpreludecpp-python.i PreludeEasy.py _PreludeEasy.cxx pystrings.sw
 all-am: python-build
 
 python-build: _PreludeEasy.cxx
-	CC="$(CXX)" $(PYTHON) setup.py build
-
+if HAVE_PYTHON2
+	CC="$(CXX)" $(PYTHON2) setup.py build
+endif
+if HAVE_PYTHON3
+	CC="$(CXX)" $(PYTHON3) setup.py build
+endif
 install-exec-hook:
-	$(PYTHON) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+if HAVE_PYTHON2
+	$(PYTHON2) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+endif
+if HAVE_PYTHON3
+	$(PYTHON3) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+endif
 
 uninstall-hook:
-	$(PYTHON) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+if HAVE_PYTHON2
+	$(PYTHON2) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+endif
+if HAVE_PYTHON3
+	$(PYTHON3) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+endif
 
 clean-local:
-	$(PYTHON) setup.py clean -a
-
+if HAVE_PYTHON2
+	$(PYTHON2) setup.py clean -a
+endif
+if HAVE_PYTHON3
+	$(PYTHON3) setup.py clean -a
+endif
 
 _PreludeEasy.cxx PreludeEasy.py: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
 if HAVE_SWIG

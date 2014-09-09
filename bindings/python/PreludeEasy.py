@@ -98,6 +98,18 @@ class SwigPyIterator(_object):
 SwigPyIterator_swigregister = _PreludeEasy.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
+import sys
+
+def python2_unicode_patch(cl):
+    if cl.__str__ is object.__str__:
+        return cl
+
+    if sys.version_info < (3, 0):
+         cl.__unicode__ = lambda self: self.__str__().decode('utf-8')
+
+    cl.__repr__ = lambda self: self.__class__.__name__ + "(" + repr(str(self)) + ")"
+    return cl
+
 
 def CheckVersion(version=None):
   return _PreludeEasy.CheckVersion(version)
@@ -314,6 +326,7 @@ class PreludeError(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, PreludeError, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, PreludeError, name)
+    __repr__ = _swig_repr
     __swig_destroy__ = _PreludeEasy.delete_PreludeError
     __del__ = lambda self : None;
     def __init__(self, *args): 
@@ -322,7 +335,7 @@ class PreludeError(_object):
         except: self.this = this
     def GetCode(self): return _PreludeEasy.PreludeError_GetCode(self)
     def what(self): return _PreludeEasy.PreludeError_what(self)
-    def __repr__(self): return _PreludeEasy.PreludeError___repr__(self)
+    def __str__(self): return _PreludeEasy.PreludeError___str__(self)
     def __int__(self): return _PreludeEasy.PreludeError___int__(self)
 PreludeError_swigregister = _PreludeEasy.PreludeError_swigregister
 PreludeError_swigregister(PreludeError)
@@ -384,6 +397,7 @@ class IDMEFCriteria(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, IDMEFCriteria, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, IDMEFCriteria, name)
+    __repr__ = _swig_repr
     __swig_destroy__ = _PreludeEasy.delete_IDMEFCriteria
     __del__ = lambda self : None;
     def __init__(self, *args): 
@@ -398,7 +412,7 @@ class IDMEFCriteria(_object):
     def ANDCriteria(self, *args): return _PreludeEasy.IDMEFCriteria_ANDCriteria(self, *args)
     def ORCriteria(self, *args): return _PreludeEasy.IDMEFCriteria_ORCriteria(self, *args)
     def ToString(self): return _PreludeEasy.IDMEFCriteria_ToString(self)
-    def __repr__(self): return _PreludeEasy.IDMEFCriteria___repr__(self)
+    def __str__(self): return _PreludeEasy.IDMEFCriteria___str__(self)
 IDMEFCriteria_swigregister = _PreludeEasy.IDMEFCriteria_swigregister
 IDMEFCriteria_swigregister(IDMEFCriteria)
 
@@ -487,6 +501,7 @@ class IDMEFTime(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, IDMEFTime, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, IDMEFTime, name)
+    __repr__ = _swig_repr
     def __init__(self, *args): 
         this = _PreludeEasy.new_IDMEFTime(*args)
         try: self.this.append(this)
@@ -508,7 +523,7 @@ class IDMEFTime(_object):
     def __int__(self): return _PreludeEasy.IDMEFTime___int__(self)
     def __long__(self): return _PreludeEasy.IDMEFTime___long__(self)
     def __float__(self): return _PreludeEasy.IDMEFTime___float__(self)
-    def __repr__(self): return _PreludeEasy.IDMEFTime___repr__(self)
+    def __str__(self): return _PreludeEasy.IDMEFTime___str__(self)
     def __ne__(self, *args): return _PreludeEasy.IDMEFTime___ne__(self, *args)
     def __ge__(self, *args): return _PreludeEasy.IDMEFTime___ge__(self, *args)
     def __le__(self, *args): return _PreludeEasy.IDMEFTime___le__(self, *args)
@@ -523,6 +538,7 @@ class IDMEF(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, IDMEF, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, IDMEF, name)
+    __repr__ = _swig_repr
     __swig_destroy__ = _PreludeEasy.delete_IDMEF
     __del__ = lambda self : None;
     def __init__(self, *args): 
@@ -536,7 +552,7 @@ class IDMEF(_object):
 
     def GetId(self): return _PreludeEasy.IDMEF_GetId(self)
     def ToString(self): return _PreludeEasy.IDMEF_ToString(self)
-    def __repr__(self): return _PreludeEasy.IDMEF___repr__(self)
+    def __str__(self): return _PreludeEasy.IDMEF___str__(self)
     def __eq__(self, *args): return _PreludeEasy.IDMEF___eq__(self, *args)
     def __getitem__(self, key):
             try:
@@ -552,6 +568,10 @@ class IDMEF(_object):
     def Get(self, *args): return _PreludeEasy.IDMEF_Get(self, *args)
 IDMEF_swigregister = _PreludeEasy.IDMEF_swigregister
 IDMEF_swigregister(IDMEF)
+
+for i in (IDMEF, IDMEFCriteria, IDMEFCriterion, IDMEFValue, IDMEFPath, IDMEFTime,
+          Client, ClientEasy, ClientProfile, Connection, ConnectionPool, PreludeLog, PreludeError):
+    python2_unicode_patch(i)
 
 # This file is compatible with both classic and new-style classes.
 

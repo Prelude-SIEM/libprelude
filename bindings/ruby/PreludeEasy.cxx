@@ -4530,6 +4530,11 @@ SWIG_From_float  (float value)
 }
 
 
+#ifndef SWIG_FromBytePtrAndSize
+# define SWIG_FromBytePtrAndSize(arg, len) SWIG_FromCharPtrAndSize(arg, len)
+#endif
+
+
 int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
 VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
@@ -4619,8 +4624,10 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
                 idmef_data_t *d = idmef_value_get_data(value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
-                if ( t == IDMEF_DATA_TYPE_CHAR ||
-                     t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
+                if ( t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
+                        *ret = SWIG_FromBytePtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
+
+                else if ( t == IDMEF_DATA_TYPE_CHAR )
                         *ret = SWIG_FromCharPtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
 
                 else if ( t == IDMEF_DATA_TYPE_CHAR_STRING )

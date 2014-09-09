@@ -21,13 +21,10 @@
 *
 *****/
 
-//%include pystrings.swg
 %include std_list.i
 
 %rename (__str__) *::operator const std::string() const;
 %rename (__str__) *::operator const char *() const;
-%rename (__repr__) *::operator const std::string() const;
-%rename (__repr__) *::operator const char *() const;
 %rename (__int__) *::operator int() const;
 %rename (__long__) *::operator long() const;
 %rename (__float__) *::operator double() const;
@@ -38,6 +35,27 @@
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
 %}
 
+%fragment("SWIG_FromBytePtrAndSize", "header", fragment="SWIG_FromCharPtrAndSize") %{
+#if PY_VERSION_HEX < 0x03000000
+# define SWIG_FromBytePtrAndSize(arg, len) PyString_FromStringAndSize(arg, len)
+#else
+# define SWIG_FromBytePtrAndSize(arg, len) PyBytes_FromStringAndSize(arg, len)
+#endif
+%}
+
+%insert("python") {
+import sys
+
+def python2_unicode_patch(cl):
+    if cl.__str__ is object.__str__:
+        return cl
+
+    if sys.version_info < (3, 0):
+         cl.__unicode__ = lambda self: self.__str__().decode('utf-8')
+
+    cl.__repr__ = lambda self: self.__class__.__name__ + "(" + repr(str(self)) + ")"
+    return cl
+}
 
 %{
 PyObject *__prelude_log_func = NULL;
@@ -60,22 +78,32 @@ static void _cb_python_log(int level, const char *str)
 
 static int _cb_python_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
+#if PY_VERSION_HEX < 0x03000000
         size_t ret;
         PyObject *io = (PyObject *) prelude_msgbuf_get_data(fd);
         FILE *f = PyFile_AsFile(io);
 
         ret = fwrite((const char *)prelude_msg_get_message_data(msg), 1, prelude_msg_get_len(msg), f);
+#else
+        ssize_t ret;
+        int ffd = PyObject_AsFileDescriptor((PyObject *) prelude_msgbuf_get_data(fd));
+
+        do {
+                ret = write(ffd, (const char *)prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
+        } while ( ret < 0 && errno == EINTR );
+
+#endif
         if ( ret != prelude_msg_get_len(msg) )
                 return prelude_error_from_errno(errno);
 
         prelude_msg_recycle(msg);
-
         return 0;
 }
 
 
 static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 {
+#if PY_VERSION_HEX < 0x03000000
         ssize_t ret;
         PyObject *io = (PyObject *) prelude_io_get_fdptr(fd);
         FILE *f = PyFile_AsFile(io);
@@ -87,6 +115,18 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         else if ( ret == 0 )
                 ret = prelude_error(PRELUDE_ERROR_EOF);
 
+#else
+        ssize_t ret;
+        int ffd = PyObject_AsFileDescriptor((PyObject *) prelude_io_get_fdptr(fd));
+
+        ret = read(ffd, buf, size);
+        if ( ret < 0 )
+                ret = prelude_error_from_errno(errno);
+
+        else if ( ret == 0 )
+                ret = prelude_error(PRELUDE_ERROR_EOF);
+
+#endif
         return ret;
 }
 %}
@@ -106,14 +146,24 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 /* tell squid not to cast void * value */
-%typemap(in) void *nocast_file_p {
-        if ( !PyFile_Check( (PyObject *)$input) ) {
-                const char * errstr = "Argument is not a file object.";
-                PyErr_SetString(PyExc_RuntimeError,errstr);
+%typemap(in) void *nocast_file_p %{
+#if PY_VERSION_HEX < 0x03000000
+        if ( !PyFile_Check((PyObject *) $input) ) {
+                const char *errstr = "Argument is not a file object.";
+                PyErr_SetString(PyExc_RuntimeError, errstr);
                 return NULL;
         }
+#else
+        extern PyTypeObject PyIOBase_Type;
+        if ( ! PyObject_IsInstance((PyObject *) $input, (PyObject *) &PyIOBase_Type) ) {
+                const char *errstr = "Argument is not a file object.";
+                PyErr_SetString(PyExc_RuntimeError, errstr);
+                return NULL;
+        }
+#endif
+
         $1 = $input;
-}
+%}
 
 
 %exception {
@@ -253,7 +303,13 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 
         for ( i = 0; i < argc; i++ ) {
                 PyObject *o = PyList_GetItem(pyargv, i);
+#if PY_VERSION_HEX < 0x03000000
+                PyArg_Parse(o, "et", Py_FileSystemDefaultEncoding, &argv[i]);
+#else
                 argv[i] = PyString_AsString(o);
+#endif
+                if ( ! argv[i] )
+                        break;
         }
 
         argv[i] = NULL;

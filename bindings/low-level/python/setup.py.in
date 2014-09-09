@@ -92,7 +92,7 @@ commands = {
     "uninstall": uninstall,
     }
 
-if len(sys.argv) > 1 and commands.has_key(sys.argv[1]):
+if len(sys.argv) > 1 and sys.argv[1] in commands:
     commands[sys.argv[1]]()
 
 setup(name="prelude",

@@ -134,11 +134,18 @@ typedef signed int prelude_error_t;
 %ignore Prelude::IDMEFPath::Get;
 
 
+%fragment("SWIG_FromBytePtrAndSize", "header", fragment="SWIG_FromCharPtrAndSize") %{
+#ifndef SWIG_FromBytePtrAndSize
+# define SWIG_FromBytePtrAndSize(arg, len) SWIG_FromCharPtrAndSize(arg, len)
+#endif
+%}
+
+
 %fragment("IDMEFValue_to_SWIG", "header", fragment="SWIG_From_double",
                                           fragment="SWIG_From_float",
                                           fragment="SWIG_From_int", fragment="SWIG_From_unsigned_SS_int",
                                           fragment="SWIG_From_long_SS_long", fragment="SWIG_From_unsigned_SS_long_SS_long",
-                                          fragment="SWIG_FromCharPtr", fragment="SWIG_FromCharPtrAndSize",
+                                          fragment="SWIG_FromCharPtr", fragment="SWIG_FromCharPtrAndSize", fragment="SWIG_FromBytePtrAndSize",
                                           fragment="IDMEFValueList_to_SWIG") {
 
 int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
@@ -199,8 +206,10 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
                 idmef_data_t *d = idmef_value_get_data(value);
                 idmef_data_type_t t = idmef_data_get_type(d);
 
-                if ( t == IDMEF_DATA_TYPE_CHAR ||
-                     t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
+                if ( t == IDMEF_DATA_TYPE_BYTE || t == IDMEF_DATA_TYPE_BYTE_STRING )
+                        *ret = SWIG_FromBytePtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
+
+                else if ( t == IDMEF_DATA_TYPE_CHAR )
                         *ret = SWIG_FromCharPtrAndSize((const char *)idmef_data_get_data(d), idmef_data_get_len(d));
 
                 else if ( t == IDMEF_DATA_TYPE_CHAR_STRING )
@@ -318,4 +327,12 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 %include idmef-path.hxx
 %include idmef-time.hxx
 %include idmef.hxx
+#endif
+
+#ifdef SWIGPYTHON
+%pythoncode %{
+for i in (IDMEF, IDMEFCriteria, IDMEFCriterion, IDMEFValue, IDMEFPath, IDMEFTime,
+          Client, ClientEasy, ClientProfile, Connection, ConnectionPool, PreludeLog, PreludeError):
+    python2_unicode_patch(i)
+%}
 #endif
