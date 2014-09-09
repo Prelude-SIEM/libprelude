@@ -30,6 +30,8 @@ namespace Prelude {
                 IDMEF(const IDMEF &idmef);
                 IDMEF(idmef_object_t *message);
 
+                void Set(const char *path, std::vector<Prelude::IDMEF> value);
+                void Set(const char *path, Prelude::IDMEF *value);
                 void Set(const char *path, std::vector<Prelude::IDMEFValue> value);
                 void Set(const char *path, Prelude::IDMEFValue *value);
                 void Set(const char *path, Prelude::IDMEFValue &value);
@@ -54,6 +56,7 @@ namespace Prelude {
 #endif
 
                 IDMEF Clone();
+                idmef_class_id_t GetId() const;
                 const std::string ToString() const;
 
                 operator const std::string() const;

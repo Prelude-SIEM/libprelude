@@ -184,6 +184,36 @@ IDMEFValue::IDMEFValue(IDMEFTime &time)
 }
 
 
+IDMEFValue::IDMEFValue(IDMEF *idmef)
+{
+        int ret;
+
+        ret = idmef_value_new_class(&_value, idmef->GetId(), idmef_object_ref((idmef_object_t *) *idmef));
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
+IDMEFValue::IDMEFValue(std::vector<IDMEF> value)
+{
+        int ret;
+        idmef_value_t *vitem;
+        std::vector<Prelude::IDMEF>::const_iterator i;
+
+        ret = idmef_value_new_list(&_value);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        for ( i = value.begin(); i != value.end(); i++ ) {
+                ret = idmef_value_new_class(&vitem, i->GetId(), idmef_object_ref((idmef_object_t *) *i));
+                if ( ret < 0 )
+                        throw PreludeError(ret);
+
+                idmef_value_list_add(_value, vitem);
+        }
+}
+
+
 IDMEFValue::IDMEFValue(std::vector<IDMEFValue> value)
 {
         int ret;

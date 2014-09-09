@@ -722,6 +722,7 @@ sub new {
 
 *Set = *PreludeEasyc::IDMEF_Set;
 *Clone = *PreludeEasyc::IDMEF_Clone;
+*GetId = *PreludeEasyc::IDMEF_GetId;
 *ToString = *PreludeEasyc::IDMEF_ToString;
 *Write = *PreludeEasyc::IDMEF_Write;
 *Read = *PreludeEasyc::IDMEF_Read;

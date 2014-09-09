@@ -46,6 +46,8 @@ namespace Prelude {
                 ~IDMEFPath();
 
                 Prelude::IDMEFValue Get(Prelude::IDMEF &message);
+                void Set(Prelude::IDMEF &message, std::vector<Prelude::IDMEF> value);
+                void Set(Prelude::IDMEF &message, Prelude::IDMEF *value);
                 void Set(Prelude::IDMEF &message, std::vector<Prelude::IDMEFValue> value);
                 void Set(Prelude::IDMEF &message, Prelude::IDMEFValue *value);
                 void Set(Prelude::IDMEF &message, Prelude::IDMEFValue &value);

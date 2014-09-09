@@ -4941,6 +4941,24 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
 
 
   namespace swig {
+    template <>  struct traits<Prelude::IDMEF > {
+      typedef pointer_category category;
+      static const char* type_name() { return"Prelude::IDMEF"; }
+    };
+  }
+
+
+      namespace swig {
+	template <>  struct traits<std::vector<Prelude::IDMEF, std::allocator< Prelude::IDMEF > > > {
+	  typedef pointer_category category;
+	  static const char* type_name() {
+	    return "std::vector<" "Prelude::IDMEF" "," "std::allocator< Prelude::IDMEF >" " >";
+	  }
+	};
+      }
+    
+
+  namespace swig {
     template <>  struct traits<Prelude::IDMEFValue > {
       typedef pointer_category category;
       static const char* type_name() { return"Prelude::IDMEFValue"; }
@@ -11619,6 +11637,74 @@ fail:
 
 SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > arg1 ;
+  PyObject * obj0 = 0 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
+  {
+    std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
+    int res = swig::asptr(obj0, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >""'"); 
+    }
+    arg1 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -11653,7 +11739,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > arg1 ;
   PyObject * obj0 = 0 ;
@@ -11688,7 +11774,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   idmef_value_t *arg1 = (idmef_value_t *) 0 ;
   void *argp1 = 0 ;
@@ -11721,7 +11807,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::string arg1 ;
   PyObject * obj0 = 0 ;
@@ -11756,7 +11842,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
@@ -11792,7 +11878,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int8_t arg1 ;
   char val1 ;
@@ -11825,7 +11911,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   uint8_t arg1 ;
   unsigned char val1 ;
@@ -11858,7 +11944,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int16_t arg1 ;
   short val1 ;
@@ -11891,7 +11977,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   uint16_t arg1 ;
   unsigned short val1 ;
@@ -11924,7 +12010,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int32_t arg1 ;
   int val1 ;
@@ -11957,7 +12043,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_13(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   uint32_t arg1 ;
   unsigned int val1 ;
@@ -11990,7 +12076,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_14(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int64_t arg1 ;
   long long val1 ;
@@ -12023,7 +12109,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_13(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_15(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   uint64_t arg1 ;
   unsigned long long val1 ;
@@ -12056,7 +12142,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_14(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_16(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
   float val1 ;
@@ -12089,7 +12175,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_15(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_17(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   double arg1 ;
   double val1 ;
@@ -12122,7 +12208,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_16(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_18(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   void *argp1 = 0 ;
@@ -12173,7 +12259,8 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
   }
   if (argc == 1) {
     int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
       return _wrap_new_IDMEFValue__SWIG_1(self, args);
@@ -12181,8 +12268,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
   }
   if (argc == 1) {
     int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_value_t, 0);
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFValue, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
       return _wrap_new_IDMEFValue__SWIG_3(self, args);
@@ -12191,10 +12277,19 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
   if (argc == 1) {
     int _v;
     void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_value_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_IDMEFValue__SWIG_5(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_16(self, args);
+      return _wrap_new_IDMEFValue__SWIG_18(self, args);
     }
   }
   if (argc == 1) {
@@ -12204,7 +12299,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_7(self, args);
+      return _wrap_new_IDMEFValue__SWIG_9(self, args);
     }
   }
   if (argc == 1) {
@@ -12214,7 +12309,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_9(self, args);
+      return _wrap_new_IDMEFValue__SWIG_11(self, args);
     }
   }
   if (argc == 1) {
@@ -12224,7 +12319,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_8(self, args);
+      return _wrap_new_IDMEFValue__SWIG_10(self, args);
     }
   }
   if (argc == 1) {
@@ -12234,7 +12329,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_11(self, args);
+      return _wrap_new_IDMEFValue__SWIG_13(self, args);
     }
   }
   if (argc == 1) {
@@ -12244,7 +12339,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_10(self, args);
+      return _wrap_new_IDMEFValue__SWIG_12(self, args);
     }
   }
   if (argc == 1) {
@@ -12254,7 +12349,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_13(self, args);
+      return _wrap_new_IDMEFValue__SWIG_15(self, args);
     }
   }
   if (argc == 1) {
@@ -12264,7 +12359,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_12(self, args);
+      return _wrap_new_IDMEFValue__SWIG_14(self, args);
     }
   }
   if (argc == 1) {
@@ -12274,7 +12369,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_14(self, args);
+      return _wrap_new_IDMEFValue__SWIG_16(self, args);
     }
   }
   if (argc == 1) {
@@ -12284,7 +12379,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_15(self, args);
+      return _wrap_new_IDMEFValue__SWIG_17(self, args);
     }
   }
   if (argc == 1) {
@@ -12294,7 +12389,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_6(self, args);
+      return _wrap_new_IDMEFValue__SWIG_8(self, args);
     }
   }
   if (argc == 1) {
@@ -12302,7 +12397,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
     int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_4(self, args);
+      return _wrap_new_IDMEFValue__SWIG_6(self, args);
     }
   }
   if (argc == 1) {
@@ -12310,7 +12405,15 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
     int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_5(self, args);
+      return _wrap_new_IDMEFValue__SWIG_7(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_IDMEFValue__SWIG_2(self, args);
     }
   }
   if (argc == 1) {
@@ -12318,7 +12421,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
     int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_2(self, args);
+      return _wrap_new_IDMEFValue__SWIG_4(self, args);
     }
   }
   
@@ -12326,6 +12429,8 @@ fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_IDMEFValue'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::IDMEFValue::IDMEFValue()\n"
+    "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEF *)\n"
+    "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >)\n"
     "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEFValue const &)\n"
     "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >)\n"
     "    Prelude::IDMEFValue::IDMEFValue(idmef_value_t *)\n"
@@ -13131,6 +13236,114 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
+  std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_Set",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_Set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_Set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_Set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+  }
+  arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+  {
+    std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
+    int res = swig::asptr(obj2, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "IDMEFPath_Set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >""'"); 
+    }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    try {
+      (arg1)->Set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
+  Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_Set",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_Set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_Set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_Set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+  }
+  arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_Set" "', argument " "3"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg3 = reinterpret_cast< Prelude::IDMEF * >(argp3);
+  {
+    try {
+      (arg1)->Set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -13182,7 +13395,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13235,7 +13448,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13291,7 +13504,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13346,7 +13559,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13402,7 +13615,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13455,7 +13668,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13508,7 +13721,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13561,7 +13774,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13614,7 +13827,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13667,7 +13880,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13720,7 +13933,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_13(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13773,7 +13986,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_Set__SWIG_14(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13847,7 +14060,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
       if (_v) {
         void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
           return _wrap_IDMEFPath_Set__SWIG_1(self, args);
@@ -13866,10 +14079,29 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
       if (_v) {
         void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_IDMEFPath_Set__SWIG_3(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_2(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_4(self, args);
         }
       }
     }
@@ -13889,7 +14121,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_6(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_8(self, args);
         }
       }
     }
@@ -13909,7 +14141,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_5(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_7(self, args);
         }
       }
     }
@@ -13929,7 +14161,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_8(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_10(self, args);
         }
       }
     }
@@ -13949,7 +14181,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_7(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_9(self, args);
         }
       }
     }
@@ -13969,7 +14201,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_10(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_12(self, args);
         }
       }
     }
@@ -13989,7 +14221,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_9(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_11(self, args);
         }
       }
     }
@@ -14009,7 +14241,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_11(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_13(self, args);
         }
       }
     }
@@ -14029,7 +14261,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_12(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_14(self, args);
         }
       }
     }
@@ -14047,7 +14279,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
         int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_3(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_5(self, args);
         }
       }
     }
@@ -14065,7 +14297,25 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
         int res = SWIG_AsCharPtrAndSize(argv[2], 0, NULL, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_4(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_6(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_IDMEFPath_Set__SWIG_0(self, args);
         }
       }
     }
@@ -14083,7 +14333,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_0(self, args);
+          return _wrap_IDMEFPath_Set__SWIG_2(self, args);
         }
       }
     }
@@ -14092,6 +14342,8 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_Set(PyObject *self, PyObject *args) {
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'IDMEFPath_Set'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >)\n"
+    "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEF *)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEFTime &)\n"
@@ -16881,6 +17133,114 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
+  std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_Set",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_Set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_Set" "', argument " "2"" of type '" "char const *""'");
+  }
+  arg2 = reinterpret_cast< char * >(buf2);
+  {
+    std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
+    int res = swig::asptr(obj2, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "IDMEF_Set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >""'"); 
+    }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    try {
+      (arg1)->Set((char const *)arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  char *arg2 = (char *) 0 ;
+  Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_Set",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_Set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_Set" "', argument " "2"" of type '" "char const *""'");
+  }
+  arg2 = reinterpret_cast< char * >(buf2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_Set" "', argument " "3"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg3 = reinterpret_cast< Prelude::IDMEF * >(argp3);
+  {
+    try {
+      (arg1)->Set((char const *)arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  char *arg2 = (char *) 0 ;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -16932,7 +17292,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -16985,7 +17345,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17041,7 +17401,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17097,7 +17457,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17152,7 +17512,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17205,7 +17565,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17258,7 +17618,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17311,7 +17671,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17364,7 +17724,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17417,7 +17777,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17470,7 +17830,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_13(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17523,7 +17883,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_Set__SWIG_14(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17596,7 +17956,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
       if (_v) {
         void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
           return _wrap_IDMEF_Set__SWIG_1(self, args);
@@ -17614,10 +17974,28 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
       if (_v) {
         void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_IDMEF_Set__SWIG_3(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_2(self, args);
+          return _wrap_IDMEF_Set__SWIG_4(self, args);
         }
       }
     }
@@ -17636,7 +18014,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_6(self, args);
+          return _wrap_IDMEF_Set__SWIG_8(self, args);
         }
       }
     }
@@ -17655,7 +18033,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_5(self, args);
+          return _wrap_IDMEF_Set__SWIG_7(self, args);
         }
       }
     }
@@ -17674,7 +18052,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_8(self, args);
+          return _wrap_IDMEF_Set__SWIG_10(self, args);
         }
       }
     }
@@ -17693,7 +18071,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_7(self, args);
+          return _wrap_IDMEF_Set__SWIG_9(self, args);
         }
       }
     }
@@ -17712,7 +18090,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_10(self, args);
+          return _wrap_IDMEF_Set__SWIG_12(self, args);
         }
       }
     }
@@ -17731,7 +18109,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_9(self, args);
+          return _wrap_IDMEF_Set__SWIG_11(self, args);
         }
       }
     }
@@ -17750,7 +18128,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_11(self, args);
+          return _wrap_IDMEF_Set__SWIG_13(self, args);
         }
       }
     }
@@ -17769,7 +18147,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_12(self, args);
+          return _wrap_IDMEF_Set__SWIG_14(self, args);
         }
       }
     }
@@ -17786,7 +18164,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
         int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_4(self, args);
+          return _wrap_IDMEF_Set__SWIG_6(self, args);
         }
       }
     }
@@ -17803,7 +18181,24 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
         int res = SWIG_AsCharPtrAndSize(argv[2], 0, NULL, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_3(self, args);
+          return _wrap_IDMEF_Set__SWIG_5(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_IDMEF_Set__SWIG_0(self, args);
         }
       }
     }
@@ -17820,7 +18215,7 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_0(self, args);
+          return _wrap_IDMEF_Set__SWIG_2(self, args);
         }
       }
     }
@@ -17829,6 +18224,8 @@ SWIGINTERN PyObject *_wrap_IDMEF_Set(PyObject *self, PyObject *args) {
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'IDMEF_Set'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::IDMEF::Set(char const *,std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >)\n"
+    "    Prelude::IDMEF::Set(char const *,Prelude::IDMEF *)\n"
     "    Prelude::IDMEF::Set(char const *,std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >)\n"
     "    Prelude::IDMEF::Set(char const *,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEF::Set(char const *,Prelude::IDMEFTime &)\n"
@@ -17873,6 +18270,39 @@ SWIGINTERN PyObject *_wrap_IDMEF_Clone(PyObject *SWIGUNUSEDPARM(self), PyObject 
     }
   }
   resultobj = SWIG_NewPointerObj((new Prelude::IDMEF(static_cast< const Prelude::IDMEF& >(result))), SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEF_GetId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  idmef_class_id_t result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:IDMEF_GetId",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_GetId" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  {
+    try {
+      result = ((Prelude::IDMEF const *)arg1)->GetId();
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new idmef_class_id_t(static_cast< const idmef_class_id_t& >(result))), SWIGTYPE_p_idmef_class_id_t, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -18370,6 +18800,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_IDMEF", _wrap_new_IDMEF, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_Set", _wrap_IDMEF_Set, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_Clone", _wrap_IDMEF_Clone, METH_VARARGS, NULL},
+	 { (char *)"IDMEF_GetId", _wrap_IDMEF_GetId, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_ToString", _wrap_IDMEF_ToString, METH_VARARGS, NULL},
 	 { (char *)"IDMEF___repr__", _wrap_IDMEF___repr__, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_Write", _wrap_IDMEF_Write, METH_VARARGS, NULL},

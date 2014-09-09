@@ -114,6 +114,32 @@ idmef_criterion_operator_t IDMEFPath::GetApplicableOperators()
 }
 
 
+
+void IDMEFPath::Set(IDMEF &message, std::vector<IDMEF> value)
+{
+        int ret;
+        IDMEFValue v = value;
+
+        ret = idmef_path_set(_path, message, v);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
+void IDMEFPath::Set(IDMEF &message, IDMEF *value)
+{
+        int ret;
+
+        if ( ! value )
+                ret = idmef_path_set(_path, message, NULL);
+        else
+                ret = idmef_path_set(_path, message, IDMEFValue(value));
+
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
 void IDMEFPath::Set(IDMEF &message, IDMEFValue *value)
 {
         int ret;

@@ -2681,15 +2681,16 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p_std__string swig_types[30]
 #define SWIGTYPE_p_std__vectorT_Prelude__Connection_t swig_types[31]
 #define SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t swig_types[32]
-#define SWIGTYPE_p_time_t swig_types[33]
-#define SWIGTYPE_p_timeval swig_types[34]
-#define SWIGTYPE_p_unsigned_char swig_types[35]
-#define SWIGTYPE_p_unsigned_int swig_types[36]
-#define SWIGTYPE_p_unsigned_long_long swig_types[37]
-#define SWIGTYPE_p_unsigned_short swig_types[38]
-#define SWIGTYPE_p_void swig_types[39]
-static swig_type_info *swig_types[41];
-static swig_module_info swig_module = {swig_types, 40, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t swig_types[33]
+#define SWIGTYPE_p_time_t swig_types[34]
+#define SWIGTYPE_p_timeval swig_types[35]
+#define SWIGTYPE_p_unsigned_char swig_types[36]
+#define SWIGTYPE_p_unsigned_int swig_types[37]
+#define SWIGTYPE_p_unsigned_long_long swig_types[38]
+#define SWIGTYPE_p_unsigned_short swig_types[39]
+#define SWIGTYPE_p_void swig_types[40]
+static swig_type_info *swig_types[42];
+static swig_module_info swig_module = {swig_types, 41, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -7925,6 +7926,70 @@ fail:
 
 static int _wrap_new_IDMEFValue__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFValue::IDMEFValue",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",1,"Prelude::IDMEF *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("new_IDMEFValue",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__IDMEFValue,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_IDMEFValue__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< Prelude::IDMEF > arg1 ;
+  std::vector< Prelude::IDMEF > *argp1 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFValue::IDMEFValue",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",1,"std::vector< Prelude::IDMEF >");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0))){
+    SWIG_fail_ptr("new_IDMEFValue",1,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t);
+  }
+  arg1 = *argp1;
+  
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__IDMEFValue,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_IDMEFValue__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
   Prelude::IDMEFValue *arg1 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
@@ -7954,7 +8019,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_2(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_4(lua_State* L) {
   int SWIG_arg = 0;
   std::vector< Prelude::IDMEFValue > arg1 ;
   std::vector< Prelude::IDMEFValue > *argp1 ;
@@ -7987,7 +8052,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_3(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   idmef_value_t *arg1 = (idmef_value_t *) 0 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8018,7 +8083,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_4(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_6(lua_State* L) {
   int SWIG_arg = 0;
   char *arg1 = (char *) 0 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8045,7 +8110,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_5(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_7(lua_State* L) {
   int SWIG_arg = 0;
   double arg1 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8072,7 +8137,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_6(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_8(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8117,7 +8182,7 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -8131,7 +8196,7 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -8145,7 +8210,7 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_idmef_value_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -8159,20 +8224,25 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
         _v = 0;
       } else {
         _v = 1;
       }
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_6(L);
+      return _wrap_new_IDMEFValue__SWIG_4(L);
     }
   }
   if (argc == 1) {
     int _v;
     {
-      _v = lua_isnumber(L,argv[0]);
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_idmef_value_t, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
     }
     if (_v) {
       return _wrap_new_IDMEFValue__SWIG_5(L);
@@ -8181,16 +8251,41 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
   if (argc == 1) {
     int _v;
     {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_IDMEFValue__SWIG_8(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_IDMEFValue__SWIG_7(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
       _v = SWIG_lua_isnilstring(L,argv[0]);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_4(L);
+      return _wrap_new_IDMEFValue__SWIG_6(L);
     }
   }
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'new_IDMEFValue'\n"
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::IDMEFValue::IDMEFValue()\n"
+    "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEF *)\n"
+    "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEF >)\n"
     "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEFValue const &)\n"
     "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEFValue >)\n"
     "    Prelude::IDMEFValue::IDMEFValue(idmef_value_t *)\n"
@@ -8810,6 +8905,96 @@ static int _wrap_IDMEFPath_Set__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
+  std::vector< Prelude::IDMEF > arg3 ;
+  std::vector< Prelude::IDMEF > *argp3 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::Set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::Set",1,"Prelude::IDMEFPath *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::Set",2,"Prelude::IDMEF &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::Set",3,"std::vector< Prelude::IDMEF >");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",1,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",3,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t);
+  }
+  arg3 = *argp3;
+  
+  {
+    try {
+      (arg1)->Set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFPath_Set__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
+  Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::Set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::Set",1,"Prelude::IDMEFPath *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::Set",2,"Prelude::IDMEF &");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::Set",3,"Prelude::IDMEF *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",1,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_Set",3,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  {
+    try {
+      (arg1)->Set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFPath_Set__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
   std::vector< Prelude::IDMEFValue > arg3 ;
   std::vector< Prelude::IDMEFValue > *argp3 ;
   
@@ -8852,7 +9037,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_Set__SWIG_1(lua_State* L) {
+static int _wrap_IDMEFPath_Set__SWIG_3(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -8896,7 +9081,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_Set__SWIG_2(lua_State* L) {
+static int _wrap_IDMEFPath_Set__SWIG_4(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -8940,7 +9125,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_Set__SWIG_3(lua_State* L) {
+static int _wrap_IDMEFPath_Set__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -8980,7 +9165,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_Set__SWIG_4(lua_State* L) {
+static int _wrap_IDMEFPath_Set__SWIG_6(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9049,7 +9234,7 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -9083,7 +9268,7 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
+          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -9117,7 +9302,7 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -9150,7 +9335,46 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
       }
       if (_v) {
         {
-          _v = lua_isnumber(L,argv[2]);
+          void *ptr;
+          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_Set__SWIG_3(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
         }
         if (_v) {
           return _wrap_IDMEFPath_Set__SWIG_4(L);
@@ -9179,10 +9403,39 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
       }
       if (_v) {
         {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_Set__SWIG_6(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
           _v = SWIG_lua_isnilstring(L,argv[2]);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_3(L);
+          return _wrap_IDMEFPath_Set__SWIG_5(L);
         }
       }
     }
@@ -9190,6 +9443,8 @@ static int _wrap_IDMEFPath_Set(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_Set'\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,std::vector< Prelude::IDMEF >)\n"
+    "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEF *)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,std::vector< Prelude::IDMEFValue >)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEFPath::Set(Prelude::IDMEF &,Prelude::IDMEFTime &)\n"
@@ -11662,6 +11917,88 @@ static int _wrap_IDMEF_Set__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
+  std::vector< Prelude::IDMEF > arg3 ;
+  std::vector< Prelude::IDMEF > *argp3 ;
+  
+  SWIG_check_num_args("Prelude::IDMEF::Set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::Set",1,"Prelude::IDMEF *");
+  if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("Prelude::IDMEF::Set",2,"char const *");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEF::Set",3,"std::vector< Prelude::IDMEF >");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF_Set",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0))){
+    SWIG_fail_ptr("IDMEF_Set",3,SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t);
+  }
+  arg3 = *argp3;
+  
+  {
+    try {
+      (arg1)->Set((char const *)arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEF_Set__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  char *arg2 = (char *) 0 ;
+  Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEF::Set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::Set",1,"Prelude::IDMEF *");
+  if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("Prelude::IDMEF::Set",2,"char const *");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("Prelude::IDMEF::Set",3,"Prelude::IDMEF *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF_Set",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF_Set",3,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  {
+    try {
+      (arg1)->Set((char const *)arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEF_Set__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  char *arg2 = (char *) 0 ;
   std::vector< Prelude::IDMEFValue > arg3 ;
   std::vector< Prelude::IDMEFValue > *argp3 ;
   
@@ -11700,7 +12037,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_Set__SWIG_1(lua_State* L) {
+static int _wrap_IDMEF_Set__SWIG_3(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -11740,7 +12077,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_Set__SWIG_2(lua_State* L) {
+static int _wrap_IDMEF_Set__SWIG_4(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -11780,7 +12117,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_Set__SWIG_3(lua_State* L) {
+static int _wrap_IDMEF_Set__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -11816,7 +12153,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_Set__SWIG_4(lua_State* L) {
+static int _wrap_IDMEF_Set__SWIG_6(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -11876,7 +12213,7 @@ static int _wrap_IDMEF_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -11905,7 +12242,7 @@ static int _wrap_IDMEF_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
+          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -11934,7 +12271,7 @@ static int _wrap_IDMEF_Set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -11962,7 +12299,41 @@ static int _wrap_IDMEF_Set(lua_State* L) {
       }
       if (_v) {
         {
-          _v = lua_isnumber(L,argv[2]);
+          void *ptr;
+          if (SWIG_isptrtype(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_IDMEF_Set__SWIG_3(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = SWIG_lua_isnilstring(L,argv[1]);
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
         }
         if (_v) {
           return _wrap_IDMEF_Set__SWIG_4(L);
@@ -11986,10 +12357,34 @@ static int _wrap_IDMEF_Set(lua_State* L) {
       }
       if (_v) {
         {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IDMEF_Set__SWIG_6(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = SWIG_lua_isnilstring(L,argv[1]);
+      }
+      if (_v) {
+        {
           _v = SWIG_lua_isnilstring(L,argv[2]);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_3(L);
+          return _wrap_IDMEF_Set__SWIG_5(L);
         }
       }
     }
@@ -11997,6 +12392,8 @@ static int _wrap_IDMEF_Set(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEF_Set'\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::IDMEF::Set(char const *,std::vector< Prelude::IDMEF >)\n"
+    "    Prelude::IDMEF::Set(char const *,Prelude::IDMEF *)\n"
     "    Prelude::IDMEF::Set(char const *,std::vector< Prelude::IDMEFValue >)\n"
     "    Prelude::IDMEF::Set(char const *,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEF::Set(char const *,Prelude::IDMEFTime &)\n"
@@ -12029,6 +12426,40 @@ static int _wrap_IDMEF_Clone(lua_State* L) {
   {
     Prelude::IDMEF * resultptr = new Prelude::IDMEF((const Prelude::IDMEF &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_Prelude__IDMEF,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEF_GetId(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  idmef_class_id_t result;
+  
+  SWIG_check_num_args("Prelude::IDMEF::GetId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::GetId",1,"Prelude::IDMEF const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF_GetId",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  {
+    try {
+      result = ((Prelude::IDMEF const *)arg1)->GetId();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  {
+    idmef_class_id_t * resultptr = new idmef_class_id_t((const idmef_class_id_t &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_idmef_class_id_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -12254,6 +12685,7 @@ static swig_lua_attribute swig_IDMEF_attributes[] = {
 static swig_lua_method swig_IDMEF_methods[]= {
     { "Set", _wrap_IDMEF_Set},
     { "Clone", _wrap_IDMEF_Clone},
+    { "GetId", _wrap_IDMEF_GetId},
     { "ToString", _wrap_IDMEF_ToString},
     { "__tostring", _wrap_IDMEF___tostring},
     { "Write", _wrap_IDMEF_Write},
@@ -12450,6 +12882,7 @@ static swig_type_info _swigt__p_std__exception = {"_p_std__exception", "std::exc
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_string, 0};
 static swig_type_info _swigt__p_std__vectorT_Prelude__Connection_t = {"_p_std__vectorT_Prelude__Connection_t", "std::vector< Prelude::Connection > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_Prelude__IDMEFValue_t = {"_p_std__vectorT_Prelude__IDMEFValue_t", "std::vector< Prelude::IDMEFValue > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_Prelude__IDMEF_t = {"_p_std__vectorT_Prelude__IDMEF_t", "std::vector< Prelude::IDMEF > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_time_t = {"_p_time_t", "time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_timeval = {"_p_timeval", "timeval *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uint8_t *", 0, 0, (void*)0, 0};
@@ -12492,6 +12925,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__string,
   &_swigt__p_std__vectorT_Prelude__Connection_t,
   &_swigt__p_std__vectorT_Prelude__IDMEFValue_t,
+  &_swigt__p_std__vectorT_Prelude__IDMEF_t,
   &_swigt__p_time_t,
   &_swigt__p_timeval,
   &_swigt__p_unsigned_char,
@@ -12534,6 +12968,7 @@ static swig_cast_info _swigc__p_std__exception[] = {  {&_swigt__p_std__exception
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_Prelude__Connection_t[] = {  {&_swigt__p_std__vectorT_Prelude__Connection_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_Prelude__IDMEFValue_t[] = {  {&_swigt__p_std__vectorT_Prelude__IDMEFValue_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_Prelude__IDMEF_t[] = {  {&_swigt__p_std__vectorT_Prelude__IDMEF_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_time_t[] = {  {&_swigt__p_time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_timeval[] = {  {&_swigt__p_timeval, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
@@ -12576,6 +13011,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__string,
   _swigc__p_std__vectorT_Prelude__Connection_t,
   _swigc__p_std__vectorT_Prelude__IDMEFValue_t,
+  _swigc__p_std__vectorT_Prelude__IDMEF_t,
   _swigc__p_time_t,
   _swigc__p_timeval,
   _swigc__p_unsigned_char,

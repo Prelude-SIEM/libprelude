@@ -97,6 +97,7 @@ typedef signed int prelude_error_t;
 
 
 %template() std::vector<std::string>;
+%template() std::vector<Prelude::IDMEF>;
 %template() std::vector<Prelude::IDMEFValue>;
 %template() std::vector<Prelude::Connection>;
 

@@ -27,6 +27,11 @@
 #include <vector>
 #include "idmef-time.hxx"
 
+namespace Prelude
+{
+        class IDMEF;
+}
+
 namespace Prelude {
         class IDMEFValue {
             private:
@@ -63,6 +68,8 @@ namespace Prelude {
 
                 IDMEFValue();
                 ~IDMEFValue();
+                IDMEFValue(IDMEF *idmef);
+                IDMEFValue(std::vector<IDMEF> value);
                 IDMEFValue(const IDMEFValue &value);
                 IDMEFValue(std::vector<IDMEFValue> value);
                 IDMEFValue(idmef_value_t *value);

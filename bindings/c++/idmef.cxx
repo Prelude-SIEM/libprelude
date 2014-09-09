@@ -41,6 +41,17 @@ IDMEF::~IDMEF()
                 idmef_object_destroy(_object);
 }
 
+void IDMEF::Set(const char *path, std::vector<IDMEF> value)
+{
+        IDMEFPath(*this, path).Set(*this, value);
+}
+
+
+void IDMEF::Set(const char *path, IDMEF *value)
+{
+        IDMEFPath(*this, path).Set(*this, value);
+}
+
 
 void IDMEF::Set(const char *path, std::vector<IDMEFValue> value)
 {
@@ -154,6 +165,12 @@ IDMEF IDMEF::Clone()
                 throw PreludeError(ret);
 
         return IDMEF(clone);
+}
+
+
+idmef_class_id_t IDMEF::GetId() const
+{
+        return _object->_idmef_object_id;
 }
 
 

@@ -534,6 +534,7 @@ class IDMEF(_object):
             return _PreludeEasy.IDMEF_Clone(self.this)
 
 
+    def GetId(self): return _PreludeEasy.IDMEF_GetId(self)
     def ToString(self): return _PreludeEasy.IDMEF_ToString(self)
     def __repr__(self): return _PreludeEasy.IDMEF___repr__(self)
     def __getitem__(self, key):
