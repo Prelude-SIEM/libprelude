@@ -3918,6 +3918,81 @@ typedef union {
 #ifdef __cplusplus
 extern "C" {
 #endif
+SWIGINTERN PyObject *_wrap__prelude_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  char *arg1 = (char *) 0 ;
+  int *arg2 = (int *) 0 ;
+  char **arg3 = (char **) 0 ;
+  int tmp2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:_prelude_init",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    if ( obj0 == Py_None )
+    arg1 = NULL;
+    else if ( PyString_Check(obj0) )
+    arg1 = PyString_AsString(obj0);
+    else {
+      PyErr_Format(PyExc_TypeError,
+        "expected None or string, %s found", obj0->ob_type->tp_name);
+      return NULL;
+    }
+  }
+  {
+    tmp2 = PyInt_AsLong(obj1);
+    arg2 = &tmp2;
+  }
+  {
+    /* Check if is a list */
+    if ( PyList_Check(obj2) ) {
+      int size = PyList_Size(obj2);
+      int i = 0;
+      
+      arg3 = (char **) malloc((size+1) * sizeof(char *));
+      for ( i = 0; i < size; i++ ) {
+        PyObject *o = PyList_GetItem(obj2,i);
+        if ( PyString_Check(o) )
+        arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
+        else {
+          PyErr_SetString(PyExc_TypeError, "list must contain strings");
+          free(arg3);
+          return NULL;
+        }
+      }
+      arg3[i] = 0;
+    } else {
+      PyErr_SetString(PyExc_TypeError, "not a list");
+      return NULL;
+    }
+  }
+  {
+    Py_BEGIN_ALLOW_THREADS
+    result = (int)_prelude_init((char const *)arg1,arg2,arg3);
+    Py_END_ALLOW_THREADS
+  }
+  {
+    if ( result < 0 ) {
+      swig_python_raise_exception(result);
+      resultobj = NULL;
+    } else {
+      resultobj = PyInt_FromLong(result);
+    }
+  }
+  {
+    free(arg3);
+  }
+  return resultobj;
+fail:
+  {
+    free(arg3);
+  }
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_prelude_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -48996,6 +49071,32 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_idmef_class_is_listed(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  idmef_class_id_t arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  prelude_bool_t result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:idmef_class_is_listed",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "idmef_class_is_listed" "', argument " "1"" of type '" "idmef_class_id_t""'");
+  } 
+  arg1 = (idmef_class_id_t)(val1);
+  {
+    Py_BEGIN_ALLOW_THREADS
+    result = (prelude_bool_t)idmef_class_is_listed(arg1);
+    Py_END_ALLOW_THREADS
+  }
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_prelude_connection_destroy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
@@ -55708,6 +55809,7 @@ fail:
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
+	 { (char *)"_prelude_init", _wrap__prelude_init, METH_VARARGS, NULL},
 	 { (char *)"prelude_init", _wrap_prelude_init, METH_VARARGS, NULL},
 	 { (char *)"prelude_deinit", _wrap_prelude_deinit, METH_VARARGS, NULL},
 	 { (char *)"prelude_check_version", _wrap_prelude_check_version, METH_VARARGS, NULL},
@@ -56960,6 +57062,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_class_ref", _wrap_idmef_class_ref, METH_VARARGS, NULL},
 	 { (char *)"idmef_class_print", _wrap_idmef_class_print, METH_VARARGS, NULL},
 	 { (char *)"idmef_class_destroy", _wrap_idmef_class_destroy, METH_VARARGS, NULL},
+	 { (char *)"idmef_class_is_listed", _wrap_idmef_class_is_listed, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_destroy", _wrap_prelude_connection_destroy, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_ref", _wrap_prelude_connection_ref, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_send", _wrap_prelude_connection_send, METH_VARARGS, NULL},

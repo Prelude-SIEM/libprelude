@@ -54,7 +54,11 @@
  extern "C" {
 #endif
 
+int _prelude_init(const char *libprelude_hdr_compiled_version, int *argc, char **argv);
+
 int prelude_init(int *argc, char **argv);
+
+#define prelude_init(argc, argv) _prelude_init(LIBPRELUDE_VERSION, argc, argv)
 
 void prelude_deinit(void);
 

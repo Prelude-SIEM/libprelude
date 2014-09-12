@@ -2521,6 +2521,77 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *SWIGUNUSEDPARM(sv), MAGIC *SW
 #ifdef __cplusplus
 extern "C" {
 #endif
+XS(_wrap__prelude_init) {
+  {
+    char *arg1 = (char *) 0 ;
+    int *arg2 = (int *) 0 ;
+    char **arg3 = (char **) 0 ;
+    int res1 ;
+    char *buf1 = 0 ;
+    int alloc1 = 0 ;
+    int tmp2 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: _prelude_init(libprelude_hdr_compiled_version,argc,argv);");
+    }
+    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_prelude_init" "', argument " "1"" of type '" "char const *""'");
+    }
+    arg1 = (char *)(buf1);
+    {
+      tmp2 = SvIV(ST(1));
+      arg2 = &tmp2;
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV  **tv;
+      
+      if ( ! SvROK(ST(2)) )
+      croak("Argument 3 is not a reference.");
+      
+      if ( SvTYPE(SvRV(ST(2))) != SVt_PVAV )
+      croak("Argument 3 is not an array.");
+      
+      tempav = (AV*) SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (char **) malloc((len+2)*sizeof(char *));
+      if ( ! arg3 )
+      croak("out of memory\n");
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);	
+        SvREFCNT_inc(*tv);
+        arg3[i] = (char *) SvPV_nolen(*tv);
+      }
+      arg3[i] = NULL;
+    }
+    result = (int)_prelude_init((char const *)arg1,arg2,arg3);
+    {
+      ST(argvi) = newSViv(result);
+      argvi++;
+    }
+    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+    
+    {
+      free(arg3);
+    }
+    XSRETURN(argvi);
+  fail:
+    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+    
+    {
+      free(arg3);
+    }
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_prelude_init) {
   {
     int *arg1 = (int *) 0 ;
@@ -55911,6 +55982,34 @@ XS(_wrap_idmef_class_destroy) {
 }
 
 
+XS(_wrap_idmef_class_is_listed) {
+  {
+    idmef_class_id_t arg1 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    prelude_bool_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: idmef_class_is_listed(classid);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "idmef_class_is_listed" "', argument " "1"" of type '" "idmef_class_id_t""'");
+    } 
+    arg1 = (idmef_class_id_t)(val1);
+    result = (prelude_bool_t)idmef_class_is_listed(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_prelude_connection_destroy) {
   {
     prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
@@ -63973,6 +64072,7 @@ static swig_variable_info swig_variables[] = {
 {0,0,0,0}
 };
 static swig_command_info swig_commands[] = {
+{"Prelude::_prelude_init", _wrap__prelude_init},
 {"Prelude::prelude_init", _wrap_prelude_init},
 {"Prelude::prelude_deinit", _wrap_prelude_deinit},
 {"Prelude::prelude_check_version", _wrap_prelude_check_version},
@@ -65219,6 +65319,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_class_ref", _wrap_idmef_class_ref},
 {"Prelude::idmef_class_print", _wrap_idmef_class_print},
 {"Prelude::idmef_class_destroy", _wrap_idmef_class_destroy},
+{"Prelude::idmef_class_is_listed", _wrap_idmef_class_is_listed},
 {"Prelude::prelude_connection_destroy", _wrap_prelude_connection_destroy},
 {"Prelude::prelude_connection_ref", _wrap_prelude_connection_ref},
 {"Prelude::prelude_connection_send", _wrap_prelude_connection_send},

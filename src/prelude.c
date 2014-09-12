@@ -42,6 +42,8 @@
 #include "tls-auth.h"
 
 
+#undef prelude_init
+
 int _prelude_internal_argc = 0;
 char *_prelude_prefix = NULL;
 char *_prelude_internal_argv[1024];
@@ -165,25 +167,41 @@ static void slice_arguments(int *argc, char **argv)
 }
 
 
-/**
- * prelude_init:
- * @argc: Address of the argc parameter of your main() function.
- * @argv: Address of the argv parameter of your main() function.
- *
- * Call this function before using any other Prelude functions in your applications.
- * It will initialize everything needed to operate the library and parses some standard
- * command line options. @argc and @argv are adjusted accordingly so your own code will
- * never see those standard arguments.
- *
- * Returns: 0 on success, a negative value if an error occured.
- */
-int prelude_init(int *argc, char **argv)
+
+static int check_abi(const char *libprelude_header_version)
+{
+        /*
+         * Check ABI compatibility:
+         *
+         * - If libprelude_header_version is NULL, then the program was compiled with
+         * a version of libprelude inferior or equal to 1.2.5.
+         *
+         * - In the future, we can add check for specific version, and return
+         * an error if necessary.
+         */
+        if ( ! libprelude_header_version ) {
+                prelude_log(PRELUDE_LOG_ERR, "This program was compiled with libprelude version <= 1.2.5. "
+                "The libprelude version currently installed (" LIBPRELUDE_VERSION ") makes ABI changes which "
+                "require this program to be recompiled. Although not compulsory, it is additionally recommended "
+                "to upgrade this program to its latest version.\n");
+                exit(1);
+        }
+
+        return 0;
+}
+
+
+int _prelude_init(const char *libprelude_header_version, int *argc, char **argv)
 {
         int ret;
         const char *env;
 
         if ( libprelude_refcount++ > 0 )
                 return 0;
+
+        ret = check_abi(libprelude_header_version);
+        if ( ret < 0 )
+                return ret;
 
         env = getenv("LIBPRELUDE_DEBUG");
         if ( env )
@@ -239,6 +257,23 @@ int prelude_init(int *argc, char **argv)
         return 0;
 }
 
+
+/**
+ * prelude_init:
+ * @argc: Address of the argc parameter of your main() function.
+ * @argv: Address of the argv parameter of your main() function.
+ *
+ * Call this function before using any other Prelude functions in your applications.
+ * It will initialize everything needed to operate the library and parses some standard
+ * command line options. @argc and @argv are adjusted accordingly so your own code will
+ * never see those standard arguments.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_init(int *argc, char **argv)
+{
+        return _prelude_init(NULL, argc, argv);
+}
 
 
 /**
