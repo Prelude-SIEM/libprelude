@@ -46,19 +46,6 @@
 #define IDMEF_LIST_APPEND  INT_MAX
 #define IDMEF_LIST_PREPEND (INT_MAX - 1)
 
-typedef struct idmef_object idmef_object_t;
-
-idmef_object_t *idmef_object_ref(idmef_object_t *object);
-
-void idmef_object_destroy(idmef_object_t *object);
-
-int idmef_object_print(idmef_object_t *object, prelude_io_t *fd);
-
-int idmef_object_clone(idmef_object_t *src, idmef_object_t **dst);
-
-int idmef_object_copy(idmef_object_t *src, idmef_object_t *dst);
-
-int idmef_object_compare(idmef_object_t *obj1, idmef_object_t *obj2);
 typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_ERROR = -1,
         IDMEF_ADDITIONAL_DATA_TYPE_STRING = 0,

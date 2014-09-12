@@ -28,9 +28,9 @@
 #include "prelude-list.h"
 
 
-#define PRELUDE_LINKED_OBJECT   \
-        prelude_list_t _list;   \
-        unsigned int _object_id
+#define PRELUDE_LINKED_OBJECT    \
+        unsigned int _object_id; \
+        prelude_list_t _list
 
 
 typedef struct {

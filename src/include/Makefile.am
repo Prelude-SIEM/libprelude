@@ -13,6 +13,7 @@ include_HEADERS = common.h			\
 		  idmef-message-read.h		\
 		  idmef-message-print.h		\
 		  idmef-message-write.h		\
+                  idmef-object.h                \
 		  idmef-path.h			\
 		  idmef-time.h			\
 		  idmef-tree-data.h		\

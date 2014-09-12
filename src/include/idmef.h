@@ -38,6 +38,7 @@
 #include "idmef-data.h"
 #include "idmef-class.h"
 #include "idmef-value.h"
+#include "idmef-object.h"
 #include "idmef-tree-wrap.h"
 #include "idmef-path.h"
 #include "idmef-criterion-value.h"

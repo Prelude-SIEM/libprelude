@@ -33,26 +33,11 @@
 #include "prelude-list.h"
 #include "prelude-macros.h"
 #include "prelude-inttypes.h"
+#include "prelude-linked-object.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-struct prelude_string {
-        prelude_list_t list;
-
-        int flags;
-        int refcount;
-
-        union {
-                char *rwbuf;
-                const char *robuf;
-        } data;
-
-        size_t size;
-        size_t index;
-};
-
 
 
 typedef struct prelude_string prelude_string_t;

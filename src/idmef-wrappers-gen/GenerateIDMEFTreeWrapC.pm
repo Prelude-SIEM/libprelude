@@ -342,7 +342,7 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
 
     if ( $struct->{is_listed} ) {
         $self->output("
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 ");
     }
 
@@ -560,7 +560,7 @@ int _idmef_$struct->{short_typename}_destroy_child(void *p, idmef_class_child_id
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->$field->{name}, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, $field->{typename}, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                ${type}_destroy(b);
                                                return 0;
                                        }
@@ -573,7 +573,7 @@ int _idmef_$struct->{short_typename}_destroy_child(void *p, idmef_class_child_id
 
                                prelude_list_for_each_reversed(&ptr->$field->{name}, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, $field->{typename}, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                ${type}_destroy(b);
                                                return 0;
                                        }
@@ -703,7 +703,7 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->$field->{name}, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, $field->{typename}, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -715,7 +715,7 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
 
                                prelude_list_for_each_reversed(&ptr->$field->{name}, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, $field->{typename}, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -798,9 +798,9 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
                 $field->{typename} *entry, *new;
 
                 prelude_list_for_each_safe(&src->$field->{name}, tmp, n) \{
-                        entry = prelude_list_entry(tmp, $field->{typename}, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         $clone_func(entry, &new);
-                        prelude_list_add_tail(&dst->$field->{name}, &new->list);
+                        prelude_list_add_tail(&dst->$field->{name}, &((prelude_linked_object_t *) new)->_list);
                 \}
         \}
 ");
@@ -952,12 +952,12 @@ int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, con
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->$field->{name}, tmp1) \{
-                                entry1 = prelude_list_entry(tmp1, $field->{typename}, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         \}
 
                         prelude_list_for_each_continue(&obj2->$field->{name}, tmp2) \{
-                                entry2 = prelude_list_entry(tmp2, $field->{typename}, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         \}
 
@@ -1049,8 +1049,8 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 ");
 
     $self->output("
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     ") if ( $struct->{is_listed} );
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -1070,8 +1070,8 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
                 $field->{typename} *entry;
 
                 prelude_list_for_each_safe(&ptr->$field->{name}, tmp, n) \{
-                        entry = prelude_list_entry(tmp, $field->{typename}, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         $destroy_func(entry);
                 \}
         \}
@@ -1427,7 +1427,7 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
                      $need_check = 0;
                      $self->output("
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_list_init(&ptr->$field->{name}.list);");
+        prelude_list_init(&ptr->$field->{name}._list);");
                  }
             }
         }
@@ -1601,12 +1601,12 @@ sub     struct_field_list
  */
 $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *$struct->{short_typename}, $field->{typename} *$field->{short_typename}_cur)
 \{
-        prelude_list_t *tmp = ($field->{short_typename}_cur) ? &$field->{short_typename}_cur->list : NULL;
+        prelude_list_t *tmp = ($field->{short_typename}_cur) ? &((prelude_linked_object_t *) $field->{short_typename}_cur)->_list : NULL;
 
         prelude_return_val_if_fail($struct->{short_typename}, NULL);
 
         prelude_list_for_each_continue(&$struct->{short_typename}->$field->{name}, tmp)
-                return prelude_list_entry(tmp, $field->{typename}, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 \}
@@ -1628,10 +1628,10 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->$field->{name}, &object->list, pos);
+        list_insert(&ptr->$field->{name}, &((prelude_linked_object_t *) object)->_list, pos);
 \}
 
 
@@ -1660,7 +1660,7 @@ int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename}
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->$field->{name}, &(*ret)->list, pos);
+        list_insert(&ptr->$field->{name}, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 \}

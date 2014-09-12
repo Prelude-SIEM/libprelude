@@ -23,7 +23,11 @@
 
 #include "prelude.h"
 #include "idmef-object-prv.h"
+#include "idmef-object.h"
 #include "idmef-class.h"
+
+
+typedef struct idmef_linked_object idmef_linked_object_t;
 
 
 idmef_object_t *idmef_object_ref(idmef_object_t *obj)
@@ -72,4 +76,39 @@ int idmef_object_copy(idmef_object_t *src, idmef_object_t *dst)
 int idmef_object_print(idmef_object_t *obj, prelude_io_t *fd)
 {
         return idmef_class_print(obj->_idmef_object_id, obj, fd);
+}
+
+
+void idmef_object_add(prelude_list_t *head, idmef_object_t *object)
+{
+        prelude_return_if_fail(idmef_class_is_listed(object->_idmef_object_id));
+        prelude_list_add(head, &((idmef_linked_object_t *) object)->_list);
+}
+
+
+void idmef_object_add_tail(prelude_list_t *head, idmef_object_t *object)
+{
+        prelude_return_if_fail(idmef_class_is_listed(object->_idmef_object_id));
+        prelude_list_add_tail(head, &((idmef_linked_object_t *) object)->_list);
+}
+
+
+void idmef_object_del(idmef_object_t *object)
+{
+        prelude_return_if_fail(idmef_class_is_listed(object->_idmef_object_id));
+        prelude_list_del(&((idmef_linked_object_t *) object)->_list);
+}
+
+
+void idmef_object_del_init(idmef_object_t *object)
+{
+        prelude_return_if_fail(idmef_class_is_listed(object->_idmef_object_id));
+        prelude_list_del(&((idmef_linked_object_t *) object)->_list);
+        prelude_list_init(&((idmef_linked_object_t *) object)->_list);
+}
+
+
+void *idmef_object_get_list_entry(prelude_list_t *elem)
+{
+        return prelude_list_entry(elem, idmef_linked_object_t, _list);
 }

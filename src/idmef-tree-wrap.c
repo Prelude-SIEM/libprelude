@@ -1935,7 +1935,7 @@ int idmef_additional_data_new(idmef_additional_data_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ADDITIONAL_DATA;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -2051,8 +2051,8 @@ static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->meaning ) {
                 prelude_string_destroy(ptr->meaning);
@@ -2364,7 +2364,7 @@ int idmef_reference_new(idmef_reference_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_REFERENCE;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -2503,8 +2503,8 @@ static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->name ) {
                 prelude_string_destroy(ptr->name);
@@ -2974,7 +2974,7 @@ int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->reference_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -2986,7 +2986,7 @@ int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n
 
                                prelude_list_for_each_reversed(&ptr->reference_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -3034,7 +3034,7 @@ int _idmef_classification_destroy_child(void *p, idmef_class_child_id_t child, i
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->reference_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_reference_destroy(b);
                                                return 0;
                                        }
@@ -3047,7 +3047,7 @@ int _idmef_classification_destroy_child(void *p, idmef_class_child_id_t child, i
 
                                prelude_list_for_each_reversed(&ptr->reference_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_reference_destroy(b);
                                                return 0;
                                        }
@@ -3082,8 +3082,8 @@ static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
                 idmef_reference_t *entry;
 
                 prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_reference_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_reference_destroy(entry);
                 }
         }
@@ -3246,12 +3246,12 @@ int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t 
  */
 idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_t *classification, idmef_reference_t *reference_cur)
 {
-        prelude_list_t *tmp = (reference_cur) ? &reference_cur->list : NULL;
+        prelude_list_t *tmp = (reference_cur) ? &((prelude_linked_object_t *) reference_cur)->_list : NULL;
 
         prelude_return_val_if_fail(classification, NULL);
 
         prelude_list_for_each_continue(&classification->reference_list, tmp)
-                return prelude_list_entry(tmp, idmef_reference_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -3273,10 +3273,10 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->reference_list, &object->list, pos);
+        list_insert(&ptr->reference_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -3305,7 +3305,7 @@ int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_refere
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->reference_list, &(*ret)->list, pos);
+        list_insert(&ptr->reference_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -3346,9 +3346,9 @@ int idmef_classification_copy(const idmef_classification_t *src, idmef_classific
                 idmef_reference_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->reference_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_reference_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_reference_clone(entry, &new);
-                        prelude_list_add_tail(&dst->reference_list, &new->list);
+                        prelude_list_add_tail(&dst->reference_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -3413,12 +3413,12 @@ int idmef_classification_compare(const idmef_classification_t *obj1, const idmef
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->reference_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_reference_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->reference_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_reference_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -3448,7 +3448,7 @@ int idmef_user_id_new(idmef_user_id_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_USER_ID;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -3577,8 +3577,8 @@ static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->ident ) {
                 prelude_string_destroy(ptr->ident);
@@ -4109,7 +4109,7 @@ int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->user_id_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -4121,7 +4121,7 @@ int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                                prelude_list_for_each_reversed(&ptr->user_id_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -4165,7 +4165,7 @@ int _idmef_user_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->user_id_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_user_id_destroy(b);
                                                return 0;
                                        }
@@ -4178,7 +4178,7 @@ int _idmef_user_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->user_id_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_user_id_destroy(b);
                                                return 0;
                                        }
@@ -4208,8 +4208,8 @@ static void idmef_user_destroy_internal(idmef_user_t *ptr)
                 idmef_user_id_t *entry;
 
                 prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_user_id_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_user_id_destroy(entry);
                 }
         }
@@ -4360,12 +4360,12 @@ int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
  */
 idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *user, idmef_user_id_t *user_id_cur)
 {
-        prelude_list_t *tmp = (user_id_cur) ? &user_id_cur->list : NULL;
+        prelude_list_t *tmp = (user_id_cur) ? &((prelude_linked_object_t *) user_id_cur)->_list : NULL;
 
         prelude_return_val_if_fail(user, NULL);
 
         prelude_list_for_each_continue(&user->user_id_list, tmp)
-                return prelude_list_entry(tmp, idmef_user_id_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -4387,10 +4387,10 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->user_id_list, &object->list, pos);
+        list_insert(&ptr->user_id_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -4419,7 +4419,7 @@ int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->user_id_list, &(*ret)->list, pos);
+        list_insert(&ptr->user_id_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -4456,9 +4456,9 @@ int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst)
                 idmef_user_id_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->user_id_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_user_id_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_user_id_clone(entry, &new);
-                        prelude_list_add_tail(&dst->user_id_list, &new->list);
+                        prelude_list_add_tail(&dst->user_id_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -4522,12 +4522,12 @@ int idmef_user_compare(const idmef_user_t *obj1, const idmef_user_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->user_id_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_user_id_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->user_id_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_user_id_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -4557,7 +4557,7 @@ int idmef_address_new(idmef_address_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ADDRESS;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -4709,8 +4709,8 @@ static void idmef_address_destroy_internal(idmef_address_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->ident ) {
                 prelude_string_destroy(ptr->ident);
@@ -5343,7 +5343,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->arg_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -5355,7 +5355,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                                prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -5377,7 +5377,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->env_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -5389,7 +5389,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                                prelude_list_for_each_reversed(&ptr->env_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -5449,7 +5449,7 @@ int _idmef_process_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->arg_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -5462,7 +5462,7 @@ int _idmef_process_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -5480,7 +5480,7 @@ int _idmef_process_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->env_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -5493,7 +5493,7 @@ int _idmef_process_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->env_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -5533,8 +5533,8 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
                 prelude_string_t *entry;
 
                 prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         prelude_string_destroy(entry);
                 }
         }
@@ -5544,8 +5544,8 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
                 prelude_string_t *entry;
 
                 prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         prelude_string_destroy(entry);
                 }
         }
@@ -5828,12 +5828,12 @@ int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_process_get_next_arg(idmef_process_t *process, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &((prelude_linked_object_t *) prelude_string_cur)->_list : NULL;
 
         prelude_return_val_if_fail(process, NULL);
 
         prelude_list_for_each_continue(&process->arg_list, tmp)
-                return prelude_list_entry(tmp, prelude_string_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -5855,10 +5855,10 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int p
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->arg_list, &object->list, pos);
+        list_insert(&ptr->arg_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -5887,7 +5887,7 @@ int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->arg_list, &(*ret)->list, pos);
+        list_insert(&ptr->arg_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -5906,12 +5906,12 @@ int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
  */
 prelude_string_t *idmef_process_get_next_env(idmef_process_t *process, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &((prelude_linked_object_t *) prelude_string_cur)->_list : NULL;
 
         prelude_return_val_if_fail(process, NULL);
 
         prelude_list_for_each_continue(&process->env_list, tmp)
-                return prelude_list_entry(tmp, prelude_string_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -5933,10 +5933,10 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int p
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->env_list, &object->list, pos);
+        list_insert(&ptr->env_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -5965,7 +5965,7 @@ int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->env_list, &(*ret)->list, pos);
+        list_insert(&ptr->env_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -6016,9 +6016,9 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
                 prelude_string_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->arg_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         prelude_string_clone(entry, &new);
-                        prelude_list_add_tail(&dst->arg_list, &new->list);
+                        prelude_list_add_tail(&dst->arg_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -6027,9 +6027,9 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
                 prelude_string_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->env_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         prelude_string_clone(entry, &new);
-                        prelude_list_add_tail(&dst->env_list, &new->list);
+                        prelude_list_add_tail(&dst->env_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -6104,12 +6104,12 @@ int idmef_process_compare(const idmef_process_t *obj1, const idmef_process_t *ob
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->arg_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->arg_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -6129,12 +6129,12 @@ int idmef_process_compare(const idmef_process_t *obj1, const idmef_process_t *ob
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->env_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->env_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -6251,7 +6251,7 @@ int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, v
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->arg_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -6263,7 +6263,7 @@ int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, v
 
                                prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -6319,7 +6319,7 @@ int _idmef_web_service_destroy_child(void *p, idmef_class_child_id_t child, int 
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->arg_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -6332,7 +6332,7 @@ int _idmef_web_service_destroy_child(void *p, idmef_class_child_id_t child, int 
 
                                prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -6372,8 +6372,8 @@ static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
                 prelude_string_t *entry;
 
                 prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         prelude_string_destroy(entry);
                 }
         }
@@ -6597,12 +6597,12 @@ int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t
  */
 prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *web_service, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &((prelude_linked_object_t *) prelude_string_cur)->_list : NULL;
 
         prelude_return_val_if_fail(web_service, NULL);
 
         prelude_list_for_each_continue(&web_service->arg_list, tmp)
-                return prelude_list_entry(tmp, prelude_string_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -6624,10 +6624,10 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->arg_list, &object->list, pos);
+        list_insert(&ptr->arg_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -6656,7 +6656,7 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->arg_list, &(*ret)->list, pos);
+        list_insert(&ptr->arg_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -6703,9 +6703,9 @@ int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *
                 prelude_string_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->arg_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         prelude_string_clone(entry, &new);
-                        prelude_list_add_tail(&dst->arg_list, &new->list);
+                        prelude_list_add_tail(&dst->arg_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -6774,12 +6774,12 @@ int idmef_web_service_compare(const idmef_web_service_t *obj1, const idmef_web_s
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->arg_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->arg_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -8958,7 +8958,7 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->address_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_address_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -8970,7 +8970,7 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                                prelude_list_for_each_reversed(&ptr->address_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_address_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -9030,7 +9030,7 @@ int _idmef_node_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->address_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_address_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_address_destroy(b);
                                                return 0;
                                        }
@@ -9043,7 +9043,7 @@ int _idmef_node_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->address_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_address_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_address_destroy(b);
                                                return 0;
                                        }
@@ -9083,8 +9083,8 @@ static void idmef_node_destroy_internal(idmef_node_t *ptr)
                 idmef_address_t *entry;
 
                 prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_address_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_address_destroy(entry);
                 }
         }
@@ -9357,12 +9357,12 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
  */
 idmef_address_t *idmef_node_get_next_address(idmef_node_t *node, idmef_address_t *address_cur)
 {
-        prelude_list_t *tmp = (address_cur) ? &address_cur->list : NULL;
+        prelude_list_t *tmp = (address_cur) ? &((prelude_linked_object_t *) address_cur)->_list : NULL;
 
         prelude_return_val_if_fail(node, NULL);
 
         prelude_list_for_each_continue(&node->address_list, tmp)
-                return prelude_list_entry(tmp, idmef_address_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -9384,10 +9384,10 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->address_list, &object->list, pos);
+        list_insert(&ptr->address_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -9416,7 +9416,7 @@ int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->address_list, &(*ret)->list, pos);
+        list_insert(&ptr->address_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -9465,9 +9465,9 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
                 idmef_address_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->address_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_address_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_address_clone(entry, &new);
-                        prelude_list_add_tail(&dst->address_list, &new->list);
+                        prelude_list_add_tail(&dst->address_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -9539,12 +9539,12 @@ int idmef_node_compare(const idmef_node_t *obj1, const idmef_node_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->address_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_address_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->address_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_address_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -9574,7 +9574,7 @@ int idmef_source_new(idmef_source_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_SOURCE;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -9740,8 +9740,8 @@ static void idmef_source_destroy_internal(idmef_source_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->ident ) {
                 prelude_string_destroy(ptr->ident);
@@ -10357,7 +10357,7 @@ int idmef_file_access_new(idmef_file_access_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_FILE_ACCESS;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -10438,7 +10438,7 @@ int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, v
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->permission_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -10450,7 +10450,7 @@ int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, v
 
                                prelude_list_for_each_reversed(&ptr->permission_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -10490,7 +10490,7 @@ int _idmef_file_access_destroy_child(void *p, idmef_class_child_id_t child, int 
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->permission_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -10503,7 +10503,7 @@ int _idmef_file_access_destroy_child(void *p, idmef_class_child_id_t child, int 
 
                                prelude_list_for_each_reversed(&ptr->permission_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                prelude_string_destroy(b);
                                                return 0;
                                        }
@@ -10523,8 +10523,8 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->user_id ) {
                 idmef_user_id_destroy(ptr->user_id);
@@ -10536,8 +10536,8 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
                 prelude_string_t *entry;
 
                 prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         prelude_string_destroy(entry);
                 }
         }
@@ -10639,12 +10639,12 @@ int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **re
  */
 prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *file_access, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &((prelude_linked_object_t *) prelude_string_cur)->_list : NULL;
 
         prelude_return_val_if_fail(file_access, NULL);
 
         prelude_list_for_each_continue(&file_access->permission_list, tmp)
-                return prelude_list_entry(tmp, prelude_string_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -10666,10 +10666,10 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->permission_list, &object->list, pos);
+        list_insert(&ptr->permission_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -10698,7 +10698,7 @@ int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t 
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->permission_list, &(*ret)->list, pos);
+        list_insert(&ptr->permission_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -10733,9 +10733,9 @@ int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *
                 prelude_string_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->permission_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         prelude_string_clone(entry, &new);
-                        prelude_list_add_tail(&dst->permission_list, &new->list);
+                        prelude_list_add_tail(&dst->permission_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -10796,12 +10796,12 @@ int idmef_file_access_compare(const idmef_file_access_t *obj1, const idmef_file_
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->permission_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->permission_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -11486,7 +11486,7 @@ int idmef_checksum_new(idmef_checksum_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_CHECKSUM;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -11602,8 +11602,8 @@ static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->value ) {
                 prelude_string_destroy(ptr->value);
@@ -11915,7 +11915,7 @@ int idmef_file_new(idmef_file_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_FILE;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -12071,7 +12071,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->file_access_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12083,7 +12083,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                                prelude_list_for_each_reversed(&ptr->file_access_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12105,7 +12105,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->linkage_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12117,7 +12117,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                                prelude_list_for_each_reversed(&ptr->linkage_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12142,7 +12142,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->checksum_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12154,7 +12154,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                                prelude_list_for_each_reversed(&ptr->checksum_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -12251,7 +12251,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->file_access_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_file_access_destroy(b);
                                                return 0;
                                        }
@@ -12264,7 +12264,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->file_access_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_file_access_destroy(b);
                                                return 0;
                                        }
@@ -12282,7 +12282,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->linkage_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_linkage_destroy(b);
                                                return 0;
                                        }
@@ -12295,7 +12295,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->linkage_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_linkage_destroy(b);
                                                return 0;
                                        }
@@ -12321,7 +12321,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->checksum_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_checksum_destroy(b);
                                                return 0;
                                        }
@@ -12334,7 +12334,7 @@ int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->checksum_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_checksum_destroy(b);
                                                return 0;
                                        }
@@ -12370,8 +12370,8 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->ident ) {
                 prelude_string_destroy(ptr->ident);
@@ -12408,8 +12408,8 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
                 idmef_file_access_t *entry;
 
                 prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_file_access_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_file_access_destroy(entry);
                 }
         }
@@ -12419,8 +12419,8 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
                 idmef_linkage_t *entry;
 
                 prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_linkage_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_linkage_destroy(entry);
                 }
         }
@@ -12435,8 +12435,8 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
                 idmef_checksum_t *entry;
 
                 prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_checksum_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_checksum_destroy(entry);
                 }
         }
@@ -12966,12 +12966,12 @@ int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
  */
 idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *file, idmef_file_access_t *file_access_cur)
 {
-        prelude_list_t *tmp = (file_access_cur) ? &file_access_cur->list : NULL;
+        prelude_list_t *tmp = (file_access_cur) ? &((prelude_linked_object_t *) file_access_cur)->_list : NULL;
 
         prelude_return_val_if_fail(file, NULL);
 
         prelude_list_for_each_continue(&file->file_access_list, tmp)
-                return prelude_list_entry(tmp, idmef_file_access_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -12993,10 +12993,10 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, 
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->file_access_list, &object->list, pos);
+        list_insert(&ptr->file_access_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -13025,7 +13025,7 @@ int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->file_access_list, &(*ret)->list, pos);
+        list_insert(&ptr->file_access_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -13044,12 +13044,12 @@ int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int
  */
 idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *file, idmef_linkage_t *linkage_cur)
 {
-        prelude_list_t *tmp = (linkage_cur) ? &linkage_cur->list : NULL;
+        prelude_list_t *tmp = (linkage_cur) ? &((prelude_linked_object_t *) linkage_cur)->_list : NULL;
 
         prelude_return_val_if_fail(file, NULL);
 
         prelude_list_for_each_continue(&file->linkage_list, tmp)
-                return prelude_list_entry(tmp, idmef_linkage_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -13071,10 +13071,10 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->linkage_list, &object->list, pos);
+        list_insert(&ptr->linkage_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -13103,7 +13103,7 @@ int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->linkage_list, &(*ret)->list, pos);
+        list_insert(&ptr->linkage_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -13183,12 +13183,12 @@ int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
  */
 idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *file, idmef_checksum_t *checksum_cur)
 {
-        prelude_list_t *tmp = (checksum_cur) ? &checksum_cur->list : NULL;
+        prelude_list_t *tmp = (checksum_cur) ? &((prelude_linked_object_t *) checksum_cur)->_list : NULL;
 
         prelude_return_val_if_fail(file, NULL);
 
         prelude_list_for_each_continue(&file->checksum_list, tmp)
-                return prelude_list_entry(tmp, idmef_checksum_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -13210,10 +13210,10 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int po
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->checksum_list, &object->list, pos);
+        list_insert(&ptr->checksum_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -13242,7 +13242,7 @@ int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->checksum_list, &(*ret)->list, pos);
+        list_insert(&ptr->checksum_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -13484,9 +13484,9 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 idmef_file_access_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->file_access_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_file_access_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_file_access_clone(entry, &new);
-                        prelude_list_add_tail(&dst->file_access_list, &new->list);
+                        prelude_list_add_tail(&dst->file_access_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -13495,9 +13495,9 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 idmef_linkage_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->linkage_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_linkage_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_linkage_clone(entry, &new);
-                        prelude_list_add_tail(&dst->linkage_list, &new->list);
+                        prelude_list_add_tail(&dst->linkage_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -13512,9 +13512,9 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 idmef_checksum_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->checksum_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_checksum_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_checksum_clone(entry, &new);
-                        prelude_list_add_tail(&dst->checksum_list, &new->list);
+                        prelude_list_add_tail(&dst->checksum_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -13619,12 +13619,12 @@ int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->file_access_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_file_access_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->file_access_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_file_access_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -13644,12 +13644,12 @@ int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->linkage_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_linkage_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->linkage_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_linkage_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -13673,12 +13673,12 @@ int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->checksum_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_checksum_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->checksum_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_checksum_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -13721,7 +13721,7 @@ int idmef_linkage_new(idmef_linkage_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_LINKAGE;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -13872,8 +13872,8 @@ static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->name ) {
                 prelude_string_destroy(ptr->name);
@@ -14261,7 +14261,7 @@ int idmef_target_new(idmef_target_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_TARGET;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -14370,7 +14370,7 @@ int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->file_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_file_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -14382,7 +14382,7 @@ int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void *
 
                                prelude_list_for_each_reversed(&ptr->file_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_file_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -14466,7 +14466,7 @@ int _idmef_target_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->file_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_file_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_file_destroy(b);
                                                return 0;
                                        }
@@ -14479,7 +14479,7 @@ int _idmef_target_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->file_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_file_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_file_destroy(b);
                                                return 0;
                                        }
@@ -14499,8 +14499,8 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->ident ) {
                 prelude_string_destroy(ptr->ident);
@@ -14537,8 +14537,8 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
                 idmef_file_t *entry;
 
                 prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_file_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_file_destroy(entry);
                 }
         }
@@ -14994,12 +14994,12 @@ int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
  */
 idmef_file_t *idmef_target_get_next_file(idmef_target_t *target, idmef_file_t *file_cur)
 {
-        prelude_list_t *tmp = (file_cur) ? &file_cur->list : NULL;
+        prelude_list_t *tmp = (file_cur) ? &((prelude_linked_object_t *) file_cur)->_list : NULL;
 
         prelude_return_val_if_fail(target, NULL);
 
         prelude_list_for_each_continue(&target->file_list, tmp)
-                return prelude_list_entry(tmp, idmef_file_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -15021,10 +15021,10 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->file_list, &object->list, pos);
+        list_insert(&ptr->file_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -15053,7 +15053,7 @@ int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->file_list, &(*ret)->list, pos);
+        list_insert(&ptr->file_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -15120,9 +15120,9 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
                 idmef_file_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->file_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_file_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_file_clone(entry, &new);
-                        prelude_list_add_tail(&dst->file_list, &new->list);
+                        prelude_list_add_tail(&dst->file_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -15206,12 +15206,12 @@ int idmef_target_compare(const idmef_target_t *obj1, const idmef_target_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->file_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_file_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->file_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_file_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -15241,7 +15241,7 @@ int idmef_analyzer_new(idmef_analyzer_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ANALYZER;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -15444,8 +15444,8 @@ static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->analyzerid ) {
                 prelude_string_destroy(ptr->analyzerid);
@@ -16311,7 +16311,7 @@ int idmef_alertident_new(idmef_alertident_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ALERTIDENT;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -16416,8 +16416,8 @@ static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->alertident ) {
                 prelude_string_destroy(ptr->alertident);
@@ -17164,7 +17164,7 @@ int idmef_action_new(idmef_action_t **ret)
 
         (*ret)->_idmef_object_id = IDMEF_CLASS_ID_ACTION;
 
-        prelude_list_init(&(*ret)->list);
+        prelude_list_init(&((prelude_linked_object_t *) (*ret))->_list);
 
         (*ret)->refcount = 1;
 
@@ -17257,8 +17257,8 @@ static void idmef_action_destroy_internal(idmef_action_t *ptr)
 {
         prelude_return_if_fail(ptr);
 
-       if ( ! prelude_list_is_empty(&ptr->list) )
-               prelude_list_del_init(&ptr->list);
+       if ( ! prelude_list_is_empty(&((prelude_linked_object_t *)ptr)->_list) )
+               prelude_list_del_init(&((prelude_linked_object_t *)ptr)->_list);
     
         if ( ptr->description ) {
                 prelude_string_destroy(ptr->description);
@@ -17861,7 +17861,7 @@ int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->action_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_action_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -17873,7 +17873,7 @@ int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, vo
 
                                prelude_list_for_each_reversed(&ptr->action_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_action_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -17916,7 +17916,7 @@ int _idmef_assessment_destroy_child(void *p, idmef_class_child_id_t child, int n
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->action_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_action_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_action_destroy(b);
                                                return 0;
                                        }
@@ -17929,7 +17929,7 @@ int _idmef_assessment_destroy_child(void *p, idmef_class_child_id_t child, int n
 
                                prelude_list_for_each_reversed(&ptr->action_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_action_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_action_destroy(b);
                                                return 0;
                                        }
@@ -17967,8 +17967,8 @@ static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
                 idmef_action_t *entry;
 
                 prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_action_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_action_destroy(entry);
                 }
         }
@@ -18075,12 +18075,12 @@ int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
  */
 idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *assessment, idmef_action_t *action_cur)
 {
-        prelude_list_t *tmp = (action_cur) ? &action_cur->list : NULL;
+        prelude_list_t *tmp = (action_cur) ? &((prelude_linked_object_t *) action_cur)->_list : NULL;
 
         prelude_return_val_if_fail(assessment, NULL);
 
         prelude_list_for_each_continue(&assessment->action_list, tmp)
-                return prelude_list_entry(tmp, idmef_action_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -18102,10 +18102,10 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->action_list, &object->list, pos);
+        list_insert(&ptr->action_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -18134,7 +18134,7 @@ int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret, i
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->action_list, &(*ret)->list, pos);
+        list_insert(&ptr->action_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -18230,9 +18230,9 @@ int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst
                 idmef_action_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->action_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_action_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_action_clone(entry, &new);
-                        prelude_list_add_tail(&dst->action_list, &new->list);
+                        prelude_list_add_tail(&dst->action_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -18299,12 +18299,12 @@ int idmef_assessment_compare(const idmef_assessment_t *obj1, const idmef_assessm
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->action_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_action_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->action_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_action_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -18420,7 +18420,7 @@ int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->alertident_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -18432,7 +18432,7 @@ int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, vo
 
                                prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -18480,7 +18480,7 @@ int _idmef_tool_alert_destroy_child(void *p, idmef_class_child_id_t child, int n
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->alertident_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_alertident_destroy(b);
                                                return 0;
                                        }
@@ -18493,7 +18493,7 @@ int _idmef_tool_alert_destroy_child(void *p, idmef_class_child_id_t child, int n
 
                                prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_alertident_destroy(b);
                                                return 0;
                                        }
@@ -18528,8 +18528,8 @@ static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
                 idmef_alertident_t *entry;
 
                 prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_alertident_destroy(entry);
                 }
         }
@@ -18692,12 +18692,12 @@ int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret
  */
 idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *tool_alert, idmef_alertident_t *alertident_cur)
 {
-        prelude_list_t *tmp = (alertident_cur) ? &alertident_cur->list : NULL;
+        prelude_list_t *tmp = (alertident_cur) ? &((prelude_linked_object_t *) alertident_cur)->_list : NULL;
 
         prelude_return_val_if_fail(tool_alert, NULL);
 
         prelude_list_for_each_continue(&tool_alert->alertident_list, tmp)
-                return prelude_list_entry(tmp, idmef_alertident_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -18719,10 +18719,10 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->alertident_list, &object->list, pos);
+        list_insert(&ptr->alertident_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -18751,7 +18751,7 @@ int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t 
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->alertident_list, &(*ret)->list, pos);
+        list_insert(&ptr->alertident_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -18792,9 +18792,9 @@ int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
                 idmef_alertident_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_alertident_clone(entry, &new);
-                        prelude_list_add_tail(&dst->alertident_list, &new->list);
+                        prelude_list_add_tail(&dst->alertident_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -18859,12 +18859,12 @@ int idmef_tool_alert_compare(const idmef_tool_alert_t *obj1, const idmef_tool_al
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->alertident_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_alertident_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->alertident_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_alertident_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -18971,7 +18971,7 @@ int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, in
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->alertident_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -18983,7 +18983,7 @@ int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, in
 
                                prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -19023,7 +19023,7 @@ int _idmef_correlation_alert_destroy_child(void *p, idmef_class_child_id_t child
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->alertident_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_alertident_destroy(b);
                                                return 0;
                                        }
@@ -19036,7 +19036,7 @@ int _idmef_correlation_alert_destroy_child(void *p, idmef_class_child_id_t child
 
                                prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_alertident_destroy(b);
                                                return 0;
                                        }
@@ -19066,8 +19066,8 @@ static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *
                 idmef_alertident_t *entry;
 
                 prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_alertident_destroy(entry);
                 }
         }
@@ -19169,12 +19169,12 @@ int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_str
  */
 idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlation_alert_t *correlation_alert, idmef_alertident_t *alertident_cur)
 {
-        prelude_list_t *tmp = (alertident_cur) ? &alertident_cur->list : NULL;
+        prelude_list_t *tmp = (alertident_cur) ? &((prelude_linked_object_t *) alertident_cur)->_list : NULL;
 
         prelude_return_val_if_fail(correlation_alert, NULL);
 
         prelude_list_for_each_continue(&correlation_alert->alertident_list, tmp)
-                return prelude_list_entry(tmp, idmef_alertident_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -19196,10 +19196,10 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->alertident_list, &object->list, pos);
+        list_insert(&ptr->alertident_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -19228,7 +19228,7 @@ int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->alertident_list, &(*ret)->list, pos);
+        list_insert(&ptr->alertident_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -19263,9 +19263,9 @@ int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_cor
                 idmef_alertident_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_alertident_clone(entry, &new);
-                        prelude_list_add_tail(&dst->alertident_list, &new->list);
+                        prelude_list_add_tail(&dst->alertident_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -19326,12 +19326,12 @@ int idmef_correlation_alert_compare(const idmef_correlation_alert_t *obj1, const
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->alertident_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_alertident_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->alertident_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_alertident_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -19935,7 +19935,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->analyzer_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -19947,7 +19947,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                                prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -19981,7 +19981,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->source_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_source_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -19993,7 +19993,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                                prelude_list_for_each_reversed(&ptr->source_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_source_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -20015,7 +20015,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->target_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_target_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -20027,7 +20027,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                                prelude_list_for_each_reversed(&ptr->target_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_target_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -20052,7 +20052,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->additional_data_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -20064,7 +20064,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                                prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -20113,7 +20113,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->analyzer_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_analyzer_destroy(b);
                                                return 0;
                                        }
@@ -20126,7 +20126,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_analyzer_destroy(b);
                                                return 0;
                                        }
@@ -20176,7 +20176,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->source_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_source_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_source_destroy(b);
                                                return 0;
                                        }
@@ -20189,7 +20189,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->source_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_source_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_source_destroy(b);
                                                return 0;
                                        }
@@ -20207,7 +20207,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->target_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_target_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_target_destroy(b);
                                                return 0;
                                        }
@@ -20220,7 +20220,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->target_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_target_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_target_destroy(b);
                                                return 0;
                                        }
@@ -20246,7 +20246,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->additional_data_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_additional_data_destroy(b);
                                                return 0;
                                        }
@@ -20259,7 +20259,7 @@ int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_additional_data_destroy(b);
                                                return 0;
                                        }
@@ -20319,8 +20319,8 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
                 idmef_analyzer_t *entry;
 
                 prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_analyzer_destroy(entry);
                 }
         }
@@ -20350,8 +20350,8 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
                 idmef_source_t *entry;
 
                 prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_source_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_source_destroy(entry);
                 }
         }
@@ -20361,8 +20361,8 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
                 idmef_target_t *entry;
 
                 prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_target_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_target_destroy(entry);
                 }
         }
@@ -20377,8 +20377,8 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
                 idmef_additional_data_t *entry;
 
                 prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_additional_data_destroy(entry);
                 }
         }
@@ -20501,12 +20501,12 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
  */
 idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *alert, idmef_analyzer_t *analyzer_cur)
 {
-        prelude_list_t *tmp = (analyzer_cur) ? &analyzer_cur->list : NULL;
+        prelude_list_t *tmp = (analyzer_cur) ? &((prelude_linked_object_t *) analyzer_cur)->_list : NULL;
 
         prelude_return_val_if_fail(alert, NULL);
 
         prelude_list_for_each_continue(&alert->analyzer_list, tmp)
-                return prelude_list_entry(tmp, idmef_analyzer_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -20528,10 +20528,10 @@ void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int 
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->analyzer_list, &object->list, pos);
+        list_insert(&ptr->analyzer_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -20560,7 +20560,7 @@ int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret, int pos
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->analyzer_list, &(*ret)->list, pos);
+        list_insert(&ptr->analyzer_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -20823,12 +20823,12 @@ int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
  */
 idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *alert, idmef_source_t *source_cur)
 {
-        prelude_list_t *tmp = (source_cur) ? &source_cur->list : NULL;
+        prelude_list_t *tmp = (source_cur) ? &((prelude_linked_object_t *) source_cur)->_list : NULL;
 
         prelude_return_val_if_fail(alert, NULL);
 
         prelude_list_for_each_continue(&alert->source_list, tmp)
-                return prelude_list_entry(tmp, idmef_source_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -20850,10 +20850,10 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->source_list, &object->list, pos);
+        list_insert(&ptr->source_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -20882,7 +20882,7 @@ int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->source_list, &(*ret)->list, pos);
+        list_insert(&ptr->source_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -20901,12 +20901,12 @@ int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
  */
 idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *alert, idmef_target_t *target_cur)
 {
-        prelude_list_t *tmp = (target_cur) ? &target_cur->list : NULL;
+        prelude_list_t *tmp = (target_cur) ? &((prelude_linked_object_t *) target_cur)->_list : NULL;
 
         prelude_return_val_if_fail(alert, NULL);
 
         prelude_list_for_each_continue(&alert->target_list, tmp)
-                return prelude_list_entry(tmp, idmef_target_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -20928,10 +20928,10 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->target_list, &object->list, pos);
+        list_insert(&ptr->target_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -20960,7 +20960,7 @@ int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret, int pos)
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->target_list, &(*ret)->list, pos);
+        list_insert(&ptr->target_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -21040,12 +21040,12 @@ int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
  */
 idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *alert, idmef_additional_data_t *additional_data_cur)
 {
-        prelude_list_t *tmp = (additional_data_cur) ? &additional_data_cur->list : NULL;
+        prelude_list_t *tmp = (additional_data_cur) ? &((prelude_linked_object_t *) additional_data_cur)->_list : NULL;
 
         prelude_return_val_if_fail(alert, NULL);
 
         prelude_list_for_each_continue(&alert->additional_data_list, tmp)
-                return prelude_list_entry(tmp, idmef_additional_data_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -21067,10 +21067,10 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->additional_data_list, &object->list, pos);
+        list_insert(&ptr->additional_data_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -21099,7 +21099,7 @@ int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t 
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->additional_data_list, &(*ret)->list, pos);
+        list_insert(&ptr->additional_data_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -21427,9 +21427,9 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 idmef_analyzer_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_analyzer_clone(entry, &new);
-                        prelude_list_add_tail(&dst->analyzer_list, &new->list);
+                        prelude_list_add_tail(&dst->analyzer_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -21462,9 +21462,9 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 idmef_source_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->source_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_source_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_source_clone(entry, &new);
-                        prelude_list_add_tail(&dst->source_list, &new->list);
+                        prelude_list_add_tail(&dst->source_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -21473,9 +21473,9 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 idmef_target_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->target_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_target_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_target_clone(entry, &new);
-                        prelude_list_add_tail(&dst->target_list, &new->list);
+                        prelude_list_add_tail(&dst->target_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -21490,9 +21490,9 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 idmef_additional_data_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_additional_data_clone(entry, &new);
-                        prelude_list_add_tail(&dst->additional_data_list, &new->list);
+                        prelude_list_add_tail(&dst->additional_data_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -21576,12 +21576,12 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->analyzer_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_analyzer_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->analyzer_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_analyzer_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -21617,12 +21617,12 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->source_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_source_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->source_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_source_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -21642,12 +21642,12 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->target_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_target_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->target_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_target_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -21671,12 +21671,12 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->additional_data_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_additional_data_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->additional_data_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_additional_data_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -21820,7 +21820,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->analyzer_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -21832,7 +21832,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
 
                                prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -21863,7 +21863,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->additional_data_list, tmp) {
                                        if ( i++ == n ) {
-                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -21875,7 +21875,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
 
                                prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
                                        if ( i++ == pos ) {
-                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               *ret = prelude_linked_object_get_object(tmp);
                                                return 0;
                                        }
                                }
@@ -21915,7 +21915,7 @@ int _idmef_heartbeat_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->analyzer_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_analyzer_destroy(b);
                                                return 0;
                                        }
@@ -21928,7 +21928,7 @@ int _idmef_heartbeat_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_analyzer_destroy(b);
                                                return 0;
                                        }
@@ -21966,7 +21966,7 @@ int _idmef_heartbeat_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         if ( n >= 0 ) {
                                prelude_list_for_each(&ptr->additional_data_list, tmp) {
                                        if ( i++ == n ) {
-                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_additional_data_destroy(b);
                                                return 0;
                                        }
@@ -21979,7 +21979,7 @@ int _idmef_heartbeat_destroy_child(void *p, idmef_class_child_id_t child, int n)
 
                                prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
                                        if ( i++ == pos ) {
-                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               void *b = prelude_linked_object_get_object(tmp);
                                                idmef_additional_data_destroy(b);
                                                return 0;
                                        }
@@ -22009,8 +22009,8 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
                 idmef_analyzer_t *entry;
 
                 prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_analyzer_destroy(entry);
                 }
         }
@@ -22030,8 +22030,8 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
                 idmef_additional_data_t *entry;
 
                 prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
-                        prelude_list_del_init(&entry->list);
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_list_del_init(tmp);
                         idmef_additional_data_destroy(entry);
                 }
         }
@@ -22133,12 +22133,12 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
  */
 idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *heartbeat, idmef_analyzer_t *analyzer_cur)
 {
-        prelude_list_t *tmp = (analyzer_cur) ? &analyzer_cur->list : NULL;
+        prelude_list_t *tmp = (analyzer_cur) ? &((prelude_linked_object_t *) analyzer_cur)->_list : NULL;
 
         prelude_return_val_if_fail(heartbeat, NULL);
 
         prelude_list_for_each_continue(&heartbeat->analyzer_list, tmp)
-                return prelude_list_entry(tmp, idmef_analyzer_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -22160,10 +22160,10 @@ void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *obje
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->analyzer_list, &object->list, pos);
+        list_insert(&ptr->analyzer_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -22192,7 +22192,7 @@ int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret,
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->analyzer_list, &(*ret)->list, pos);
+        list_insert(&ptr->analyzer_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -22392,12 +22392,12 @@ int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **re
  */
 idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbeat_t *heartbeat, idmef_additional_data_t *additional_data_cur)
 {
-        prelude_list_t *tmp = (additional_data_cur) ? &additional_data_cur->list : NULL;
+        prelude_list_t *tmp = (additional_data_cur) ? &((prelude_linked_object_t *) additional_data_cur)->_list : NULL;
 
         prelude_return_val_if_fail(heartbeat, NULL);
 
         prelude_list_for_each_continue(&heartbeat->additional_data_list, tmp)
-                return prelude_list_entry(tmp, idmef_additional_data_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -22419,10 +22419,10 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
         prelude_return_if_fail(ptr);
         prelude_return_if_fail(object);
 
-        if ( ! prelude_list_is_empty(&object->list) )
-                prelude_list_del_init(&object->list);
+        if ( ! prelude_list_is_empty(&((prelude_linked_object_t *) object)->_list) )
+                prelude_list_del_init(&((prelude_linked_object_t *) object)->_list);
 
-        list_insert(&ptr->additional_data_list, &object->list, pos);
+        list_insert(&ptr->additional_data_list, &((prelude_linked_object_t *) object)->_list, pos);
 }
 
 
@@ -22451,7 +22451,7 @@ int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional
         if ( retval < 0 )
                 return retval;
 
-        list_insert(&ptr->additional_data_list, &(*ret)->list, pos);
+        list_insert(&ptr->additional_data_list, &((prelude_linked_object_t *)(*ret))->_list, pos);
 
         return 0;
 }
@@ -22486,9 +22486,9 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
                 idmef_analyzer_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_analyzer_clone(entry, &new);
-                        prelude_list_add_tail(&dst->analyzer_list, &new->list);
+                        prelude_list_add_tail(&dst->analyzer_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -22513,9 +22513,9 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
                 idmef_additional_data_t *entry, *new;
 
                 prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
-                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                        entry = prelude_linked_object_get_object(tmp);
                         idmef_additional_data_clone(entry, &new);
-                        prelude_list_add_tail(&dst->additional_data_list, &new->list);
+                        prelude_list_add_tail(&dst->additional_data_list, &((prelude_linked_object_t *) new)->_list);
                 }
         }
 
@@ -22576,12 +22576,12 @@ int idmef_heartbeat_compare(const idmef_heartbeat_t *obj1, const idmef_heartbeat
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->analyzer_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_analyzer_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->analyzer_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_analyzer_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 
@@ -22615,12 +22615,12 @@ int idmef_heartbeat_compare(const idmef_heartbeat_t *obj1, const idmef_heartbeat
                         entry1 = entry2 = NULL;
 
                         prelude_list_for_each_continue(&obj1->additional_data_list, tmp1) {
-                                entry1 = prelude_list_entry(tmp1, idmef_additional_data_t, list);
+                                entry1 = prelude_linked_object_get_object(tmp1);
                                 break;
                         }
 
                         prelude_list_for_each_continue(&obj2->additional_data_list, tmp2) {
-                                entry2 = prelude_list_entry(tmp2, idmef_additional_data_t, list);
+                                entry2 = prelude_linked_object_get_object(tmp2);
                                 break;
                         }
 

@@ -343,3 +343,16 @@ const char *idmef_class_get_name(idmef_class_id_t class)
 
         return object_data[class].name;
 }
+
+
+
+prelude_bool_t idmef_class_is_listed(idmef_class_id_t class)
+{
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+
+        return object_data[class].is_listed;
+}

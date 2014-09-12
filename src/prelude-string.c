@@ -93,6 +93,23 @@
 } while(0)
 
 
+
+struct prelude_string {
+        PRELUDE_LINKED_OBJECT;
+
+        int flags;
+        int refcount;
+
+        union {
+                char *rwbuf;
+                const char *robuf;
+        } data;
+
+        size_t size;
+        size_t index;
+};
+
+
 static int string_buf_alloc(prelude_string_t *string, size_t len)
 {
         /*
@@ -174,7 +191,7 @@ int prelude_string_new(prelude_string_t **string)
                 return prelude_error_from_errno(errno);
 
         (*string)->refcount = 1;
-        prelude_list_init(&(*string)->list);
+        prelude_list_init(&(*string)->_list);
         (*string)->flags = PRELUDE_STRING_OWN_STRUCTURE;
 
         return 0;
@@ -757,8 +774,8 @@ void prelude_string_destroy(prelude_string_t *string)
         if ( --string->refcount )
                 return;
 
-        if ( ! prelude_list_is_empty(&string->list) )
-                prelude_list_del_init(&string->list);
+        if ( ! prelude_list_is_empty(&string->_list) )
+                prelude_list_del_init(&string->_list);
 
         prelude_string_destroy_internal(string);
 

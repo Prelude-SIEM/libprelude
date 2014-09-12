@@ -132,6 +132,7 @@ typedef struct \{
         int (*print)(const void *obj, prelude_io_t *fd);
         void *(*ref)(void *src);
         void (*destroy)(void *obj);
+        prelude_bool_t is_listed;
 \} object_data_t;
 
 
@@ -160,7 +161,8 @@ const object_data_t object_data[] = \{
                       "(void *) idmef_$obj->{short_typename}_compare, ",
                       "(void *) idmef_$obj->{short_typename}_print, ",
                       "(void *) idmef_$obj->{short_typename}_ref, ",
-                      "(void *) idmef_$obj->{short_typename}_destroy \}, ",
+                      "(void *) idmef_$obj->{short_typename}_destroy, ",
+                      "$obj->{is_listed} \},",
                       "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_STRUCT );
 
         $self->output("        \{ ",
@@ -176,7 +178,8 @@ const object_data_t object_data[] = \{
                       "NULL, ",
                       "NULL, ",
                       "NULL, ",
-                      "NULL ",
+                      "NULL, ",
+                      "0 ",
                       "\}, ",
                       "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_ENUM );
     }

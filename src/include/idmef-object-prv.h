@@ -24,8 +24,8 @@
 #ifndef _LIBPRELUDE_IDMEF_OBJECT_PRV_H
 #define _LIBPRELUDE_IDMEF_OBJECT_PRV_H
 
-#define IDMEF_OBJECT int _idmef_object_id
-#define IDMEF_LINKED_OBJECT IDMEF_OBJECT; prelude_list_t list
+#define IDMEF_OBJECT unsigned int _idmef_object_id
+#define IDMEF_LINKED_OBJECT IDMEF_OBJECT; prelude_list_t _list
 
 struct idmef_object {
         IDMEF_OBJECT;
