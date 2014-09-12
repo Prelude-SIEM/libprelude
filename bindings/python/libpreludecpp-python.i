@@ -192,6 +192,8 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
+#ifdef SWIG_COMPILE_LIBPRELUDE
+
 %extend Prelude::IDMEFValue {
         long __hash__() {
                 return $self->GetType();
@@ -201,6 +203,9 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 %extend Prelude::IDMEF {
         %insert("python") %{
+        def __setitem__(self, key, value):
+                return self.Set(key, value)
+
         def __getitem__(self, key):
                 try:
                         return self.Get(key)
@@ -228,6 +233,8 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
                 return *self;
         }
 }
+
+#endif
 
 %fragment("IDMEFValueList_to_SWIG", "header", fragment="IDMEFValue_to_SWIG") {
 int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);

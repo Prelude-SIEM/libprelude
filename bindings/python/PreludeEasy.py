@@ -554,6 +554,9 @@ class IDMEF(_object):
     def ToString(self): return _PreludeEasy.IDMEF_ToString(self)
     def __str__(self): return _PreludeEasy.IDMEF___str__(self)
     def __eq__(self, *args): return _PreludeEasy.IDMEF___eq__(self, *args)
+    def __setitem__(self, key, value):
+            return self.Set(key, value)
+
     def __getitem__(self, key):
             try:
                     return self.Get(key)

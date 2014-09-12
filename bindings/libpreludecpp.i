@@ -101,6 +101,7 @@ typedef signed int prelude_error_t;
 %template() std::vector<Prelude::IDMEFValue>;
 %template() std::vector<Prelude::Connection>;
 
+#ifdef SWIG_COMPILE_LIBPRELUDE
 %extend Prelude::IDMEF {
         Prelude::IDMEFValue Get(const char *path) {
                 Prelude::IDMEFValue value;
@@ -129,6 +130,7 @@ typedef signed int prelude_error_t;
                 return value;
         }
 }
+#endif
 
 %ignore Prelude::IDMEF::Get;
 %ignore Prelude::IDMEFPath::Get;
