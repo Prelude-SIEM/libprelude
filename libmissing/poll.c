@@ -1,7 +1,7 @@
 /* Emulation for poll(2)
    Contributed by Paolo Bonzini.
 
-   Copyright 2001-2003, 2006-2013 Free Software Foundation, Inc.
+   Copyright 2001-2003, 2006-2014 Free Software Foundation, Inc.
 
    This file is part of gnulib.
 
@@ -70,9 +70,11 @@
 
 #ifdef WINDOWS_NATIVE
 
-/* Optimized test whether a HANDLE refers to a console.
-   See <http://lists.gnu.org/archive/html/bug-gnulib/2009-08/msg00065.html>.  */
-#define IsConsoleHandle(h) (((intptr_t) (h) & 3) == 3)
+static BOOL IsConsoleHandle (HANDLE h)
+{
+  DWORD mode;
+  return GetConsoleMode (h, &mode) != 0;
+}
 
 static BOOL
 IsSocketHandle (HANDLE h)

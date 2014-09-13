@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2013 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -726,14 +726,6 @@ check_PROGRAMS += test-lstat
 EXTRA_DIST += test-lstat.h test-lstat.c signature.h macros.h
 
 ## end   gnulib module lstat-tests
-
-## begin gnulib module malloc-gnu-tests
-
-TESTS += test-malloc-gnu
-check_PROGRAMS += test-malloc-gnu
-EXTRA_DIST += test-malloc-gnu.c
-
-## end   gnulib module malloc-gnu-tests
 
 ## begin gnulib module malloca
 

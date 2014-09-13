@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2013 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -178,8 +178,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module lseek-tests:
   # Code from module lstat:
   # Code from module lstat-tests:
-  # Code from module malloc-gnu:
-  # Code from module malloc-gnu-tests:
   # Code from module malloc-posix:
   # Code from module malloca:
   # Code from module malloca-tests:
@@ -587,11 +585,6 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([lseek])
   fi
   gl_UNISTD_MODULE_INDICATOR([lseek])
-  gl_FUNC_MALLOC_GNU
-  if test $REPLACE_MALLOC = 1; then
-    AC_LIBOBJ([malloc])
-  fi
-  gl_MODULE_INDICATOR([malloc-gnu])
   gl_FUNC_MALLOC_POSIX
   if test $REPLACE_MALLOC = 1; then
     AC_LIBOBJ([malloc])
@@ -1653,7 +1646,6 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-lseek.sh
   tests/test-lstat.c
   tests/test-lstat.h
-  tests/test-malloc-gnu.c
   tests/test-malloca.c
   tests/test-math.c
   tests/test-mbrtowc-w32-1.sh
