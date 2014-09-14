@@ -17848,6 +17848,58 @@ fail:
 }
 
 
+
+/*
+  Document-method: PreludeEasy::IDMEF.==
+
+  call-seq:
+    ==(idmef) -> int
+
+Equality comparison operator.
+*/
+SWIGINTERN VALUE
+_wrap_IDMEF___eq__(int argc, VALUE *argv, VALUE self) {
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","operator ==", 1, self )); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","operator ==", 2, argv[0] )); 
+  }
+  arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+  {
+    try {
+      result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      rb_raise(rb_eEOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE
 _wrap_IDMEF_Write(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -18910,6 +18962,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   rb_define_method(SwigClassIDMEF.klass, "GetId", VALUEFUNC(_wrap_IDMEF_GetId), -1);
   rb_define_method(SwigClassIDMEF.klass, "ToString", VALUEFUNC(_wrap_IDMEF_ToString), -1);
   rb_define_method(SwigClassIDMEF.klass, "to_s", VALUEFUNC(_wrap_IDMEF___str__), -1);
+  rb_define_method(SwigClassIDMEF.klass, "==", VALUEFUNC(_wrap_IDMEF___eq__), -1);
   rb_define_method(SwigClassIDMEF.klass, "Write", VALUEFUNC(_wrap_IDMEF_Write), -1);
   rb_define_method(SwigClassIDMEF.klass, "Read", VALUEFUNC(_wrap_IDMEF_Read), -1);
   rb_define_method(SwigClassIDMEF.klass, ">>", VALUEFUNC(_wrap_IDMEF___rshift__), -1);

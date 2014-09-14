@@ -62,6 +62,7 @@ namespace Prelude {
                 operator const std::string() const;
                 operator idmef_object_t *() const;
                 IDMEF &operator = (const IDMEF &idmef);
+                int operator == (const IDMEF *idmef);
         };
 };
 

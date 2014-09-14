@@ -699,6 +699,10 @@ sub ACQUIRE {
 ############# Class : PreludeEasy::IDMEF ##############
 
 package PreludeEasy::IDMEF;
+use overload
+    "==" => sub { $_[0]->__eq__($_[1])},
+    "=" => sub { my $class = ref($_[0]); $class->new($_[0]) },
+    "fallback" => 1;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( PreludeEasy );
 %OWNER = ();
@@ -724,6 +728,7 @@ sub new {
 *Clone = *PreludeEasyc::IDMEF_Clone;
 *GetId = *PreludeEasyc::IDMEF_GetId;
 *ToString = *PreludeEasyc::IDMEF_ToString;
+*__eq__ = *PreludeEasyc::IDMEF___eq__;
 *Write = *PreludeEasyc::IDMEF_Write;
 *Read = *PreludeEasyc::IDMEF_Read;
 *Get = *PreludeEasyc::IDMEF_Get;

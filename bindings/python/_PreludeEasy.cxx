@@ -18361,6 +18361,48 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF___eq__",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___eq__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF___eq__" "', argument " "2"" of type '" "Prelude::IDMEF const *""'"); 
+  }
+  arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+  {
+    try {
+      result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_IDMEF_Write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -18789,6 +18831,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"IDMEF_GetId", _wrap_IDMEF_GetId, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_ToString", _wrap_IDMEF_ToString, METH_VARARGS, NULL},
 	 { (char *)"IDMEF___repr__", _wrap_IDMEF___repr__, METH_VARARGS, NULL},
+	 { (char *)"IDMEF___eq__", _wrap_IDMEF___eq__, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_Write", _wrap_IDMEF_Write, METH_VARARGS, NULL},
 	 { (char *)"IDMEF_Read", _wrap_IDMEF_Read, METH_VARARGS, NULL},
 	 { (char *)"IDMEF___rshift__", _wrap_IDMEF___rshift__, METH_VARARGS, NULL},

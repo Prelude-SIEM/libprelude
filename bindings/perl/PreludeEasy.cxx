@@ -16786,6 +16786,51 @@ XS(_wrap_IDMEF_ToString) {
 }
 
 
+XS(_wrap_IDMEF___eq__) {
+  {
+    Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+    Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: IDMEF___eq__(self,idmef);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___eq__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF___eq__" "', argument " "2"" of type '" "Prelude::IDMEF const *""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+    {
+      try {
+        result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_IDMEF_Write) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -17280,6 +17325,7 @@ static swig_command_info swig_commands[] = {
 {"PreludeEasyc::IDMEF_Clone", _wrap_IDMEF_Clone},
 {"PreludeEasyc::IDMEF_GetId", _wrap_IDMEF_GetId},
 {"PreludeEasyc::IDMEF_ToString", _wrap_IDMEF_ToString},
+{"PreludeEasyc::IDMEF___eq__", _wrap_IDMEF___eq__},
 {"PreludeEasyc::IDMEF_Write", _wrap_IDMEF_Write},
 {"PreludeEasyc::IDMEF_Read", _wrap_IDMEF_Read},
 {"PreludeEasyc::IDMEF_Get", _wrap_IDMEF_Get},

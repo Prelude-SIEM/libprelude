@@ -155,6 +155,18 @@ IDMEFValue IDMEF::Get(const char *path)
 }
 
 
+int IDMEF::operator == (const IDMEF *idmef)
+{
+        if ( ! idmef )
+                return 0;
+
+        if ( _object == idmef->_object )
+                return 1;
+
+        return idmef_object_compare(_object, idmef->_object) == 0 ? 1 : 0;
+}
+
+
 IDMEF IDMEF::Clone()
 {
         int ret;

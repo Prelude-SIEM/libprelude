@@ -12502,6 +12502,44 @@ fail:
 }
 
 
+static int _wrap_IDMEF___eq(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("Prelude::IDMEF::operator ==",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::operator ==",1,"Prelude::IDMEF *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEF::operator ==",2,"Prelude::IDMEF const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF___eq",1,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEF___eq",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  {
+    try {
+      result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_IDMEF___tostring(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -12687,6 +12725,7 @@ static swig_lua_method swig_IDMEF_methods[]= {
     { "Clone", _wrap_IDMEF_Clone},
     { "GetId", _wrap_IDMEF_GetId},
     { "ToString", _wrap_IDMEF_ToString},
+    { "__eq", _wrap_IDMEF___eq},
     { "__tostring", _wrap_IDMEF___tostring},
     { "Write", _wrap_IDMEF_Write},
     { "Read", _wrap_IDMEF_Read},
@@ -12694,6 +12733,7 @@ static swig_lua_method swig_IDMEF_methods[]= {
     {0,0}
 };
 static swig_lua_method swig_IDMEF_meta[] = {
+    { "__eq", _wrap_IDMEF___eq},
     { "__tostring", _wrap_IDMEF___tostring},
     {0,0}
 };
