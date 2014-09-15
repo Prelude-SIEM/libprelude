@@ -1,4 +1,26 @@
-AC_INIT(libprelude, 1.2.6rc1)
+m4_define([libprelude_major_version], [1])
+m4_define([libprelude_minor_version], [2])
+m4_define([libprelude_micro_version], [6])
+m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_RC])
+m4_define([libprelude_serial_version], [1])
+
+m4_define([serial_string], ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_ALPHA, alpha,
+                                  ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_BETA, beta,
+                                  ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_RC, rc))))
+m4_append([serial_string], ifelse(serial_string, [],
+                                  ifelse(libprelude_serial_version, 0, , .libprelude_serial_version),
+                                  ifelse(libprelude_serial_version, 0, [m4_fatal(Release level 'serial_string' and serial 'libprelude_serial_version' are incompatible)], libprelude_serial_version)))
+
+AC_INIT(libprelude, m4_join([.], [libprelude_major_version],
+                                 [libprelude_minor_version],
+                                 m4_join([], libprelude_micro_version, serial_string)))
+
+LIBPRELUDE_MAJOR_VERSION=libprelude_major_version
+LIBPRELUDE_MINOR_VERSION=libprelude_minor_version
+LIBPRELUDE_MICRO_VERSION=libprelude_micro_version
+LIBPRELUDE_LEVEL_VERSION=libprelude_level_version
+LIBPRELUDE_SERIAL_VERSION=libprelude_serial_version
+
 
 dnl **********************************************************
 dnl * Library soname (http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91)
@@ -693,6 +715,12 @@ AC_SUBST(LIBPRELUDE_SONAME)
 AC_SUBST(LIBPRELUDECPP_SONAME)
 AC_SUBST(LIBPRELUDE_LIBS)
 AC_SUBST(LIBPRELUDE_CFLAGS)
+AC_SUBST(LIBPRELUDE_VERSION)
+AC_SUBST(LIBPRELUDE_MAJOR_VERSION)
+AC_SUBST(LIBPRELUDE_MINOR_VERSION)
+AC_SUBST(LIBPRELUDE_MICRO_VERSION)
+AC_SUBST(LIBPRELUDE_LEVEL_VERSION)
+AC_SUBST(LIBPRELUDE_SERIAL_VERSION)
 AC_SUBST(PRELUDE_ADMIN_LIBS)
 AC_SUBST(PRELUDE_SPOOL_DIR)
 AC_SUBST(PRELUDE_CONFIG_DIR)

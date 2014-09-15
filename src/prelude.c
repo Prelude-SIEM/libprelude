@@ -305,6 +305,28 @@ void prelude_deinit(void)
 
 
 
+static int levelstr_to_int(const char *wanted)
+{
+        int i;
+        struct {
+                int level;
+                const char *level_str;
+        } tbl[] = {
+                { LIBPRELUDE_RELEASE_LEVEL_ALPHA, "alpha" },
+                { LIBPRELUDE_RELEASE_LEVEL_BETA, "beta"   },
+                { LIBPRELUDE_RELEASE_LEVEL_RC, "rc"       }
+        };
+
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcmp(wanted, tbl[i].level_str) == 0 )
+                        return tbl[i].level;
+        }
+
+        return -1;
+}
+
+
+
 /**
  * prelude_check_version:
  * @req_version: The minimum acceptable version number.
@@ -319,28 +341,27 @@ void prelude_deinit(void)
 const char *prelude_check_version(const char *req_version)
 {
         int ret;
-        int major, minor, micro, patch = 0;
-        int rq_major, rq_minor, rq_micro, rq_patch = 0;
+        unsigned int hexreq;
+        char rq_levels[6] = { 0 };
+        int rq_major, rq_minor, rq_micro, rq_level = 0, rq_patch = 0;
 
         if ( ! req_version )
                 return VERSION;
 
-        ret = sscanf(VERSION, "%d.%d.%d.%d", &major, &minor, &micro, &patch);
+        ret = sscanf(req_version, "%d.%d.%d%5[^0-9]%d", &rq_major, &rq_minor, &rq_micro, rq_levels, &rq_patch);
         if ( ret < 3 )
                 return NULL;
 
-        ret = sscanf(req_version, "%d.%d.%d.%d", &rq_major, &rq_minor, &rq_micro, &rq_patch);
-        if ( ret < 3 )
-                return NULL;
-
-        if ( major > rq_major
-             || (major == rq_major && minor > rq_minor)
-             || (major == rq_major && minor == rq_minor && micro > rq_micro)
-             || (major == rq_major && minor == rq_minor && micro == rq_micro && patch >= rq_patch) ) {
-                return VERSION;
+        if ( *rq_levels == 0 || *rq_levels == '.' )
+                rq_level = LIBPRELUDE_RELEASE_LEVEL_FINAL;
+        else {
+                rq_level = levelstr_to_int(rq_levels);
+                if ( rq_level < 0 )
+                        return NULL;
         }
 
-        return NULL;
+        hexreq = (rq_major << 24) | (rq_minor << 16) | (rq_micro << 8) | (rq_level << 4) | (rq_patch << 0);
+        return (hexreq <= LIBPRELUDE_HEXVERSION) ? VERSION : NULL;
 }
 
 
