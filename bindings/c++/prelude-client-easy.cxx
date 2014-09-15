@@ -15,22 +15,22 @@ void ClientEasy::setup_analyzer(idmef_analyzer_t *analyzer,
         ret = idmef_analyzer_new_model(analyzer, &string);
         if ( ret < 0 )
                 throw PreludeError(ret);
-        prelude_string_set_ref(string, _model);
+        prelude_string_set_dup(string, _model);
 
         ret = idmef_analyzer_new_class(analyzer, &string);
         if ( ret < 0 )
                 throw PreludeError(ret);
-        prelude_string_set_ref(string, _class);
+        prelude_string_set_dup(string, _class);
 
         ret = idmef_analyzer_new_manufacturer(analyzer, &string);
         if ( ret < 0 )
                 throw PreludeError(ret);
-        prelude_string_set_ref(string, _manufacturer);
+        prelude_string_set_dup(string, _manufacturer);
 
         ret = idmef_analyzer_new_version(analyzer, &string);
         if ( ret < 0 )
                 throw PreludeError(ret);
-        prelude_string_set_ref(string, _version);
+        prelude_string_set_dup(string, _version);
 }
 
 
