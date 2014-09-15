@@ -40,6 +40,9 @@
 
 #include "prelude-timer.h"
 
+#ifndef MIN
+# define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
 
 static PRELUDE_LIST(timer_list);
 static int next_wakeup = 0;
@@ -336,6 +339,7 @@ static void timer_init_unlocked(prelude_timer_t *timer)
                 prev = &timer_list;
 
         prelude_list_add(prev, &timer->list);
+        next_wakeup = MIN(next_wakeup, prelude_timer_get_expire(timer));
 }
 
 
