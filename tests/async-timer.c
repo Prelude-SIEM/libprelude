@@ -66,5 +66,6 @@ int main(void)
         prelude_async_exit();
         assert(async_done);
 
+        prelude_deinit();
         exit(0);
 }

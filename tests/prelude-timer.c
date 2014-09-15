@@ -90,6 +90,7 @@ int main(int argc, char **argv)
         }
 
         assert(timer_alive == 0);
+        prelude_deinit();
 
         return 0;
 }
