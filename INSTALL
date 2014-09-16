@@ -9,6 +9,29 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved.  This file is offered as-is,
 without warranty of any kind.
 
+Dependencies
+============
+
+   For Redhat based systems (CentOS, Fedora, etc.)
+       Minimal            :    gcc gcc-c++ gnutls-devel (Fedora += libgcrypt-devel)
+       Documentation      :    gtk-doc
+       Binding Perl       :    perl perl-devel
+       Binding Python     :    python python-devel
+       Binding LUA        :    lua lua-devel
+       Binding Ruby       :    ruby ruby-devel
+
+   For Debian systems
+       Minimal            :    gcc g++ libcurl4-gnutls-dev
+       Documentation      :    gtk-doc-tools
+       Binding Perl       :    perl
+       Binding Python     :    python python-dev
+       Binding Ruby       :    ruby ruby-dev
+
+       For Debian 7
+              Binding LUA :    lua5.2 lua5.2-dev
+       For Debian 6
+              Binding LUA :    lua5.1 lua5.1-dev
+
 Basic Installation
 ==================
 
