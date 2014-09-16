@@ -1,3 +1,72 @@
+2014-09-16, libprelude-1.2.6rc1:
+
+Author: Yoann Vandoorselaere
+
+- Various improvements
+
+    - Fix valgrind memory leak warnings
+
+    - Allow creation of IDMEFPath relative to a root
+
+        Example: idmef_path_new_from_root_fast(&path, IDMEF_CLASS_ID_ANALYZER, "name");
+        will create an IDMEFPath that references the 'name' attribute of an
+        idmef_analyzer_t object.
+
+    - Introduce the idmef_object_t datatype
+
+        IDMEF datatype now contain their own ID, so that it is possible for API
+        using them anonymously to know which object they are currently being
+        dealing with.
+
+    - Ability to cast from IDMEFCriteria to idmef_criteria_t
+
+    - Implement idmef_class_print() function
+      It is now possible to generically convert any IDMEF object to string.
+
+    - IDMEFPath support for key as index
+
+        Example: idmef.Set("alert.additional_data('My Key').data", "data");
+        will create a new AdditionalData object whose key is 'My Key',
+        and data is 'data' (the object "meaning" field will thus contain the key).
+
+    - Verify ABI compatibility in prelude_init()
+
+    - Support for IDMEF object in Set()
+
+- Corrections
+
+    - Newly added timer did not expire when expected
+
+    - Add missing IDMEF equal operator
+
+    - prelude-linked-object members ordering fixes, so that the members are
+      synchronized with listed idmef_object_t.
+
+    - Fix asynchronous stack / high level bindings callback deadlock
+
+- Compilation fixes
+
+    - Various SWIG fixes
+
+    - Use Prelude namespace explicitely, prevent error when included from other project
+
+    - Include high- and low-level bindings generated code in the repository
+
+        A reference version avoids using buggy or too old SWIG versions,
+        do not automatically regenerate bindings by default.
+        Warning : not compatible with lua 5.0 on Debian 7 and maybe other Linux
+
+    - Enable Python 2.x Unicode coercion (include a SWIG patch from Brian Cole)
+
+    - From now on, SWIG interface files are now installed
+      This will be useful in order to generate libpreludedb bindings.
+
+    - Fix make distcheck
+
+    - Fix compilation with recent Flex version, update C code.
+
+
+
 * 2014-07-07, libprelude-1.2.5:
 
 - Various improvements
