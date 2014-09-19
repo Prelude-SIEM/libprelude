@@ -9661,6 +9661,32 @@ free_Prelude_PreludeError(Prelude::PreludeError *arg1) {
 
 SWIGINTERN VALUE
 _wrap_new_PreludeError__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Prelude::PreludeError *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  {
+    try {
+      result = (Prelude::PreludeError *)new Prelude::PreludeError();
+      DATA_PTR(self) = result;
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      rb_raise(rb_eEOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -9711,8 +9737,9 @@ _wrap_PreludeError_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
-  std::string arg1 ;
+_wrap_new_PreludeError__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  std::string *arg1 = 0 ;
+  int res1 = SWIG_OLDOBJ ;
   Prelude::PreludeError *result = 0 ;
   
   if ((argc < 1) || (argc > 1)) {
@@ -9720,16 +9747,18 @@ _wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   {
     std::string *ptr = (std::string *)0;
-    int res = SWIG_AsPtr_std_string(argv[0], &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::string const","PreludeError", 1, argv[0] )); 
+    res1 = SWIG_AsPtr_std_string(argv[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "std::string const &","PreludeError", 1, argv[0] )); 
     }
-    arg1 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "std::string const &","PreludeError", 1, argv[0])); 
+    }
+    arg1 = ptr;
   }
   {
     try {
-      result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
+      result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
@@ -9740,8 +9769,10 @@ _wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
       SWIG_fail;
     }
   }
+  if (SWIG_IsNewObj(res1)) delete arg1;
   return self;
 fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
   return Qnil;
 }
 
@@ -9756,6 +9787,9 @@ SWIGINTERN VALUE _wrap_new_PreludeError(int nargs, VALUE *args, VALUE self) {
   for (ii = 0; (ii < argc); ++ii) {
     argv[ii] = args[ii];
   }
+  if (argc == 0) {
+    return _wrap_new_PreludeError__SWIG_0(nargs, args, self);
+  }
   if (argc == 1) {
     int _v;
     {
@@ -9763,7 +9797,7 @@ SWIGINTERN VALUE _wrap_new_PreludeError(int nargs, VALUE *args, VALUE self) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_0(nargs, args, self);
+      return _wrap_new_PreludeError__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 1) {
@@ -9771,14 +9805,15 @@ SWIGINTERN VALUE _wrap_new_PreludeError(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_1(nargs, args, self);
+      return _wrap_new_PreludeError__SWIG_2(nargs, args, self);
     }
   }
   
 fail:
   Ruby_Format_OverloadedError( argc, 1, "PreludeError.new", 
+    "    PreludeError.new()\n"
     "    PreludeError.new(int error)\n"
-    "    PreludeError.new(std::string const message)\n");
+    "    PreludeError.new(std::string const &message)\n");
   
   return Qnil;
 }

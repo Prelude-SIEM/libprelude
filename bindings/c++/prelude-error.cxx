@@ -31,7 +31,13 @@
 using namespace Prelude;
 
 
-PreludeError::PreludeError(const std::string message) throw()
+PreludeError::PreludeError(void) throw()
+{
+        _error = -1;
+}
+
+
+PreludeError::PreludeError(const std::string &message) throw()
 {
         _error = -1;
         _message = message;
@@ -65,5 +71,5 @@ PreludeError::operator const char *() const
 
 PreludeError::operator int () const
 {
-	return prelude_error_get_code(_error);
+        return prelude_error_get_code(_error);
 }

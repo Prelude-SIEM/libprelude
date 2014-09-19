@@ -10166,6 +10166,30 @@ fail:
 
 SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
+  Prelude::PreludeError *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_PreludeError")) SWIG_fail;
+  {
+    try {
+      result = (Prelude::PreludeError *)new Prelude::PreludeError();
+    } catch(Prelude::PreludeError &e) {
+      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      PyErr_SetString(PyExc_EOFError, e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -10197,25 +10221,28 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  std::string arg1 ;
+  std::string *arg1 = 0 ;
+  int res1 = SWIG_OLDOBJ ;
   PyObject * obj0 = 0 ;
   Prelude::PreludeError *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:new_PreludeError",&obj0)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
-    int res = SWIG_AsPtr_std_string(obj0, &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const""'"); 
+    res1 = SWIG_AsPtr_std_string(obj0, &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const &""'"); 
     }
-    arg1 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
   }
   {
     try {
-      result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
+      result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.GetCode() == PRELUDE_ERROR_EOF )
       PyErr_SetString(PyExc_EOFError, e.what());
@@ -10226,8 +10253,10 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     }
   }
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_NEW |  0 );
+  if (SWIG_IsNewObj(res1)) delete arg1;
   return resultobj;
 fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
   return NULL;
 }
 
@@ -10242,6 +10271,9 @@ SWIGINTERN PyObject *_wrap_new_PreludeError(PyObject *self, PyObject *args) {
   for (ii = 0; (ii < 1) && (ii < argc); ii++) {
     argv[ii] = PyTuple_GET_ITEM(args,ii);
   }
+  if (argc == 0) {
+    return _wrap_new_PreludeError__SWIG_0(self, args);
+  }
   if (argc == 1) {
     int _v;
     {
@@ -10249,7 +10281,7 @@ SWIGINTERN PyObject *_wrap_new_PreludeError(PyObject *self, PyObject *args) {
       _v = SWIG_CheckState(res);
     }
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_0(self, args);
+      return _wrap_new_PreludeError__SWIG_1(self, args);
     }
   }
   if (argc == 1) {
@@ -10257,15 +10289,16 @@ SWIGINTERN PyObject *_wrap_new_PreludeError(PyObject *self, PyObject *args) {
     int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_1(self, args);
+      return _wrap_new_PreludeError__SWIG_2(self, args);
     }
   }
   
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_PreludeError'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::PreludeError::PreludeError()\n"
     "    Prelude::PreludeError::PreludeError(int)\n"
-    "    Prelude::PreludeError::PreludeError(std::string const)\n");
+    "    Prelude::PreludeError::PreludeError(std::string const &)\n");
   return 0;
 }
 

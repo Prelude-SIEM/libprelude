@@ -35,14 +35,15 @@
 
 namespace Prelude {
         class PreludeError: public std::exception {
-            private:
+            protected:
                 int _error;
                 std::string _message;
 
             public:
                 virtual ~PreludeError() throw() {};
+                PreludeError(void) throw();
                 PreludeError(int error) throw();
-                PreludeError(const std::string message) throw();
+                PreludeError(const std::string &message) throw();
 
                 int GetCode(void);
 

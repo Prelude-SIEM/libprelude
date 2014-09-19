@@ -6676,6 +6676,31 @@ XS(_wrap_delete_PreludeError) {
 
 XS(_wrap_new_PreludeError__SWIG_0) {
   {
+    int argvi = 0;
+    Prelude::PreludeError *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_PreludeError();");
+    }
+    {
+      try {
+        result = (Prelude::PreludeError *)new Prelude::PreludeError();
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_PreludeError__SWIG_1) {
+  {
     int arg1 ;
     int val1 ;
     int ecode1 = 0 ;
@@ -6709,9 +6734,10 @@ XS(_wrap_new_PreludeError__SWIG_0) {
 }
 
 
-XS(_wrap_new_PreludeError__SWIG_1) {
+XS(_wrap_new_PreludeError__SWIG_2) {
   {
-    std::string arg1 ;
+    std::string *arg1 = 0 ;
+    int res1 = SWIG_OLDOBJ ;
     int argvi = 0;
     Prelude::PreludeError *result = 0 ;
     dXSARGS;
@@ -6721,26 +6747,28 @@ XS(_wrap_new_PreludeError__SWIG_1) {
     }
     {
       std::string *ptr = (std::string *)0;
-      int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), &ptr);
-      if (!SWIG_IsOK(res) || !ptr) {
-        SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const""'"); 
+      res1 = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), &ptr);
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const &""'"); 
       }
-      arg1 = *ptr;
-      if (SWIG_IsNewObj(res)) delete ptr;
+      if (!ptr) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const &""'"); 
+      }
+      arg1 = ptr;
     }
     {
       try {
-        result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
+        result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
       }
     }
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
+    if (SWIG_IsNewObj(res1)) delete arg1;
     XSRETURN(argvi);
   fail:
-    
+    if (SWIG_IsNewObj(res1)) delete arg1;
     SWIG_croak_null();
   }
 }
@@ -6752,6 +6780,14 @@ XS(_wrap_new_PreludeError) {
   {
     unsigned long _index = 0;
     SWIG_TypeRank _rank = 0; 
+    if (items == 0) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 1;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
     if (items == 1) {
       SWIG_TypeRank _ranki = 0;
       SWIG_TypeRank _rankm = 0;
@@ -6762,26 +6798,6 @@ XS(_wrap_new_PreludeError) {
           int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
-      }
-      if (!_v) goto check_1;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 1;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_1:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), (std::string**)(0));
-        _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_2;
       _ranki += _v*_pi;
@@ -6794,12 +6810,34 @@ XS(_wrap_new_PreludeError) {
     }
   check_2:
     
+    if (items == 1) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), (std::string**)(0));
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 3;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_3:
+    
   dispatch:
     switch(_index) {
     case 1:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_PreludeError__SWIG_0); return;
     case 2:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_PreludeError__SWIG_1); return;
+    case 3:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_PreludeError__SWIG_2); return;
     }
   }
   

@@ -6685,6 +6685,30 @@ static swig_lua_class _wrap_class_PreludeLog = { "PreludeLog", "PreludeLog", &SW
 
 static int _wrap_new_PreludeError__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
+  Prelude::PreludeError *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::PreludeError::PreludeError",0,0)
+  {
+    try {
+      result = (Prelude::PreludeError *)new Prelude::PreludeError();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__PreludeError,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PreludeError__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
   int arg1 ;
   Prelude::PreludeError *result = 0 ;
   
@@ -6710,17 +6734,18 @@ fail:
 }
 
 
-static int _wrap_new_PreludeError__SWIG_1(lua_State* L) {
+static int _wrap_new_PreludeError__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
-  std::string arg1 ;
+  std::string *arg1 = 0 ;
+  std::string temp1 ;
   Prelude::PreludeError *result = 0 ;
   
   SWIG_check_num_args("Prelude::PreludeError::PreludeError",1,1)
-  if(!lua_isstring(L,1)) SWIG_fail_arg("Prelude::PreludeError::PreludeError",1,"std::string const");
-  (&arg1)->assign(lua_tostring(L,1),lua_rawlen(L,1));
+  if(!lua_isstring(L,1)) SWIG_fail_arg("Prelude::PreludeError::PreludeError",1,"std::string const &");
+  temp1.assign(lua_tostring(L,1),lua_rawlen(L,1)); arg1=&temp1;
   {
     try {
-      result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
+      result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -6744,13 +6769,16 @@ static int _wrap_new_PreludeError(lua_State* L) {
   };
   
   argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_PreludeError__SWIG_0(L);
+  }
   if (argc == 1) {
     int _v;
     {
       _v = lua_isnumber(L,argv[0]);
     }
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_0(L);
+      return _wrap_new_PreludeError__SWIG_1(L);
     }
   }
   if (argc == 1) {
@@ -6759,14 +6787,15 @@ static int _wrap_new_PreludeError(lua_State* L) {
       _v = lua_isstring(L,argv[0]);
     }
     if (_v) {
-      return _wrap_new_PreludeError__SWIG_1(L);
+      return _wrap_new_PreludeError__SWIG_2(L);
     }
   }
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'new_PreludeError'\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Prelude::PreludeError::PreludeError()\n"
     "    Prelude::PreludeError::PreludeError(int)\n"
-    "    Prelude::PreludeError::PreludeError(std::string const)\n");
+    "    Prelude::PreludeError::PreludeError(std::string const &)\n");
   lua_error(L);return 0;
 }
 
