@@ -4,11 +4,11 @@ if HAVE_PYTHON
 swigdatadir = @SWIG_DATA_DIR@/python
 dist_swigdata_DATA = libpreludecpp-python.i
 
-EXTRA_DIST = libpreludecpp-python.i PreludeEasy.py _PreludeEasy.cxx pystrings.swg
+EXTRA_DIST = libpreludecpp-python.i prelude.py _prelude.cxx pystrings.swg
 
 all-am: python-build
 
-python-build: _PreludeEasy.cxx
+python-build: _prelude.cxx
 if HAVE_PYTHON2
 	CC="$(CXX)" $(PYTHON2) setup.py build
 endif
@@ -39,7 +39,7 @@ if HAVE_PYTHON3
 	$(PYTHON3) setup.py clean -a
 endif
 
-_PreludeEasy.cxx PreludeEasy.py: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
+_prelude.cxx prelude.py: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
 if HAVE_SWIG
 	$(SWIG) -c++ -DSWIG_COMPILE_LIBPRELUDE -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -python -threads -o $@ $(top_srcdir)/bindings/libpreludecpp.i
 endif

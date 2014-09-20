@@ -1855,10 +1855,10 @@ static swig_module_info swig_module = {swig_types, 44, 0, 0, 0, 0};
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_init    Init_PreludeEasy
-#define SWIG_name    "PreludeEasy"
+#define SWIG_init    Init_Prelude
+#define SWIG_name    "Prelude"
 
-static VALUE mPreludeEasy;
+static VALUE mPrelude;
 
 #define SWIG_RUBY_THREAD_BEGIN_BLOCK
 #define SWIG_RUBY_THREAD_END_BLOCK
@@ -4549,7 +4549,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 VALUE val;
 
-                if ( (*i).IsNull() )
+                if ( (*i).isNull() )
                         val = Qnil;
                 else {
                         ret = IDMEFValue_to_SWIG(*i, extra, &val);
@@ -4570,7 +4570,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 {
         std::stringstream s;
         idmef_value_t *value = result;
-        Prelude::IDMEFValue::IDMEFValueTypeEnum type = result.GetType();
+        Prelude::IDMEFValue::IDMEFValueTypeEnum type = result.getType();
 
         if ( type == Prelude::IDMEFValue::TYPE_STRING ) {
                 prelude_string_t *str = idmef_value_get_string(value);
@@ -4653,21 +4653,21 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
         return 1;
 }
 
-SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_Get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
+SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
                 Prelude::IDMEFValue value;
 
-                value = self->Get(message);
-                if ( value.IsNull() && self->IsAmbiguous() ) {
+                value = self->get(message);
+                if ( value.isNull() && self->isAmbiguous() ) {
                         std::vector<Prelude::IDMEFValue> v;
                         return Prelude::IDMEFValue(v);
                 }
 
                 return value;
         }
-SWIGINTERN void Prelude_IDMEF_Write(Prelude::IDMEF *self,void *nocast_p){
+SWIGINTERN void Prelude_IDMEF_write(Prelude::IDMEF *self,void *nocast_p){
                 self->_genericWrite(_cb_ruby_write, nocast_p);
         }
-SWIGINTERN int Prelude_IDMEF_Read(Prelude::IDMEF *self,void *nocast_p){
+SWIGINTERN int Prelude_IDMEF_read(Prelude::IDMEF *self,void *nocast_p){
                 self->_genericRead(_cb_ruby_read, nocast_p);
                 return 1;
         }
@@ -4679,12 +4679,12 @@ SWIGINTERN Prelude::IDMEF &Prelude_IDMEF_operator_Sl__Sl_(Prelude::IDMEF *self,v
                 self->_genericRead(_cb_ruby_read, nocast_p);
                 return *self;
         }
-SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_Get(Prelude::IDMEF *self,char const *path){
+SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_get(Prelude::IDMEF *self,char const *path){
                 Prelude::IDMEFValue value;
                 Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
-                value = ipath.Get(*self);
-                if ( value.IsNull() && ipath.IsAmbiguous() ) {
+                value = ipath.get(*self);
+                if ( value.isNull() && ipath.isAmbiguous() ) {
                         std::vector<Prelude::IDMEFValue> v;
                         return Prelude::IDMEFValue(v);
                 }
@@ -4695,7 +4695,7 @@ static swig_class SwigClassGC_VALUE;
 
 
 /*
-  Document-method: PreludeEasy::GC_VALUE.inspect
+  Document-method: Prelude::GC_VALUE.inspect
 
   call-seq:
     inspect -> VALUE
@@ -4723,7 +4723,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::GC_VALUE.to_s
+  Document-method: Prelude::GC_VALUE.to_s
 
   call-seq:
     to_s -> VALUE
@@ -4792,7 +4792,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.dup
+  Document-method: Prelude::ConstIterator.dup
 
   call-seq:
     dup -> ConstIterator
@@ -4825,7 +4825,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.inspect
+  Document-method: Prelude::ConstIterator.inspect
 
   call-seq:
     inspect -> VALUE
@@ -4858,7 +4858,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.to_s
+  Document-method: Prelude::ConstIterator.to_s
 
   call-seq:
     to_s -> VALUE
@@ -5113,7 +5113,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.==
+  Document-method: Prelude::ConstIterator.==
 
   call-seq:
     ==(x) -> bool
@@ -5157,7 +5157,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.+
+  Document-method: Prelude::ConstIterator.+
 
   call-seq:
     +(n) -> ConstIterator
@@ -5208,7 +5208,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::ConstIterator.-
+  Document-method: Prelude::ConstIterator.-
 
   call-seq:
     -(n) -> ConstIterator
@@ -5375,7 +5375,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.dup
+  Document-method: Prelude::Iterator.dup
 
   call-seq:
     dup -> Iterator
@@ -5630,7 +5630,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.inspect
+  Document-method: Prelude::Iterator.inspect
 
   call-seq:
     inspect -> VALUE
@@ -5663,7 +5663,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.to_s
+  Document-method: Prelude::Iterator.to_s
 
   call-seq:
     to_s -> VALUE
@@ -5696,7 +5696,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.==
+  Document-method: Prelude::Iterator.==
 
   call-seq:
     ==(x) -> bool
@@ -5740,7 +5740,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.+
+  Document-method: Prelude::Iterator.+
 
   call-seq:
     +(n) -> Iterator
@@ -5791,7 +5791,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Iterator.-
+  Document-method: Prelude::Iterator.-
 
   call-seq:
     -(n) -> Iterator
@@ -5932,7 +5932,7 @@ free_swig_Iterator(swig::Iterator *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_CheckVersion__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_checkVersion__SWIG_0(int argc, VALUE *argv, VALUE self) {
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
@@ -5945,14 +5945,14 @@ _wrap_CheckVersion__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_AsCharPtrAndSize(argv[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","Prelude::CheckVersion", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","Prelude::checkVersion", 1, argv[0] ));
   }
   arg1 = reinterpret_cast< char * >(buf1);
   {
     try {
-      result = (char *)Prelude::CheckVersion((char const *)arg1);
+      result = (char *)Prelude::checkVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -5970,7 +5970,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_CheckVersion__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_checkVersion__SWIG_1(int argc, VALUE *argv, VALUE self) {
   char *result = 0 ;
   VALUE vresult = Qnil;
   
@@ -5979,9 +5979,9 @@ _wrap_CheckVersion__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      result = (char *)Prelude::CheckVersion();
+      result = (char *)Prelude::checkVersion();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -5996,7 +5996,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_CheckVersion(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_checkVersion(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[1];
   int ii;
@@ -6007,21 +6007,21 @@ SWIGINTERN VALUE _wrap_CheckVersion(int nargs, VALUE *args, VALUE self) {
     argv[ii] = args[ii];
   }
   if (argc == 0) {
-    return _wrap_CheckVersion__SWIG_1(nargs, args, self);
+    return _wrap_checkVersion__SWIG_1(nargs, args, self);
   }
   if (argc == 1) {
     int _v;
     int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_CheckVersion__SWIG_0(nargs, args, self);
+      return _wrap_checkVersion__SWIG_0(nargs, args, self);
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 1, "CheckVersion", 
-    "    char const * CheckVersion(char const *version)\n"
-    "    char const * CheckVersion()\n");
+  Ruby_Format_OverloadedError( argc, 1, "checkVersion", 
+    "    char const * checkVersion(char const *version)\n"
+    "    char const * checkVersion()\n");
   
   return Qnil;
 }
@@ -6041,7 +6041,7 @@ _wrap_new_ClientProfile__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6076,7 +6076,7 @@ _wrap_new_ClientProfile__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6112,7 +6112,7 @@ _wrap_new_ClientProfile__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6166,7 +6166,7 @@ _wrap_new_ClientProfile__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile((Prelude::ClientProfile const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6237,7 +6237,7 @@ free_Prelude_ClientProfile(Prelude::ClientProfile *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetUid(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getUid(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6249,14 +6249,14 @@ _wrap_ClientProfile_GetUid(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetUid", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getUid", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetUid();
+      result = (int)(arg1)->getUid();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6272,7 +6272,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetGid(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getGid(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6284,14 +6284,14 @@ _wrap_ClientProfile_GetGid(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetGid", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getGid", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetGid();
+      result = (int)(arg1)->getGid();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6307,7 +6307,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetName(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getName(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6319,14 +6319,14 @@ _wrap_ClientProfile_GetName(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetName", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getName", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetName();
+      result = (char *)(arg1)->getName();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6342,7 +6342,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_SetName(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_setName(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -6358,19 +6358,19 @@ _wrap_ClientProfile_SetName(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","SetName", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","setName", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","SetName", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","setName", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      result = (int)(arg1)->SetName((char const *)arg2);
+      result = (int)(arg1)->setName((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6388,7 +6388,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetAnalyzerId(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getAnalyzerId(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6400,14 +6400,14 @@ _wrap_ClientProfile_GetAnalyzerId(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetAnalyzerId", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getAnalyzerId", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (uint64_t)(arg1)->GetAnalyzerId();
+      result = (uint64_t)(arg1)->getAnalyzerId();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6423,7 +6423,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_SetAnalyzerId(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_setAnalyzerId(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t arg2 ;
   void *argp1 = 0 ;
@@ -6436,19 +6436,19 @@ _wrap_ClientProfile_SetAnalyzerId(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","SetAnalyzerId", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","setAnalyzerId", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","SetAnalyzerId", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","setAnalyzerId", 2, argv[0] ));
   } 
   arg2 = static_cast< uint64_t >(val2);
   {
     try {
-      (arg1)->SetAnalyzerId(arg2);
+      (arg1)->setAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6463,7 +6463,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetConfigFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getConfigFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6475,14 +6475,14 @@ _wrap_ClientProfile_GetConfigFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetConfigFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getConfigFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetConfigFilename();
+      result = (arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6498,7 +6498,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetAnalyzeridFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getAnalyzeridFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6510,14 +6510,14 @@ _wrap_ClientProfile_GetAnalyzeridFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetAnalyzeridFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getAnalyzeridFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetAnalyzeridFilename();
+      result = (arg1)->getAnalyzeridFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6533,7 +6533,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsKeyFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsKeyFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6545,14 +6545,14 @@ _wrap_ClientProfile_GetTlsKeyFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsKeyFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsKeyFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsKeyFilename();
+      result = (arg1)->getTlsKeyFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6568,7 +6568,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsServerCaCertFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsServerCaCertFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6580,14 +6580,14 @@ _wrap_ClientProfile_GetTlsServerCaCertFilename(int argc, VALUE *argv, VALUE self
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsServerCaCertFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsServerCaCertFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsServerCaCertFilename();
+      result = (arg1)->getTlsServerCaCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6603,7 +6603,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsServerKeyCertFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsServerKeyCertFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6615,14 +6615,14 @@ _wrap_ClientProfile_GetTlsServerKeyCertFilename(int argc, VALUE *argv, VALUE sel
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsServerKeyCertFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsServerKeyCertFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsServerKeyCertFilename();
+      result = (arg1)->getTlsServerKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6638,7 +6638,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsServerCrlFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsServerCrlFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6650,14 +6650,14 @@ _wrap_ClientProfile_GetTlsServerCrlFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsServerCrlFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsServerCrlFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsServerCrlFilename();
+      result = (arg1)->getTlsServerCrlFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6673,7 +6673,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsClientKeyCertFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsClientKeyCertFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6685,14 +6685,14 @@ _wrap_ClientProfile_GetTlsClientKeyCertFilename(int argc, VALUE *argv, VALUE sel
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsClientKeyCertFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsClientKeyCertFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsClientKeyCertFilename();
+      result = (arg1)->getTlsClientKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6708,7 +6708,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetTlsClientTrustedCertFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getTlsClientTrustedCertFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6720,14 +6720,14 @@ _wrap_ClientProfile_GetTlsClientTrustedCertFilename(int argc, VALUE *argv, VALUE
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetTlsClientTrustedCertFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getTlsClientTrustedCertFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetTlsClientTrustedCertFilename();
+      result = (arg1)->getTlsClientTrustedCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6743,7 +6743,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetBackupDirname(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getBackupDirname(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6755,14 +6755,14 @@ _wrap_ClientProfile_GetBackupDirname(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetBackupDirname", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getBackupDirname", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetBackupDirname();
+      result = (arg1)->getBackupDirname();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6778,7 +6778,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetProfileDirname(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getProfileDirname(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6790,14 +6790,14 @@ _wrap_ClientProfile_GetProfileDirname(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetProfileDirname", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getProfileDirname", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetProfileDirname();
+      result = (arg1)->getProfileDirname();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6813,7 +6813,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_SetPrefix(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_setPrefix(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -6827,19 +6827,19 @@ _wrap_ClientProfile_SetPrefix(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","SetPrefix", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","setPrefix", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","SetPrefix", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","setPrefix", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      (arg1)->SetPrefix((char const *)arg2);
+      (arg1)->setPrefix((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6856,7 +6856,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ClientProfile_GetPrefix(int argc, VALUE *argv, VALUE self) {
+_wrap_ClientProfile_getPrefix(int argc, VALUE *argv, VALUE self) {
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -6868,14 +6868,14 @@ _wrap_ClientProfile_GetPrefix(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","GetPrefix", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ClientProfile *","getPrefix", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
   {
     try {
-      result = (arg1)->GetPrefix();
+      result = (arg1)->getPrefix();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6909,7 +6909,7 @@ _wrap_new_Connection__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Connection *)new Prelude::Connection();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6944,7 +6944,7 @@ _wrap_new_Connection__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Connection *)new Prelude::Connection((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6983,7 +6983,7 @@ _wrap_new_Connection__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Connection *)new Prelude::Connection((Prelude::Connection const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7025,7 +7025,7 @@ _wrap_new_Connection__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Connection *)new Prelude::Connection(arg1,arg2);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7076,7 +7076,7 @@ _wrap_new_Connection__SWIG_4(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Connection *)new Prelude::Connection(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7158,7 +7158,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetConnection(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getConnection(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7170,14 +7170,14 @@ _wrap_Connection_GetConnection(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetConnection", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getConnection", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (prelude_connection_t *)(arg1)->GetConnection();
+      result = (prelude_connection_t *)(arg1)->getConnection();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7193,7 +7193,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_Close(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_close(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7203,14 +7203,14 @@ _wrap_Connection_Close(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","Close", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","close", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      (arg1)->Close();
+      (arg1)->close();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7225,7 +7225,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_Connect(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_connect(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   Prelude::ClientProfile *arg2 = 0 ;
   int arg3 ;
@@ -7241,27 +7241,27 @@ _wrap_Connection_Connect(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","Connect", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","connect", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__ClientProfile,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::ClientProfile &","Connect", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::ClientProfile &","connect", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::ClientProfile &","Connect", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::ClientProfile &","connect", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::ClientProfile * >(argp2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","Connect", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","connect", 3, argv[1] ));
   } 
   arg3 = static_cast< int >(val3);
   {
     try {
-      (arg1)->Connect(*arg2,arg3);
+      (arg1)->connect(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7276,7 +7276,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_SetState(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_setState(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -7289,19 +7289,19 @@ _wrap_Connection_SetState(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","SetState", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","setState", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","SetState", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","setState", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetState(arg2);
+      (arg1)->setState(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7316,7 +7316,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetState(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getState(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7328,14 +7328,14 @@ _wrap_Connection_GetState(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetState", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getState", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetState();
+      result = (int)(arg1)->getState();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7351,7 +7351,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_SetData(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_setData(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
@@ -7363,18 +7363,18 @@ _wrap_Connection_SetData(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","SetData", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","setData", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg2), 0, 0);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void *","SetData", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void *","setData", 2, argv[0] )); 
   }
   {
     try {
-      (arg1)->SetData(arg2);
+      (arg1)->setData(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7389,7 +7389,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetData(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getData(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7401,14 +7401,14 @@ _wrap_Connection_GetData(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetData", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getData", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (void *)(arg1)->GetData();
+      result = (void *)(arg1)->getData();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7424,7 +7424,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetPermission(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getPermission(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7436,14 +7436,14 @@ _wrap_Connection_GetPermission(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetPermission", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getPermission", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetPermission();
+      result = (int)(arg1)->getPermission();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7459,7 +7459,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_SetPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_setPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   uint64_t arg2 ;
   void *argp1 = 0 ;
@@ -7472,19 +7472,19 @@ _wrap_Connection_SetPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","SetPeerAnalyzerid", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","setPeerAnalyzerid", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","SetPeerAnalyzerid", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint64_t","setPeerAnalyzerid", 2, argv[0] ));
   } 
   arg2 = static_cast< uint64_t >(val2);
   {
     try {
-      (arg1)->SetPeerAnalyzerid(arg2);
+      (arg1)->setPeerAnalyzerid(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7499,7 +7499,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7511,14 +7511,14 @@ _wrap_Connection_GetPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetPeerAnalyzerid", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getPeerAnalyzerid", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (uint64_t)(arg1)->GetPeerAnalyzerid();
+      result = (uint64_t)(arg1)->getPeerAnalyzerid();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7534,7 +7534,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetLocalAddr(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getLocalAddr(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7546,14 +7546,14 @@ _wrap_Connection_GetLocalAddr(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetLocalAddr", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getLocalAddr", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetLocalAddr();
+      result = (char *)(arg1)->getLocalAddr();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7569,7 +7569,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetLocalPort(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getLocalPort(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7581,14 +7581,14 @@ _wrap_Connection_GetLocalPort(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetLocalPort", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getLocalPort", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (unsigned int)(arg1)->GetLocalPort();
+      result = (unsigned int)(arg1)->getLocalPort();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7604,7 +7604,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetPeerAddr(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getPeerAddr(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7616,14 +7616,14 @@ _wrap_Connection_GetPeerAddr(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetPeerAddr", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getPeerAddr", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetPeerAddr();
+      result = (char *)(arg1)->getPeerAddr();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7639,7 +7639,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetPeerPort(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getPeerPort(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7651,14 +7651,14 @@ _wrap_Connection_GetPeerPort(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetPeerPort", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getPeerPort", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (unsigned int)(arg1)->GetPeerPort();
+      result = (unsigned int)(arg1)->getPeerPort();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7674,7 +7674,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_IsAlive(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_isAlive(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7686,14 +7686,14 @@ _wrap_Connection_IsAlive(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","IsAlive", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","isAlive", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (bool)(arg1)->IsAlive();
+      result = (bool)(arg1)->isAlive();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7709,7 +7709,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_GetFd(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_getFd(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7721,14 +7721,14 @@ _wrap_Connection_GetFd(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","GetFd", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","getFd", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetFd();
+      result = (int)(arg1)->getFd();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7744,7 +7744,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Connection_RecvIDMEF(int argc, VALUE *argv, VALUE self) {
+_wrap_Connection_recvIDMEF(int argc, VALUE *argv, VALUE self) {
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -7756,14 +7756,14 @@ _wrap_Connection_RecvIDMEF(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","RecvIDMEF", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Connection *","recvIDMEF", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
   {
     try {
-      result = (arg1)->RecvIDMEF();
+      result = (arg1)->recvIDMEF();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7797,7 +7797,7 @@ _wrap_new_ConnectionPool__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ConnectionPool *)new Prelude::ConnectionPool();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7831,7 +7831,7 @@ _wrap_new_ConnectionPool__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ConnectionPool *)new Prelude::ConnectionPool(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7868,7 +7868,7 @@ _wrap_new_ConnectionPool__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ConnectionPool *)new Prelude::ConnectionPool((Prelude::ConnectionPool const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7930,7 +7930,7 @@ _wrap_new_ConnectionPool__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ConnectionPool *)new Prelude::ConnectionPool(*arg1,arg2);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8003,7 +8003,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_Init(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_init(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8013,14 +8013,14 @@ _wrap_ConnectionPool_Init(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","Init", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","init", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     try {
-      (arg1)->Init();
+      (arg1)->init();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8035,7 +8035,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetConnectionString(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setConnectionString(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -8049,19 +8049,19 @@ _wrap_ConnectionPool_SetConnectionString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetConnectionString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setConnectionString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","SetConnectionString", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","setConnectionString", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      (arg1)->SetConnectionString((char const *)arg2);
+      (arg1)->setConnectionString((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8078,7 +8078,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_GetConnectionString(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_getConnectionString(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8090,14 +8090,14 @@ _wrap_ConnectionPool_GetConnectionString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","GetConnectionString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","getConnectionString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetConnectionString();
+      result = (char *)(arg1)->getConnectionString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8113,7 +8113,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_GetConnectionList(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_getConnectionList(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8125,14 +8125,14 @@ _wrap_ConnectionPool_GetConnectionList(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","GetConnectionList", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","getConnectionList", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     try {
-      result = (arg1)->GetConnectionList();
+      result = (arg1)->getConnectionList();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8148,7 +8148,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setFlags(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -8161,19 +8161,19 @@ _wrap_ConnectionPool_SetFlags(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetFlags", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setFlags", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","SetFlags", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","setFlags", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetFlags(arg2);
+      (arg1)->setFlags(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8188,7 +8188,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_GetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_getFlags(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8200,14 +8200,14 @@ _wrap_ConnectionPool_GetFlags(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","GetFlags", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","getFlags", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetFlags();
+      result = (int)(arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8223,7 +8223,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetData(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setData(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
@@ -8235,18 +8235,18 @@ _wrap_ConnectionPool_SetData(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetData", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setData", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg2), 0, 0);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void *","SetData", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "void *","setData", 2, argv[0] )); 
   }
   {
     try {
-      (arg1)->SetData(arg2);
+      (arg1)->setData(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8261,7 +8261,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_GetData(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_getData(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8273,14 +8273,14 @@ _wrap_ConnectionPool_GetData(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","GetData", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","getData", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     try {
-      result = (void *)(arg1)->GetData();
+      result = (void *)(arg1)->getData();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8296,7 +8296,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_AddConnection(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_addConnection(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection arg2 ;
   void *argp1 = 0 ;
@@ -8309,25 +8309,25 @@ _wrap_ConnectionPool_AddConnection(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","AddConnection", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","addConnection", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection","AddConnection", 2, argv[0] )); 
+      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection","addConnection", 2, argv[0] )); 
     }  
     if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection","AddConnection", 2, argv[0]));
+      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection","addConnection", 2, argv[0]));
     } else {
       arg2 = *(reinterpret_cast< Prelude::Connection * >(argp2));
     }
   }
   {
     try {
-      (arg1)->AddConnection(arg2);
+      (arg1)->addConnection(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8342,7 +8342,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_DelConnection(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_delConnection(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection arg2 ;
   void *argp1 = 0 ;
@@ -8355,25 +8355,25 @@ _wrap_ConnectionPool_DelConnection(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","DelConnection", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","delConnection", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
     res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection","DelConnection", 2, argv[0] )); 
+      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection","delConnection", 2, argv[0] )); 
     }  
     if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection","DelConnection", 2, argv[0]));
+      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection","delConnection", 2, argv[0]));
     } else {
       arg2 = *(reinterpret_cast< Prelude::Connection * >(argp2));
     }
   }
   {
     try {
-      (arg1)->DelConnection(arg2);
+      (arg1)->delConnection(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8388,7 +8388,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetConnectionAlive(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setConnectionAlive(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -8401,22 +8401,22 @@ _wrap_ConnectionPool_SetConnectionAlive(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetConnectionAlive", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setConnectionAlive", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection &","SetConnectionAlive", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection &","setConnectionAlive", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection &","SetConnectionAlive", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection &","setConnectionAlive", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::Connection * >(argp2);
   {
     try {
-      (arg1)->SetConnectionAlive(*arg2);
+      (arg1)->setConnectionAlive(*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8431,7 +8431,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetConnectionDead(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setConnectionDead(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -8444,22 +8444,22 @@ _wrap_ConnectionPool_SetConnectionDead(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetConnectionDead", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setConnectionDead", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection &","SetConnectionDead", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::Connection &","setConnectionDead", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection &","SetConnectionDead", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Connection &","setConnectionDead", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::Connection * >(argp2);
   {
     try {
-      (arg1)->SetConnectionDead(*arg2);
+      (arg1)->setConnectionDead(*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8474,7 +8474,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_ConnectionPool_SetRequiredPermission(int argc, VALUE *argv, VALUE self) {
+_wrap_ConnectionPool_setRequiredPermission(int argc, VALUE *argv, VALUE self) {
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -8487,19 +8487,19 @@ _wrap_ConnectionPool_SetRequiredPermission(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","SetRequiredPermission", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::ConnectionPool *","setRequiredPermission", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","SetRequiredPermission", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","setRequiredPermission", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetRequiredPermission(arg2);
+      (arg1)->setRequiredPermission(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8541,7 +8541,7 @@ _wrap_new_Client__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Client *)new Prelude::Client((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8597,7 +8597,7 @@ _wrap_new_Client__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Client *)new Prelude::Client((Prelude::Client const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8649,7 +8649,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_Start(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_start(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8659,14 +8659,14 @@ _wrap_Client_Start(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","Start", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","start", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      (arg1)->Start();
+      (arg1)->start();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8681,7 +8681,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_Init(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_init(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8691,14 +8691,14 @@ _wrap_Client_Init(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","Init", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","init", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      (arg1)->Init();
+      (arg1)->init();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8713,7 +8713,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_GetClient(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_getClient(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8725,14 +8725,14 @@ _wrap_Client_GetClient(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","GetClient", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","getClient", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      result = (prelude_client_t *)(arg1)->GetClient();
+      result = (prelude_client_t *)(arg1)->getClient();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8748,7 +8748,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SendIDMEF(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_sendIDMEF(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -8761,22 +8761,22 @@ _wrap_Client_SendIDMEF(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","SendIDMEF", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","sendIDMEF", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF const &","SendIDMEF", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF const &","sendIDMEF", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF const &","SendIDMEF", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF const &","sendIDMEF", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     try {
-      (arg1)->SendIDMEF((Prelude::IDMEF const &)*arg2);
+      (arg1)->sendIDMEF((Prelude::IDMEF const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8791,7 +8791,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_RecvIDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_recvIDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   int arg3 ;
@@ -8809,27 +8809,27 @@ _wrap_Client_RecvIDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","RecvIDMEF", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","recvIDMEF", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","RecvIDMEF", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","recvIDMEF", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","RecvIDMEF", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","recvIDMEF", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","RecvIDMEF", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","recvIDMEF", 3, argv[1] ));
   } 
   arg3 = static_cast< int >(val3);
   {
     try {
-      result = (int)(arg1)->RecvIDMEF(*arg2,arg3);
+      result = (int)(arg1)->recvIDMEF(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8845,7 +8845,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_RecvIDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_recvIDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -8860,22 +8860,22 @@ _wrap_Client_RecvIDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","RecvIDMEF", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","recvIDMEF", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","RecvIDMEF", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","recvIDMEF", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","RecvIDMEF", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","recvIDMEF", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     try {
-      result = (int)(arg1)->RecvIDMEF(*arg2);
+      result = (int)(arg1)->recvIDMEF(*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8890,7 +8890,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_Client_RecvIDMEF(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_Client_recvIDMEF(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
   int ii;
@@ -8911,7 +8911,7 @@ SWIGINTERN VALUE _wrap_Client_RecvIDMEF(int nargs, VALUE *args, VALUE self) {
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_Client_RecvIDMEF__SWIG_1(nargs, args, self);
+        return _wrap_Client_recvIDMEF__SWIG_1(nargs, args, self);
       }
     }
   }
@@ -8930,23 +8930,23 @@ SWIGINTERN VALUE _wrap_Client_RecvIDMEF(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_Client_RecvIDMEF__SWIG_0(nargs, args, self);
+          return _wrap_Client_recvIDMEF__SWIG_0(nargs, args, self);
         }
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 4, "Client.RecvIDMEF", 
-    "    int Client.RecvIDMEF(Prelude::IDMEF &idmef, int timeout)\n"
-    "    int Client.RecvIDMEF(Prelude::IDMEF &idmef)\n");
+  Ruby_Format_OverloadedError( argc, 4, "Client.recvIDMEF", 
+    "    int Client.recvIDMEF(Prelude::IDMEF &idmef, int timeout)\n"
+    "    int Client.recvIDMEF(Prelude::IDMEF &idmef)\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_Client_GetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_getFlags(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -8958,14 +8958,14 @@ _wrap_Client_GetFlags(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","GetFlags", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","getFlags", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetFlags();
+      result = (int)(arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8981,7 +8981,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_setFlags(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -8994,19 +8994,19 @@ _wrap_Client_SetFlags(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","SetFlags", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","setFlags", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","SetFlags", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","setFlags", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetFlags(arg2);
+      (arg1)->setFlags(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9021,7 +9021,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_GetRequiredPermission(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_getRequiredPermission(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -9033,14 +9033,14 @@ _wrap_Client_GetRequiredPermission(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","GetRequiredPermission", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","getRequiredPermission", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetRequiredPermission();
+      result = (int)(arg1)->getRequiredPermission();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9056,7 +9056,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SetRequiredPermission(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_setRequiredPermission(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -9069,19 +9069,19 @@ _wrap_Client_SetRequiredPermission(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","SetRequiredPermission", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","setRequiredPermission", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","SetRequiredPermission", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","setRequiredPermission", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetRequiredPermission(arg2);
+      (arg1)->setRequiredPermission(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9096,7 +9096,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_GetConfigFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_getConfigFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -9108,14 +9108,14 @@ _wrap_Client_GetConfigFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","GetConfigFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","getConfigFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetConfigFilename();
+      result = (char *)(arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9131,7 +9131,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SetConfigFilename(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_setConfigFilename(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -9145,19 +9145,19 @@ _wrap_Client_SetConfigFilename(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","SetConfigFilename", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","setConfigFilename", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","SetConfigFilename", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","setConfigFilename", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      (arg1)->SetConfigFilename((char const *)arg2);
+      (arg1)->setConfigFilename((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9174,7 +9174,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_GetConnectionPool(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_getConnectionPool(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -9186,14 +9186,14 @@ _wrap_Client_GetConnectionPool(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","GetConnectionPool", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","getConnectionPool", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     try {
-      result = (Prelude::ConnectionPool *) &(arg1)->GetConnectionPool();
+      result = (Prelude::ConnectionPool *) &(arg1)->getConnectionPool();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9209,7 +9209,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SetConnectionPool(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_setConnectionPool(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::ConnectionPool arg2 ;
   void *argp1 = 0 ;
@@ -9222,25 +9222,25 @@ _wrap_Client_SetConnectionPool(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","SetConnectionPool", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client *","setConnectionPool", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
     res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__ConnectionPool,  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::ConnectionPool","SetConnectionPool", 2, argv[0] )); 
+      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::ConnectionPool","setConnectionPool", 2, argv[0] )); 
     }  
     if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::ConnectionPool","SetConnectionPool", 2, argv[0]));
+      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::ConnectionPool","setConnectionPool", 2, argv[0]));
     } else {
       arg2 = *(reinterpret_cast< Prelude::ConnectionPool * >(argp2));
     }
   }
   {
     try {
-      (arg1)->SetConnectionPool(arg2);
+      (arg1)->setConnectionPool(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9256,7 +9256,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Client.<<
+  Document-method: Prelude::Client.<<
 
   call-seq:
     <<(idmef) -> Client
@@ -9294,7 +9294,7 @@ _wrap_Client___lshift__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (Prelude::Client *) &(arg1)->operator <<(*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9311,7 +9311,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::Client.>>
+  Document-method: Prelude::Client.>>
 
   call-seq:
     >>(idmef) -> Client
@@ -9349,7 +9349,7 @@ _wrap_Client___rshift__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (Prelude::Client *) &(arg1)->operator >>(*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9365,7 +9365,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Client_SetRecvTimeout(int argc, VALUE *argv, VALUE self) {
+_wrap_Client_setRecvTimeout(int argc, VALUE *argv, VALUE self) {
   Prelude::Client *arg1 = 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -9380,22 +9380,22 @@ _wrap_Client_SetRecvTimeout(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Prelude__Client,  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client &","Prelude::Client::SetRecvTimeout", 1, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::Client &","Prelude::Client::setRecvTimeout", 1, argv[0] )); 
   }
   if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Client &","Prelude::Client::SetRecvTimeout", 1, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::Client &","Prelude::Client::setRecvTimeout", 1, argv[0])); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","Prelude::Client::SetRecvTimeout", 2, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","Prelude::Client::setRecvTimeout", 2, argv[1] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (Prelude::Client *) &Prelude::Client::SetRecvTimeout(*arg1,arg2);
+      result = (Prelude::Client *) &Prelude::Client::setRecvTimeout(*arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9413,7 +9413,7 @@ fail:
 static swig_class SwigClassPreludeLog;
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_SetLevel(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_setLevel(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -9423,14 +9423,14 @@ _wrap_PreludeLog_SetLevel(int argc, VALUE *argv, VALUE self) {
   }
   ecode1 = SWIG_AsVal_int(argv[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::SetLevel", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::setLevel", 1, argv[0] ));
   } 
   arg1 = static_cast< int >(val1);
   {
     try {
-      Prelude::PreludeLog::SetLevel(arg1);
+      Prelude::PreludeLog::setLevel(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9445,7 +9445,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_SetDebugLevel(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_setDebugLevel(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -9455,14 +9455,14 @@ _wrap_PreludeLog_SetDebugLevel(int argc, VALUE *argv, VALUE self) {
   }
   ecode1 = SWIG_AsVal_int(argv[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::SetDebugLevel", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::setDebugLevel", 1, argv[0] ));
   } 
   arg1 = static_cast< int >(val1);
   {
     try {
-      Prelude::PreludeLog::SetDebugLevel(arg1);
+      Prelude::PreludeLog::setDebugLevel(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9477,7 +9477,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_SetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_setFlags(int argc, VALUE *argv, VALUE self) {
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -9487,14 +9487,14 @@ _wrap_PreludeLog_SetFlags(int argc, VALUE *argv, VALUE self) {
   }
   ecode1 = SWIG_AsVal_int(argv[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::SetFlags", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode1), Ruby_Format_TypeError( "", "int","Prelude::PreludeLog::setFlags", 1, argv[0] ));
   } 
   arg1 = static_cast< int >(val1);
   {
     try {
-      Prelude::PreludeLog::SetFlags(arg1);
+      Prelude::PreludeLog::setFlags(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9509,7 +9509,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_GetFlags(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_getFlags(int argc, VALUE *argv, VALUE self) {
   int result;
   VALUE vresult = Qnil;
   
@@ -9518,9 +9518,9 @@ _wrap_PreludeLog_GetFlags(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      result = (int)Prelude::PreludeLog::GetFlags();
+      result = (int)Prelude::PreludeLog::getFlags();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9536,7 +9536,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_SetLogfile(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_setLogfile(int argc, VALUE *argv, VALUE self) {
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
@@ -9547,14 +9547,14 @@ _wrap_PreludeLog_SetLogfile(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_AsCharPtrAndSize(argv[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","Prelude::PreludeLog::SetLogfile", 1, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","Prelude::PreludeLog::setLogfile", 1, argv[0] ));
   }
   arg1 = reinterpret_cast< char * >(buf1);
   {
     try {
-      Prelude::PreludeLog::SetLogfile((char const *)arg1);
+      Prelude::PreludeLog::setLogfile((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9571,7 +9571,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeLog_SetCallback(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeLog_setCallback(int argc, VALUE *argv, VALUE self) {
   void (*arg1)(int,char const *) = (void (*)(int,char const *)) 0 ;
   
   if ((argc < 1) || (argc > 1)) {
@@ -9588,9 +9588,9 @@ _wrap_PreludeLog_SetCallback(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      Prelude::PreludeLog::SetCallback(arg1);
+      Prelude::PreludeLog::setCallback(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9633,7 +9633,7 @@ _wrap_new_PreludeLog(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::PreludeLog *)new Prelude::PreludeLog();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9671,7 +9671,7 @@ _wrap_new_PreludeError__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::PreludeError *)new Prelude::PreludeError();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9705,7 +9705,7 @@ _wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9761,7 +9761,7 @@ _wrap_new_PreludeError__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9820,7 +9820,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PreludeError_GetCode(int argc, VALUE *argv, VALUE self) {
+_wrap_PreludeError_getCode(int argc, VALUE *argv, VALUE self) {
   Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -9832,14 +9832,14 @@ _wrap_PreludeError_GetCode(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::PreludeError *","GetCode", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::PreludeError *","getCode", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetCode();
+      result = (int)(arg1)->getCode();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9874,7 +9874,7 @@ _wrap_PreludeError_what(int argc, VALUE *argv, VALUE self) {
     try {
       result = (char *)((Prelude::PreludeError const *)arg1)->what();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9909,7 +9909,7 @@ _wrap_PreludeError___str__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9944,7 +9944,7 @@ _wrap_PreludeError___int__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (int)((Prelude::PreludeError const *)arg1)->operator int();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10026,7 +10026,7 @@ _wrap_new_ClientEasy__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2,(char const *)arg3,(char const *)arg4,(char const *)arg5,(char const *)arg6);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10106,7 +10106,7 @@ _wrap_new_ClientEasy__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2,(char const *)arg3,(char const *)arg4,(char const *)arg5);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10175,7 +10175,7 @@ _wrap_new_ClientEasy__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2,(char const *)arg3,(char const *)arg4);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10233,7 +10233,7 @@ _wrap_new_ClientEasy__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2,(char const *)arg3);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10280,7 +10280,7 @@ _wrap_new_ClientEasy__SWIG_4(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10334,7 +10334,7 @@ _wrap_new_ClientEasy__SWIG_5(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10528,7 +10528,7 @@ _wrap_new_IDMEFCriterion(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriterion *)new Prelude::IDMEFCriterion();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10566,7 +10566,7 @@ _wrap_new_IDMEFCriteria__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10603,7 +10603,7 @@ _wrap_new_IDMEFCriteria__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((Prelude::IDMEFCriteria const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10638,7 +10638,7 @@ _wrap_new_IDMEFCriteria__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10679,7 +10679,7 @@ _wrap_new_IDMEFCriteria__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((std::string const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10732,7 +10732,7 @@ _wrap_new_IDMEFCriteria__SWIG_4(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10807,7 +10807,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFCriteria_Match(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFCriteria_match(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
@@ -10822,19 +10822,19 @@ _wrap_IDMEFCriteria_Match(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","Match", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","match", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Match", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF *","match", 2, argv[0] )); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     try {
-      result = (int)(arg1)->Match(arg2);
+      result = (int)(arg1)->match(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10849,8 +10849,17 @@ fail:
 }
 
 
+
+/*
+  Document-method: Prelude::IDMEFCriteria.clone
+
+  call-seq:
+    clone -> IDMEFCriteria
+
+Create a duplicate of the class.
+*/
 SWIGINTERN VALUE
-_wrap_IDMEFCriteria_Clone(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFCriteria_clone(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -10862,14 +10871,14 @@ _wrap_IDMEFCriteria_Clone(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","Clone", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","clone", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
   {
     try {
-      result = (arg1)->Clone();
+      result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10885,7 +10894,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFCriteria_ANDCriteria(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFCriteria_andCriteria(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEFCriteria *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -10898,22 +10907,22 @@ _wrap_IDMEFCriteria_ANDCriteria(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","ANDCriteria", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","andCriteria", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const &","ANDCriteria", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const &","andCriteria", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFCriteria const &","ANDCriteria", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFCriteria const &","andCriteria", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp2);
   {
     try {
-      (arg1)->ANDCriteria((Prelude::IDMEFCriteria const &)*arg2);
+      (arg1)->andCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10928,7 +10937,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFCriteria_ORCriteria(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFCriteria_orCriteria(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEFCriteria *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -10941,22 +10950,22 @@ _wrap_IDMEFCriteria_ORCriteria(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","ORCriteria", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria *","orCriteria", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const &","ORCriteria", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const &","orCriteria", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFCriteria const &","ORCriteria", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFCriteria const &","orCriteria", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp2);
   {
     try {
-      (arg1)->ORCriteria((Prelude::IDMEFCriteria const &)*arg2);
+      (arg1)->orCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10971,7 +10980,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFCriteria_ToString(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFCriteria_toString(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -10983,14 +10992,14 @@ _wrap_IDMEFCriteria_ToString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const *","ToString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFCriteria const *","toString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEFCriteria const *)arg1)->ToString();
+      result = ((Prelude::IDMEFCriteria const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11025,7 +11034,7 @@ _wrap_IDMEFCriteria___str__(int argc, VALUE *argv, VALUE self) {
     try {
       result = ((Prelude::IDMEFCriteria const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11043,7 +11052,7 @@ fail:
 static swig_class SwigClassIDMEFValue;
 
 SWIGINTERN VALUE
-_wrap_IDMEFValue_GetType(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFValue_getType(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -11055,14 +11064,14 @@ _wrap_IDMEFValue_GetType(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","GetType", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","getType", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   {
     try {
-      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFValue const *)arg1)->GetType();
+      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFValue const *)arg1)->getType();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11078,7 +11087,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFValue_IsNull(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFValue_isNull(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -11090,14 +11099,14 @@ _wrap_IDMEFValue_IsNull(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","IsNull", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","isNull", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   {
     try {
-      result = (bool)((Prelude::IDMEFValue const *)arg1)->IsNull();
+      result = (bool)((Prelude::IDMEFValue const *)arg1)->isNull();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11124,7 +11133,7 @@ _wrap_new_IDMEFValue__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11163,7 +11172,7 @@ _wrap_new_IDMEFValue__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11199,7 +11208,7 @@ _wrap_new_IDMEFValue__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11236,7 +11245,7 @@ _wrap_new_IDMEFValue__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((Prelude::IDMEFValue const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11272,7 +11281,7 @@ _wrap_new_IDMEFValue__SWIG_4(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11306,7 +11315,7 @@ _wrap_new_IDMEFValue__SWIG_5(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11342,7 +11351,7 @@ _wrap_new_IDMEFValue__SWIG_6(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11377,7 +11386,7 @@ _wrap_new_IDMEFValue__SWIG_7(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11413,7 +11422,7 @@ _wrap_new_IDMEFValue__SWIG_8(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11447,7 +11456,7 @@ _wrap_new_IDMEFValue__SWIG_9(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11481,7 +11490,7 @@ _wrap_new_IDMEFValue__SWIG_10(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11515,7 +11524,7 @@ _wrap_new_IDMEFValue__SWIG_11(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11549,7 +11558,7 @@ _wrap_new_IDMEFValue__SWIG_12(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11583,7 +11592,7 @@ _wrap_new_IDMEFValue__SWIG_13(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11617,7 +11626,7 @@ _wrap_new_IDMEFValue__SWIG_14(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11651,7 +11660,7 @@ _wrap_new_IDMEFValue__SWIG_15(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11685,7 +11694,7 @@ _wrap_new_IDMEFValue__SWIG_16(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11719,7 +11728,7 @@ _wrap_new_IDMEFValue__SWIG_17(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11773,7 +11782,7 @@ _wrap_new_IDMEFValue__SWIG_18(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11996,7 +12005,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFValue_Match(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFValue_match(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
   int arg3 ;
@@ -12014,27 +12023,27 @@ _wrap_IDMEFValue_Match(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","Match", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","match", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const &","Match", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const &","match", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFValue const &","Match", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFValue const &","match", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","Match", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","match", 3, argv[1] ));
   } 
   arg3 = static_cast< int >(val3);
   {
     try {
-      result = (int)(arg1)->Match((Prelude::IDMEFValue const &)*arg2,arg3);
+      result = (int)(arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12049,8 +12058,17 @@ fail:
 }
 
 
+
+/*
+  Document-method: Prelude::IDMEFValue.clone
+
+  call-seq:
+    clone -> IDMEFValue
+
+Create a duplicate of the class.
+*/
 SWIGINTERN VALUE
-_wrap_IDMEFValue_Clone(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFValue_clone(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -12062,14 +12080,14 @@ _wrap_IDMEFValue_Clone(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","Clone", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","clone", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEFValue const *)arg1)->Clone();
+      result = ((Prelude::IDMEFValue const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12080,13 +12098,13 @@ _wrap_IDMEFValue_Clone(int argc, VALUE *argv, VALUE self) {
   {
     int ret;
     
-    if ( (&result)->IsNull() )
+    if ( (&result)->isNull() )
     vresult = Qnil;
     else {
       ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
+        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
       }
     }
@@ -12098,7 +12116,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFValue_ToString(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFValue_toString(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -12110,14 +12128,14 @@ _wrap_IDMEFValue_ToString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","ToString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFValue const *","toString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEFValue const *)arg1)->ToString();
+      result = ((Prelude::IDMEFValue const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12134,7 +12152,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.==
+  Document-method: Prelude::IDMEFValue.==
 
   call-seq:
     ==(vlist) -> bool
@@ -12175,7 +12193,7 @@ _wrap_IDMEFValue___eq____SWIG_0(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator ==((std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12194,7 +12212,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.<=
+  Document-method: Prelude::IDMEFValue.<=
 
   call-seq:
     <=(value) -> bool
@@ -12232,7 +12250,7 @@ _wrap_IDMEFValue___le__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12249,7 +12267,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.>=
+  Document-method: Prelude::IDMEFValue.>=
 
   call-seq:
     >=(value) -> bool
@@ -12287,7 +12305,7 @@ _wrap_IDMEFValue___ge__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator >=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12304,7 +12322,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.<
+  Document-method: Prelude::IDMEFValue.<
 
   call-seq:
     <(value) -> bool
@@ -12342,7 +12360,7 @@ _wrap_IDMEFValue___lt__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12359,7 +12377,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.>
+  Document-method: Prelude::IDMEFValue.>
 
   call-seq:
     >(value) -> bool
@@ -12397,7 +12415,7 @@ _wrap_IDMEFValue___gt__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator >((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12414,7 +12432,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFValue.==
+  Document-method: Prelude::IDMEFValue.==
 
   call-seq:
     ==(vlist) -> bool
@@ -12453,7 +12471,7 @@ _wrap_IDMEFValue___eq____SWIG_1(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12539,7 +12557,7 @@ _wrap_new_IDMEFPath__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12587,7 +12605,7 @@ _wrap_new_IDMEFPath__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(*arg1,(char const *)arg2);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12623,7 +12641,7 @@ _wrap_new_IDMEFPath__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12677,7 +12695,7 @@ _wrap_new_IDMEFPath__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath((Prelude::IDMEFPath const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12758,7 +12776,7 @@ free_Prelude_IDMEFPath(Prelude::IDMEFPath *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > arg3 ;
@@ -12772,31 +12790,31 @@ _wrap_IDMEFPath_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
     int res = swig::asptr(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12811,7 +12829,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
@@ -12827,27 +12845,27 @@ _wrap_IDMEFPath_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 3, argv[1] )); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEF * >(argp3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12862,7 +12880,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > arg3 ;
@@ -12876,31 +12894,31 @@ _wrap_IDMEFPath_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
     int res = swig::asptr(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12915,7 +12933,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   Prelude::IDMEFValue *arg3 = (Prelude::IDMEFValue *) 0 ;
@@ -12931,27 +12949,27 @@ _wrap_IDMEFPath_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","set", 3, argv[1] )); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEFValue * >(argp3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12966,7 +12984,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_4(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_4(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   Prelude::IDMEFTime *arg3 = 0 ;
@@ -12982,30 +13000,30 @@ _wrap_IDMEFPath_Set__SWIG_4(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFTime &","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFTime &","set", 3, argv[1] )); 
   }
   if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFTime &","Set", 3, argv[1])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFTime &","set", 3, argv[1])); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEFTime * >(argp3);
   {
     try {
-      (arg1)->Set(*arg2,*arg3);
+      (arg1)->set(*arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13020,7 +13038,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_5(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_5(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   std::string arg3 ;
@@ -13034,31 +13052,31 @@ _wrap_IDMEFPath_Set__SWIG_5(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::string *ptr = (std::string *)0;
     int res = SWIG_AsPtr_std_string(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::string","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::string","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13073,7 +13091,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_6(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_6(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   char *arg3 = (char *) 0 ;
@@ -13090,27 +13108,27 @@ _wrap_IDMEFPath_Set__SWIG_6(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   res3 = SWIG_AsCharPtrAndSize(argv[1], &buf3, NULL, &alloc3);
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "char const *","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "char const *","set", 3, argv[1] ));
   }
   arg3 = reinterpret_cast< char * >(buf3);
   {
     try {
-      (arg1)->Set(*arg2,(char const *)arg3);
+      (arg1)->set(*arg2,(char const *)arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13127,7 +13145,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_7(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_7(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   int16_t arg3 ;
@@ -13143,27 +13161,27 @@ _wrap_IDMEFPath_Set__SWIG_7(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_short(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int16_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int16_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int16_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13178,7 +13196,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_8(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_8(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   uint16_t arg3 ;
@@ -13194,27 +13212,27 @@ _wrap_IDMEFPath_Set__SWIG_8(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_unsigned_SS_short(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint16_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint16_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint16_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13229,7 +13247,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_9(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_9(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   int32_t arg3 ;
@@ -13245,27 +13263,27 @@ _wrap_IDMEFPath_Set__SWIG_9(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int32_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int32_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int32_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13280,7 +13298,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_10(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_10(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   uint32_t arg3 ;
@@ -13296,27 +13314,27 @@ _wrap_IDMEFPath_Set__SWIG_10(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_unsigned_SS_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint32_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint32_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint32_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13331,7 +13349,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_11(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_11(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   int64_t arg3 ;
@@ -13347,27 +13365,27 @@ _wrap_IDMEFPath_Set__SWIG_11(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_long_SS_long(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int64_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int64_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int64_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13382,7 +13400,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_12(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_12(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   uint64_t arg3 ;
@@ -13398,27 +13416,27 @@ _wrap_IDMEFPath_Set__SWIG_12(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint64_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint64_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint64_t >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13433,7 +13451,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_13(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_13(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   float arg3 ;
@@ -13449,27 +13467,27 @@ _wrap_IDMEFPath_Set__SWIG_13(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_float(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "float","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "float","set", 3, argv[1] ));
   } 
   arg3 = static_cast< float >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13484,7 +13502,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Set__SWIG_14(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_set__SWIG_14(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   double arg3 ;
@@ -13500,27 +13518,27 @@ _wrap_IDMEFPath_Set__SWIG_14(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","set", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Set", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","set", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   ecode3 = SWIG_AsVal_double(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "double","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "double","set", 3, argv[1] ));
   } 
   arg3 = static_cast< double >(val3);
   {
     try {
-      (arg1)->Set(*arg2,arg3);
+      (arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13534,7 +13552,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_set(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
   int ii;
@@ -13559,7 +13577,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_1(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_1(nargs, args, self);
         }
       }
     }
@@ -13578,7 +13596,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_3(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_3(nargs, args, self);
         }
       }
     }
@@ -13597,7 +13615,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_4(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_4(nargs, args, self);
         }
       }
     }
@@ -13617,7 +13635,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_8(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_8(nargs, args, self);
         }
       }
     }
@@ -13637,7 +13655,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_7(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_7(nargs, args, self);
         }
       }
     }
@@ -13657,7 +13675,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_10(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_10(nargs, args, self);
         }
       }
     }
@@ -13677,7 +13695,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_9(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_9(nargs, args, self);
         }
       }
     }
@@ -13697,7 +13715,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_12(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_12(nargs, args, self);
         }
       }
     }
@@ -13717,7 +13735,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_11(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_11(nargs, args, self);
         }
       }
     }
@@ -13737,7 +13755,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_13(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_13(nargs, args, self);
         }
       }
     }
@@ -13757,7 +13775,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_14(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_14(nargs, args, self);
         }
       }
     }
@@ -13775,7 +13793,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_5(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_5(nargs, args, self);
         }
       }
     }
@@ -13793,7 +13811,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_AsCharPtrAndSize(argv[2], 0, NULL, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_6(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_6(nargs, args, self);
         }
       }
     }
@@ -13811,7 +13829,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_0(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_0(nargs, args, self);
         }
       }
     }
@@ -13829,36 +13847,36 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Set(int nargs, VALUE *args, VALUE self) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEFPath_Set__SWIG_2(nargs, args, self);
+          return _wrap_IDMEFPath_set__SWIG_2(nargs, args, self);
         }
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.Set", 
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, Prelude::IDMEF *value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, Prelude::IDMEFValue *value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, Prelude::IDMEFTime &time)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, std::string value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, char const *value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, int16_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, uint16_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, int32_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, uint32_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, int64_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, uint64_t value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, float value)\n"
-    "    void IDMEFPath.Set(Prelude::IDMEF &message, double value)\n");
+  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.set", 
+    "    void IDMEFPath.set(Prelude::IDMEF &message, std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, Prelude::IDMEF *value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, Prelude::IDMEFValue *value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, Prelude::IDMEFTime &time)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, std::string value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, char const *value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, int16_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, uint16_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, int32_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, uint32_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, int64_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, uint64_t value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, float value)\n"
+    "    void IDMEFPath.set(Prelude::IDMEF &message, double value)\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetClass__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getClass__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -13873,19 +13891,19 @@ _wrap_IDMEFPath_GetClass__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetClass", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getClass", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","GetClass", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","getClass", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (arg1)->GetClass(arg2);
+      result = (arg1)->getClass(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13901,7 +13919,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetClass__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getClass__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -13913,14 +13931,14 @@ _wrap_IDMEFPath_GetClass__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetClass", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getClass", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (arg1)->GetClass();
+      result = (arg1)->getClass();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -13935,7 +13953,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_GetClass(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_getClass(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -13952,7 +13970,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetClass(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_GetClass__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_getClass__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -13966,22 +13984,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetClass(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_GetClass__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_getClass__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.GetClass", 
-    "    idmef_class_id_t IDMEFPath.GetClass(int depth)\n"
-    "    idmef_class_id_t IDMEFPath.GetClass()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.getClass", 
+    "    idmef_class_id_t IDMEFPath.getClass(int depth)\n"
+    "    idmef_class_id_t IDMEFPath.getClass()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetValueType__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getValueType__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -13996,19 +14014,19 @@ _wrap_IDMEFPath_GetValueType__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetValueType", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getValueType", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","GetValueType", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","getValueType", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->GetValueType(arg2);
+      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14024,7 +14042,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetValueType__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getValueType__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14036,14 +14054,14 @@ _wrap_IDMEFPath_GetValueType__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetValueType", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getValueType", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->GetValueType();
+      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14058,7 +14076,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_GetValueType(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_getValueType(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -14075,7 +14093,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetValueType(int nargs, VALUE *args, VALUE self
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_GetValueType__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_getValueType__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -14089,22 +14107,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetValueType(int nargs, VALUE *args, VALUE self
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_GetValueType__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_getValueType__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.GetValueType", 
-    "    Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath.GetValueType(int depth)\n"
-    "    Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath.GetValueType()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.getValueType", 
+    "    Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath.getValueType(int depth)\n"
+    "    Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath.getValueType()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_SetIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_setIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   unsigned int arg2 ;
   int arg3 ;
@@ -14122,24 +14140,24 @@ _wrap_IDMEFPath_SetIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","SetIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","setIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "unsigned int","SetIndex", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "unsigned int","setIndex", 2, argv[0] ));
   } 
   arg2 = static_cast< unsigned int >(val2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","SetIndex", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","setIndex", 3, argv[1] ));
   } 
   arg3 = static_cast< int >(val3);
   {
     try {
-      result = (int)(arg1)->SetIndex(arg2,arg3);
+      result = (int)(arg1)->setIndex(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14155,7 +14173,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_SetIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_setIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   unsigned int arg2 ;
   void *argp1 = 0 ;
@@ -14170,19 +14188,19 @@ _wrap_IDMEFPath_SetIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","SetIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","setIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "unsigned int","SetIndex", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "unsigned int","setIndex", 2, argv[0] ));
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
     try {
-      result = (int)(arg1)->SetIndex(arg2);
+      result = (int)(arg1)->setIndex(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14197,7 +14215,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_SetIndex(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_setIndex(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
   int ii;
@@ -14219,7 +14237,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_SetIndex(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_SetIndex__SWIG_1(nargs, args, self);
+        return _wrap_IDMEFPath_setIndex__SWIG_1(nargs, args, self);
       }
     }
   }
@@ -14239,23 +14257,23 @@ SWIGINTERN VALUE _wrap_IDMEFPath_SetIndex(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_SetIndex__SWIG_0(nargs, args, self);
+          return _wrap_IDMEFPath_setIndex__SWIG_0(nargs, args, self);
         }
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.SetIndex", 
-    "    int IDMEFPath.SetIndex(unsigned int index, int depth)\n"
-    "    int IDMEFPath.SetIndex(unsigned int index)\n");
+  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.setIndex", 
+    "    int IDMEFPath.setIndex(unsigned int index, int depth)\n"
+    "    int IDMEFPath.setIndex(unsigned int index)\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_UndefineIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_undefineIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -14270,19 +14288,19 @@ _wrap_IDMEFPath_UndefineIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","UndefineIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","undefineIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","UndefineIndex", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","undefineIndex", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (int)(arg1)->UndefineIndex(arg2);
+      result = (int)(arg1)->undefineIndex(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14298,7 +14316,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_UndefineIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_undefineIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14310,14 +14328,14 @@ _wrap_IDMEFPath_UndefineIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","UndefineIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","undefineIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (int)(arg1)->UndefineIndex();
+      result = (int)(arg1)->undefineIndex();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14332,7 +14350,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_UndefineIndex(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_undefineIndex(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -14349,7 +14367,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_UndefineIndex(int nargs, VALUE *args, VALUE sel
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_UndefineIndex__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_undefineIndex__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -14363,22 +14381,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_UndefineIndex(int nargs, VALUE *args, VALUE sel
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_UndefineIndex__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_undefineIndex__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.UndefineIndex", 
-    "    int IDMEFPath.UndefineIndex(int depth)\n"
-    "    int IDMEFPath.UndefineIndex()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.undefineIndex", 
+    "    int IDMEFPath.undefineIndex(int depth)\n"
+    "    int IDMEFPath.undefineIndex()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -14393,19 +14411,19 @@ _wrap_IDMEFPath_GetIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","GetIndex", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","getIndex", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (int)(arg1)->GetIndex(arg2);
+      result = (int)(arg1)->getIndex(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14421,7 +14439,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14433,14 +14451,14 @@ _wrap_IDMEFPath_GetIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetIndex", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getIndex", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (int)(arg1)->GetIndex();
+      result = (int)(arg1)->getIndex();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14455,7 +14473,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_GetIndex(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_getIndex(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -14472,7 +14490,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetIndex(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_GetIndex__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_getIndex__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -14486,22 +14504,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetIndex(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_GetIndex__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_getIndex__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.GetIndex", 
-    "    int IDMEFPath.GetIndex(int depth)\n"
-    "    int IDMEFPath.GetIndex()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.getIndex", 
+    "    int IDMEFPath.getIndex(int depth)\n"
+    "    int IDMEFPath.getIndex()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_MakeChild(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_makeChild(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   char *arg2 = (char *) 0 ;
   unsigned int arg3 ;
@@ -14520,24 +14538,24 @@ _wrap_IDMEFPath_MakeChild(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","MakeChild", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","makeChild", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","MakeChild", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","makeChild", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_unsigned_SS_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "unsigned int","MakeChild", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "unsigned int","makeChild", 3, argv[1] ));
   } 
   arg3 = static_cast< unsigned int >(val3);
   {
     try {
-      result = (int)(arg1)->MakeChild((char const *)arg2,arg3);
+      result = (int)(arg1)->makeChild((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14555,7 +14573,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_MakeParent(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_makeParent(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14567,14 +14585,14 @@ _wrap_IDMEFPath_MakeParent(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","MakeParent", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","makeParent", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (int)(arg1)->MakeParent();
+      result = (int)(arg1)->makeParent();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14590,7 +14608,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Compare__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_compare__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
   int arg3 ;
@@ -14608,24 +14626,24 @@ _wrap_IDMEFPath_Compare__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Compare", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","compare", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Compare", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","compare", 2, argv[0] )); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFPath * >(argp2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","Compare", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int","compare", 3, argv[1] ));
   } 
   arg3 = static_cast< int >(val3);
   {
     try {
-      result = (int)(arg1)->Compare(arg2,arg3);
+      result = (int)(arg1)->compare(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14641,7 +14659,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Compare__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_compare__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
@@ -14656,19 +14674,19 @@ _wrap_IDMEFPath_Compare__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Compare", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","compare", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Compare", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","compare", 2, argv[0] )); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFPath * >(argp2);
   {
     try {
-      result = (int)(arg1)->Compare(arg2);
+      result = (int)(arg1)->compare(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14683,7 +14701,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_Compare(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_compare(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
   int ii;
@@ -14704,7 +14722,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Compare(int nargs, VALUE *args, VALUE self) {
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_IDMEFPath_Compare__SWIG_1(nargs, args, self);
+        return _wrap_IDMEFPath_compare__SWIG_1(nargs, args, self);
       }
     }
   }
@@ -14723,23 +14741,32 @@ SWIGINTERN VALUE _wrap_IDMEFPath_Compare(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEFPath_Compare__SWIG_0(nargs, args, self);
+          return _wrap_IDMEFPath_compare__SWIG_0(nargs, args, self);
         }
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.Compare", 
-    "    int IDMEFPath.Compare(Prelude::IDMEFPath *path, int depth)\n"
-    "    int IDMEFPath.Compare(Prelude::IDMEFPath *path)\n");
+  Ruby_Format_OverloadedError( argc, 4, "IDMEFPath.compare", 
+    "    int IDMEFPath.compare(Prelude::IDMEFPath *path, int depth)\n"
+    "    int IDMEFPath.compare(Prelude::IDMEFPath *path)\n");
   
   return Qnil;
 }
 
 
+
+/*
+  Document-method: Prelude::IDMEFPath.clone
+
+  call-seq:
+    clone -> IDMEFPath
+
+Create a duplicate of the class.
+*/
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Clone(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_clone(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14751,14 +14778,14 @@ _wrap_IDMEFPath_Clone(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Clone", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","clone", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (arg1)->Clone();
+      result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14774,7 +14801,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_CheckOperator(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_checkOperator(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   idmef_criterion_operator_t arg2 ;
   void *argp1 = 0 ;
@@ -14789,25 +14816,25 @@ _wrap_IDMEFPath_CheckOperator(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","CheckOperator", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","checkOperator", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_idmef_criterion_operator_t,  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "idmef_criterion_operator_t","CheckOperator", 2, argv[0] )); 
+      SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "idmef_criterion_operator_t","checkOperator", 2, argv[0] )); 
     }  
     if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "idmef_criterion_operator_t","CheckOperator", 2, argv[0]));
+      SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "idmef_criterion_operator_t","checkOperator", 2, argv[0]));
     } else {
       arg2 = *(reinterpret_cast< idmef_criterion_operator_t * >(argp2));
     }
   }
   {
     try {
-      result = (int)(arg1)->CheckOperator(arg2);
+      result = (int)(arg1)->checkOperator(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14823,7 +14850,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetApplicableOperators(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getApplicableOperators(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14835,14 +14862,14 @@ _wrap_IDMEFPath_GetApplicableOperators(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetApplicableOperators", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getApplicableOperators", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (arg1)->GetApplicableOperators();
+      result = (arg1)->getApplicableOperators();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14858,7 +14885,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetName__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getName__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -14873,19 +14900,19 @@ _wrap_IDMEFPath_GetName__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetName", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getName", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","GetName", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","getName", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (char *)(arg1)->GetName(arg2);
+      result = (char *)(arg1)->getName(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14901,7 +14928,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetName__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getName__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14913,14 +14940,14 @@ _wrap_IDMEFPath_GetName__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetName", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getName", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (char *)(arg1)->GetName();
+      result = (char *)(arg1)->getName();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -14935,7 +14962,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_GetName(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_getName(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -14952,7 +14979,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetName(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_GetName__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_getName__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -14966,22 +14993,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_GetName(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_GetName__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_getName__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.GetName", 
-    "    char const * IDMEFPath.GetName(int depth)\n"
-    "    char const * IDMEFPath.GetName()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.getName", 
+    "    char const * IDMEFPath.getName(int depth)\n"
+    "    char const * IDMEFPath.getName()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_IsAmbiguous(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_isAmbiguous(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -14993,14 +15020,14 @@ _wrap_IDMEFPath_IsAmbiguous(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","IsAmbiguous", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","isAmbiguous", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (bool)(arg1)->IsAmbiguous();
+      result = (bool)(arg1)->isAmbiguous();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15016,7 +15043,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_HasLists(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_hasLists(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15028,14 +15055,14 @@ _wrap_IDMEFPath_HasLists(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","HasLists", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","hasLists", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (int)(arg1)->HasLists();
+      result = (int)(arg1)->hasLists();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15051,7 +15078,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_IsList__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_isList__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
@@ -15066,19 +15093,19 @@ _wrap_IDMEFPath_IsList__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","IsList", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","isList", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","IsList", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int","isList", 2, argv[0] ));
   } 
   arg2 = static_cast< int >(val2);
   {
     try {
-      result = (bool)(arg1)->IsList(arg2);
+      result = (bool)(arg1)->isList(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15094,7 +15121,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_IsList__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_isList__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15106,14 +15133,14 @@ _wrap_IDMEFPath_IsList__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","IsList", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","isList", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (bool)(arg1)->IsList();
+      result = (bool)(arg1)->isList();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15128,7 +15155,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFPath_IsList(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFPath_isList(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -15145,7 +15172,7 @@ SWIGINTERN VALUE _wrap_IDMEFPath_IsList(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFPath_IsList__SWIG_1(nargs, args, self);
+      return _wrap_IDMEFPath_isList__SWIG_1(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -15159,22 +15186,22 @@ SWIGINTERN VALUE _wrap_IDMEFPath_IsList(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_IDMEFPath_IsList__SWIG_0(nargs, args, self);
+        return _wrap_IDMEFPath_isList__SWIG_0(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.IsList", 
-    "    bool IDMEFPath.IsList(int depth)\n"
-    "    bool IDMEFPath.IsList()\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFPath.isList", 
+    "    bool IDMEFPath.isList(int depth)\n"
+    "    bool IDMEFPath.isList()\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_GetDepth(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_getDepth(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15186,14 +15213,14 @@ _wrap_IDMEFPath_GetDepth(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","GetDepth", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","getDepth", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
     try {
-      result = (unsigned int)(arg1)->GetDepth();
+      result = (unsigned int)(arg1)->getDepth();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15209,7 +15236,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFPath_Get(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFPath_get(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
   void *argp1 = 0 ;
@@ -15224,22 +15251,22 @@ _wrap_IDMEFPath_Get(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","Get", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFPath *","get", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","Get", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "Prelude::IDMEF &","get", 2, argv[0] )); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","Get", 2, argv[0])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEF &","get", 2, argv[0])); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     try {
-      result = Prelude_IDMEFPath_Get(arg1,*arg2);
+      result = Prelude_IDMEFPath_get(arg1,*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15250,13 +15277,13 @@ _wrap_IDMEFPath_Get(int argc, VALUE *argv, VALUE self) {
   {
     int ret;
     
-    if ( (&result)->IsNull() )
+    if ( (&result)->isNull() )
     vresult = Qnil;
     else {
       ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
+        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
       }
     }
@@ -15281,7 +15308,7 @@ _wrap_new_IDMEFTime__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15315,7 +15342,7 @@ _wrap_new_IDMEFTime__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15349,7 +15376,7 @@ _wrap_new_IDMEFTime__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((time_t const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15384,7 +15411,7 @@ _wrap_new_IDMEFTime__SWIG_3(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((char const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15420,7 +15447,7 @@ _wrap_new_IDMEFTime__SWIG_4(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((timeval const *)arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15474,7 +15501,7 @@ _wrap_new_IDMEFTime__SWIG_5(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((Prelude::IDMEFTime const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15565,7 +15592,7 @@ free_Prelude_IDMEFTime(Prelude::IDMEFTime *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15575,14 +15602,14 @@ _wrap_IDMEFTime_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      (arg1)->Set();
+      (arg1)->set();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15597,7 +15624,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   time_t *arg2 = (time_t *) 0 ;
   void *argp1 = 0 ;
@@ -15610,19 +15637,19 @@ _wrap_IDMEFTime_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_time_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "time_t const *","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "time_t const *","set", 2, argv[0] )); 
   }
   arg2 = reinterpret_cast< time_t * >(argp2);
   {
     try {
-      (arg1)->Set((time_t const *)arg2);
+      (arg1)->set((time_t const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15637,7 +15664,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -15651,19 +15678,19 @@ _wrap_IDMEFTime_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      (arg1)->Set((char const *)arg2);
+      (arg1)->set((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15680,7 +15707,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   timeval *arg2 = (timeval *) 0 ;
   void *argp1 = 0 ;
@@ -15693,19 +15720,19 @@ _wrap_IDMEFTime_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_timeval, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "timeval const *","Set", 2, argv[0] )); 
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "timeval const *","set", 2, argv[0] )); 
   }
   arg2 = reinterpret_cast< timeval * >(argp2);
   {
     try {
-      (arg1)->Set((timeval const *)arg2);
+      (arg1)->set((timeval const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15719,7 +15746,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEFTime_Set(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEFTime_set(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
   int ii;
@@ -15736,7 +15763,7 @@ SWIGINTERN VALUE _wrap_IDMEFTime_Set(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_IDMEFTime_Set__SWIG_0(nargs, args, self);
+      return _wrap_IDMEFTime_set__SWIG_0(nargs, args, self);
     }
   }
   if (argc == 2) {
@@ -15749,7 +15776,7 @@ SWIGINTERN VALUE _wrap_IDMEFTime_Set(int nargs, VALUE *args, VALUE self) {
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_time_t, 0);
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_IDMEFTime_Set__SWIG_1(nargs, args, self);
+        return _wrap_IDMEFTime_set__SWIG_1(nargs, args, self);
       }
     }
   }
@@ -15763,7 +15790,7 @@ SWIGINTERN VALUE _wrap_IDMEFTime_Set(int nargs, VALUE *args, VALUE self) {
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_timeval, 0);
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_IDMEFTime_Set__SWIG_3(nargs, args, self);
+        return _wrap_IDMEFTime_set__SWIG_3(nargs, args, self);
       }
     }
   }
@@ -15776,24 +15803,24 @@ SWIGINTERN VALUE _wrap_IDMEFTime_Set(int nargs, VALUE *args, VALUE self) {
       int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
       _v = SWIG_CheckState(res);
       if (_v) {
-        return _wrap_IDMEFTime_Set__SWIG_2(nargs, args, self);
+        return _wrap_IDMEFTime_set__SWIG_2(nargs, args, self);
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 3, "IDMEFTime.Set", 
-    "    void IDMEFTime.Set()\n"
-    "    void IDMEFTime.Set(time_t const *time)\n"
-    "    void IDMEFTime.Set(char const *string)\n"
-    "    void IDMEFTime.Set(timeval const *tv)\n");
+  Ruby_Format_OverloadedError( argc, 3, "IDMEFTime.set", 
+    "    void IDMEFTime.set()\n"
+    "    void IDMEFTime.set(time_t const *time)\n"
+    "    void IDMEFTime.set(char const *string)\n"
+    "    void IDMEFTime.set(timeval const *tv)\n");
   
   return Qnil;
 }
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_SetSec(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_setSec(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   uint32_t arg2 ;
   void *argp1 = 0 ;
@@ -15806,19 +15833,19 @@ _wrap_IDMEFTime_SetSec(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","SetSec", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","setSec", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint32_t","SetSec", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint32_t","setSec", 2, argv[0] ));
   } 
   arg2 = static_cast< uint32_t >(val2);
   {
     try {
-      (arg1)->SetSec(arg2);
+      (arg1)->setSec(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15833,7 +15860,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_SetUSec(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_setUSec(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   uint32_t arg2 ;
   void *argp1 = 0 ;
@@ -15846,19 +15873,19 @@ _wrap_IDMEFTime_SetUSec(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","SetUSec", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","setUSec", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint32_t","SetUSec", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "uint32_t","setUSec", 2, argv[0] ));
   } 
   arg2 = static_cast< uint32_t >(val2);
   {
     try {
-      (arg1)->SetUSec(arg2);
+      (arg1)->setUSec(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15873,7 +15900,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_SetGmtOffset(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_setGmtOffset(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   int32_t arg2 ;
   void *argp1 = 0 ;
@@ -15886,19 +15913,19 @@ _wrap_IDMEFTime_SetGmtOffset(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","SetGmtOffset", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","setGmtOffset", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int32_t","SetGmtOffset", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode2), Ruby_Format_TypeError( "", "int32_t","setGmtOffset", 2, argv[0] ));
   } 
   arg2 = static_cast< int32_t >(val2);
   {
     try {
-      (arg1)->SetGmtOffset(arg2);
+      (arg1)->setGmtOffset(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15913,7 +15940,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_GetSec(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_getSec(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15925,14 +15952,14 @@ _wrap_IDMEFTime_GetSec(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","GetSec", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","getSec", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->GetSec();
+      result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getSec();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15948,7 +15975,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_GetUSec(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_getUSec(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15960,14 +15987,14 @@ _wrap_IDMEFTime_GetUSec(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","GetUSec", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","getUSec", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->GetUSec();
+      result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getUSec();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -15983,7 +16010,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_GetGmtOffset(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_getGmtOffset(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15995,14 +16022,14 @@ _wrap_IDMEFTime_GetGmtOffset(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","GetGmtOffset", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","getGmtOffset", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = (int32_t)((Prelude::IDMEFTime const *)arg1)->GetGmtOffset();
+      result = (int32_t)((Prelude::IDMEFTime const *)arg1)->getGmtOffset();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16017,8 +16044,17 @@ fail:
 }
 
 
+
+/*
+  Document-method: Prelude::IDMEFTime.clone
+
+  call-seq:
+    clone -> IDMEFTime
+
+Create a duplicate of the class.
+*/
 SWIGINTERN VALUE
-_wrap_IDMEFTime_Clone(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_clone(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -16030,14 +16066,14 @@ _wrap_IDMEFTime_Clone(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","Clone", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime *","clone", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = (arg1)->Clone();
+      result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16053,7 +16089,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEFTime_ToString(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEFTime_toString(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -16065,14 +16101,14 @@ _wrap_IDMEFTime_ToString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","ToString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEFTime const *","toString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEFTime const *)arg1)->ToString();
+      result = ((Prelude::IDMEFTime const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16107,7 +16143,7 @@ _wrap_IDMEFTime___int__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (int)((Prelude::IDMEFTime const *)arg1)->operator int();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16142,7 +16178,7 @@ _wrap_IDMEFTime___long__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (long)((Prelude::IDMEFTime const *)arg1)->operator long();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16177,7 +16213,7 @@ _wrap_IDMEFTime___float__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (double)((Prelude::IDMEFTime const *)arg1)->operator double();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16212,7 +16248,7 @@ _wrap_IDMEFTime___str__(int argc, VALUE *argv, VALUE self) {
     try {
       result = ((Prelude::IDMEFTime const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16229,7 +16265,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFTime.>=
+  Document-method: Prelude::IDMEFTime.>=
 
   call-seq:
     >=(time) -> bool
@@ -16267,7 +16303,7 @@ _wrap_IDMEFTime___ge__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16284,7 +16320,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFTime.<=
+  Document-method: Prelude::IDMEFTime.<=
 
   call-seq:
     <=(time) -> bool
@@ -16322,7 +16358,7 @@ _wrap_IDMEFTime___le__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16339,7 +16375,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFTime.==
+  Document-method: Prelude::IDMEFTime.==
 
   call-seq:
     ==(time) -> bool
@@ -16377,7 +16413,7 @@ _wrap_IDMEFTime___eq__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16394,7 +16430,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFTime.>
+  Document-method: Prelude::IDMEFTime.>
 
   call-seq:
     >(time) -> bool
@@ -16432,7 +16468,7 @@ _wrap_IDMEFTime___gt__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16449,7 +16485,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEFTime.<
+  Document-method: Prelude::IDMEFTime.<
 
   call-seq:
     <(time) -> bool
@@ -16487,7 +16523,7 @@ _wrap_IDMEFTime___lt__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (bool)(arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16521,7 +16557,7 @@ _wrap_new_IDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEF *)new Prelude::IDMEF();
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16558,7 +16594,7 @@ _wrap_new_IDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEF *)new Prelude::IDMEF((Prelude::IDMEF const &)*arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16609,7 +16645,7 @@ _wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEF *)new Prelude::IDMEF(arg1);
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16666,7 +16702,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > arg3 ;
@@ -16681,28 +16717,28 @@ _wrap_IDMEF_Set__SWIG_0(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
     int res = swig::asptr(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > >","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16719,7 +16755,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
@@ -16736,24 +16772,24 @@ _wrap_IDMEF_Set__SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 3, argv[1] )); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEF * >(argp3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16770,7 +16806,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > arg3 ;
@@ -16785,28 +16821,28 @@ _wrap_IDMEF_Set__SWIG_2(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
     int res = swig::asptr(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16823,7 +16859,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   Prelude::IDMEFValue *arg3 = (Prelude::IDMEFValue *) 0 ;
@@ -16840,24 +16876,24 @@ _wrap_IDMEF_Set__SWIG_3(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFValue *","set", 3, argv[1] )); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEFValue * >(argp3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16874,7 +16910,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_4(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_4(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   Prelude::IDMEFTime *arg3 = 0 ;
@@ -16891,27 +16927,27 @@ _wrap_IDMEF_Set__SWIG_4(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFTime &","Set", 3, argv[1] )); 
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "Prelude::IDMEFTime &","set", 3, argv[1] )); 
   }
   if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFTime &","Set", 3, argv[1])); 
+    SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "Prelude::IDMEFTime &","set", 3, argv[1])); 
   }
   arg3 = reinterpret_cast< Prelude::IDMEFTime * >(argp3);
   {
     try {
-      (arg1)->Set((char const *)arg2,*arg3);
+      (arg1)->set((char const *)arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16928,7 +16964,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_5(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_5(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   char *arg3 = (char *) 0 ;
@@ -16946,24 +16982,24 @@ _wrap_IDMEF_Set__SWIG_5(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   res3 = SWIG_AsCharPtrAndSize(argv[1], &buf3, NULL, &alloc3);
   if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "char const *","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(res3), Ruby_Format_TypeError( "", "char const *","set", 3, argv[1] ));
   }
   arg3 = reinterpret_cast< char * >(buf3);
   {
     try {
-      (arg1)->Set((char const *)arg2,(char const *)arg3);
+      (arg1)->set((char const *)arg2,(char const *)arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -16982,7 +17018,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_6(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_6(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   std::string arg3 ;
@@ -16997,28 +17033,28 @@ _wrap_IDMEF_Set__SWIG_6(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::string *ptr = (std::string *)0;
     int res = SWIG_AsPtr_std_string(argv[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::string","Set", 3, argv[1] )); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), Ruby_Format_TypeError( "", "std::string","set", 3, argv[1] )); 
     }
     arg3 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17035,7 +17071,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_7(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_7(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   int16_t arg3 ;
@@ -17052,24 +17088,24 @@ _wrap_IDMEF_Set__SWIG_7(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_short(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int16_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int16_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int16_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17086,7 +17122,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_8(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_8(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   uint16_t arg3 ;
@@ -17103,24 +17139,24 @@ _wrap_IDMEF_Set__SWIG_8(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_unsigned_SS_short(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint16_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint16_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint16_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17137,7 +17173,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_9(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_9(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   int32_t arg3 ;
@@ -17154,24 +17190,24 @@ _wrap_IDMEF_Set__SWIG_9(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int32_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int32_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int32_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17188,7 +17224,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_10(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_10(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   uint32_t arg3 ;
@@ -17205,24 +17241,24 @@ _wrap_IDMEF_Set__SWIG_10(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_unsigned_SS_int(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint32_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint32_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint32_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17239,7 +17275,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_11(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_11(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   int64_t arg3 ;
@@ -17256,24 +17292,24 @@ _wrap_IDMEF_Set__SWIG_11(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_long_SS_long(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int64_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "int64_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< int64_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17290,7 +17326,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_12(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_12(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   uint64_t arg3 ;
@@ -17307,24 +17343,24 @@ _wrap_IDMEF_Set__SWIG_12(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint64_t","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "uint64_t","set", 3, argv[1] ));
   } 
   arg3 = static_cast< uint64_t >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17341,7 +17377,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_13(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_13(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   float arg3 ;
@@ -17358,24 +17394,24 @@ _wrap_IDMEF_Set__SWIG_13(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_float(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "float","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "float","set", 3, argv[1] ));
   } 
   arg3 = static_cast< float >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17392,7 +17428,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Set__SWIG_14(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_set__SWIG_14(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   double arg3 ;
@@ -17409,24 +17445,24 @@ _wrap_IDMEF_Set__SWIG_14(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Set", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","set", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Set", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","set", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   ecode3 = SWIG_AsVal_double(argv[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "double","Set", 3, argv[1] ));
+    SWIG_exception_fail(SWIG_ArgError(ecode3), Ruby_Format_TypeError( "", "double","set", 3, argv[1] ));
   } 
   arg3 = static_cast< double >(val3);
   {
     try {
-      (arg1)->Set((char const *)arg2,arg3);
+      (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17442,7 +17478,7 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
+SWIGINTERN VALUE _wrap_IDMEF_set(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
   int ii;
@@ -17466,7 +17502,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_1(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_1(nargs, args, self);
         }
       }
     }
@@ -17484,7 +17520,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_3(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_3(nargs, args, self);
         }
       }
     }
@@ -17502,7 +17538,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_4(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_4(nargs, args, self);
         }
       }
     }
@@ -17521,7 +17557,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_8(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_8(nargs, args, self);
         }
       }
     }
@@ -17540,7 +17576,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_7(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_7(nargs, args, self);
         }
       }
     }
@@ -17559,7 +17595,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_10(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_10(nargs, args, self);
         }
       }
     }
@@ -17578,7 +17614,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_9(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_9(nargs, args, self);
         }
       }
     }
@@ -17597,7 +17633,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_12(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_12(nargs, args, self);
         }
       }
     }
@@ -17616,7 +17652,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_11(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_11(nargs, args, self);
         }
       }
     }
@@ -17635,7 +17671,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_13(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_13(nargs, args, self);
         }
       }
     }
@@ -17654,7 +17690,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_14(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_14(nargs, args, self);
         }
       }
     }
@@ -17671,7 +17707,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_6(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_6(nargs, args, self);
         }
       }
     }
@@ -17688,7 +17724,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = SWIG_AsCharPtrAndSize(argv[2], 0, NULL, 0);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_5(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_5(nargs, args, self);
         }
       }
     }
@@ -17705,7 +17741,7 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_0(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_0(nargs, args, self);
         }
       }
     }
@@ -17722,36 +17758,45 @@ SWIGINTERN VALUE _wrap_IDMEF_Set(int nargs, VALUE *args, VALUE self) {
         int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_IDMEF_Set__SWIG_2(nargs, args, self);
+          return _wrap_IDMEF_set__SWIG_2(nargs, args, self);
         }
       }
     }
   }
   
 fail:
-  Ruby_Format_OverloadedError( argc, 4, "IDMEF.Set", 
-    "    void IDMEF.Set(char const *path, std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > value)\n"
-    "    void IDMEF.Set(char const *path, Prelude::IDMEF *value)\n"
-    "    void IDMEF.Set(char const *path, std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > value)\n"
-    "    void IDMEF.Set(char const *path, Prelude::IDMEFValue *value)\n"
-    "    void IDMEF.Set(char const *path, Prelude::IDMEFTime &value)\n"
-    "    void IDMEF.Set(char const *path, char const *value)\n"
-    "    void IDMEF.Set(char const *path, std::string value)\n"
-    "    void IDMEF.Set(char const *path, int16_t value)\n"
-    "    void IDMEF.Set(char const *path, uint16_t value)\n"
-    "    void IDMEF.Set(char const *path, int32_t value)\n"
-    "    void IDMEF.Set(char const *path, uint32_t value)\n"
-    "    void IDMEF.Set(char const *path, int64_t value)\n"
-    "    void IDMEF.Set(char const *path, uint64_t value)\n"
-    "    void IDMEF.Set(char const *path, float value)\n"
-    "    void IDMEF.Set(char const *path, double value)\n");
+  Ruby_Format_OverloadedError( argc, 4, "IDMEF.set", 
+    "    void IDMEF.set(char const *path, std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > value)\n"
+    "    void IDMEF.set(char const *path, Prelude::IDMEF *value)\n"
+    "    void IDMEF.set(char const *path, std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > value)\n"
+    "    void IDMEF.set(char const *path, Prelude::IDMEFValue *value)\n"
+    "    void IDMEF.set(char const *path, Prelude::IDMEFTime &value)\n"
+    "    void IDMEF.set(char const *path, char const *value)\n"
+    "    void IDMEF.set(char const *path, std::string value)\n"
+    "    void IDMEF.set(char const *path, int16_t value)\n"
+    "    void IDMEF.set(char const *path, uint16_t value)\n"
+    "    void IDMEF.set(char const *path, int32_t value)\n"
+    "    void IDMEF.set(char const *path, uint32_t value)\n"
+    "    void IDMEF.set(char const *path, int64_t value)\n"
+    "    void IDMEF.set(char const *path, uint64_t value)\n"
+    "    void IDMEF.set(char const *path, float value)\n"
+    "    void IDMEF.set(char const *path, double value)\n");
   
   return Qnil;
 }
 
 
+
+/*
+  Document-method: Prelude::IDMEF.clone
+
+  call-seq:
+    clone -> IDMEF
+
+Create a duplicate of the class.
+*/
 SWIGINTERN VALUE
-_wrap_IDMEF_Clone(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_clone(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -17763,14 +17808,14 @@ _wrap_IDMEF_Clone(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Clone", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","clone", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   {
     try {
-      result = (arg1)->Clone();
+      result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17786,7 +17831,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_GetId(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_getId(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -17798,14 +17843,14 @@ _wrap_IDMEF_GetId(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","GetId", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","getId", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEF const *)arg1)->GetId();
+      result = ((Prelude::IDMEF const *)arg1)->getId();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17821,7 +17866,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_ToString(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_toString(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -17833,14 +17878,14 @@ _wrap_IDMEF_ToString(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","ToString", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","toString", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEF const *)arg1)->ToString();
+      result = ((Prelude::IDMEF const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17875,7 +17920,7 @@ _wrap_IDMEF___str__(int argc, VALUE *argv, VALUE self) {
     try {
       result = ((Prelude::IDMEF const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17892,7 +17937,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEF.==
+  Document-method: Prelude::IDMEF.==
 
   call-seq:
     ==(idmef) -> int
@@ -17927,7 +17972,7 @@ _wrap_IDMEF___eq__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17943,7 +17988,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Write(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_write(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
@@ -17954,7 +17999,7 @@ _wrap_IDMEF_Write(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Write", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","write", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   {
@@ -17963,9 +18008,9 @@ _wrap_IDMEF_Write(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      Prelude_IDMEF_Write(arg1,arg2);
+      Prelude_IDMEF_write(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17980,7 +18025,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Read(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_read(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
@@ -17993,7 +18038,7 @@ _wrap_IDMEF_Read(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Read", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","read", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   {
@@ -18002,9 +18047,9 @@ _wrap_IDMEF_Read(int argc, VALUE *argv, VALUE self) {
   }
   {
     try {
-      result = (int)Prelude_IDMEF_Read(arg1,arg2);
+      result = (int)Prelude_IDMEF_read(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF ) {
+      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         result = 0;
       } else
       SWIG_exception_fail(SWIG_RuntimeError, e.what());
@@ -18019,7 +18064,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEF.>>
+  Document-method: Prelude::IDMEF.>>
 
   call-seq:
     >>(nocast_p) -> IDMEF
@@ -18051,7 +18096,7 @@ _wrap_IDMEF___rshift__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sg__Sg_(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -18068,7 +18113,7 @@ fail:
 
 
 /*
-  Document-method: PreludeEasy::IDMEF.<<
+  Document-method: Prelude::IDMEF.<<
 
   call-seq:
     <<(nocast_p) -> IDMEF
@@ -18100,7 +18145,7 @@ _wrap_IDMEF___lshift__(int argc, VALUE *argv, VALUE self) {
     try {
       result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sl__Sl_(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -18116,7 +18161,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_IDMEF_Get(int argc, VALUE *argv, VALUE self) {
+_wrap_IDMEF_get(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
@@ -18132,19 +18177,19 @@ _wrap_IDMEF_Get(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","Get", 1, self )); 
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF *","get", 1, self )); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(argv[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","Get", 2, argv[0] ));
+    SWIG_exception_fail(SWIG_ArgError(res2), Ruby_Format_TypeError( "", "char const *","get", 2, argv[0] ));
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     try {
-      result = Prelude_IDMEF_Get(arg1,(char const *)arg2);
+      result = Prelude_IDMEF_get(arg1,(char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.GetCode() == PRELUDE_ERROR_EOF )
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -18155,13 +18200,13 @@ _wrap_IDMEF_Get(int argc, VALUE *argv, VALUE self) {
   {
     int ret;
     
-    if ( (&result)->IsNull() )
+    if ( (&result)->isNull() )
     vresult = Qnil;
     else {
       ret = IDMEFValue_to_SWIG(result, NULL, &vresult);
       if ( ret < 0 ) {
         std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->GetType()) << "'";
+        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
       }
     }
@@ -18620,11 +18665,11 @@ SWIG_PropagateClientData(void) {
 #ifdef __cplusplus
 extern "C"
 #endif
-SWIGEXPORT void Init_PreludeEasy(void) {
+SWIGEXPORT void Init_Prelude(void) {
   size_t i;
   
   SWIG_InitRuntime();
-  mPreludeEasy = rb_define_module("PreludeEasy");
+  mPrelude = rb_define_module("Prelude");
   
   SWIG_InitializeModule(0);
   for (i = 0; i < swig_module.size; i++) {
@@ -18633,7 +18678,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   
   SWIG_RubyInitializeTrackings();
   
-  SwigClassGC_VALUE.klass = rb_define_class_under(mPreludeEasy, "GC_VALUE", rb_cObject);
+  SwigClassGC_VALUE.klass = rb_define_class_under(mPrelude, "GC_VALUE", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_swig__GC_VALUE, (void *) &SwigClassGC_VALUE);
   rb_undef_alloc_func(SwigClassGC_VALUE.klass);
   rb_define_method(SwigClassGC_VALUE.klass, "inspect", VALUEFUNC(_wrap_GC_VALUE_inspect), -1);
@@ -18644,7 +18689,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   swig::SwigGCReferences::initialize();
   
   
-  SwigClassConstIterator.klass = rb_define_class_under(mPreludeEasy, "ConstIterator", rb_cObject);
+  SwigClassConstIterator.klass = rb_define_class_under(mPrelude, "ConstIterator", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_swig__ConstIterator, (void *) &SwigClassConstIterator);
   rb_undef_alloc_func(SwigClassConstIterator.klass);
   rb_define_method(SwigClassConstIterator.klass, "value", VALUEFUNC(_wrap_ConstIterator_value), -1);
@@ -18660,7 +18705,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassConstIterator.destroy = (void (*)(void *)) free_swig_ConstIterator;
   SwigClassConstIterator.trackObjects = 0;
   
-  SwigClassIterator.klass = rb_define_class_under(mPreludeEasy, "Iterator", ((swig_class *) SWIGTYPE_p_swig__ConstIterator->clientdata)->klass);
+  SwigClassIterator.klass = rb_define_class_under(mPrelude, "Iterator", ((swig_class *) SWIGTYPE_p_swig__ConstIterator->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_swig__Iterator, (void *) &SwigClassIterator);
   rb_undef_alloc_func(SwigClassIterator.klass);
   rb_define_method(SwigClassIterator.klass, "value=", VALUEFUNC(_wrap_Iterator_valuee___), -1);
@@ -18709,81 +18754,81 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   
   free(argv);
   
-  rb_define_module_function(mPreludeEasy, "CheckVersion", VALUEFUNC(_wrap_CheckVersion), -1);
+  rb_define_module_function(mPrelude, "checkVersion", VALUEFUNC(_wrap_checkVersion), -1);
   
-  SwigClassClientProfile.klass = rb_define_class_under(mPreludeEasy, "ClientProfile", rb_cObject);
+  SwigClassClientProfile.klass = rb_define_class_under(mPrelude, "ClientProfile", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__ClientProfile, (void *) &SwigClassClientProfile);
   rb_define_alloc_func(SwigClassClientProfile.klass, _wrap_ClientProfile_allocate);
   rb_define_method(SwigClassClientProfile.klass, "initialize", VALUEFUNC(_wrap_new_ClientProfile), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetUid", VALUEFUNC(_wrap_ClientProfile_GetUid), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetGid", VALUEFUNC(_wrap_ClientProfile_GetGid), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetName", VALUEFUNC(_wrap_ClientProfile_GetName), -1);
-  rb_define_method(SwigClassClientProfile.klass, "SetName", VALUEFUNC(_wrap_ClientProfile_SetName), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetAnalyzerId", VALUEFUNC(_wrap_ClientProfile_GetAnalyzerId), -1);
-  rb_define_method(SwigClassClientProfile.klass, "SetAnalyzerId", VALUEFUNC(_wrap_ClientProfile_SetAnalyzerId), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetConfigFilename", VALUEFUNC(_wrap_ClientProfile_GetConfigFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetAnalyzeridFilename", VALUEFUNC(_wrap_ClientProfile_GetAnalyzeridFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsKeyFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsKeyFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsServerCaCertFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsServerCaCertFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsServerKeyCertFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsServerKeyCertFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsServerCrlFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsServerCrlFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsClientKeyCertFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsClientKeyCertFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetTlsClientTrustedCertFilename", VALUEFUNC(_wrap_ClientProfile_GetTlsClientTrustedCertFilename), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetBackupDirname", VALUEFUNC(_wrap_ClientProfile_GetBackupDirname), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetProfileDirname", VALUEFUNC(_wrap_ClientProfile_GetProfileDirname), -1);
-  rb_define_method(SwigClassClientProfile.klass, "SetPrefix", VALUEFUNC(_wrap_ClientProfile_SetPrefix), -1);
-  rb_define_method(SwigClassClientProfile.klass, "GetPrefix", VALUEFUNC(_wrap_ClientProfile_GetPrefix), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getUid", VALUEFUNC(_wrap_ClientProfile_getUid), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getGid", VALUEFUNC(_wrap_ClientProfile_getGid), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getName", VALUEFUNC(_wrap_ClientProfile_getName), -1);
+  rb_define_method(SwigClassClientProfile.klass, "setName", VALUEFUNC(_wrap_ClientProfile_setName), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getAnalyzerId", VALUEFUNC(_wrap_ClientProfile_getAnalyzerId), -1);
+  rb_define_method(SwigClassClientProfile.klass, "setAnalyzerId", VALUEFUNC(_wrap_ClientProfile_setAnalyzerId), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getConfigFilename", VALUEFUNC(_wrap_ClientProfile_getConfigFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getAnalyzeridFilename", VALUEFUNC(_wrap_ClientProfile_getAnalyzeridFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsKeyFilename", VALUEFUNC(_wrap_ClientProfile_getTlsKeyFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsServerCaCertFilename", VALUEFUNC(_wrap_ClientProfile_getTlsServerCaCertFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsServerKeyCertFilename", VALUEFUNC(_wrap_ClientProfile_getTlsServerKeyCertFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsServerCrlFilename", VALUEFUNC(_wrap_ClientProfile_getTlsServerCrlFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsClientKeyCertFilename", VALUEFUNC(_wrap_ClientProfile_getTlsClientKeyCertFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getTlsClientTrustedCertFilename", VALUEFUNC(_wrap_ClientProfile_getTlsClientTrustedCertFilename), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getBackupDirname", VALUEFUNC(_wrap_ClientProfile_getBackupDirname), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getProfileDirname", VALUEFUNC(_wrap_ClientProfile_getProfileDirname), -1);
+  rb_define_method(SwigClassClientProfile.klass, "setPrefix", VALUEFUNC(_wrap_ClientProfile_setPrefix), -1);
+  rb_define_method(SwigClassClientProfile.klass, "getPrefix", VALUEFUNC(_wrap_ClientProfile_getPrefix), -1);
   SwigClassClientProfile.mark = 0;
   SwigClassClientProfile.destroy = (void (*)(void *)) free_Prelude_ClientProfile;
   SwigClassClientProfile.trackObjects = 0;
   
-  SwigClassConnection.klass = rb_define_class_under(mPreludeEasy, "Connection", rb_cObject);
+  SwigClassConnection.klass = rb_define_class_under(mPrelude, "Connection", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__Connection, (void *) &SwigClassConnection);
   rb_define_alloc_func(SwigClassConnection.klass, _wrap_Connection_allocate);
   rb_define_method(SwigClassConnection.klass, "initialize", VALUEFUNC(_wrap_new_Connection), -1);
-  rb_define_method(SwigClassConnection.klass, "GetConnection", VALUEFUNC(_wrap_Connection_GetConnection), -1);
-  rb_define_method(SwigClassConnection.klass, "Close", VALUEFUNC(_wrap_Connection_Close), -1);
-  rb_define_method(SwigClassConnection.klass, "Connect", VALUEFUNC(_wrap_Connection_Connect), -1);
-  rb_define_method(SwigClassConnection.klass, "SetState", VALUEFUNC(_wrap_Connection_SetState), -1);
-  rb_define_method(SwigClassConnection.klass, "GetState", VALUEFUNC(_wrap_Connection_GetState), -1);
-  rb_define_method(SwigClassConnection.klass, "SetData", VALUEFUNC(_wrap_Connection_SetData), -1);
-  rb_define_method(SwigClassConnection.klass, "GetData", VALUEFUNC(_wrap_Connection_GetData), -1);
-  rb_define_method(SwigClassConnection.klass, "GetPermission", VALUEFUNC(_wrap_Connection_GetPermission), -1);
-  rb_define_method(SwigClassConnection.klass, "SetPeerAnalyzerid", VALUEFUNC(_wrap_Connection_SetPeerAnalyzerid), -1);
-  rb_define_method(SwigClassConnection.klass, "GetPeerAnalyzerid", VALUEFUNC(_wrap_Connection_GetPeerAnalyzerid), -1);
-  rb_define_method(SwigClassConnection.klass, "GetLocalAddr", VALUEFUNC(_wrap_Connection_GetLocalAddr), -1);
-  rb_define_method(SwigClassConnection.klass, "GetLocalPort", VALUEFUNC(_wrap_Connection_GetLocalPort), -1);
-  rb_define_method(SwigClassConnection.klass, "GetPeerAddr", VALUEFUNC(_wrap_Connection_GetPeerAddr), -1);
-  rb_define_method(SwigClassConnection.klass, "GetPeerPort", VALUEFUNC(_wrap_Connection_GetPeerPort), -1);
-  rb_define_method(SwigClassConnection.klass, "IsAlive", VALUEFUNC(_wrap_Connection_IsAlive), -1);
-  rb_define_method(SwigClassConnection.klass, "GetFd", VALUEFUNC(_wrap_Connection_GetFd), -1);
-  rb_define_method(SwigClassConnection.klass, "RecvIDMEF", VALUEFUNC(_wrap_Connection_RecvIDMEF), -1);
+  rb_define_method(SwigClassConnection.klass, "getConnection", VALUEFUNC(_wrap_Connection_getConnection), -1);
+  rb_define_method(SwigClassConnection.klass, "close", VALUEFUNC(_wrap_Connection_close), -1);
+  rb_define_method(SwigClassConnection.klass, "connect", VALUEFUNC(_wrap_Connection_connect), -1);
+  rb_define_method(SwigClassConnection.klass, "setState", VALUEFUNC(_wrap_Connection_setState), -1);
+  rb_define_method(SwigClassConnection.klass, "getState", VALUEFUNC(_wrap_Connection_getState), -1);
+  rb_define_method(SwigClassConnection.klass, "setData", VALUEFUNC(_wrap_Connection_setData), -1);
+  rb_define_method(SwigClassConnection.klass, "getData", VALUEFUNC(_wrap_Connection_getData), -1);
+  rb_define_method(SwigClassConnection.klass, "getPermission", VALUEFUNC(_wrap_Connection_getPermission), -1);
+  rb_define_method(SwigClassConnection.klass, "setPeerAnalyzerid", VALUEFUNC(_wrap_Connection_setPeerAnalyzerid), -1);
+  rb_define_method(SwigClassConnection.klass, "getPeerAnalyzerid", VALUEFUNC(_wrap_Connection_getPeerAnalyzerid), -1);
+  rb_define_method(SwigClassConnection.klass, "getLocalAddr", VALUEFUNC(_wrap_Connection_getLocalAddr), -1);
+  rb_define_method(SwigClassConnection.klass, "getLocalPort", VALUEFUNC(_wrap_Connection_getLocalPort), -1);
+  rb_define_method(SwigClassConnection.klass, "getPeerAddr", VALUEFUNC(_wrap_Connection_getPeerAddr), -1);
+  rb_define_method(SwigClassConnection.klass, "getPeerPort", VALUEFUNC(_wrap_Connection_getPeerPort), -1);
+  rb_define_method(SwigClassConnection.klass, "isAlive", VALUEFUNC(_wrap_Connection_isAlive), -1);
+  rb_define_method(SwigClassConnection.klass, "getFd", VALUEFUNC(_wrap_Connection_getFd), -1);
+  rb_define_method(SwigClassConnection.klass, "recvIDMEF", VALUEFUNC(_wrap_Connection_recvIDMEF), -1);
   SwigClassConnection.mark = 0;
   SwigClassConnection.destroy = (void (*)(void *)) free_Prelude_Connection;
   SwigClassConnection.trackObjects = 0;
   
-  SwigClassConnectionPool.klass = rb_define_class_under(mPreludeEasy, "ConnectionPool", rb_cObject);
+  SwigClassConnectionPool.klass = rb_define_class_under(mPrelude, "ConnectionPool", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__ConnectionPool, (void *) &SwigClassConnectionPool);
   rb_define_alloc_func(SwigClassConnectionPool.klass, _wrap_ConnectionPool_allocate);
   rb_define_method(SwigClassConnectionPool.klass, "initialize", VALUEFUNC(_wrap_new_ConnectionPool), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "Init", VALUEFUNC(_wrap_ConnectionPool_Init), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetConnectionString", VALUEFUNC(_wrap_ConnectionPool_SetConnectionString), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "GetConnectionString", VALUEFUNC(_wrap_ConnectionPool_GetConnectionString), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "GetConnectionList", VALUEFUNC(_wrap_ConnectionPool_GetConnectionList), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetFlags", VALUEFUNC(_wrap_ConnectionPool_SetFlags), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "GetFlags", VALUEFUNC(_wrap_ConnectionPool_GetFlags), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetData", VALUEFUNC(_wrap_ConnectionPool_SetData), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "GetData", VALUEFUNC(_wrap_ConnectionPool_GetData), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "AddConnection", VALUEFUNC(_wrap_ConnectionPool_AddConnection), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "DelConnection", VALUEFUNC(_wrap_ConnectionPool_DelConnection), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetConnectionAlive", VALUEFUNC(_wrap_ConnectionPool_SetConnectionAlive), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetConnectionDead", VALUEFUNC(_wrap_ConnectionPool_SetConnectionDead), -1);
-  rb_define_method(SwigClassConnectionPool.klass, "SetRequiredPermission", VALUEFUNC(_wrap_ConnectionPool_SetRequiredPermission), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "init", VALUEFUNC(_wrap_ConnectionPool_init), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setConnectionString", VALUEFUNC(_wrap_ConnectionPool_setConnectionString), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "getConnectionString", VALUEFUNC(_wrap_ConnectionPool_getConnectionString), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "getConnectionList", VALUEFUNC(_wrap_ConnectionPool_getConnectionList), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setFlags", VALUEFUNC(_wrap_ConnectionPool_setFlags), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "getFlags", VALUEFUNC(_wrap_ConnectionPool_getFlags), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setData", VALUEFUNC(_wrap_ConnectionPool_setData), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "getData", VALUEFUNC(_wrap_ConnectionPool_getData), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "addConnection", VALUEFUNC(_wrap_ConnectionPool_addConnection), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "delConnection", VALUEFUNC(_wrap_ConnectionPool_delConnection), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setConnectionAlive", VALUEFUNC(_wrap_ConnectionPool_setConnectionAlive), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setConnectionDead", VALUEFUNC(_wrap_ConnectionPool_setConnectionDead), -1);
+  rb_define_method(SwigClassConnectionPool.klass, "setRequiredPermission", VALUEFUNC(_wrap_ConnectionPool_setRequiredPermission), -1);
   SwigClassConnectionPool.mark = 0;
   SwigClassConnectionPool.destroy = (void (*)(void *)) free_Prelude_ConnectionPool;
   SwigClassConnectionPool.trackObjects = 0;
   
-  SwigClassClient.klass = rb_define_class_under(mPreludeEasy, "Client", ((swig_class *) SWIGTYPE_p_Prelude__ClientProfile->clientdata)->klass);
+  SwigClassClient.klass = rb_define_class_under(mPrelude, "Client", ((swig_class *) SWIGTYPE_p_Prelude__ClientProfile->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__Client, (void *) &SwigClassClient);
   rb_define_alloc_func(SwigClassClient.klass, _wrap_Client_allocate);
   rb_define_method(SwigClassClient.klass, "initialize", VALUEFUNC(_wrap_new_Client), -1);
@@ -18805,27 +18850,27 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   rb_define_const(SwigClassClient.klass, "PERMISSION_IDMEF_WRITE", SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_IDMEF_WRITE)));
   rb_define_const(SwigClassClient.klass, "ADMIN_WRITE", SWIG_From_int(static_cast< int >(Prelude::Client::ADMIN_WRITE)));
   rb_define_const(SwigClassClient.klass, "PERMISSION_ADMIN_WRITE", SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_ADMIN_WRITE)));
-  rb_define_method(SwigClassClient.klass, "Start", VALUEFUNC(_wrap_Client_Start), -1);
-  rb_define_method(SwigClassClient.klass, "Init", VALUEFUNC(_wrap_Client_Init), -1);
-  rb_define_method(SwigClassClient.klass, "GetClient", VALUEFUNC(_wrap_Client_GetClient), -1);
-  rb_define_method(SwigClassClient.klass, "SendIDMEF", VALUEFUNC(_wrap_Client_SendIDMEF), -1);
-  rb_define_method(SwigClassClient.klass, "RecvIDMEF", VALUEFUNC(_wrap_Client_RecvIDMEF), -1);
-  rb_define_method(SwigClassClient.klass, "GetFlags", VALUEFUNC(_wrap_Client_GetFlags), -1);
-  rb_define_method(SwigClassClient.klass, "SetFlags", VALUEFUNC(_wrap_Client_SetFlags), -1);
-  rb_define_method(SwigClassClient.klass, "GetRequiredPermission", VALUEFUNC(_wrap_Client_GetRequiredPermission), -1);
-  rb_define_method(SwigClassClient.klass, "SetRequiredPermission", VALUEFUNC(_wrap_Client_SetRequiredPermission), -1);
-  rb_define_method(SwigClassClient.klass, "GetConfigFilename", VALUEFUNC(_wrap_Client_GetConfigFilename), -1);
-  rb_define_method(SwigClassClient.klass, "SetConfigFilename", VALUEFUNC(_wrap_Client_SetConfigFilename), -1);
-  rb_define_method(SwigClassClient.klass, "GetConnectionPool", VALUEFUNC(_wrap_Client_GetConnectionPool), -1);
-  rb_define_method(SwigClassClient.klass, "SetConnectionPool", VALUEFUNC(_wrap_Client_SetConnectionPool), -1);
+  rb_define_method(SwigClassClient.klass, "start", VALUEFUNC(_wrap_Client_start), -1);
+  rb_define_method(SwigClassClient.klass, "init", VALUEFUNC(_wrap_Client_init), -1);
+  rb_define_method(SwigClassClient.klass, "getClient", VALUEFUNC(_wrap_Client_getClient), -1);
+  rb_define_method(SwigClassClient.klass, "sendIDMEF", VALUEFUNC(_wrap_Client_sendIDMEF), -1);
+  rb_define_method(SwigClassClient.klass, "recvIDMEF", VALUEFUNC(_wrap_Client_recvIDMEF), -1);
+  rb_define_method(SwigClassClient.klass, "getFlags", VALUEFUNC(_wrap_Client_getFlags), -1);
+  rb_define_method(SwigClassClient.klass, "setFlags", VALUEFUNC(_wrap_Client_setFlags), -1);
+  rb_define_method(SwigClassClient.klass, "getRequiredPermission", VALUEFUNC(_wrap_Client_getRequiredPermission), -1);
+  rb_define_method(SwigClassClient.klass, "setRequiredPermission", VALUEFUNC(_wrap_Client_setRequiredPermission), -1);
+  rb_define_method(SwigClassClient.klass, "getConfigFilename", VALUEFUNC(_wrap_Client_getConfigFilename), -1);
+  rb_define_method(SwigClassClient.klass, "setConfigFilename", VALUEFUNC(_wrap_Client_setConfigFilename), -1);
+  rb_define_method(SwigClassClient.klass, "getConnectionPool", VALUEFUNC(_wrap_Client_getConnectionPool), -1);
+  rb_define_method(SwigClassClient.klass, "setConnectionPool", VALUEFUNC(_wrap_Client_setConnectionPool), -1);
   rb_define_method(SwigClassClient.klass, "<<", VALUEFUNC(_wrap_Client___lshift__), -1);
   rb_define_method(SwigClassClient.klass, ">>", VALUEFUNC(_wrap_Client___rshift__), -1);
-  rb_define_singleton_method(SwigClassClient.klass, "SetRecvTimeout", VALUEFUNC(_wrap_Client_SetRecvTimeout), -1);
+  rb_define_singleton_method(SwigClassClient.klass, "setRecvTimeout", VALUEFUNC(_wrap_Client_setRecvTimeout), -1);
   SwigClassClient.mark = 0;
   SwigClassClient.destroy = (void (*)(void *)) free_Prelude_Client;
   SwigClassClient.trackObjects = 0;
   
-  SwigClassPreludeLog.klass = rb_define_class_under(mPreludeEasy, "PreludeLog", rb_cObject);
+  SwigClassPreludeLog.klass = rb_define_class_under(mPrelude, "PreludeLog", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__PreludeLog, (void *) &SwigClassPreludeLog);
   rb_define_alloc_func(SwigClassPreludeLog.klass, _wrap_PreludeLog_allocate);
   rb_define_method(SwigClassPreludeLog.klass, "initialize", VALUEFUNC(_wrap_new_PreludeLog), -1);
@@ -18836,21 +18881,21 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   rb_define_const(SwigClassPreludeLog.klass, "CRITICAL", SWIG_From_int(static_cast< int >(Prelude::PreludeLog::CRITICAL)));
   rb_define_const(SwigClassPreludeLog.klass, "QUIET", SWIG_From_int(static_cast< int >(Prelude::PreludeLog::QUIET)));
   rb_define_const(SwigClassPreludeLog.klass, "SYSLOG", SWIG_From_int(static_cast< int >(Prelude::PreludeLog::SYSLOG)));
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "SetLevel", VALUEFUNC(_wrap_PreludeLog_SetLevel), -1);
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "SetDebugLevel", VALUEFUNC(_wrap_PreludeLog_SetDebugLevel), -1);
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "SetFlags", VALUEFUNC(_wrap_PreludeLog_SetFlags), -1);
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "GetFlags", VALUEFUNC(_wrap_PreludeLog_GetFlags), -1);
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "SetLogfile", VALUEFUNC(_wrap_PreludeLog_SetLogfile), -1);
-  rb_define_singleton_method(SwigClassPreludeLog.klass, "SetCallback", VALUEFUNC(_wrap_PreludeLog_SetCallback), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "setLevel", VALUEFUNC(_wrap_PreludeLog_setLevel), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "setDebugLevel", VALUEFUNC(_wrap_PreludeLog_setDebugLevel), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "setFlags", VALUEFUNC(_wrap_PreludeLog_setFlags), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "getFlags", VALUEFUNC(_wrap_PreludeLog_getFlags), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "setLogfile", VALUEFUNC(_wrap_PreludeLog_setLogfile), -1);
+  rb_define_singleton_method(SwigClassPreludeLog.klass, "setCallback", VALUEFUNC(_wrap_PreludeLog_setCallback), -1);
   SwigClassPreludeLog.mark = 0;
   SwigClassPreludeLog.destroy = (void (*)(void *)) free_Prelude_PreludeLog;
   SwigClassPreludeLog.trackObjects = 0;
   
-  SwigClassPreludeError.klass = rb_define_class_under(mPreludeEasy, "PreludeError", rb_cObject);
+  SwigClassPreludeError.klass = rb_define_class_under(mPrelude, "PreludeError", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__PreludeError, (void *) &SwigClassPreludeError);
   rb_define_alloc_func(SwigClassPreludeError.klass, _wrap_PreludeError_allocate);
   rb_define_method(SwigClassPreludeError.klass, "initialize", VALUEFUNC(_wrap_new_PreludeError), -1);
-  rb_define_method(SwigClassPreludeError.klass, "GetCode", VALUEFUNC(_wrap_PreludeError_GetCode), -1);
+  rb_define_method(SwigClassPreludeError.klass, "getCode", VALUEFUNC(_wrap_PreludeError_getCode), -1);
   rb_define_method(SwigClassPreludeError.klass, "what", VALUEFUNC(_wrap_PreludeError_what), -1);
   rb_define_method(SwigClassPreludeError.klass, "to_s", VALUEFUNC(_wrap_PreludeError___str__), -1);
   rb_define_method(SwigClassPreludeError.klass, "to_i", VALUEFUNC(_wrap_PreludeError___int__), -1);
@@ -18858,7 +18903,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassPreludeError.destroy = (void (*)(void *)) free_Prelude_PreludeError;
   SwigClassPreludeError.trackObjects = 0;
   
-  SwigClassClientEasy.klass = rb_define_class_under(mPreludeEasy, "ClientEasy", ((swig_class *) SWIGTYPE_p_Prelude__Client->clientdata)->klass);
+  SwigClassClientEasy.klass = rb_define_class_under(mPrelude, "ClientEasy", ((swig_class *) SWIGTYPE_p_Prelude__Client->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__ClientEasy, (void *) &SwigClassClientEasy);
   rb_define_alloc_func(SwigClassClientEasy.klass, _wrap_ClientEasy_allocate);
   rb_define_method(SwigClassClientEasy.klass, "initialize", VALUEFUNC(_wrap_new_ClientEasy), -1);
@@ -18866,7 +18911,7 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassClientEasy.destroy = (void (*)(void *)) free_Prelude_ClientEasy;
   SwigClassClientEasy.trackObjects = 0;
   
-  SwigClassIDMEFCriterion.klass = rb_define_class_under(mPreludeEasy, "IDMEFCriterion", rb_cObject);
+  SwigClassIDMEFCriterion.klass = rb_define_class_under(mPrelude, "IDMEFCriterion", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFCriterion, (void *) &SwigClassIDMEFCriterion);
   rb_define_alloc_func(SwigClassIDMEFCriterion.klass, _wrap_IDMEFCriterion_allocate);
   rb_define_method(SwigClassIDMEFCriterion.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFCriterion), -1);
@@ -18894,21 +18939,21 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassIDMEFCriterion.destroy = (void (*)(void *)) free_Prelude_IDMEFCriterion;
   SwigClassIDMEFCriterion.trackObjects = 0;
   
-  SwigClassIDMEFCriteria.klass = rb_define_class_under(mPreludeEasy, "IDMEFCriteria", rb_cObject);
+  SwigClassIDMEFCriteria.klass = rb_define_class_under(mPrelude, "IDMEFCriteria", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFCriteria, (void *) &SwigClassIDMEFCriteria);
   rb_define_alloc_func(SwigClassIDMEFCriteria.klass, _wrap_IDMEFCriteria_allocate);
   rb_define_method(SwigClassIDMEFCriteria.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFCriteria), -1);
-  rb_define_method(SwigClassIDMEFCriteria.klass, "Match", VALUEFUNC(_wrap_IDMEFCriteria_Match), -1);
-  rb_define_method(SwigClassIDMEFCriteria.klass, "Clone", VALUEFUNC(_wrap_IDMEFCriteria_Clone), -1);
-  rb_define_method(SwigClassIDMEFCriteria.klass, "ANDCriteria", VALUEFUNC(_wrap_IDMEFCriteria_ANDCriteria), -1);
-  rb_define_method(SwigClassIDMEFCriteria.klass, "ORCriteria", VALUEFUNC(_wrap_IDMEFCriteria_ORCriteria), -1);
-  rb_define_method(SwigClassIDMEFCriteria.klass, "ToString", VALUEFUNC(_wrap_IDMEFCriteria_ToString), -1);
+  rb_define_method(SwigClassIDMEFCriteria.klass, "match", VALUEFUNC(_wrap_IDMEFCriteria_match), -1);
+  rb_define_method(SwigClassIDMEFCriteria.klass, "clone", VALUEFUNC(_wrap_IDMEFCriteria_clone), -1);
+  rb_define_method(SwigClassIDMEFCriteria.klass, "andCriteria", VALUEFUNC(_wrap_IDMEFCriteria_andCriteria), -1);
+  rb_define_method(SwigClassIDMEFCriteria.klass, "orCriteria", VALUEFUNC(_wrap_IDMEFCriteria_orCriteria), -1);
+  rb_define_method(SwigClassIDMEFCriteria.klass, "toString", VALUEFUNC(_wrap_IDMEFCriteria_toString), -1);
   rb_define_method(SwigClassIDMEFCriteria.klass, "to_s", VALUEFUNC(_wrap_IDMEFCriteria___str__), -1);
   SwigClassIDMEFCriteria.mark = 0;
   SwigClassIDMEFCriteria.destroy = (void (*)(void *)) free_Prelude_IDMEFCriteria;
   SwigClassIDMEFCriteria.trackObjects = 0;
   
-  SwigClassIDMEFValue.klass = rb_define_class_under(mPreludeEasy, "IDMEFValue", rb_cObject);
+  SwigClassIDMEFValue.klass = rb_define_class_under(mPrelude, "IDMEFValue", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFValue, (void *) &SwigClassIDMEFValue);
   rb_define_alloc_func(SwigClassIDMEFValue.klass, _wrap_IDMEFValue_allocate);
   rb_define_method(SwigClassIDMEFValue.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFValue), -1);
@@ -18929,11 +18974,11 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   rb_define_const(SwigClassIDMEFValue.klass, "TYPE_ENUM", SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_ENUM)));
   rb_define_const(SwigClassIDMEFValue.klass, "TYPE_LIST", SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_LIST)));
   rb_define_const(SwigClassIDMEFValue.klass, "TYPE_CLASS", SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_CLASS)));
-  rb_define_method(SwigClassIDMEFValue.klass, "GetType", VALUEFUNC(_wrap_IDMEFValue_GetType), -1);
-  rb_define_method(SwigClassIDMEFValue.klass, "IsNull", VALUEFUNC(_wrap_IDMEFValue_IsNull), -1);
-  rb_define_method(SwigClassIDMEFValue.klass, "Match", VALUEFUNC(_wrap_IDMEFValue_Match), -1);
-  rb_define_method(SwigClassIDMEFValue.klass, "Clone", VALUEFUNC(_wrap_IDMEFValue_Clone), -1);
-  rb_define_method(SwigClassIDMEFValue.klass, "ToString", VALUEFUNC(_wrap_IDMEFValue_ToString), -1);
+  rb_define_method(SwigClassIDMEFValue.klass, "getType", VALUEFUNC(_wrap_IDMEFValue_getType), -1);
+  rb_define_method(SwigClassIDMEFValue.klass, "isNull", VALUEFUNC(_wrap_IDMEFValue_isNull), -1);
+  rb_define_method(SwigClassIDMEFValue.klass, "match", VALUEFUNC(_wrap_IDMEFValue_match), -1);
+  rb_define_method(SwigClassIDMEFValue.klass, "clone", VALUEFUNC(_wrap_IDMEFValue_clone), -1);
+  rb_define_method(SwigClassIDMEFValue.klass, "toString", VALUEFUNC(_wrap_IDMEFValue_toString), -1);
   rb_define_method(SwigClassIDMEFValue.klass, "<=", VALUEFUNC(_wrap_IDMEFValue___le__), -1);
   rb_define_method(SwigClassIDMEFValue.klass, ">=", VALUEFUNC(_wrap_IDMEFValue___ge__), -1);
   rb_define_method(SwigClassIDMEFValue.klass, "<", VALUEFUNC(_wrap_IDMEFValue___lt__), -1);
@@ -18943,45 +18988,45 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassIDMEFValue.destroy = (void (*)(void *)) free_Prelude_IDMEFValue;
   SwigClassIDMEFValue.trackObjects = 0;
   
-  SwigClassIDMEFPath.klass = rb_define_class_under(mPreludeEasy, "IDMEFPath", rb_cObject);
+  SwigClassIDMEFPath.klass = rb_define_class_under(mPrelude, "IDMEFPath", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFPath, (void *) &SwigClassIDMEFPath);
   rb_define_alloc_func(SwigClassIDMEFPath.klass, _wrap_IDMEFPath_allocate);
   rb_define_method(SwigClassIDMEFPath.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFPath), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "Set", VALUEFUNC(_wrap_IDMEFPath_Set), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetClass", VALUEFUNC(_wrap_IDMEFPath_GetClass), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetValueType", VALUEFUNC(_wrap_IDMEFPath_GetValueType), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "SetIndex", VALUEFUNC(_wrap_IDMEFPath_SetIndex), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "UndefineIndex", VALUEFUNC(_wrap_IDMEFPath_UndefineIndex), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetIndex", VALUEFUNC(_wrap_IDMEFPath_GetIndex), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "MakeChild", VALUEFUNC(_wrap_IDMEFPath_MakeChild), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "MakeParent", VALUEFUNC(_wrap_IDMEFPath_MakeParent), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "Compare", VALUEFUNC(_wrap_IDMEFPath_Compare), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "Clone", VALUEFUNC(_wrap_IDMEFPath_Clone), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "CheckOperator", VALUEFUNC(_wrap_IDMEFPath_CheckOperator), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetApplicableOperators", VALUEFUNC(_wrap_IDMEFPath_GetApplicableOperators), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetName", VALUEFUNC(_wrap_IDMEFPath_GetName), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "IsAmbiguous", VALUEFUNC(_wrap_IDMEFPath_IsAmbiguous), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "HasLists", VALUEFUNC(_wrap_IDMEFPath_HasLists), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "IsList", VALUEFUNC(_wrap_IDMEFPath_IsList), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "GetDepth", VALUEFUNC(_wrap_IDMEFPath_GetDepth), -1);
-  rb_define_method(SwigClassIDMEFPath.klass, "Get", VALUEFUNC(_wrap_IDMEFPath_Get), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "set", VALUEFUNC(_wrap_IDMEFPath_set), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getClass", VALUEFUNC(_wrap_IDMEFPath_getClass), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getValueType", VALUEFUNC(_wrap_IDMEFPath_getValueType), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "setIndex", VALUEFUNC(_wrap_IDMEFPath_setIndex), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "undefineIndex", VALUEFUNC(_wrap_IDMEFPath_undefineIndex), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getIndex", VALUEFUNC(_wrap_IDMEFPath_getIndex), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "makeChild", VALUEFUNC(_wrap_IDMEFPath_makeChild), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "makeParent", VALUEFUNC(_wrap_IDMEFPath_makeParent), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "compare", VALUEFUNC(_wrap_IDMEFPath_compare), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "clone", VALUEFUNC(_wrap_IDMEFPath_clone), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "checkOperator", VALUEFUNC(_wrap_IDMEFPath_checkOperator), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getApplicableOperators", VALUEFUNC(_wrap_IDMEFPath_getApplicableOperators), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getName", VALUEFUNC(_wrap_IDMEFPath_getName), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "isAmbiguous", VALUEFUNC(_wrap_IDMEFPath_isAmbiguous), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "hasLists", VALUEFUNC(_wrap_IDMEFPath_hasLists), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "isList", VALUEFUNC(_wrap_IDMEFPath_isList), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "getDepth", VALUEFUNC(_wrap_IDMEFPath_getDepth), -1);
+  rb_define_method(SwigClassIDMEFPath.klass, "get", VALUEFUNC(_wrap_IDMEFPath_get), -1);
   SwigClassIDMEFPath.mark = 0;
   SwigClassIDMEFPath.destroy = (void (*)(void *)) free_Prelude_IDMEFPath;
   SwigClassIDMEFPath.trackObjects = 0;
   
-  SwigClassIDMEFTime.klass = rb_define_class_under(mPreludeEasy, "IDMEFTime", rb_cObject);
+  SwigClassIDMEFTime.klass = rb_define_class_under(mPrelude, "IDMEFTime", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFTime, (void *) &SwigClassIDMEFTime);
   rb_define_alloc_func(SwigClassIDMEFTime.klass, _wrap_IDMEFTime_allocate);
   rb_define_method(SwigClassIDMEFTime.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFTime), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "Set", VALUEFUNC(_wrap_IDMEFTime_Set), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "SetSec", VALUEFUNC(_wrap_IDMEFTime_SetSec), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "SetUSec", VALUEFUNC(_wrap_IDMEFTime_SetUSec), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "SetGmtOffset", VALUEFUNC(_wrap_IDMEFTime_SetGmtOffset), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "GetSec", VALUEFUNC(_wrap_IDMEFTime_GetSec), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "GetUSec", VALUEFUNC(_wrap_IDMEFTime_GetUSec), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "GetGmtOffset", VALUEFUNC(_wrap_IDMEFTime_GetGmtOffset), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "Clone", VALUEFUNC(_wrap_IDMEFTime_Clone), -1);
-  rb_define_method(SwigClassIDMEFTime.klass, "ToString", VALUEFUNC(_wrap_IDMEFTime_ToString), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "set", VALUEFUNC(_wrap_IDMEFTime_set), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "setSec", VALUEFUNC(_wrap_IDMEFTime_setSec), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "setUSec", VALUEFUNC(_wrap_IDMEFTime_setUSec), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "setGmtOffset", VALUEFUNC(_wrap_IDMEFTime_setGmtOffset), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "getSec", VALUEFUNC(_wrap_IDMEFTime_getSec), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "getUSec", VALUEFUNC(_wrap_IDMEFTime_getUSec), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "getGmtOffset", VALUEFUNC(_wrap_IDMEFTime_getGmtOffset), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "clone", VALUEFUNC(_wrap_IDMEFTime_clone), -1);
+  rb_define_method(SwigClassIDMEFTime.klass, "toString", VALUEFUNC(_wrap_IDMEFTime_toString), -1);
   rb_define_method(SwigClassIDMEFTime.klass, "to_i", VALUEFUNC(_wrap_IDMEFTime___int__), -1);
   rb_define_method(SwigClassIDMEFTime.klass, "__long__", VALUEFUNC(_wrap_IDMEFTime___long__), -1);
   rb_define_method(SwigClassIDMEFTime.klass, "to_f", VALUEFUNC(_wrap_IDMEFTime___float__), -1);
@@ -18995,21 +19040,21 @@ SWIGEXPORT void Init_PreludeEasy(void) {
   SwigClassIDMEFTime.destroy = (void (*)(void *)) free_Prelude_IDMEFTime;
   SwigClassIDMEFTime.trackObjects = 0;
   
-  SwigClassIDMEF.klass = rb_define_class_under(mPreludeEasy, "IDMEF", rb_cObject);
+  SwigClassIDMEF.klass = rb_define_class_under(mPrelude, "IDMEF", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEF, (void *) &SwigClassIDMEF);
   rb_define_alloc_func(SwigClassIDMEF.klass, _wrap_IDMEF_allocate);
   rb_define_method(SwigClassIDMEF.klass, "initialize", VALUEFUNC(_wrap_new_IDMEF), -1);
-  rb_define_method(SwigClassIDMEF.klass, "Set", VALUEFUNC(_wrap_IDMEF_Set), -1);
-  rb_define_method(SwigClassIDMEF.klass, "Clone", VALUEFUNC(_wrap_IDMEF_Clone), -1);
-  rb_define_method(SwigClassIDMEF.klass, "GetId", VALUEFUNC(_wrap_IDMEF_GetId), -1);
-  rb_define_method(SwigClassIDMEF.klass, "ToString", VALUEFUNC(_wrap_IDMEF_ToString), -1);
+  rb_define_method(SwigClassIDMEF.klass, "set", VALUEFUNC(_wrap_IDMEF_set), -1);
+  rb_define_method(SwigClassIDMEF.klass, "clone", VALUEFUNC(_wrap_IDMEF_clone), -1);
+  rb_define_method(SwigClassIDMEF.klass, "getId", VALUEFUNC(_wrap_IDMEF_getId), -1);
+  rb_define_method(SwigClassIDMEF.klass, "toString", VALUEFUNC(_wrap_IDMEF_toString), -1);
   rb_define_method(SwigClassIDMEF.klass, "to_s", VALUEFUNC(_wrap_IDMEF___str__), -1);
   rb_define_method(SwigClassIDMEF.klass, "==", VALUEFUNC(_wrap_IDMEF___eq__), -1);
-  rb_define_method(SwigClassIDMEF.klass, "Write", VALUEFUNC(_wrap_IDMEF_Write), -1);
-  rb_define_method(SwigClassIDMEF.klass, "Read", VALUEFUNC(_wrap_IDMEF_Read), -1);
+  rb_define_method(SwigClassIDMEF.klass, "write", VALUEFUNC(_wrap_IDMEF_write), -1);
+  rb_define_method(SwigClassIDMEF.klass, "read", VALUEFUNC(_wrap_IDMEF_read), -1);
   rb_define_method(SwigClassIDMEF.klass, ">>", VALUEFUNC(_wrap_IDMEF___rshift__), -1);
   rb_define_method(SwigClassIDMEF.klass, "<<", VALUEFUNC(_wrap_IDMEF___lshift__), -1);
-  rb_define_method(SwigClassIDMEF.klass, "Get", VALUEFUNC(_wrap_IDMEF_Get), -1);
+  rb_define_method(SwigClassIDMEF.klass, "get", VALUEFUNC(_wrap_IDMEF_get), -1);
   SwigClassIDMEF.mark = 0;
   SwigClassIDMEF.destroy = (void (*)(void *)) free_Prelude_IDMEF;
   SwigClassIDMEF.trackObjects = 0;

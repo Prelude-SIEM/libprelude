@@ -1,7 +1,8 @@
-# Copyright (C) 2005-2012 CS-SI. All Rights Reserved.
-# Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 #
-# This file is part of the libpreludedb program.
+# Copyright (C) 2005-2012 CS-SI. All Rights Reserved.
+# Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
+#
+# This file is part of the Prelude library.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,5 +18,14 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-require XSLoader;
-XSLoader::load('Prelude');
+from _preludeold import *
+
+class PreludeError(Exception):
+    def __init__(self, errno, strerror=None):
+        self.errno = errno
+        self._strerror = strerror
+
+    def __str__(self):
+        if self._strerror:
+            return self._strerror
+        return prelude_strerror(self.errno)

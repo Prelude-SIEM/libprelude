@@ -24,18 +24,18 @@ use ExtUtils::MM_Unix;
 use File::Copy;
 use Cwd "abs_path";
 
-my %attributs = (NAME => 'PreludeEasy',
+my %attributs = (NAME => 'Prelude',
 		 INC => '-I@top_builddir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include -I@top_srcdir@/libmissing -I@top_builddir@/libmissing',
 		 LIBS => ["-L@top_builddir@/src/.libs -lprelude -L@top_builddir@/bindings/c++/.libs -lpreludecpp", "-L$ENV{LIBDIR} -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @LTLIBTHREAD@" ],
 		 LDDLFLAGS => "-L@top_builddir@/src/.libs $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
-    foreach my $filename ( qw/PreludeEasy.cxx PreludeEasy.pm/ ) {
+    foreach my $filename ( qw/Prelude.cxx Prelude.pm/ ) {
 	my $src = "@top_srcdir@/bindings/perl/$filename";
 	my $dst = "@top_builddir@/bindings/perl/$filename";
 	copy($src, $dst) if ( ! -e $dst );
     }
-    $attributs{"clean"} = {FILES => join(" ", map { "@top_builddir@/bindings/perl/$_" } qw/PreludeEasy.cxx PreludeEasy.pm Makefile/)};
+    $attributs{"clean"} = {FILES => join(" ", map { "@top_builddir@/bindings/perl/$_" } qw/Prelude.cxx Prelude.pm Makefile/)};
 }
 
 if ( -w $Config{"sitelib"} ) {
@@ -55,8 +55,8 @@ package MY;
 sub install
 {
     my $str = shift->SUPER::install(@_);
-    my @files = ((map { "\$(INSTALLSITEARCH)/$_" } qw/perllocal.pod PreludeEasy.pm/),
-                 (map { "\$(INSTALLSITEARCH)/auto/PreludeEasy/$_" } qw/PreludeEasy.bs PreludeEasy.so .packlist/),
+    my @files = ((map { "\$(INSTALLSITEARCH)/$_" } qw/perllocal.pod Prelude.pm/),
+                 (map { "\$(INSTALLSITEARCH)/auto/Prelude/$_" } qw/Prelude.bs Prelude.so .packlist/),
                  '$(INSTALLMAN3DIR)/Prelude.$(MAN3EXT)');
 
     $str =~ s/(uninstall_from_sitedirs.+)\n.+\n/"$1\n\t\$(RM_F) " . join(" ", @files) . "\n"/e;

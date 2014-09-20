@@ -73,11 +73,11 @@ namespace Prelude {
                 IDMEFCriteria(const std::string &criteria);
                 IDMEFCriteria(idmef_criteria_t *criteria);
 
-                int Match(Prelude::IDMEF *message);
-                IDMEFCriteria Clone();
-                void ANDCriteria(const IDMEFCriteria &criteria);
-                void ORCriteria(const IDMEFCriteria &criteria);
-                const std::string ToString() const;
+                int match(Prelude::IDMEF *message);
+                IDMEFCriteria clone();
+                void andCriteria(const IDMEFCriteria &criteria);
+                void orCriteria(const IDMEFCriteria &criteria);
+                const std::string toString() const;
 
                 operator const std::string() const;
                 operator idmef_criteria_t *() const;

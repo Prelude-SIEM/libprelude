@@ -31,13 +31,13 @@ perl: perl-build
 perl-makefile:
 	cd perl && LANG="" DESTDIR=$(DESTDIR) LIBDIR=$(libdir) $(PERL) Makefile.PL @PERL_EXTRA_PARAMS@ CC="$(CXX)"
 
-perl/PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i perl/libpreludecpp-perl.i
+perl/Prelude.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i perl/libpreludecpp-perl.i
 if HAVE_SWIG
 	$(SWIG) -c++ -DSWIG_COMPILE_LIBPRELUDE -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -perl5 -o $@ libpreludecpp.i
 endif
 
 
-perl-build: perl/PreludeEasy.cxx perl-makefile
+perl-build: perl/Prelude.cxx perl-makefile
 	cd perl && $(MAKE) LD_RUN_PATH="" CC="$(CXX)"
 
 install-exec-hook: perl-makefile 

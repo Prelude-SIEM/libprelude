@@ -21,7 +21,12 @@
 *
 *****/
 
-%module PreludeEasy
+#if defined(SWIGPYTHON) || defined(SWIGLUA) 
+%module prelude
+#else
+%module Prelude
+#endif
+
 %feature("nothread", "1");
 
 %include "std_string.i"
@@ -103,12 +108,12 @@ typedef signed int prelude_error_t;
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
 %extend Prelude::IDMEF {
-        Prelude::IDMEFValue Get(const char *path) {
+        Prelude::IDMEFValue get(const char *path) {
                 Prelude::IDMEFValue value;
                 Prelude::IDMEFPath ipath = Prelude::IDMEFPath(*self, path);
 
-                value = ipath.Get(*self);
-                if ( value.IsNull() && ipath.IsAmbiguous() ) {
+                value = ipath.get(*self);
+                if ( value.isNull() && ipath.isAmbiguous() ) {
                         std::vector<Prelude::IDMEFValue> v;
                         return Prelude::IDMEFValue(v);
                 }
@@ -118,11 +123,11 @@ typedef signed int prelude_error_t;
 }
 
 %extend Prelude::IDMEFPath {
-        Prelude::IDMEFValue Get(Prelude::IDMEF &message) {
+        Prelude::IDMEFValue get(Prelude::IDMEF &message) {
                 Prelude::IDMEFValue value;
 
-                value = self->Get(message);
-                if ( value.IsNull() && self->IsAmbiguous() ) {
+                value = self->get(message);
+                if ( value.isNull() && self->isAmbiguous() ) {
                         std::vector<Prelude::IDMEFValue> v;
                         return Prelude::IDMEFValue(v);
                 }
@@ -132,8 +137,8 @@ typedef signed int prelude_error_t;
 }
 #endif
 
-%ignore Prelude::IDMEF::Get;
-%ignore Prelude::IDMEFPath::Get;
+%ignore Prelude::IDMEF::get;
+%ignore Prelude::IDMEFPath::get;
 
 
 %fragment("SWIG_FromBytePtrAndSize", "header", fragment="SWIG_FromCharPtrAndSize") %{
@@ -154,7 +159,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 {
         std::stringstream s;
         idmef_value_t *value = result;
-        Prelude::IDMEFValue::IDMEFValueTypeEnum type = result.GetType();
+        Prelude::IDMEFValue::IDMEFValueTypeEnum type = result.getType();
 
         if ( type == Prelude::IDMEFValue::TYPE_STRING ) {
                 prelude_string_t *str = idmef_value_get_string(value);
@@ -256,12 +261,12 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
  * Force SWIG to use the IDMEFValue * version of the Set() function,
  * so that the user might provide NULL IDMEFValue.
  */
-%ignore Prelude::IDMEF::Set(char const *, int8_t);
-%ignore Prelude::IDMEF::Set(char const *, uint8_t);
-%ignore Prelude::IDMEF::Set(char const *, Prelude::IDMEFValue &value);
-%ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, int8_t);
-%ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, uint8_t);
-%ignore Prelude::IDMEFPath::Set(Prelude::IDMEF &, Prelude::IDMEFValue &);
+%ignore Prelude::IDMEF::set(char const *, int8_t);
+%ignore Prelude::IDMEF::set(char const *, uint8_t);
+%ignore Prelude::IDMEF::set(char const *, Prelude::IDMEFValue &value);
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, int8_t);
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, uint8_t);
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, Prelude::IDMEFValue &);
 
 %ignore idmef_path_t;
 %ignore idmef_object_t;

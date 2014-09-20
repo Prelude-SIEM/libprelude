@@ -57,7 +57,7 @@ const char *PreludeError::what() const throw()
 }
 
 
-int PreludeError::GetCode()
+int PreludeError::getCode()
 {
         return prelude_error_get_code(_error);
 }

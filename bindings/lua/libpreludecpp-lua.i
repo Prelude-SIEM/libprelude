@@ -92,19 +92,19 @@
 %ignore Prelude::IDMEFCriteria::operator const std::string() const;
 %newobject Prelude::IDMEFCriteria::__str__;
 %extend Prelude::IDMEFCriteria {
-        char *__str__() { return my_strdup(self->ToString().c_str()); }
+        char *__str__() { return my_strdup(self->toString().c_str()); }
 }
 
 %ignore Prelude::IDMEFTime::operator const std::string() const;
 %newobject Prelude::IDMEFTime::__str__;
 %extend Prelude::IDMEFTime {
-        char *__str__() { return my_strdup(self->ToString().c_str()); }
+        char *__str__() { return my_strdup(self->toString().c_str()); }
 }
 
 %ignore Prelude::IDMEF::operator const std::string() const;
 %newobject Prelude::IDMEF::__str__;
 %extend Prelude::IDMEF {
-        char *__str__() { return my_strdup(self->ToString().c_str()); }
+        char *__str__() { return my_strdup(self->toString().c_str()); }
 }
 
 
@@ -218,11 +218,11 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
         }
 }
 
-%exception Read(void *nocast_p) {
+%exception read(void *nocast_p) {
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
-                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                if ( e.getCode() == PRELUDE_ERROR_EOF )
                         return 0;
                 else {
                         SWIG_exception(SWIG_RuntimeError, e.what());
@@ -233,12 +233,12 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %extend Prelude::IDMEF {
-        void Write(void *nocast_p) {
+        void write(void *nocast_p) {
                 self->_genericWrite(_cb_lua_write, nocast_p);
         }
 
 
-        int Read(void *nocast_p) {
+        int read(void *nocast_p) {
                 self->_genericRead(_cb_lua_read, nocast_p);
                 return 1;
         }
@@ -304,11 +304,11 @@ int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                 if ( ret < 0 )
                         return ret;
 
-                if ( (*i).IsNull() ) {
+                if ( (*i).isNull() ) {
                         lua_pushnil((lua_State *) extra);
                         lua_rawseti((lua_State *) extra, -2, ++index);
                 } else {
-                        is_list = (i->GetType() == IDMEFValue::TYPE_LIST);
+                        is_list = (i->getType() == IDMEFValue::TYPE_LIST);
                         if ( is_list )
                                 lua_pushnumber((lua_State *) extra, ++index);
 
@@ -330,14 +330,14 @@ int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 %typemap(out, fragment="IDMEFValue_to_SWIG") Prelude::IDMEFValue {
         int ret, unused;
 
-        if ( $1.IsNull() ) {
+        if ( $1.isNull() ) {
                 lua_pushnil(L);
                 SWIG_arg = 1;
         } else {
                 SWIG_arg = IDMEFValue_to_SWIG($1, L, &unused);
                 if ( SWIG_arg < 0 ) {
                         std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";
+                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
                         SWIG_exception(SWIG_ValueError, s.str().c_str());
                 }
         }

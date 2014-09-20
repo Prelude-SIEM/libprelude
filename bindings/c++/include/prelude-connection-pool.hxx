@@ -40,25 +40,25 @@ namespace Prelude {
                 ConnectionPool(const ConnectionPool &pool);
                 ConnectionPool(Prelude::ClientProfile &cp, int permission);
 
-                void Init();
+                void init();
 
-                void SetConnectionString(const char *str);
-                const char *GetConnectionString();
-                std::vector<Prelude::Connection> GetConnectionList();
+                void setConnectionString(const char *str);
+                const char *getConnectionString();
+                std::vector<Prelude::Connection> getConnectionList();
 
-                void SetFlags(int flags);
-                int GetFlags();
+                void setFlags(int flags);
+                int getFlags();
 
-                void SetData(void *data);
-                void *GetData();
+                void setData(void *data);
+                void *getData();
 
-                void AddConnection(Prelude::Connection con);
-                void DelConnection(Prelude::Connection con);
+                void addConnection(Prelude::Connection con);
+                void delConnection(Prelude::Connection con);
 
-                void SetConnectionAlive(Prelude::Connection &con);
-                void SetConnectionDead(Prelude::Connection &con);
+                void setConnectionAlive(Prelude::Connection &con);
+                void setConnectionDead(Prelude::Connection &con);
 
-                void SetRequiredPermission(int permission);
+                void setRequiredPermission(int permission);
                 ConnectionPool &operator=(const ConnectionPool &pool);
                 operator prelude_connection_pool_t *();
         };

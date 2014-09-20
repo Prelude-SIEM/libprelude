@@ -807,7 +807,6 @@ docs/manpages/Makefile
 
 bindings/Makefile
 bindings/low-level/Makefile
-bindings/low-level/perl/Makefile.PL
 bindings/low-level/python/Makefile
 bindings/low-level/python/setup.py
 

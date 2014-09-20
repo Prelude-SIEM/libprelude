@@ -47,12 +47,12 @@ namespace Prelude {
                         SYSLOG   = PRELUDE_LOG_FLAGS_SYSLOG
                 };
 
-                static void SetLevel(int level);
-                static void SetDebugLevel(int level);
-                static void SetFlags(int flags);
-                static int GetFlags(void);
-                static void SetLogfile(const char *filename);
-                static void SetCallback(void (*log_cb)(int level, const char *log));
+                static void setLevel(int level);
+                static void setDebugLevel(int level);
+                static void setFlags(int flags);
+                static int getFlags(void);
+                static void setLogfile(const char *filename);
+                static void setCallback(void (*log_cb)(int level, const char *log));
         };
 };
 

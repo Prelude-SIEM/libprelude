@@ -41,8 +41,8 @@ ClientEasy::ClientEasy(const char *profile,
                        const char *_manufacturer,
                        const char *_version) : Client(profile)
 {
-        SetRequiredPermission(permission);
+        setRequiredPermission(permission);
 
-        SetFlags(GetFlags() | Client::FLAGS_ASYNC_TIMER);
-        setup_analyzer(prelude_client_get_analyzer(GetClient()), _model, _class, _manufacturer, _version);
+        setFlags(getFlags() | Client::FLAGS_ASYNC_TIMER);
+        setup_analyzer(prelude_client_get_analyzer(getClient()), _model, _class, _manufacturer, _version);
 }

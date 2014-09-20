@@ -34,11 +34,11 @@ Client::~Client()
 }
 
 
-void Client::Start()
+void Client::start()
 {
         int ret;
 
-        Init();
+        init();
 
         ret = prelude_client_start(_client);
         if ( ret < 0 )
@@ -46,7 +46,7 @@ void Client::Start()
 }
 
 
-void Client::Init()
+void Client::init()
 {
         int ret;
 
@@ -58,19 +58,19 @@ void Client::Init()
 }
 
 
-prelude_client_t *Client::GetClient()
+prelude_client_t *Client::getClient()
 {
         return _client;
 }
 
 
-void Client::SendIDMEF(const IDMEF &message)
+void Client::sendIDMEF(const IDMEF &message)
 {
         prelude_client_send_idmef(_client, (idmef_message_t *) (idmef_object_t *) message);
 }
 
 
-int Client::RecvIDMEF(Prelude::IDMEF &idmef, int timeout)
+int Client::recvIDMEF(Prelude::IDMEF &idmef, int timeout)
 {
         int ret;
         idmef_message_t *idmef_p;
@@ -88,13 +88,13 @@ int Client::RecvIDMEF(Prelude::IDMEF &idmef, int timeout)
 }
 
 
-int Client::GetFlags()
+int Client::getFlags()
 {
         return prelude_client_get_flags(_client);
 }
 
 
-void Client::SetFlags(int flags)
+void Client::setFlags(int flags)
 {
         int ret;
 
@@ -104,25 +104,25 @@ void Client::SetFlags(int flags)
 }
 
 
-int Client::GetRequiredPermission()
+int Client::getRequiredPermission()
 {
         return prelude_client_get_required_permission(_client);
 }
 
 
-void Client::SetRequiredPermission(int permission)
+void Client::setRequiredPermission(int permission)
 {
         prelude_client_set_required_permission(_client, (prelude_connection_permission_t) permission);
 }
 
 
-const char *Client::GetConfigFilename()
+const char *Client::getConfigFilename()
 {
         return prelude_client_get_config_filename(_client);
 }
 
 
-void Client::SetConfigFilename(const char *name)
+void Client::setConfigFilename(const char *name)
 {
         int ret;
 
@@ -132,13 +132,13 @@ void Client::SetConfigFilename(const char *name)
 }
 
 
-ConnectionPool &Client::GetConnectionPool()
+ConnectionPool &Client::getConnectionPool()
 {
         return _pool;
 }
 
 
-void Client::SetConnectionPool(ConnectionPool pool)
+void Client::setConnectionPool(ConnectionPool pool)
 {
         _pool = pool;
         prelude_client_set_connection_pool(_client, prelude_connection_pool_ref(pool));
@@ -147,7 +147,7 @@ void Client::SetConnectionPool(ConnectionPool pool)
 
 Client &Client::operator << (IDMEF &idmef)
 {
-        SendIDMEF(idmef);
+        sendIDMEF(idmef);
         return *this;
 }
 
@@ -156,14 +156,14 @@ Client &Client::operator >> (IDMEF &idmef)
 {
         int ret;
 
-        ret = RecvIDMEF(idmef, _recv_timeout);
+        ret = recvIDMEF(idmef, _recv_timeout);
         if ( ret <= 0 )
                 throw PreludeError(ret);
 
         return *this;
 }
 
-Client &Client::SetRecvTimeout(Client &c, int timeout)
+Client &Client::setRecvTimeout(Client &c, int timeout)
 {
         c._recv_timeout = timeout;
         return c;

@@ -76,7 +76,7 @@ IDMEFCriteria::IDMEFCriteria()
 }
 
 
-IDMEFCriteria IDMEFCriteria::Clone()
+IDMEFCriteria IDMEFCriteria::clone()
 {
         int ret;
         idmef_criteria_t *cl;
@@ -89,19 +89,19 @@ IDMEFCriteria IDMEFCriteria::Clone()
 }
 
 
-void IDMEFCriteria::ANDCriteria(const IDMEFCriteria &criteria)
+void IDMEFCriteria::andCriteria(const IDMEFCriteria &criteria)
 {
         idmef_criteria_and_criteria(this->_criteria, criteria._criteria);
 }
 
 
-void IDMEFCriteria::ORCriteria(const IDMEFCriteria &criteria)
+void IDMEFCriteria::orCriteria(const IDMEFCriteria &criteria)
 {
         idmef_criteria_or_criteria(this->_criteria, criteria._criteria);
 }
 
 
-int IDMEFCriteria::Match(IDMEF *message)
+int IDMEFCriteria::match(IDMEF *message)
 {
         int ret;
 
@@ -113,7 +113,7 @@ int IDMEFCriteria::Match(IDMEF *message)
 }
 
 
-const std::string IDMEFCriteria::ToString() const
+const std::string IDMEFCriteria::toString() const
 {
         int ret;
         std::string s;
@@ -138,7 +138,7 @@ const std::string IDMEFCriteria::ToString() const
 
 IDMEFCriteria::operator const std::string() const
 {
-        return ToString();
+        return toString();
 }
 
 

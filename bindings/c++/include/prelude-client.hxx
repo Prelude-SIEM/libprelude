@@ -46,31 +46,31 @@ namespace Prelude {
                 Client(const char *profile);
                 Client(const Client &client);
 
-                void Start();
-                void Init();
+                void start();
+                void init();
 
-                prelude_client_t *GetClient();
+                prelude_client_t *getClient();
 
-                void SendIDMEF(const Prelude::IDMEF &message);
-                int RecvIDMEF(Prelude::IDMEF &idmef, int timeout=-1);
+                void sendIDMEF(const Prelude::IDMEF &message);
+                int recvIDMEF(Prelude::IDMEF &idmef, int timeout=-1);
 
-                int GetFlags();
-                void SetFlags(int flags);
+                int getFlags();
+                void setFlags(int flags);
 
-                int GetRequiredPermission();
-                void SetRequiredPermission(int permission);
+                int getRequiredPermission();
+                void setRequiredPermission(int permission);
 
-                const char *GetConfigFilename();
-                void SetConfigFilename(const char *name);
+                const char *getConfigFilename();
+                void setConfigFilename(const char *name);
 
-                Prelude::ConnectionPool &GetConnectionPool();
-                void SetConnectionPool(Prelude::ConnectionPool pool);
+                Prelude::ConnectionPool &getConnectionPool();
+                void setConnectionPool(Prelude::ConnectionPool pool);
 
                 Client &operator << (Prelude::IDMEF &idmef);
                 Client &operator >> (Prelude::IDMEF &idmef);
                 Client &operator=(const Client &p);
 
-                static Client &SetRecvTimeout(Client &c, int timeout);
+                static Client &setRecvTimeout(Client &c, int timeout);
         };
 };
 

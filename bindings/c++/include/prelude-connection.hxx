@@ -41,32 +41,32 @@ namespace Prelude {
                 Connection(const char *addr);
                 Connection(const Connection &con);
                 Connection(prelude_connection_t *con, bool own_data=FALSE);
-                prelude_connection_t *GetConnection();
+                prelude_connection_t *getConnection();
 
-                void Close();
-                void Connect(Prelude::ClientProfile &cp, int permission);
+                void close();
+                void connect(Prelude::ClientProfile &cp, int permission);
 
-                void SetState(int state);
-                int GetState();
+                void setState(int state);
+                int getState();
 
-                void SetData(void *data);
-                void *GetData();
+                void setData(void *data);
+                void *getData();
 
-                int GetPermission();
+                int getPermission();
 
-                void SetPeerAnalyzerid(uint64_t analyzerid);
-                uint64_t GetPeerAnalyzerid();
+                void setPeerAnalyzerid(uint64_t analyzerid);
+                uint64_t getPeerAnalyzerid();
 
-                const char *GetLocalAddr();
-                unsigned int GetLocalPort();
+                const char *getLocalAddr();
+                unsigned int getLocalPort();
 
-                const char *GetPeerAddr();
-                unsigned int GetPeerPort();
+                const char *getPeerAddr();
+                unsigned int getPeerPort();
 
-                bool IsAlive();
+                bool isAlive();
 
-                int GetFd();
-                Prelude::IDMEF RecvIDMEF();
+                int getFd();
+                Prelude::IDMEF recvIDMEF();
 
                 Connection & operator=(const Connection &con);
                 operator prelude_connection_t *();

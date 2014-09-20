@@ -24,7 +24,7 @@
 #include <prelude.h>
 #include "prelude.hxx"
 
-const char *Prelude::CheckVersion(const char *wanted)
+const char *Prelude::checkVersion(const char *wanted)
 {
         const char *ret;
 

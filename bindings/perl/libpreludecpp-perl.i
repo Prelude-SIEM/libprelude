@@ -58,7 +58,7 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
         SV *svret, **svs = new SV*[result.size()];
 
         for ( i = result.begin(); i != result.end(); i++ ) {
-                if ( (*i).IsNull() ) {
+                if ( (*i).isNull() ) {
                         SvREFCNT_inc(& PL_sv_undef);
                         svs[j++] = &PL_sv_undef;
                 } else {
@@ -151,11 +151,11 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
 };
 
 
-%exception Read(void *nocast_p) {
+%exception read(void *nocast_p) {
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
-                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                if ( e.getCode() == PRELUDE_ERROR_EOF )
                         result = 0;
                 else
                         SWIG_exception_fail(SWIG_RuntimeError, e.what());
@@ -164,12 +164,12 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %extend Prelude::IDMEF {
-        void Write(void *nocast_p) {
+        void write(void *nocast_p) {
                 PerlIO *io = IoIFP(sv_2io((SV *) nocast_p));
                 self->_genericWrite(_cb_perl_write, io);
         }
 
-        int Read(void *nocast_p) {
+        int read(void *nocast_p) {
                 PerlIO *io = IoIFP(sv_2io((SV *) nocast_p));
                 self->_genericRead(_cb_perl_read, io);
                 return 1;
@@ -180,7 +180,7 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
 %typemap(out, fragment="IDMEFValue_to_SWIG") Prelude::IDMEFValue {
         int ret;
 
-        if ( $1.IsNull() ) {
+        if ( $1.isNull() ) {
                 SvREFCNT_inc (& PL_sv_undef);
                 $result = &PL_sv_undef;
         } else {
@@ -189,7 +189,7 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
                 ret = IDMEFValue_to_SWIG($1, NULL, &mysv);
                 if ( ret < 0 ) {
                         std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";
+                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
                         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
                 }
 

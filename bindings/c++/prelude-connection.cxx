@@ -68,19 +68,19 @@ Connection::Connection(prelude_connection_t *con, bool own_data)
 }
 
 
-prelude_connection_t *Connection::GetConnection()
+prelude_connection_t *Connection::getConnection()
 {
         return _con;
 }
 
 
-void Connection::Close()
+void Connection::close()
 {
         prelude_connection_close(_con);
 }
 
 
-void Connection::Connect(ClientProfile &cp, int permission)
+void Connection::connect(ClientProfile &cp, int permission)
 {
         int ret;
 
@@ -90,79 +90,79 @@ void Connection::Connect(ClientProfile &cp, int permission)
 }
 
 
-void Connection::SetState(int state)
+void Connection::setState(int state)
 {
         prelude_connection_set_state(_con, (prelude_connection_state_t) state);
 }
 
 
-int Connection::GetState()
+int Connection::getState()
 {
         return prelude_connection_get_state(_con);
 }
 
 
-void Connection::SetData(void *data)
+void Connection::setData(void *data)
 {
         prelude_connection_set_data(_con, data);
 }
 
 
-void *Connection::GetData()
+void *Connection::getData()
 {
         return prelude_connection_get_data(_con);
 }
 
 
-int Connection::GetPermission()
+int Connection::getPermission()
 {
         return prelude_connection_get_permission(_con);
 }
 
 
-void Connection::SetPeerAnalyzerid(uint64_t analyzerid)
+void Connection::setPeerAnalyzerid(uint64_t analyzerid)
 {
         prelude_connection_set_peer_analyzerid(_con, analyzerid);
 }
 
 
-uint64_t Connection::GetPeerAnalyzerid()
+uint64_t Connection::getPeerAnalyzerid()
 {
         return prelude_connection_get_peer_analyzerid(_con);
 }
 
 
-const char *Connection::GetLocalAddr()
+const char *Connection::getLocalAddr()
 {
         return prelude_connection_get_local_addr(_con);
 }
 
 
-unsigned int Connection::GetLocalPort()
+unsigned int Connection::getLocalPort()
 {
         return prelude_connection_get_local_port(_con);
 }
 
 
-const char *Connection::GetPeerAddr()
+const char *Connection::getPeerAddr()
 {
         return prelude_connection_get_peer_addr(_con);
 }
 
 
-unsigned int Connection::GetPeerPort()
+unsigned int Connection::getPeerPort()
 {
         return prelude_connection_get_peer_port(_con);
 }
 
 
-int Connection::GetFd()
+int Connection::getFd()
 {
         return prelude_io_get_fd(prelude_connection_get_fd(_con));
 }
 
 
-Prelude::IDMEF Connection::RecvIDMEF()
+Prelude::IDMEF Connection::recvIDMEF()
 {
         int ret;
         idmef_message_t *idmef;
@@ -175,7 +175,7 @@ Prelude::IDMEF Connection::RecvIDMEF()
 }
 
 
-bool Connection::IsAlive()
+bool Connection::isAlive()
 {
         return prelude_connection_is_alive(_con);
 }

@@ -50,58 +50,58 @@ ClientProfile::~ClientProfile()
 }
 
 
-const std::string ClientProfile::GetConfigFilename()
+const std::string ClientProfile::getConfigFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_config_filename);
 }
 
-const std::string ClientProfile::GetAnalyzeridFilename()
+const std::string ClientProfile::getAnalyzeridFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_analyzerid_filename);
 }
 
-const std::string ClientProfile::GetTlsKeyFilename()
+const std::string ClientProfile::getTlsKeyFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_key_filename);
 }
 
-const std::string ClientProfile::GetTlsServerCaCertFilename()
+const std::string ClientProfile::getTlsServerCaCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_ca_cert_filename);
 }
 
-const std::string ClientProfile::GetTlsServerKeyCertFilename()
+const std::string ClientProfile::getTlsServerKeyCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_keycert_filename);
 }
 
-const std::string ClientProfile::GetTlsServerCrlFilename()
+const std::string ClientProfile::getTlsServerCrlFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_server_crl_filename);
 }
 
-const std::string ClientProfile::GetTlsClientKeyCertFilename()
+const std::string ClientProfile::getTlsClientKeyCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_client_keycert_filename);
 }
 
-const std::string ClientProfile::GetTlsClientTrustedCertFilename()
+const std::string ClientProfile::getTlsClientTrustedCertFilename()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_tls_client_trusted_cert_filename);
 }
 
-const std::string ClientProfile::GetBackupDirname()
+const std::string ClientProfile::getBackupDirname()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_backup_dirname);
 }
 
-const std::string ClientProfile::GetProfileDirname()
+const std::string ClientProfile::getProfileDirname()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_profile_dirname);
 }
 
 
-void ClientProfile::SetPrefix(const char *prefix)
+void ClientProfile::setPrefix(const char *prefix)
 {
         int ret;
 
@@ -111,7 +111,7 @@ void ClientProfile::SetPrefix(const char *prefix)
 }
 
 
-const std::string ClientProfile::GetPrefix()
+const std::string ClientProfile::getPrefix()
 {
         _RETURN_NEW_BUFFER_FROM_FUNCTION_BUFFERSIZE(prelude_client_profile_get_prefix);
 }

@@ -63,8 +63,8 @@ namespace Prelude {
                         TYPE_CLASS      = IDMEF_VALUE_TYPE_CLASS
                 };
 
-                IDMEFValueTypeEnum GetType() const;
-                bool IsNull() const;
+                IDMEFValueTypeEnum getType() const;
+                bool isNull() const;
 
                 IDMEFValue();
                 ~IDMEFValue();
@@ -87,9 +87,9 @@ namespace Prelude {
                 IDMEFValue(double value);
                 IDMEFValue(Prelude::IDMEFTime &time);
 
-                int Match(const IDMEFValue &value, int op);
-                IDMEFValue Clone() const;
-                const std::string ToString() const;
+                int match(const IDMEFValue &value, int op);
+                IDMEFValue clone() const;
+                const std::string toString() const;
 
                 operator int32_t() const;
                 operator uint32_t() const;

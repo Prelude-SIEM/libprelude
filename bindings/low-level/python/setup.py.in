@@ -25,7 +25,7 @@ import shutil
 from distutils.sysconfig import get_python_lib
 from distutils.core import setup, Extension
 
-FILES_TO_BE_COPIED = ("_prelude.c", "prelude.py")
+FILES_TO_BE_COPIED = ("_preludeold.c", "preludeold.py")
 
 
 def split_args(s):
@@ -74,7 +74,7 @@ def uninstall():
     else:
         prefix = "@prefix@"
     
-    for f in "prelude.py", "prelude.pyc", "_prelude.so":
+    for f in "preludeold.py", "preludeold.pyc", "_preludeold.so":
         file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + f
         exists(file) and os.remove(file)
 
@@ -95,16 +95,16 @@ commands = {
 if len(sys.argv) > 1 and sys.argv[1] in commands:
     commands[sys.argv[1]]()
 
-setup(name="prelude",
+setup(name="preludeold",
       version="@VERSION@",
       description="Low-level Python bindings for the Prelude Library",
       author="CS-SI",
       license="GPL V2.1",
       url="http://www.prelude-ids.com",
-      package_dir={'prelude': '@top_srcdir@/bindings/low-level/python'},
-      py_modules=["prelude"],
-      ext_modules=[Extension("_prelude",
-                             ["_prelude.c"],
+      package_dir={'preludeold': '@top_srcdir@/bindings/low-level/python'},
+      py_modules=["preludeold"],
+      ext_modules=[Extension("_preludeold",
+                             ["_preludeold.c"],
                              extra_compile_args=split_args("-I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings"),
                              library_dirs=[ "@top_builddir@/src/.libs/" ],
                              extra_link_args=split_args("-lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @LTLIBTHREAD@"))])

@@ -88,13 +88,13 @@ IDMEFTime::IDMEFTime(const struct timeval *tv)
 
 
 
-void IDMEFTime::Set(const time_t *t)
+void IDMEFTime::set(const time_t *t)
 {
         idmef_time_set_from_time(_time, t);
 }
 
 
-void IDMEFTime::Set(const struct timeval *tv)
+void IDMEFTime::set(const struct timeval *tv)
 {
         int ret;
 
@@ -105,7 +105,7 @@ void IDMEFTime::Set(const struct timeval *tv)
 
 
 
-void IDMEFTime::Set(const char *str)
+void IDMEFTime::set(const char *str)
 {
         int ret;
 
@@ -115,7 +115,7 @@ void IDMEFTime::Set(const char *str)
 }
 
 
-void IDMEFTime::Set()
+void IDMEFTime::set()
 {
         int ret;
 
@@ -125,43 +125,43 @@ void IDMEFTime::Set()
 }
 
 
-void IDMEFTime::SetSec(uint32_t sec)
+void IDMEFTime::setSec(uint32_t sec)
 {
         idmef_time_set_sec(_time, sec);
 }
 
 
-void IDMEFTime::SetUSec(uint32_t usec)
+void IDMEFTime::setUSec(uint32_t usec)
 {
         idmef_time_set_usec(_time, usec);
 }
 
 
-void IDMEFTime::SetGmtOffset(int32_t gmtoff)
+void IDMEFTime::setGmtOffset(int32_t gmtoff)
 {
         idmef_time_set_gmt_offset(_time, gmtoff);
 }
 
 
-uint32_t IDMEFTime::GetSec() const
+uint32_t IDMEFTime::getSec() const
 {
         return idmef_time_get_sec(_time);
 }
 
 
-uint32_t IDMEFTime::GetUSec() const
+uint32_t IDMEFTime::getUSec() const
 {
         return idmef_time_get_usec(_time);
 }
 
 
-int32_t IDMEFTime::GetGmtOffset() const
+int32_t IDMEFTime::getGmtOffset() const
 {
         return idmef_time_get_gmt_offset(_time);
 }
 
 
-IDMEFTime IDMEFTime::Clone()
+IDMEFTime IDMEFTime::clone()
 {
         int ret;
         idmef_time_t *clone;
@@ -174,7 +174,7 @@ IDMEFTime IDMEFTime::Clone()
 }
 
 
-const std::string IDMEFTime::ToString() const
+const std::string IDMEFTime::toString() const
 {
         int ret;
         std::string cs;
@@ -233,25 +233,25 @@ bool IDMEFTime::operator == (const IDMEFTime &time)
 
 IDMEFTime::operator int() const
 {
-        return GetSec();
+        return getSec();
 }
 
 
 IDMEFTime::operator long() const
 {
-        return GetSec();
+        return getSec();
 }
 
 
 IDMEFTime::operator double() const
 {
-        return GetSec() + (GetUSec() * 1e-6);
+        return getSec() + (getUSec() * 1e-6);
 }
 
 
 IDMEFTime::operator const std::string() const
 {
-        return ToString();
+        return toString();
 }
 
 

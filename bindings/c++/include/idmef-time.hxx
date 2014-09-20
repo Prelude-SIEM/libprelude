@@ -40,20 +40,20 @@ namespace Prelude {
                 IDMEFTime(const IDMEFTime &value);
                 ~IDMEFTime();
 
-                void Set();
-                void Set(const time_t *time);
-                void Set(const char *string);
-                void Set(const struct timeval *tv);
-                void SetSec(uint32_t sec);
-                void SetUSec(uint32_t usec);
-                void SetGmtOffset(int32_t gmtoff);
+                void set();
+                void set(const time_t *time);
+                void set(const char *string);
+                void set(const struct timeval *tv);
+                void setSec(uint32_t sec);
+                void setUSec(uint32_t usec);
+                void setGmtOffset(int32_t gmtoff);
 
-                uint32_t GetSec() const;
-                uint32_t GetUSec() const;
-                int32_t GetGmtOffset() const;
+                uint32_t getSec() const;
+                uint32_t getUSec() const;
+                int32_t getGmtOffset() const;
 
-                IDMEFTime Clone();
-                const std::string ToString() const;
+                IDMEFTime clone();
+                const std::string toString() const;
 
                 operator int() const;
                 operator long() const;

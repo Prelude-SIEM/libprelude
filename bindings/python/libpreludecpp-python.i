@@ -170,9 +170,9 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
-                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                if ( e.getCode() == PRELUDE_ERROR_EOF ) {
                         PyErr_SetString(PyExc_EOFError, e.what());
-                else
+                } else
                         SWIG_exception(SWIG_RuntimeError, e.what());
 
                 SWIG_fail;
@@ -180,11 +180,11 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
-%exception Read(void *nocast_p) {
+%exception read(void *nocast_p) {
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
-                if ( e.GetCode() == PRELUDE_ERROR_EOF )
+                if ( e.getCode() == PRELUDE_ERROR_EOF )
                         result = 0;
                 else
                         SWIG_exception_fail(SWIG_RuntimeError, e.what());
@@ -196,7 +196,7 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 %extend Prelude::IDMEFValue {
         long __hash__() {
-                return $self->GetType();
+                return $self->getType();
         }
 }
 
@@ -204,21 +204,21 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 %extend Prelude::IDMEF {
         %insert("python") %{
         def __setitem__(self, key, value):
-                return self.Set(key, value)
+                return self.set(key, value)
 
         def __getitem__(self, key):
                 try:
-                        return self.Get(key)
+                        return self.get(key)
                 except:
                         raise IndexError
 
         %}
 
-        void Write(void *nocast_file_p) {
+        void write(void *nocast_file_p) {
                 self->_genericWrite(_cb_python_write, nocast_file_p);
         }
 
-        int Read(void *nocast_file_p) {
+        int read(void *nocast_file_p) {
                 self->_genericRead(_cb_python_read, nocast_file_p);
                 return 1;
         }
@@ -251,7 +251,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
         for ( i = result.begin(); i != result.end(); i++ ) {
                 PyObject *val;
 
-                if ( (*i).IsNull() ) {
+                if ( (*i).isNull() ) {
                         Py_INCREF(Py_None);
                         val = Py_None;
                 } else {
@@ -271,21 +271,21 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 %typemap(out, fragment="IDMEFValue_to_SWIG") Prelude::IDMEFValue {
         int ret;
 
-        if ( $1.IsNull() ) {
+        if ( $1.isNull() ) {
                 Py_INCREF(Py_None);
                 $result = Py_None;
         } else {
                 ret = IDMEFValue_to_SWIG($1, NULL, &$result);
                 if ( ret < 0 ) {
                         std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.GetType()) << "'";
+                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
                         SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
                 }
         }
 };
 
 
-%feature("shadow") Clone() %{
+%feature("shadow") clone() %{
         def __deepcopy__(self, memo):
                 return $action(self.this)
 %}

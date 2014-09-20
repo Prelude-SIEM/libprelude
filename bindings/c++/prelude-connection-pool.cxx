@@ -69,7 +69,7 @@ ConnectionPool::ConnectionPool(ClientProfile &cp, int permission)
 
 
 
-void ConnectionPool::Init()
+void ConnectionPool::init()
 {
         int ret;
 
@@ -79,7 +79,7 @@ void ConnectionPool::Init()
 }
 
 
-std::vector<Prelude::Connection> ConnectionPool::GetConnectionList()
+std::vector<Prelude::Connection> ConnectionPool::getConnectionList()
 {
         std::vector<Prelude::Connection> clist;
         prelude_connection_t *con;
@@ -96,31 +96,31 @@ std::vector<Prelude::Connection> ConnectionPool::GetConnectionList()
 }
 
 
-void ConnectionPool::AddConnection(Connection con)
+void ConnectionPool::addConnection(Connection con)
 {
         prelude_connection_pool_add_connection(_pool, prelude_connection_ref(con));
 }
 
 
-void ConnectionPool::DelConnection(Connection con)
+void ConnectionPool::delConnection(Connection con)
 {
         prelude_connection_pool_del_connection(_pool, con);
 }
 
 
-void ConnectionPool::SetConnectionDead(Connection &con)
+void ConnectionPool::setConnectionDead(Connection &con)
 {
         prelude_connection_pool_set_connection_dead(_pool, con);
 }
 
 
-void ConnectionPool::SetConnectionAlive(Connection &con)
+void ConnectionPool::setConnectionAlive(Connection &con)
 {
         prelude_connection_pool_set_connection_alive(_pool, con);
 }
 
 
-void ConnectionPool::SetConnectionString(const char *str)
+void ConnectionPool::setConnectionString(const char *str)
 {
         int ret;
 
@@ -130,37 +130,37 @@ void ConnectionPool::SetConnectionString(const char *str)
 }
 
 
-const char *ConnectionPool::GetConnectionString()
+const char *ConnectionPool::getConnectionString()
 {
         return prelude_connection_pool_get_connection_string(_pool);
 }
 
 
-int ConnectionPool::GetFlags()
+int ConnectionPool::getFlags()
 {
         return prelude_connection_pool_get_flags(_pool);
 }
 
 
-void ConnectionPool::SetFlags(int flags)
+void ConnectionPool::setFlags(int flags)
 {
         prelude_connection_pool_set_flags(_pool, (prelude_connection_pool_flags_t) flags);
 }
 
 
-void ConnectionPool::SetRequiredPermission(int permission)
+void ConnectionPool::setRequiredPermission(int permission)
 {
         prelude_connection_pool_set_required_permission(_pool, (prelude_connection_permission_t) permission);
 }
 
 
-void ConnectionPool::SetData(void *data)
+void ConnectionPool::setData(void *data)
 {
         prelude_connection_pool_set_data(_pool, data);
 }
 
 
-void *ConnectionPool::GetData()
+void *ConnectionPool::getData()
 {
         return prelude_connection_pool_get_data(_pool);
 }

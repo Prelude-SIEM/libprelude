@@ -41,117 +41,117 @@ IDMEF::~IDMEF()
                 idmef_object_destroy(_object);
 }
 
-void IDMEF::Set(const char *path, std::vector<IDMEF> value)
+void IDMEF::set(const char *path, std::vector<IDMEF> value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, IDMEF *value)
+void IDMEF::set(const char *path, IDMEF *value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, std::vector<IDMEFValue> value)
+void IDMEF::set(const char *path, std::vector<IDMEFValue> value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, IDMEFValue *value)
+void IDMEF::set(const char *path, IDMEFValue *value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, IDMEFValue &value)
+void IDMEF::set(const char *path, IDMEFValue &value)
 {
-        IDMEFPath(*this, path).Set(*this, &value);
+        IDMEFPath(*this, path).set(*this, &value);
 }
 
 
-void IDMEF::Set(const char *path, std::string value)
+void IDMEF::set(const char *path, std::string value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, const char *value)
+void IDMEF::set(const char *path, const char *value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, int8_t value)
+void IDMEF::set(const char *path, int8_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, uint8_t value)
+void IDMEF::set(const char *path, uint8_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, int16_t value)
+void IDMEF::set(const char *path, int16_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, uint16_t value)
+void IDMEF::set(const char *path, uint16_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, int32_t value)
+void IDMEF::set(const char *path, int32_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, uint32_t value)
+void IDMEF::set(const char *path, uint32_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, int64_t value)
+void IDMEF::set(const char *path, int64_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, uint64_t value)
+void IDMEF::set(const char *path, uint64_t value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, float value)
+void IDMEF::set(const char *path, float value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, double value)
+void IDMEF::set(const char *path, double value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-void IDMEF::Set(const char *path, IDMEFTime &value)
+void IDMEF::set(const char *path, IDMEFTime &value)
 {
-        IDMEFPath(*this, path).Set(*this, value);
+        IDMEFPath(*this, path).set(*this, value);
 }
 
 
-IDMEFValue IDMEF::Get(const char *path)
+IDMEFValue IDMEF::get(const char *path)
 {
-        return IDMEFPath(*this, path).Get(*this);
+        return IDMEFPath(*this, path).get(*this);
 }
 
 
@@ -167,7 +167,7 @@ int IDMEF::operator == (const IDMEF *idmef)
 }
 
 
-IDMEF IDMEF::Clone()
+IDMEF IDMEF::clone()
 {
         int ret;
         idmef_object_t *clone;
@@ -180,13 +180,13 @@ IDMEF IDMEF::Clone()
 }
 
 
-idmef_class_id_t IDMEF::GetId() const
+idmef_class_id_t IDMEF::getId() const
 {
         return _object->_idmef_object_id;
 }
 
 
-const std::string IDMEF::ToString() const
+const std::string IDMEF::toString() const
 {
         int ret;
         std::string str;
@@ -304,7 +304,7 @@ std::ostream &operator <<(std::ostream &os, const IDMEF &idmef)
 
 IDMEF::operator const std::string() const
 {
-        return ToString();
+        return toString();
 }
 
 

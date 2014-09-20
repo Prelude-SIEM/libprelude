@@ -1,10 +1,10 @@
 if HAVE_PYTHON2
 
-EXTRA_DIST = libprelude-python.i prelude.py _prelude.c
+EXTRA_DIST = libprelude-python.i preludeold.py _preludeold.c
 
 all-am: python-build
 
-python-build: _prelude.c
+python-build: _preludeold.c
 	CC="$(BINDINGS_CC)" $(PYTHON2) setup.py build
 
 install-exec-hook:
@@ -16,9 +16,9 @@ uninstall-hook:
 clean-local:
 	$(PYTHON2) setup.py clean -a
 
-_prelude.c: $(top_srcdir)/bindings/low-level/libprelude.i libprelude-python.i
+_preludeold.c: $(top_srcdir)/bindings/low-level/libprelude.i libprelude-python.i
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/bindings -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude $(top_srcdir)/bindings/low-level/libprelude.i
+	$(SWIG) -I$(top_srcdir)/bindings -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _preludeold -module _preludeold $(top_srcdir)/bindings/low-level/libprelude.i
 endif
 
 endif

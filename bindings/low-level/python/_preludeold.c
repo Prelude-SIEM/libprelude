@@ -3114,16 +3114,16 @@ static swig_module_info swig_module = {swig_types, 190, 0, 0, 0, 0};
 #endif
 
 /*-----------------------------------------------
-              @(target):= _prelude.so
+              @(target):= _preludeold.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__prelude
+#  define SWIG_init    PyInit__preludeold
 
 #else
-#  define SWIG_init    init_prelude
+#  define SWIG_init    init_preludeold
 
 #endif
-#define SWIG_name    "_prelude"
+#define SWIG_name    "_preludeold"
 
 #define SWIGVERSION 0x030002 
 #define SWIG_VERSION SWIGVERSION
@@ -48775,6 +48775,32 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_idmef_class_is_listed(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  idmef_class_id_t arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  prelude_bool_t result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:idmef_class_is_listed",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "idmef_class_is_listed" "', argument " "1"" of type '" "idmef_class_id_t""'");
+  } 
+  arg1 = (idmef_class_id_t)(val1);
+  {
+    Py_BEGIN_ALLOW_THREADS
+    result = (prelude_bool_t)idmef_class_is_listed(arg1);
+    Py_END_ALLOW_THREADS
+  }
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_prelude_connection_destroy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
@@ -56733,6 +56759,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_class_ref", _wrap_idmef_class_ref, METH_VARARGS, NULL},
 	 { (char *)"idmef_class_print", _wrap_idmef_class_print, METH_VARARGS, NULL},
 	 { (char *)"idmef_class_destroy", _wrap_idmef_class_destroy, METH_VARARGS, NULL},
+	 { (char *)"idmef_class_is_listed", _wrap_idmef_class_is_listed, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_destroy", _wrap_prelude_connection_destroy, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_ref", _wrap_prelude_connection_ref, METH_VARARGS, NULL},
 	 { (char *)"prelude_connection_send", _wrap_prelude_connection_send, METH_VARARGS, NULL},
@@ -58385,7 +58412,17 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "IDMEF_LIST_PREPEND",SWIG_From_int((int)(IDMEF_LIST_PREPEND)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_TRUE",SWIG_From_int((int)(PRELUDE_BOOL_TRUE)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_FALSE",SWIG_From_int((int)(PRELUDE_BOOL_FALSE)));
-  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.5"));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.6rc1"));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_ALPHA",SWIG_From_int((int)(0xa)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_BETA",SWIG_From_int((int)(0xb)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_RC",SWIG_From_int((int)(0xc)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_FINAL",SWIG_From_int((int)(0xf)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_MAJOR_VERSION",SWIG_From_int((int)(1)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_MINOR_VERSION",SWIG_From_int((int)(2)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_MICRO_VERSION",SWIG_From_int((int)(6)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_LEVEL_VERSION",SWIG_From_int((int)(0xc)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_SERIAL_VERSION",SWIG_From_int((int)(1)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_HEXVERSION",SWIG_From_int((int)(((1 << 24)|(2 << 16)|(6 << 8)|(0xc << 4)|(1 << 0)))));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_EXIT_STATUS_SUCCESS",SWIG_From_int((int)(PRELUDE_CLIENT_EXIT_STATUS_SUCCESS)));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_EXIT_STATUS_FAILURE",SWIG_From_int((int)(PRELUDE_CLIENT_EXIT_STATUS_FAILURE)));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_FLAGS_ASYNC_SEND",SWIG_From_int((int)(PRELUDE_CLIENT_FLAGS_ASYNC_SEND)));
