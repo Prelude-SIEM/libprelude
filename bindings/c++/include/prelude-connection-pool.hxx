@@ -43,14 +43,14 @@ namespace Prelude {
                 void init();
 
                 void setConnectionString(const char *str);
-                const char *getConnectionString();
-                std::vector<Prelude::Connection> getConnectionList();
+                const char *getConnectionString() const;
+                std::vector<Prelude::Connection> getConnectionList() const;
 
                 void setFlags(int flags);
-                int getFlags();
+                int getFlags() const;
 
                 void setData(void *data);
-                void *getData();
+                void *getData() const;
 
                 void addConnection(Prelude::Connection con);
                 void delConnection(Prelude::Connection con);

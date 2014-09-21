@@ -4397,7 +4397,7 @@ static int _wrap_Connection_getConnection(lua_State* L) {
   prelude_connection_t *result = 0 ;
   
   SWIG_check_num_args("Prelude::Connection::getConnection",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getConnection",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getConnection",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getConnection",1,SWIGTYPE_p_Prelude__Connection);
@@ -4405,7 +4405,7 @@ static int _wrap_Connection_getConnection(lua_State* L) {
   
   {
     try {
-      result = (prelude_connection_t *)(arg1)->getConnection();
+      result = (prelude_connection_t *)((Prelude::Connection const *)arg1)->getConnection();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4531,7 +4531,7 @@ static int _wrap_Connection_getState(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::Connection::getState",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getState",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getState",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getState",1,SWIGTYPE_p_Prelude__Connection);
@@ -4539,7 +4539,7 @@ static int _wrap_Connection_getState(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getState();
+      result = (int)((Prelude::Connection const *)arg1)->getState();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4595,7 +4595,7 @@ static int _wrap_Connection_getData(lua_State* L) {
   void *result = 0 ;
   
   SWIG_check_num_args("Prelude::Connection::getData",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getData",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getData",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getData",1,SWIGTYPE_p_Prelude__Connection);
@@ -4603,7 +4603,7 @@ static int _wrap_Connection_getData(lua_State* L) {
   
   {
     try {
-      result = (void *)(arg1)->getData();
+      result = (void *)((Prelude::Connection const *)arg1)->getData();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4626,7 +4626,7 @@ static int _wrap_Connection_getPermission(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::Connection::getPermission",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPermission",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPermission",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getPermission",1,SWIGTYPE_p_Prelude__Connection);
@@ -4634,7 +4634,7 @@ static int _wrap_Connection_getPermission(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getPermission();
+      result = (int)((Prelude::Connection const *)arg1)->getPermission();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4690,7 +4690,7 @@ static int _wrap_Connection_getPeerAnalyzerid(lua_State* L) {
   uint64_t result;
   
   SWIG_check_num_args("Prelude::Connection::getPeerAnalyzerid",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerAnalyzerid",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerAnalyzerid",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getPeerAnalyzerid",1,SWIGTYPE_p_Prelude__Connection);
@@ -4698,7 +4698,7 @@ static int _wrap_Connection_getPeerAnalyzerid(lua_State* L) {
   
   {
     try {
-      result = (uint64_t)(arg1)->getPeerAnalyzerid();
+      result = (uint64_t)((Prelude::Connection const *)arg1)->getPeerAnalyzerid();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4721,7 +4721,7 @@ static int _wrap_Connection_getLocalAddr(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::Connection::getLocalAddr",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getLocalAddr",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getLocalAddr",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getLocalAddr",1,SWIGTYPE_p_Prelude__Connection);
@@ -4729,7 +4729,7 @@ static int _wrap_Connection_getLocalAddr(lua_State* L) {
   
   {
     try {
-      result = (char *)(arg1)->getLocalAddr();
+      result = (char *)((Prelude::Connection const *)arg1)->getLocalAddr();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4752,7 +4752,7 @@ static int _wrap_Connection_getLocalPort(lua_State* L) {
   unsigned int result;
   
   SWIG_check_num_args("Prelude::Connection::getLocalPort",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getLocalPort",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getLocalPort",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getLocalPort",1,SWIGTYPE_p_Prelude__Connection);
@@ -4760,7 +4760,7 @@ static int _wrap_Connection_getLocalPort(lua_State* L) {
   
   {
     try {
-      result = (unsigned int)(arg1)->getLocalPort();
+      result = (unsigned int)((Prelude::Connection const *)arg1)->getLocalPort();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4783,7 +4783,7 @@ static int _wrap_Connection_getPeerAddr(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::Connection::getPeerAddr",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerAddr",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerAddr",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getPeerAddr",1,SWIGTYPE_p_Prelude__Connection);
@@ -4791,7 +4791,7 @@ static int _wrap_Connection_getPeerAddr(lua_State* L) {
   
   {
     try {
-      result = (char *)(arg1)->getPeerAddr();
+      result = (char *)((Prelude::Connection const *)arg1)->getPeerAddr();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4814,7 +4814,7 @@ static int _wrap_Connection_getPeerPort(lua_State* L) {
   unsigned int result;
   
   SWIG_check_num_args("Prelude::Connection::getPeerPort",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerPort",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getPeerPort",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getPeerPort",1,SWIGTYPE_p_Prelude__Connection);
@@ -4822,7 +4822,7 @@ static int _wrap_Connection_getPeerPort(lua_State* L) {
   
   {
     try {
-      result = (unsigned int)(arg1)->getPeerPort();
+      result = (unsigned int)((Prelude::Connection const *)arg1)->getPeerPort();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4845,7 +4845,7 @@ static int _wrap_Connection_isAlive(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::Connection::isAlive",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::isAlive",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::isAlive",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_isAlive",1,SWIGTYPE_p_Prelude__Connection);
@@ -4853,7 +4853,7 @@ static int _wrap_Connection_isAlive(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->isAlive();
+      result = (bool)((Prelude::Connection const *)arg1)->isAlive();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -4876,7 +4876,7 @@ static int _wrap_Connection_getFd(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::Connection::getFd",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getFd",1,"Prelude::Connection *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Connection::getFd",1,"Prelude::Connection const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Connection,0))){
     SWIG_fail_ptr("Connection_getFd",1,SWIGTYPE_p_Prelude__Connection);
@@ -4884,7 +4884,7 @@ static int _wrap_Connection_getFd(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getFd();
+      result = (int)((Prelude::Connection const *)arg1)->getFd();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -5256,7 +5256,7 @@ static int _wrap_ConnectionPool_getConnectionString(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::ConnectionPool::getConnectionString",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getConnectionString",1,"Prelude::ConnectionPool *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getConnectionString",1,"Prelude::ConnectionPool const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__ConnectionPool,0))){
     SWIG_fail_ptr("ConnectionPool_getConnectionString",1,SWIGTYPE_p_Prelude__ConnectionPool);
@@ -5264,7 +5264,7 @@ static int _wrap_ConnectionPool_getConnectionString(lua_State* L) {
   
   {
     try {
-      result = (char *)(arg1)->getConnectionString();
+      result = (char *)((Prelude::ConnectionPool const *)arg1)->getConnectionString();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -5287,7 +5287,7 @@ static int _wrap_ConnectionPool_getConnectionList(lua_State* L) {
   std::vector< Prelude::Connection > result;
   
   SWIG_check_num_args("Prelude::ConnectionPool::getConnectionList",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getConnectionList",1,"Prelude::ConnectionPool *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getConnectionList",1,"Prelude::ConnectionPool const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__ConnectionPool,0))){
     SWIG_fail_ptr("ConnectionPool_getConnectionList",1,SWIGTYPE_p_Prelude__ConnectionPool);
@@ -5295,7 +5295,7 @@ static int _wrap_ConnectionPool_getConnectionList(lua_State* L) {
   
   {
     try {
-      result = (arg1)->getConnectionList();
+      result = ((Prelude::ConnectionPool const *)arg1)->getConnectionList();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -5354,7 +5354,7 @@ static int _wrap_ConnectionPool_getFlags(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::ConnectionPool::getFlags",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getFlags",1,"Prelude::ConnectionPool *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getFlags",1,"Prelude::ConnectionPool const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__ConnectionPool,0))){
     SWIG_fail_ptr("ConnectionPool_getFlags",1,SWIGTYPE_p_Prelude__ConnectionPool);
@@ -5362,7 +5362,7 @@ static int _wrap_ConnectionPool_getFlags(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getFlags();
+      result = (int)((Prelude::ConnectionPool const *)arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -5418,7 +5418,7 @@ static int _wrap_ConnectionPool_getData(lua_State* L) {
   void *result = 0 ;
   
   SWIG_check_num_args("Prelude::ConnectionPool::getData",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getData",1,"Prelude::ConnectionPool *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::ConnectionPool::getData",1,"Prelude::ConnectionPool const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__ConnectionPool,0))){
     SWIG_fail_ptr("ConnectionPool_getData",1,SWIGTYPE_p_Prelude__ConnectionPool);
@@ -5426,7 +5426,7 @@ static int _wrap_ConnectionPool_getData(lua_State* L) {
   
   {
     try {
-      result = (void *)(arg1)->getData();
+      result = (void *)((Prelude::ConnectionPool const *)arg1)->getData();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -5851,7 +5851,7 @@ static int _wrap_Client_getClient(lua_State* L) {
   prelude_client_t *result = 0 ;
   
   SWIG_check_num_args("Prelude::Client::getClient",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getClient",1,"Prelude::Client *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getClient",1,"Prelude::Client const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Client,0))){
     SWIG_fail_ptr("Client_getClient",1,SWIGTYPE_p_Prelude__Client);
@@ -5859,7 +5859,7 @@ static int _wrap_Client_getClient(lua_State* L) {
   
   {
     try {
-      result = (prelude_client_t *)(arg1)->getClient();
+      result = (prelude_client_t *)((Prelude::Client const *)arg1)->getClient();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -6067,7 +6067,7 @@ static int _wrap_Client_getFlags(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::Client::getFlags",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getFlags",1,"Prelude::Client *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getFlags",1,"Prelude::Client const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Client,0))){
     SWIG_fail_ptr("Client_getFlags",1,SWIGTYPE_p_Prelude__Client);
@@ -6075,7 +6075,7 @@ static int _wrap_Client_getFlags(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getFlags();
+      result = (int)((Prelude::Client const *)arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -6131,7 +6131,7 @@ static int _wrap_Client_getRequiredPermission(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::Client::getRequiredPermission",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getRequiredPermission",1,"Prelude::Client *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getRequiredPermission",1,"Prelude::Client const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Client,0))){
     SWIG_fail_ptr("Client_getRequiredPermission",1,SWIGTYPE_p_Prelude__Client);
@@ -6139,7 +6139,7 @@ static int _wrap_Client_getRequiredPermission(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getRequiredPermission();
+      result = (int)((Prelude::Client const *)arg1)->getRequiredPermission();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -6195,7 +6195,7 @@ static int _wrap_Client_getConfigFilename(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::Client::getConfigFilename",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getConfigFilename",1,"Prelude::Client *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::Client::getConfigFilename",1,"Prelude::Client const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__Client,0))){
     SWIG_fail_ptr("Client_getConfigFilename",1,SWIGTYPE_p_Prelude__Client);
@@ -6203,7 +6203,7 @@ static int _wrap_Client_getConfigFilename(lua_State* L) {
   
   {
     try {
-      result = (char *)(arg1)->getConfigFilename();
+      result = (char *)((Prelude::Client const *)arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -6806,7 +6806,7 @@ static int _wrap_PreludeError_getCode(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::PreludeError::getCode",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::PreludeError::getCode",1,"Prelude::PreludeError *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::PreludeError::getCode",1,"Prelude::PreludeError const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__PreludeError,0))){
     SWIG_fail_ptr("PreludeError_getCode",1,SWIGTYPE_p_Prelude__PreludeError);
@@ -6814,7 +6814,7 @@ static int _wrap_PreludeError_getCode(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getCode();
+      result = (int)((Prelude::PreludeError const *)arg1)->getCode();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -7616,7 +7616,7 @@ static int _wrap_IDMEFCriteria_match(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFCriteria::match",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFCriteria::match",1,"Prelude::IDMEFCriteria *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFCriteria::match",1,"Prelude::IDMEFCriteria const *");
   if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEFCriteria::match",2,"Prelude::IDMEF *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFCriteria,0))){
@@ -7630,7 +7630,7 @@ static int _wrap_IDMEFCriteria_match(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->match(arg2);
+      result = (int)((Prelude::IDMEFCriteria const *)arg1)->match(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -7653,7 +7653,7 @@ static int _wrap_IDMEFCriteria_clone(lua_State* L) {
   Prelude::IDMEFCriteria result;
   
   SWIG_check_num_args("Prelude::IDMEFCriteria::clone",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFCriteria::clone",1,"Prelude::IDMEFCriteria *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFCriteria::clone",1,"Prelude::IDMEFCriteria const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFCriteria,0))){
     SWIG_fail_ptr("IDMEFCriteria_clone",1,SWIGTYPE_p_Prelude__IDMEFCriteria);
@@ -7661,7 +7661,7 @@ static int _wrap_IDMEFCriteria_clone(lua_State* L) {
   
   {
     try {
-      result = (arg1)->clone();
+      result = ((Prelude::IDMEFCriteria const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8338,7 +8338,7 @@ static int _wrap_IDMEFValue_match(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFValue::match",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::match",1,"Prelude::IDMEFValue *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::match",1,"Prelude::IDMEFValue const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::match",2,"Prelude::IDMEFValue const &");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFValue::match",3,"int");
   
@@ -8354,7 +8354,7 @@ static int _wrap_IDMEFValue_match(lua_State* L) {
   arg3 = (int)lua_tonumber(L, 3);
   {
     try {
-      result = (int)(arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
+      result = (int)((Prelude::IDMEFValue const *)arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8454,7 +8454,7 @@ static int _wrap_IDMEFValue___eq__SWIG_0(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFValue::operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",1,"Prelude::IDMEFValue *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",1,"Prelude::IDMEFValue const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",2,"std::vector< Prelude::IDMEFValue > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFValue,0))){
@@ -8468,7 +8468,7 @@ static int _wrap_IDMEFValue___eq__SWIG_0(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator ==((std::vector< Prelude::IDMEFValue > const &)*arg2);
+      result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((std::vector< Prelude::IDMEFValue > const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8492,7 +8492,7 @@ static int _wrap_IDMEFValue___le(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFValue::operator <=",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator <=",1,"Prelude::IDMEFValue *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator <=",1,"Prelude::IDMEFValue const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::operator <=",2,"Prelude::IDMEFValue const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFValue,0))){
@@ -8506,7 +8506,7 @@ static int _wrap_IDMEFValue___le(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
+      result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8530,7 +8530,7 @@ static int _wrap_IDMEFValue___lt(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFValue::operator <",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator <",1,"Prelude::IDMEFValue *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator <",1,"Prelude::IDMEFValue const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::operator <",2,"Prelude::IDMEFValue const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFValue,0))){
@@ -8544,7 +8544,7 @@ static int _wrap_IDMEFValue___lt(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
+      result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8568,7 +8568,7 @@ static int _wrap_IDMEFValue___eq__SWIG_1(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFValue::operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",1,"Prelude::IDMEFValue *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",1,"Prelude::IDMEFValue const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::operator ==",2,"Prelude::IDMEFValue const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFValue,0))){
@@ -8582,7 +8582,7 @@ static int _wrap_IDMEFValue___eq__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
+      result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8657,8 +8657,8 @@ static int _wrap_IDMEFValue___eq(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFValue___eq'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFValue::operator ==(std::vector< Prelude::IDMEFValue > const &)\n"
-    "    Prelude::IDMEFValue::operator ==(Prelude::IDMEFValue const &)\n");
+    "    Prelude::IDMEFValue::operator ==(std::vector< Prelude::IDMEFValue > const &) const\n"
+    "    Prelude::IDMEFValue::operator ==(Prelude::IDMEFValue const &) const\n");
   lua_error(L);return 0;
 }
 
@@ -8943,7 +8943,7 @@ static int _wrap_IDMEFPath_set__SWIG_0(lua_State* L) {
   std::vector< Prelude::IDMEF > *argp3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
   if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"std::vector< Prelude::IDMEF >");
   
@@ -8964,7 +8964,7 @@ static int _wrap_IDMEFPath_set__SWIG_0(lua_State* L) {
   
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -8988,7 +8988,7 @@ static int _wrap_IDMEFPath_set__SWIG_1(lua_State* L) {
   Prelude::IDMEF *arg3 = (Prelude::IDMEF *) 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
   if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"Prelude::IDMEF *");
   
@@ -9008,7 +9008,7 @@ static int _wrap_IDMEFPath_set__SWIG_1(lua_State* L) {
   
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9033,7 +9033,7 @@ static int _wrap_IDMEFPath_set__SWIG_2(lua_State* L) {
   std::vector< Prelude::IDMEFValue > *argp3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
   if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"std::vector< Prelude::IDMEFValue >");
   
@@ -9054,7 +9054,7 @@ static int _wrap_IDMEFPath_set__SWIG_2(lua_State* L) {
   
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9078,7 +9078,7 @@ static int _wrap_IDMEFPath_set__SWIG_3(lua_State* L) {
   Prelude::IDMEFValue *arg3 = (Prelude::IDMEFValue *) 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
   if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"Prelude::IDMEFValue *");
   
@@ -9098,7 +9098,7 @@ static int _wrap_IDMEFPath_set__SWIG_3(lua_State* L) {
   
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9119,12 +9119,12 @@ static int _wrap_IDMEFPath_set__SWIG_4(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  Prelude::IDMEFTime *arg3 = 0 ;
+  Prelude::IDMEFValue *arg3 = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"Prelude::IDMEFTime &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"Prelude::IDMEFValue &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9136,13 +9136,13 @@ static int _wrap_IDMEFPath_set__SWIG_4(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_Prelude__IDMEFTime,0))){
-    SWIG_fail_ptr("IDMEFPath_set",3,SWIGTYPE_p_Prelude__IDMEFTime);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_Prelude__IDMEFValue,0))){
+    SWIG_fail_ptr("IDMEFPath_set",3,SWIGTYPE_p_Prelude__IDMEFValue);
   }
   
   {
     try {
-      (arg1)->set(*arg2,*arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9163,12 +9163,12 @@ static int _wrap_IDMEFPath_set__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  std::string arg3 ;
+  Prelude::IDMEFTime *arg3 = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isstring(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"std::string");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"Prelude::IDMEFTime &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9179,10 +9179,14 @@ static int _wrap_IDMEFPath_set__SWIG_5(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  (&arg3)->assign(lua_tostring(L,3),lua_rawlen(L,3));
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_Prelude__IDMEFTime,0))){
+    SWIG_fail_ptr("IDMEFPath_set",3,SWIGTYPE_p_Prelude__IDMEFTime);
+  }
+  
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9203,12 +9207,12 @@ static int _wrap_IDMEFPath_set__SWIG_6(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  char *arg3 = (char *) 0 ;
+  std::string arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!SWIG_lua_isnilstring(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"char const *");
+  if(!lua_isstring(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"std::string");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9219,10 +9223,10 @@ static int _wrap_IDMEFPath_set__SWIG_6(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (char *)lua_tostring(L, 3);
+  (&arg3)->assign(lua_tostring(L,3),lua_rawlen(L,3));
   {
     try {
-      (arg1)->set(*arg2,(char const *)arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9243,12 +9247,12 @@ static int _wrap_IDMEFPath_set__SWIG_7(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  int16_t arg3 ;
+  char *arg3 = (char *) 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int16_t");
+  if(!SWIG_lua_isnilstring(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"char const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9259,10 +9263,10 @@ static int _wrap_IDMEFPath_set__SWIG_7(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (int16_t)lua_tonumber(L, 3);
+  arg3 = (char *)lua_tostring(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(char const *)arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9283,12 +9287,12 @@ static int _wrap_IDMEFPath_set__SWIG_8(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  uint16_t arg3 ;
+  int8_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint16_t");
+  if(!SWIG_lua_isnilstring(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int8_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9299,11 +9303,10 @@ static int _wrap_IDMEFPath_set__SWIG_8(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-  arg3 = (uint16_t)lua_tonumber(L, 3);
+  arg3 = (lua_tostring(L, 3))[0];
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9324,12 +9327,12 @@ static int _wrap_IDMEFPath_set__SWIG_9(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  int32_t arg3 ;
+  uint8_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int32_t");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint8_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9340,10 +9343,11 @@ static int _wrap_IDMEFPath_set__SWIG_9(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (int32_t)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (uint8_t)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9364,12 +9368,12 @@ static int _wrap_IDMEFPath_set__SWIG_10(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  uint32_t arg3 ;
+  int16_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint32_t");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int16_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9380,11 +9384,10 @@ static int _wrap_IDMEFPath_set__SWIG_10(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-  arg3 = (uint32_t)lua_tonumber(L, 3);
+  arg3 = (int16_t)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9405,12 +9408,12 @@ static int _wrap_IDMEFPath_set__SWIG_11(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  int64_t arg3 ;
+  uint16_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int64_t");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint16_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9421,10 +9424,11 @@ static int _wrap_IDMEFPath_set__SWIG_11(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (int64_t)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (uint16_t)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9445,12 +9449,12 @@ static int _wrap_IDMEFPath_set__SWIG_12(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  uint64_t arg3 ;
+  int32_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint64_t");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int32_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9461,10 +9465,10 @@ static int _wrap_IDMEFPath_set__SWIG_12(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (uint64_t)lua_tonumber(L, 3);
+  arg3 = (int32_t)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9485,12 +9489,12 @@ static int _wrap_IDMEFPath_set__SWIG_13(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  float arg3 ;
+  uint32_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"float");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint32_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -9501,10 +9505,11 @@ static int _wrap_IDMEFPath_set__SWIG_13(lua_State* L) {
     SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
   }
   
-  arg3 = (float)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (uint32_t)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9525,10 +9530,130 @@ static int _wrap_IDMEFPath_set__SWIG_14(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
+  int64_t arg3 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"int64_t");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg3 = (int64_t)lua_tonumber(L, 3);
+  {
+    try {
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFPath_set__SWIG_15(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
+  uint64_t arg3 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint64_t");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg3 = (uint64_t)lua_tonumber(L, 3);
+  {
+    try {
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFPath_set__SWIG_16(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
+  float arg3 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
+    SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
+  }
+  
+  arg3 = (float)lua_tonumber(L, 3);
+  {
+    try {
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFPath_set__SWIG_17(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEF *arg2 = 0 ;
   double arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"double");
   
@@ -9544,7 +9669,7 @@ static int _wrap_IDMEFPath_set__SWIG_14(lua_State* L) {
   arg3 = (double)lua_tonumber(L, 3);
   {
     try {
-      (arg1)->set(*arg2,arg3);
+      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -9726,7 +9851,7 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFValue, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -9759,39 +9884,15 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
       }
       if (_v) {
         {
-          _v = lua_isnumber(L,argv[2]);
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFTime, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
         }
         if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_7(L);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_8(L);
+          return _wrap_IDMEFPath_set__SWIG_5(L);
         }
       }
     }
@@ -9991,10 +10092,126 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
       }
       if (_v) {
         {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_set__SWIG_15(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_set__SWIG_16(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_set__SWIG_17(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = SWIG_lua_isnilstring(L,argv[2]) && (lua_rawlen(L,argv[2])==1);
+        }
+        if (_v) {
+          return _wrap_IDMEFPath_set__SWIG_8(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
           _v = lua_isstring(L,argv[2]);
         }
         if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_5(L);
+          return _wrap_IDMEFPath_set__SWIG_6(L);
         }
       }
     }
@@ -10023,7 +10240,7 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
           _v = SWIG_lua_isnilstring(L,argv[2]);
         }
         if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_6(L);
+          return _wrap_IDMEFPath_set__SWIG_7(L);
         }
       }
     }
@@ -10031,21 +10248,24 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_set'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::vector< Prelude::IDMEF >)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEF *)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::vector< Prelude::IDMEFValue >)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFValue *)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFTime &)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::string)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,char const *)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int16_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint16_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int32_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint32_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int64_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint64_t)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,float)\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,double)\n");
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::vector< Prelude::IDMEF >) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEF *) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::vector< Prelude::IDMEFValue >) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFValue *) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFValue &) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFTime &) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::string) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,char const *) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int8_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint8_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int16_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint16_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int32_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint32_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int64_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint64_t) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,float) const\n"
+    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,double) const\n");
   lua_error(L);return 0;
 }
 
@@ -10057,7 +10277,7 @@ static int _wrap_IDMEFPath_getClass__SWIG_0(lua_State* L) {
   idmef_class_id_t result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getClass",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getClass",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getClass",1,"Prelude::IDMEFPath const *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::getClass",2,"int");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10067,7 +10287,7 @@ static int _wrap_IDMEFPath_getClass__SWIG_0(lua_State* L) {
   arg2 = (int)lua_tonumber(L, 2);
   {
     try {
-      result = (arg1)->getClass(arg2);
+      result = ((Prelude::IDMEFPath const *)arg1)->getClass(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10093,7 +10313,7 @@ static int _wrap_IDMEFPath_getClass__SWIG_1(lua_State* L) {
   idmef_class_id_t result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getClass",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getClass",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getClass",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getClass",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -10101,7 +10321,7 @@ static int _wrap_IDMEFPath_getClass__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (arg1)->getClass();
+      result = ((Prelude::IDMEFPath const *)arg1)->getClass();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10164,8 +10384,8 @@ static int _wrap_IDMEFPath_getClass(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_getClass'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::getClass(int)\n"
-    "    Prelude::IDMEFPath::getClass()\n");
+    "    Prelude::IDMEFPath::getClass(int) const\n"
+    "    Prelude::IDMEFPath::getClass() const\n");
   lua_error(L);return 0;
 }
 
@@ -10177,7 +10397,7 @@ static int _wrap_IDMEFPath_getValueType__SWIG_0(lua_State* L) {
   Prelude::IDMEFValue::IDMEFValueTypeEnum result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getValueType",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getValueType",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getValueType",1,"Prelude::IDMEFPath const *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::getValueType",2,"int");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10187,7 +10407,7 @@ static int _wrap_IDMEFPath_getValueType__SWIG_0(lua_State* L) {
   arg2 = (int)lua_tonumber(L, 2);
   {
     try {
-      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType(arg2);
+      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10210,7 +10430,7 @@ static int _wrap_IDMEFPath_getValueType__SWIG_1(lua_State* L) {
   Prelude::IDMEFValue::IDMEFValueTypeEnum result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getValueType",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getValueType",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getValueType",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getValueType",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -10218,7 +10438,7 @@ static int _wrap_IDMEFPath_getValueType__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType();
+      result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10278,8 +10498,8 @@ static int _wrap_IDMEFPath_getValueType(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_getValueType'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::getValueType(int)\n"
-    "    Prelude::IDMEFPath::getValueType()\n");
+    "    Prelude::IDMEFPath::getValueType(int) const\n"
+    "    Prelude::IDMEFPath::getValueType() const\n");
   lua_error(L);return 0;
 }
 
@@ -10537,7 +10757,7 @@ static int _wrap_IDMEFPath_getIndex__SWIG_0(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getIndex",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getIndex",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getIndex",1,"Prelude::IDMEFPath const *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::getIndex",2,"int");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10547,7 +10767,7 @@ static int _wrap_IDMEFPath_getIndex__SWIG_0(lua_State* L) {
   arg2 = (int)lua_tonumber(L, 2);
   {
     try {
-      result = (int)(arg1)->getIndex(arg2);
+      result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10570,7 +10790,7 @@ static int _wrap_IDMEFPath_getIndex__SWIG_1(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getIndex",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getIndex",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getIndex",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getIndex",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -10578,7 +10798,7 @@ static int _wrap_IDMEFPath_getIndex__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->getIndex();
+      result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10638,8 +10858,8 @@ static int _wrap_IDMEFPath_getIndex(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_getIndex'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::getIndex(int)\n"
-    "    Prelude::IDMEFPath::getIndex()\n");
+    "    Prelude::IDMEFPath::getIndex(int) const\n"
+    "    Prelude::IDMEFPath::getIndex() const\n");
   lua_error(L);return 0;
 }
 
@@ -10721,7 +10941,7 @@ static int _wrap_IDMEFPath_compare__SWIG_0(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::compare",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::compare",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::compare",1,"Prelude::IDMEFPath const *");
   if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::compare",2,"Prelude::IDMEFPath *");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::compare",3,"int");
   
@@ -10737,7 +10957,7 @@ static int _wrap_IDMEFPath_compare__SWIG_0(lua_State* L) {
   arg3 = (int)lua_tonumber(L, 3);
   {
     try {
-      result = (int)(arg1)->compare(arg2,arg3);
+      result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10761,7 +10981,7 @@ static int _wrap_IDMEFPath_compare__SWIG_1(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::compare",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::compare",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::compare",1,"Prelude::IDMEFPath const *");
   if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::compare",2,"Prelude::IDMEFPath *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10775,7 +10995,7 @@ static int _wrap_IDMEFPath_compare__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->compare(arg2);
+      result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10855,8 +11075,8 @@ static int _wrap_IDMEFPath_compare(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_compare'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::compare(Prelude::IDMEFPath *,int)\n"
-    "    Prelude::IDMEFPath::compare(Prelude::IDMEFPath *)\n");
+    "    Prelude::IDMEFPath::compare(Prelude::IDMEFPath *,int) const\n"
+    "    Prelude::IDMEFPath::compare(Prelude::IDMEFPath *) const\n");
   lua_error(L);return 0;
 }
 
@@ -10867,7 +11087,7 @@ static int _wrap_IDMEFPath_clone(lua_State* L) {
   SwigValueWrapper< Prelude::IDMEFPath > result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::clone",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::clone",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::clone",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_clone",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -10875,7 +11095,7 @@ static int _wrap_IDMEFPath_clone(lua_State* L) {
   
   {
     try {
-      result = (arg1)->clone();
+      result = ((Prelude::IDMEFPath const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10903,7 +11123,7 @@ static int _wrap_IDMEFPath_checkOperator(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::checkOperator",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::checkOperator",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::checkOperator",1,"Prelude::IDMEFPath const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::checkOperator",2,"idmef_criterion_operator_t");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10918,7 +11138,7 @@ static int _wrap_IDMEFPath_checkOperator(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->checkOperator(arg2);
+      result = (int)((Prelude::IDMEFPath const *)arg1)->checkOperator(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10941,7 +11161,7 @@ static int _wrap_IDMEFPath_getApplicableOperators(lua_State* L) {
   idmef_criterion_operator_t result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getApplicableOperators",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getApplicableOperators",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getApplicableOperators",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getApplicableOperators",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -10949,7 +11169,7 @@ static int _wrap_IDMEFPath_getApplicableOperators(lua_State* L) {
   
   {
     try {
-      result = (arg1)->getApplicableOperators();
+      result = ((Prelude::IDMEFPath const *)arg1)->getApplicableOperators();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10976,7 +11196,7 @@ static int _wrap_IDMEFPath_getName__SWIG_0(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getName",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getName",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getName",1,"Prelude::IDMEFPath const *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::getName",2,"int");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -10986,7 +11206,7 @@ static int _wrap_IDMEFPath_getName__SWIG_0(lua_State* L) {
   arg2 = (int)lua_tonumber(L, 2);
   {
     try {
-      result = (char *)(arg1)->getName(arg2);
+      result = (char *)((Prelude::IDMEFPath const *)arg1)->getName(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11009,7 +11229,7 @@ static int _wrap_IDMEFPath_getName__SWIG_1(lua_State* L) {
   char *result = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getName",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getName",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getName",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getName",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -11017,7 +11237,7 @@ static int _wrap_IDMEFPath_getName__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (char *)(arg1)->getName();
+      result = (char *)((Prelude::IDMEFPath const *)arg1)->getName();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11077,8 +11297,8 @@ static int _wrap_IDMEFPath_getName(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_getName'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::getName(int)\n"
-    "    Prelude::IDMEFPath::getName()\n");
+    "    Prelude::IDMEFPath::getName(int) const\n"
+    "    Prelude::IDMEFPath::getName() const\n");
   lua_error(L);return 0;
 }
 
@@ -11089,7 +11309,7 @@ static int _wrap_IDMEFPath_isAmbiguous(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::isAmbiguous",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isAmbiguous",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isAmbiguous",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_isAmbiguous",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -11097,7 +11317,7 @@ static int _wrap_IDMEFPath_isAmbiguous(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->isAmbiguous();
+      result = (bool)((Prelude::IDMEFPath const *)arg1)->isAmbiguous();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11120,7 +11340,7 @@ static int _wrap_IDMEFPath_hasLists(lua_State* L) {
   int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::hasLists",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::hasLists",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::hasLists",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_hasLists",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -11128,7 +11348,7 @@ static int _wrap_IDMEFPath_hasLists(lua_State* L) {
   
   {
     try {
-      result = (int)(arg1)->hasLists();
+      result = (int)((Prelude::IDMEFPath const *)arg1)->hasLists();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11152,7 +11372,7 @@ static int _wrap_IDMEFPath_isList__SWIG_0(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::isList",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isList",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isList",1,"Prelude::IDMEFPath const *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::isList",2,"int");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
@@ -11162,7 +11382,7 @@ static int _wrap_IDMEFPath_isList__SWIG_0(lua_State* L) {
   arg2 = (int)lua_tonumber(L, 2);
   {
     try {
-      result = (bool)(arg1)->isList(arg2);
+      result = (bool)((Prelude::IDMEFPath const *)arg1)->isList(arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11185,7 +11405,7 @@ static int _wrap_IDMEFPath_isList__SWIG_1(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::isList",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isList",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::isList",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_isList",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -11193,7 +11413,7 @@ static int _wrap_IDMEFPath_isList__SWIG_1(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->isList();
+      result = (bool)((Prelude::IDMEFPath const *)arg1)->isList();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11253,8 +11473,8 @@ static int _wrap_IDMEFPath_isList(lua_State* L) {
   
   SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFPath_isList'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFPath::isList(int)\n"
-    "    Prelude::IDMEFPath::isList()\n");
+    "    Prelude::IDMEFPath::isList(int) const\n"
+    "    Prelude::IDMEFPath::isList() const\n");
   lua_error(L);return 0;
 }
 
@@ -11265,7 +11485,7 @@ static int _wrap_IDMEFPath_getDepth(lua_State* L) {
   unsigned int result;
   
   SWIG_check_num_args("Prelude::IDMEFPath::getDepth",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getDepth",1,"Prelude::IDMEFPath *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::getDepth",1,"Prelude::IDMEFPath const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
     SWIG_fail_ptr("IDMEFPath_getDepth",1,SWIGTYPE_p_Prelude__IDMEFPath);
@@ -11273,7 +11493,7 @@ static int _wrap_IDMEFPath_getDepth(lua_State* L) {
   
   {
     try {
-      result = (unsigned int)(arg1)->getDepth();
+      result = (unsigned int)((Prelude::IDMEFPath const *)arg1)->getDepth();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -12106,7 +12326,7 @@ static int _wrap_IDMEFTime_clone(lua_State* L) {
   Prelude::IDMEFTime result;
   
   SWIG_check_num_args("Prelude::IDMEFTime::clone",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::clone",1,"Prelude::IDMEFTime *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::clone",1,"Prelude::IDMEFTime const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFTime,0))){
     SWIG_fail_ptr("IDMEFTime_clone",1,SWIGTYPE_p_Prelude__IDMEFTime);
@@ -12114,7 +12334,7 @@ static int _wrap_IDMEFTime_clone(lua_State* L) {
   
   {
     try {
-      result = (arg1)->clone();
+      result = ((Prelude::IDMEFTime const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -12172,7 +12392,7 @@ static int _wrap_IDMEFTime___le(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFTime::operator <=",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator <=",1,"Prelude::IDMEFTime *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator <=",1,"Prelude::IDMEFTime const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFTime::operator <=",2,"Prelude::IDMEFTime const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFTime,0))){
@@ -12186,7 +12406,7 @@ static int _wrap_IDMEFTime___le(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
+      result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -12210,7 +12430,7 @@ static int _wrap_IDMEFTime___eq(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFTime::operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator ==",1,"Prelude::IDMEFTime *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator ==",1,"Prelude::IDMEFTime const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFTime::operator ==",2,"Prelude::IDMEFTime const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFTime,0))){
@@ -12224,7 +12444,7 @@ static int _wrap_IDMEFTime___eq(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
+      result = (bool)((Prelude::IDMEFTime const *)arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -12248,7 +12468,7 @@ static int _wrap_IDMEFTime___lt(lua_State* L) {
   bool result;
   
   SWIG_check_num_args("Prelude::IDMEFTime::operator <",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator <",1,"Prelude::IDMEFTime *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::operator <",1,"Prelude::IDMEFTime const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFTime::operator <",2,"Prelude::IDMEFTime const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFTime,0))){
@@ -12262,7 +12482,7 @@ static int _wrap_IDMEFTime___lt(lua_State* L) {
   
   {
     try {
-      result = (bool)(arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
+      result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;

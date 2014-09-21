@@ -58,7 +58,7 @@ void Client::init()
 }
 
 
-prelude_client_t *Client::getClient()
+prelude_client_t *Client::getClient() const
 {
         return _client;
 }
@@ -88,7 +88,7 @@ int Client::recvIDMEF(Prelude::IDMEF &idmef, int timeout)
 }
 
 
-int Client::getFlags()
+int Client::getFlags() const
 {
         return prelude_client_get_flags(_client);
 }
@@ -104,7 +104,7 @@ void Client::setFlags(int flags)
 }
 
 
-int Client::getRequiredPermission()
+int Client::getRequiredPermission() const
 {
         return prelude_client_get_required_permission(_client);
 }
@@ -116,7 +116,7 @@ void Client::setRequiredPermission(int permission)
 }
 
 
-const char *Client::getConfigFilename()
+const char *Client::getConfigFilename() const
 {
         return prelude_client_get_config_filename(_client);
 }

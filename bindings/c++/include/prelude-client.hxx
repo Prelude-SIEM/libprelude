@@ -49,18 +49,18 @@ namespace Prelude {
                 void start();
                 void init();
 
-                prelude_client_t *getClient();
+                prelude_client_t *getClient() const;
 
                 void sendIDMEF(const Prelude::IDMEF &message);
                 int recvIDMEF(Prelude::IDMEF &idmef, int timeout=-1);
 
-                int getFlags();
+                int getFlags() const;
                 void setFlags(int flags);
 
-                int getRequiredPermission();
+                int getRequiredPermission() const;
                 void setRequiredPermission(int permission);
 
-                const char *getConfigFilename();
+                const char *getConfigFilename() const;
                 void setConfigFilename(const char *name);
 
                 Prelude::ConnectionPool &getConnectionPool();

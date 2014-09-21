@@ -233,7 +233,7 @@ IDMEFValue::IDMEFValue(idmef_value_t *value)
 }
 
 
-int IDMEFValue::match(const IDMEFValue &value, int op)
+int IDMEFValue::match(const IDMEFValue &value, int op) const
 {
         int ret;
 
@@ -505,43 +505,43 @@ IDMEFValue::operator idmef_value_t *() const
 }
 
 
-bool IDMEFValue::operator <= (const IDMEFValue &value)
+bool IDMEFValue::operator <= (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_LESSER|IDMEFCriterion::OPERATOR_EQUAL);
 }
 
 
-bool IDMEFValue::operator >= (const IDMEFValue &value)
+bool IDMEFValue::operator >= (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_GREATER|IDMEFCriterion::OPERATOR_EQUAL);
 }
 
 
-bool IDMEFValue::operator < (const IDMEFValue &value)
+bool IDMEFValue::operator < (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_LESSER);
 }
 
 
-bool IDMEFValue::operator > (const IDMEFValue &value)
+bool IDMEFValue::operator > (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_GREATER);
 }
 
 
-bool IDMEFValue::operator == (const IDMEFValue &value)
+bool IDMEFValue::operator == (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_EQUAL);
 }
 
 
-bool IDMEFValue::operator == (const std::vector<IDMEFValue> &vlist)
+bool IDMEFValue::operator == (const std::vector<IDMEFValue> &vlist) const
 {
         return this->match(vlist, IDMEFCriterion::OPERATOR_EQUAL);
 }
 
 
-bool IDMEFValue::operator != (const IDMEFValue &value)
+bool IDMEFValue::operator != (const IDMEFValue &value) const
 {
         return this->match(value, IDMEFCriterion::OPERATOR_NOT|IDMEFCriterion::OPERATOR_EQUAL);
 }

@@ -45,45 +45,45 @@ namespace Prelude {
                 IDMEFPath(const IDMEFPath &path);
                 ~IDMEFPath();
 
-                Prelude::IDMEFValue get(Prelude::IDMEF &message);
-                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEF> value);
-                void set(Prelude::IDMEF &message, Prelude::IDMEF *value);
-                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEFValue> value);
-                void set(Prelude::IDMEF &message, Prelude::IDMEFValue *value);
-                void set(Prelude::IDMEF &message, Prelude::IDMEFValue &value);
-                void set(Prelude::IDMEF &message, Prelude::IDMEFTime &time);
-                void set(Prelude::IDMEF &message, std::string value);
-                void set(Prelude::IDMEF &message, const char *value);
-                void set(Prelude::IDMEF &message, int8_t value);
-                void set(Prelude::IDMEF &message, uint8_t value);
-                void set(Prelude::IDMEF &message, int16_t value);
-                void set(Prelude::IDMEF &message, uint16_t value);
-                void set(Prelude::IDMEF &message, int32_t value);
-                void set(Prelude::IDMEF &message, uint32_t value);
-                void set(Prelude::IDMEF &message, int64_t value);
-                void set(Prelude::IDMEF &message, uint64_t value);
-                void set(Prelude::IDMEF &message, float value);
-                void set(Prelude::IDMEF &message, double value);
+                Prelude::IDMEFValue get(const Prelude::IDMEF &message) const;
+                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEF> value) const;
+                void set(Prelude::IDMEF &message, Prelude::IDMEF *value) const;
+                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEFValue> value) const;
+                void set(Prelude::IDMEF &message, Prelude::IDMEFValue *value) const;
+                void set(Prelude::IDMEF &message, Prelude::IDMEFValue &value) const;
+                void set(Prelude::IDMEF &message, Prelude::IDMEFTime &time) const;
+                void set(Prelude::IDMEF &message, std::string value) const;
+                void set(Prelude::IDMEF &message, const char *value) const;
+                void set(Prelude::IDMEF &message, int8_t value) const;
+                void set(Prelude::IDMEF &message, uint8_t value) const;
+                void set(Prelude::IDMEF &message, int16_t value) const;
+                void set(Prelude::IDMEF &message, uint16_t value) const;
+                void set(Prelude::IDMEF &message, int32_t value) const;
+                void set(Prelude::IDMEF &message, uint32_t value) const;
+                void set(Prelude::IDMEF &message, int64_t value) const;
+                void set(Prelude::IDMEF &message, uint64_t value) const;
+                void set(Prelude::IDMEF &message, float value) const;
+                void set(Prelude::IDMEF &message, double value) const;
 
-                idmef_class_id_t getClass(int depth=-1);
-                Prelude::IDMEFValue::IDMEFValueTypeEnum getValueType(int depth=-1);
+                idmef_class_id_t getClass(int depth=-1) const;
+                Prelude::IDMEFValue::IDMEFValueTypeEnum getValueType(int depth=-1) const;
                 int setIndex(unsigned int index, int depth=-1);
                 int undefineIndex(int depth=-1);
-                int getIndex(int depth=-1);
+                int getIndex(int depth=-1) const;
                 int makeChild(const char *child_name, unsigned int index);
                 int makeParent();
-                int compare(IDMEFPath *path, int depth=-1);
-                IDMEFPath clone();
+                int compare(IDMEFPath *path, int depth=-1) const;
+                IDMEFPath clone() const;
 
-                int checkOperator(idmef_criterion_operator_t op);
-                idmef_criterion_operator_t getApplicableOperators();
+                int checkOperator(idmef_criterion_operator_t op) const;
+                idmef_criterion_operator_t getApplicableOperators() const;
 
                 //ref ?
-                const char *getName(int depth=-1);
-                bool isAmbiguous();
-                int hasLists();
-                bool isList(int depth=-1);
-                unsigned int getDepth();
+                const char *getName(int depth=-1) const;
+                bool isAmbiguous() const;
+                int hasLists() const;
+                bool isList(int depth=-1) const;
+                unsigned int getDepth() const;
 
                 IDMEFPath &operator = (const IDMEFPath &path);
         };

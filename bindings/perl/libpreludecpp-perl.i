@@ -23,7 +23,7 @@
 
 %begin %{
 #include "config.h"
-#include "glthread/thread.h"
+#include "../../libmissing/glthread/thread.h"
 %}
 
 # Conversion not allowed
@@ -111,7 +111,7 @@ static void _cb_perl_log(int level, const char *str)
 
 static int _cb_perl_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
 {
-        int ret;
+        ssize_t ret;
         PerlIO *io = (PerlIO *) prelude_msgbuf_get_data(fd);
 
         ret = PerlIO_write(io, (const char *) prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));

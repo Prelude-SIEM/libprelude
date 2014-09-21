@@ -161,7 +161,7 @@ int32_t IDMEFTime::getGmtOffset() const
 }
 
 
-IDMEFTime IDMEFTime::clone()
+IDMEFTime IDMEFTime::clone() const
 {
         int ret;
         idmef_time_t *clone;
@@ -195,37 +195,37 @@ const std::string IDMEFTime::toString() const
 }
 
 
-bool IDMEFTime::operator <= (const IDMEFTime &time)
+bool IDMEFTime::operator <= (const IDMEFTime &time) const
 {
         return ( (double) *this <= (double) time );
 }
 
 
-bool IDMEFTime::operator < (const IDMEFTime &time)
+bool IDMEFTime::operator < (const IDMEFTime &time) const
 {
         return ( (double) *this < (double) time );
 }
 
 
-bool IDMEFTime::operator >= (const IDMEFTime &time)
+bool IDMEFTime::operator >= (const IDMEFTime &time) const
 {
         return ( (double) *this >= (double) time );
 }
 
 
-bool IDMEFTime::operator > (const IDMEFTime &time)
+bool IDMEFTime::operator > (const IDMEFTime &time) const
 {
         return ( (double) *this > (double) time );
 }
 
 
-bool IDMEFTime::operator != (const IDMEFTime &time)
+bool IDMEFTime::operator != (const IDMEFTime &time) const
 {
         return ( (double) *this != (double) time );
 }
 
 
-bool IDMEFTime::operator == (const IDMEFTime &time)
+bool IDMEFTime::operator == (const IDMEFTime &time) const
 {
         return ( (double) *this == (double) time );
 }

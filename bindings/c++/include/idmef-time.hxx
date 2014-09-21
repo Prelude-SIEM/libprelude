@@ -52,7 +52,7 @@ namespace Prelude {
                 uint32_t getUSec() const;
                 int32_t getGmtOffset() const;
 
-                IDMEFTime clone();
+                IDMEFTime clone() const;
                 const std::string toString() const;
 
                 operator int() const;
@@ -61,12 +61,12 @@ namespace Prelude {
                 operator const std::string() const;
                 operator idmef_time_t *() const;
 
-                bool operator != (const IDMEFTime &time);
-                bool operator >= (const IDMEFTime &time);
-                bool operator <= (const IDMEFTime &time);
-                bool operator == (const IDMEFTime &time);
-                bool operator > (const IDMEFTime &time);
-                bool operator < (const IDMEFTime &time);
+                bool operator != (const IDMEFTime &time) const;
+                bool operator >= (const IDMEFTime &time) const;
+                bool operator <= (const IDMEFTime &time) const;
+                bool operator == (const IDMEFTime &time) const;
+                bool operator > (const IDMEFTime &time) const;
+                bool operator < (const IDMEFTime &time) const;
 
                 IDMEFTime & operator = (const IDMEFTime &p);
         };

@@ -68,7 +68,7 @@ Connection::Connection(prelude_connection_t *con, bool own_data)
 }
 
 
-prelude_connection_t *Connection::getConnection()
+prelude_connection_t *Connection::getConnection() const
 {
         return _con;
 }
@@ -96,7 +96,7 @@ void Connection::setState(int state)
 }
 
 
-int Connection::getState()
+int Connection::getState() const
 {
         return prelude_connection_get_state(_con);
 }
@@ -108,13 +108,13 @@ void Connection::setData(void *data)
 }
 
 
-void *Connection::getData()
+void *Connection::getData() const
 {
         return prelude_connection_get_data(_con);
 }
 
 
-int Connection::getPermission()
+int Connection::getPermission() const
 {
         return prelude_connection_get_permission(_con);
 }
@@ -126,37 +126,37 @@ void Connection::setPeerAnalyzerid(uint64_t analyzerid)
 }
 
 
-uint64_t Connection::getPeerAnalyzerid()
+uint64_t Connection::getPeerAnalyzerid() const
 {
         return prelude_connection_get_peer_analyzerid(_con);
 }
 
 
-const char *Connection::getLocalAddr()
+const char *Connection::getLocalAddr() const
 {
         return prelude_connection_get_local_addr(_con);
 }
 
 
-unsigned int Connection::getLocalPort()
+unsigned int Connection::getLocalPort() const
 {
         return prelude_connection_get_local_port(_con);
 }
 
 
-const char *Connection::getPeerAddr()
+const char *Connection::getPeerAddr() const
 {
         return prelude_connection_get_peer_addr(_con);
 }
 
 
-unsigned int Connection::getPeerPort()
+unsigned int Connection::getPeerPort() const
 {
         return prelude_connection_get_peer_port(_con);
 }
 
 
-int Connection::getFd()
+int Connection::getFd() const
 {
         return prelude_io_get_fd(prelude_connection_get_fd(_con));
 }
@@ -175,7 +175,7 @@ Prelude::IDMEF Connection::recvIDMEF()
 }
 
 
-bool Connection::isAlive()
+bool Connection::isAlive() const
 {
         return prelude_connection_is_alive(_con);
 }

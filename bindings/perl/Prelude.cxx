@@ -3938,12 +3938,12 @@ XS(_wrap_Connection_getConnection) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getConnection" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getConnection" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (prelude_connection_t *)(arg1)->getConnection();
+        result = (prelude_connection_t *)((Prelude::Connection const *)arg1)->getConnection();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4108,12 +4108,12 @@ XS(_wrap_Connection_getState) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getState" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getState" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (int)(arg1)->getState();
+        result = (int)((Prelude::Connection const *)arg1)->getState();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4185,12 +4185,12 @@ XS(_wrap_Connection_getData) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getData" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getData" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (void *)(arg1)->getData();
+        result = (void *)((Prelude::Connection const *)arg1)->getData();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4220,12 +4220,12 @@ XS(_wrap_Connection_getPermission) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPermission" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPermission" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (int)(arg1)->getPermission();
+        result = (int)((Prelude::Connection const *)arg1)->getPermission();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4299,12 +4299,12 @@ XS(_wrap_Connection_getPeerAnalyzerid) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAnalyzerid" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAnalyzerid" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (uint64_t)(arg1)->getPeerAnalyzerid();
+        result = (uint64_t)((Prelude::Connection const *)arg1)->getPeerAnalyzerid();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4334,12 +4334,12 @@ XS(_wrap_Connection_getLocalAddr) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalAddr" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalAddr" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (char *)(arg1)->getLocalAddr();
+        result = (char *)((Prelude::Connection const *)arg1)->getLocalAddr();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4369,12 +4369,12 @@ XS(_wrap_Connection_getLocalPort) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalPort" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalPort" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (unsigned int)(arg1)->getLocalPort();
+        result = (unsigned int)((Prelude::Connection const *)arg1)->getLocalPort();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4404,12 +4404,12 @@ XS(_wrap_Connection_getPeerAddr) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAddr" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAddr" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (char *)(arg1)->getPeerAddr();
+        result = (char *)((Prelude::Connection const *)arg1)->getPeerAddr();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4439,12 +4439,12 @@ XS(_wrap_Connection_getPeerPort) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerPort" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerPort" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (unsigned int)(arg1)->getPeerPort();
+        result = (unsigned int)((Prelude::Connection const *)arg1)->getPeerPort();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4474,12 +4474,12 @@ XS(_wrap_Connection_isAlive) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_isAlive" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_isAlive" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (bool)(arg1)->isAlive();
+        result = (bool)((Prelude::Connection const *)arg1)->isAlive();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4509,12 +4509,12 @@ XS(_wrap_Connection_getFd) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getFd" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getFd" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
     {
       try {
-        result = (int)(arg1)->getFd();
+        result = (int)((Prelude::Connection const *)arg1)->getFd();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4943,12 +4943,12 @@ XS(_wrap_ConnectionPool_getConnectionString) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionString" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionString" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
     {
       try {
-        result = (char *)(arg1)->getConnectionString();
+        result = (char *)((Prelude::ConnectionPool const *)arg1)->getConnectionString();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -4978,12 +4978,12 @@ XS(_wrap_ConnectionPool_getConnectionList) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionList" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionList" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
     {
       try {
-        result = (arg1)->getConnectionList();
+        result = ((Prelude::ConnectionPool const *)arg1)->getConnectionList();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -5071,12 +5071,12 @@ XS(_wrap_ConnectionPool_getFlags) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getFlags" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getFlags" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
     {
       try {
-        result = (int)(arg1)->getFlags();
+        result = (int)((Prelude::ConnectionPool const *)arg1)->getFlags();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -5148,12 +5148,12 @@ XS(_wrap_ConnectionPool_getData) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getData" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getData" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
     {
       try {
-        result = (void *)(arg1)->getData();
+        result = (void *)((Prelude::ConnectionPool const *)arg1)->getData();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -5654,12 +5654,12 @@ XS(_wrap_Client_getClient) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getClient" "', argument " "1"" of type '" "Prelude::Client *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getClient" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Client * >(argp1);
     {
       try {
-        result = (prelude_client_t *)(arg1)->getClient();
+        result = (prelude_client_t *)((Prelude::Client const *)arg1)->getClient();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -5932,12 +5932,12 @@ XS(_wrap_Client_getFlags) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getFlags" "', argument " "1"" of type '" "Prelude::Client *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getFlags" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Client * >(argp1);
     {
       try {
-        result = (int)(arg1)->getFlags();
+        result = (int)((Prelude::Client const *)arg1)->getFlags();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -6011,12 +6011,12 @@ XS(_wrap_Client_getRequiredPermission) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getRequiredPermission" "', argument " "1"" of type '" "Prelude::Client *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getRequiredPermission" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Client * >(argp1);
     {
       try {
-        result = (int)(arg1)->getRequiredPermission();
+        result = (int)((Prelude::Client const *)arg1)->getRequiredPermission();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -6090,12 +6090,12 @@ XS(_wrap_Client_getConfigFilename) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getConfigFilename" "', argument " "1"" of type '" "Prelude::Client *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getConfigFilename" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::Client * >(argp1);
     {
       try {
-        result = (char *)(arg1)->getConfigFilename();
+        result = (char *)((Prelude::Client const *)arg1)->getConfigFilename();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -6860,12 +6860,12 @@ XS(_wrap_PreludeError_getCode) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError_getCode" "', argument " "1"" of type '" "Prelude::PreludeError *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError_getCode" "', argument " "1"" of type '" "Prelude::PreludeError const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
     {
       try {
-        result = (int)(arg1)->getCode();
+        result = (int)((Prelude::PreludeError const *)arg1)->getCode();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -8004,7 +8004,7 @@ XS(_wrap_IDMEFCriteria_match) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_match" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_match" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
@@ -8014,7 +8014,7 @@ XS(_wrap_IDMEFCriteria_match) {
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
     {
       try {
-        result = (int)(arg1)->match(arg2);
+        result = (int)((Prelude::IDMEFCriteria const *)arg1)->match(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -8046,12 +8046,12 @@ XS(_wrap_IDMEFCriteria_clone) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_clone" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_clone" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
     {
       try {
-        result = (arg1)->clone();
+        result = ((Prelude::IDMEFCriteria const *)arg1)->clone();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9528,7 +9528,7 @@ XS(_wrap_IDMEFValue_match) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_match" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_match" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9546,7 +9546,7 @@ XS(_wrap_IDMEFValue_match) {
     arg3 = static_cast< int >(val3);
     {
       try {
-        result = (int)(arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
+        result = (int)((Prelude::IDMEFValue const *)arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9673,7 +9673,7 @@ XS(_wrap_IDMEFValue___eq____SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     {
@@ -9707,7 +9707,7 @@ XS(_wrap_IDMEFValue___eq____SWIG_0) {
     }
     {
       try {
-        result = (bool)(arg1)->operator ==((std::vector< Prelude::IDMEFValue > const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((std::vector< Prelude::IDMEFValue > const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9742,7 +9742,7 @@ XS(_wrap_IDMEFValue___le__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___le__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___le__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9755,7 +9755,7 @@ XS(_wrap_IDMEFValue___le__) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9790,7 +9790,7 @@ XS(_wrap_IDMEFValue___ge__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ge__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ge__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9803,7 +9803,7 @@ XS(_wrap_IDMEFValue___ge__) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator >=((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >=((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9838,7 +9838,7 @@ XS(_wrap_IDMEFValue___lt__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___lt__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___lt__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9851,7 +9851,7 @@ XS(_wrap_IDMEFValue___lt__) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9886,7 +9886,7 @@ XS(_wrap_IDMEFValue___gt__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___gt__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___gt__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9899,7 +9899,7 @@ XS(_wrap_IDMEFValue___gt__) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator >((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -9934,7 +9934,7 @@ XS(_wrap_IDMEFValue___eq____SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -9947,7 +9947,7 @@ XS(_wrap_IDMEFValue___eq____SWIG_1) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10090,7 +10090,7 @@ XS(_wrap_IDMEFValue___ne__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ne__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ne__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
@@ -10103,7 +10103,7 @@ XS(_wrap_IDMEFValue___ne__) {
     arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator !=((Prelude::IDMEFValue const &)*arg2);
+        result = (bool)((Prelude::IDMEFValue const *)arg1)->operator !=((Prelude::IDMEFValue const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10446,7 +10446,7 @@ XS(_wrap_IDMEFPath_set__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10487,7 +10487,7 @@ XS(_wrap_IDMEFPath_set__SWIG_0) {
     }
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10524,7 +10524,7 @@ XS(_wrap_IDMEFPath_set__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10542,7 +10542,7 @@ XS(_wrap_IDMEFPath_set__SWIG_1) {
     arg3 = reinterpret_cast< Prelude::IDMEF * >(argp3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10580,7 +10580,7 @@ XS(_wrap_IDMEFPath_set__SWIG_2) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10621,7 +10621,7 @@ XS(_wrap_IDMEFPath_set__SWIG_2) {
     }
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10658,7 +10658,7 @@ XS(_wrap_IDMEFPath_set__SWIG_3) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10676,7 +10676,7 @@ XS(_wrap_IDMEFPath_set__SWIG_3) {
     arg3 = reinterpret_cast< Prelude::IDMEFValue * >(argp3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10700,7 +10700,7 @@ XS(_wrap_IDMEFPath_set__SWIG_4) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    Prelude::IDMEFTime *arg3 = 0 ;
+    Prelude::IDMEFValue *arg3 = 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
@@ -10711,11 +10711,11 @@ XS(_wrap_IDMEFPath_set__SWIG_4) {
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: IDMEFPath_set(self,message,time);");
+      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10726,17 +10726,17 @@ XS(_wrap_IDMEFPath_set__SWIG_4) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_Prelude__IDMEFValue,  0 );
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFValue &""'"); 
     }
     if (!argp3) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFValue &""'"); 
     }
-    arg3 = reinterpret_cast< Prelude::IDMEFTime * >(argp3);
+    arg3 = reinterpret_cast< Prelude::IDMEFValue * >(argp3);
     {
       try {
-        (arg1)->set(*arg2,*arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10760,20 +10760,22 @@ XS(_wrap_IDMEFPath_set__SWIG_5) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    std::string arg3 ;
+    Prelude::IDMEFTime *arg3 = 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
+      SWIG_croak("Usage: IDMEFPath_set(self,message,time);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10784,18 +10786,17 @@ XS(_wrap_IDMEFPath_set__SWIG_5) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    {
-      std::string *ptr = (std::string *)0;
-      int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), &ptr);
-      if (!SWIG_IsOK(res) || !ptr) {
-        SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "std::string""'"); 
-      }
-      arg3 = *ptr;
-      if (SWIG_IsNewObj(res)) delete ptr;
+    res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
     }
+    if (!argp3) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
+    }
+    arg3 = reinterpret_cast< Prelude::IDMEFTime * >(argp3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10819,6 +10820,65 @@ XS(_wrap_IDMEFPath_set__SWIG_6) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
+    std::string arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+    {
+      std::string *ptr = (std::string *)0;
+      int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), &ptr);
+      if (!SWIG_IsOK(res) || !ptr) {
+        SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "std::string""'"); 
+      }
+      arg3 = *ptr;
+      if (SWIG_IsNewObj(res)) delete ptr;
+    }
+    {
+      try {
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_IDMEFPath_set__SWIG_7) {
+  {
+    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+    Prelude::IDMEF *arg2 = 0 ;
     char *arg3 = (char *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -10835,7 +10895,7 @@ XS(_wrap_IDMEFPath_set__SWIG_6) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10853,7 +10913,7 @@ XS(_wrap_IDMEFPath_set__SWIG_6) {
     arg3 = reinterpret_cast< char * >(buf3);
     {
       try {
-        (arg1)->set(*arg2,(char const *)arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(char const *)arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10868,63 +10928,6 @@ XS(_wrap_IDMEFPath_set__SWIG_6) {
     
     
     if (alloc3 == SWIG_NEWOBJ) delete[] buf3;
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_IDMEFPath_set__SWIG_7) {
-  {
-    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
-    Prelude::IDMEF *arg2 = 0 ;
-    int16_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    short val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
-    }
-    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-    }
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-    }
-    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int16_t""'");
-    } 
-    arg3 = static_cast< int16_t >(val3);
-    {
-      try {
-        (arg1)->set(*arg2,arg3);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
     SWIG_croak_null();
   }
 }
@@ -10934,12 +10937,12 @@ XS(_wrap_IDMEFPath_set__SWIG_8) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    uint16_t arg3 ;
+    int8_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    unsigned short val3 ;
+    char val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -10949,7 +10952,7 @@ XS(_wrap_IDMEFPath_set__SWIG_8) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -10960,14 +10963,14 @@ XS(_wrap_IDMEFPath_set__SWIG_8) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint16_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int8_t""'");
     } 
-    arg3 = static_cast< uint16_t >(val3);
+    arg3 = static_cast< int8_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -10991,12 +10994,12 @@ XS(_wrap_IDMEFPath_set__SWIG_9) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    int32_t arg3 ;
+    uint8_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    int val3 ;
+    unsigned char val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -11006,7 +11009,7 @@ XS(_wrap_IDMEFPath_set__SWIG_9) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11017,14 +11020,14 @@ XS(_wrap_IDMEFPath_set__SWIG_9) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_unsigned_SS_char SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int32_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint8_t""'");
     } 
-    arg3 = static_cast< int32_t >(val3);
+    arg3 = static_cast< uint8_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11048,12 +11051,12 @@ XS(_wrap_IDMEFPath_set__SWIG_10) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    uint32_t arg3 ;
+    int16_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    unsigned int val3 ;
+    short val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -11063,7 +11066,7 @@ XS(_wrap_IDMEFPath_set__SWIG_10) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11074,14 +11077,14 @@ XS(_wrap_IDMEFPath_set__SWIG_10) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint32_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int16_t""'");
     } 
-    arg3 = static_cast< uint32_t >(val3);
+    arg3 = static_cast< int16_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11105,12 +11108,12 @@ XS(_wrap_IDMEFPath_set__SWIG_11) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    int64_t arg3 ;
+    uint16_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    long long val3 ;
+    unsigned short val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -11120,7 +11123,7 @@ XS(_wrap_IDMEFPath_set__SWIG_11) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11131,14 +11134,14 @@ XS(_wrap_IDMEFPath_set__SWIG_11) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int64_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint16_t""'");
     } 
-    arg3 = static_cast< int64_t >(val3);
+    arg3 = static_cast< uint16_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11162,12 +11165,12 @@ XS(_wrap_IDMEFPath_set__SWIG_12) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    uint64_t arg3 ;
+    int32_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    unsigned long long val3 ;
+    int val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -11177,7 +11180,7 @@ XS(_wrap_IDMEFPath_set__SWIG_12) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11188,14 +11191,14 @@ XS(_wrap_IDMEFPath_set__SWIG_12) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint64_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int32_t""'");
     } 
-    arg3 = static_cast< uint64_t >(val3);
+    arg3 = static_cast< int32_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11219,12 +11222,12 @@ XS(_wrap_IDMEFPath_set__SWIG_13) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    float arg3 ;
+    uint32_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    float val3 ;
+    unsigned int val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -11234,7 +11237,7 @@ XS(_wrap_IDMEFPath_set__SWIG_13) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11245,14 +11248,14 @@ XS(_wrap_IDMEFPath_set__SWIG_13) {
       SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
     }
     arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "float""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint32_t""'");
     } 
-    arg3 = static_cast< float >(val3);
+    arg3 = static_cast< uint32_t >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11276,6 +11279,177 @@ XS(_wrap_IDMEFPath_set__SWIG_14) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
+    int64_t arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    long long val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+    ecode3 = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int64_t""'");
+    } 
+    arg3 = static_cast< int64_t >(val3);
+    {
+      try {
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_IDMEFPath_set__SWIG_15) {
+  {
+    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+    Prelude::IDMEF *arg2 = 0 ;
+    uint64_t arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    unsigned long long val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+    ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint64_t""'");
+    } 
+    arg3 = static_cast< uint64_t >(val3);
+    {
+      try {
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_IDMEFPath_set__SWIG_16) {
+  {
+    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+    Prelude::IDMEF *arg2 = 0 ;
+    float arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    float val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
+    ecode3 = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "float""'");
+    } 
+    arg3 = static_cast< float >(val3);
+    {
+      try {
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_IDMEFPath_set__SWIG_17) {
+  {
+    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+    Prelude::IDMEF *arg2 = 0 ;
     double arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -11291,7 +11465,7 @@ XS(_wrap_IDMEFPath_set__SWIG_14) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
@@ -11309,7 +11483,7 @@ XS(_wrap_IDMEFPath_set__SWIG_14) {
     arg3 = static_cast< double >(val3);
     {
       try {
-        (arg1)->set(*arg2,arg3);
+        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -11438,7 +11612,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+        int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
         _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_3;
@@ -11476,10 +11650,9 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        {
-          int res = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
-          _v = SWIG_CheckState(res);
-        }
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+        _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_4;
       _ranki += _v*_pi;
@@ -11517,7 +11690,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_char SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11557,7 +11730,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11597,7 +11770,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11637,7 +11810,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11677,7 +11850,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11717,7 +11890,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11757,7 +11930,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -11796,8 +11969,10 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
-        _v = SWIG_CheckState(res);
+        {
+          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          _v = SWIG_CheckState(res);
+        }
       }
       if (!_v) goto check_12;
       _ranki += _v*_pi;
@@ -11834,8 +12009,10 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        int res = SWIG_AsCharPtrAndSize(ST(2), 0, NULL, 0);
-        _v = SWIG_CheckState(res);
+        {
+          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          _v = SWIG_CheckState(res);
+        }
       }
       if (!_v) goto check_13;
       _ranki += _v*_pi;
@@ -11873,35 +12050,8 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          {
-            /* wrapped vector? */
-            std::vector<Prelude::IDMEF >* v;
-            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
-                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
-              _v = 1;
-            } else if (SvROK(ST(2))) {
-              /* native sequence? */
-              AV *av = (AV *)SvRV(ST(2));
-              if (SvTYPE(av) == SVt_PVAV) {
-                I32 len = av_len(av) + 1;
-                if (len == 0) {
-                  /* an empty sequence can be of any type */
-                  _v = 1;
-                } else {
-                  /* check the first element only */
-                  Prelude::IDMEF* obj;
-                  SV **tv = av_fetch(av, 0, 0);
-                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
-                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
-                  _v = 1;
-                  else
-                  _v = 0;
-                }
-              }
-            } else {
-              _v = 0;
-            }
-          }
+          int res = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          _v = SWIG_CheckState(res);
         }
       }
       if (!_v) goto check_14;
@@ -11939,6 +12089,82 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_15;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 15;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_15:
+    
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_16;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_16;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        int res = SWIG_AsCharPtrAndSize(ST(2), 0, NULL, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_16;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 16;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_16:
+    
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_17;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_17;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
         {
           {
             /* wrapped vector? */
@@ -11971,16 +12197,83 @@ XS(_wrap_IDMEFPath_set) {
           }
         }
       }
-      if (!_v) goto check_15;
+      if (!_v) goto check_17;
       _ranki += _v*_pi;
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 15;
+        _rank = _ranki; _index = 17;
         if (_rank == _rankm) goto dispatch;
       }
     }
-  check_15:
+  check_17:
+    
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_18;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_18;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          {
+            /* wrapped vector? */
+            std::vector<Prelude::IDMEF >* v;
+            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
+                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
+              _v = 1;
+            } else if (SvROK(ST(2))) {
+              /* native sequence? */
+              AV *av = (AV *)SvRV(ST(2));
+              if (SvTYPE(av) == SVt_PVAV) {
+                I32 len = av_len(av) + 1;
+                if (len == 0) {
+                  /* an empty sequence can be of any type */
+                  _v = 1;
+                } else {
+                  /* check the first element only */
+                  Prelude::IDMEF* obj;
+                  SV **tv = av_fetch(av, 0, 0);
+                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
+                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
+                  _v = 1;
+                  else
+                  _v = 0;
+                }
+              }
+            } else {
+              _v = 0;
+            }
+          }
+        }
+      }
+      if (!_v) goto check_18;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 18;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_18:
     
   dispatch:
     switch(_index) {
@@ -11991,29 +12284,35 @@ XS(_wrap_IDMEFPath_set) {
     case 3:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_4); return;
     case 4:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_8); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_5); return;
     case 5:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_7); return;
-    case 6:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_10); return;
-    case 7:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_9); return;
-    case 8:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_12); return;
-    case 9:
+    case 6:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_11); return;
-    case 10:
+    case 7:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_10); return;
+    case 8:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_13); return;
+    case 9:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_12); return;
+    case 10:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_15); return;
     case 11:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_14); return;
     case 12:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_5); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_16); return;
     case 13:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_6); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_17); return;
     case 14:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_0); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_8); return;
     case 15:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_6); return;
+    case 16:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_7); return;
+    case 17:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_2); return;
+    case 18:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_0); return;
     }
   }
   
@@ -12039,7 +12338,7 @@ XS(_wrap_IDMEFPath_getClass__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getClass" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getClass" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -12049,7 +12348,7 @@ XS(_wrap_IDMEFPath_getClass__SWIG_0) {
     arg2 = static_cast< int >(val2);
     {
       try {
-        result = (arg1)->getClass(arg2);
+        result = ((Prelude::IDMEFPath const *)arg1)->getClass(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12081,12 +12380,12 @@ XS(_wrap_IDMEFPath_getClass__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getClass" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getClass" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (arg1)->getClass();
+        result = ((Prelude::IDMEFPath const *)arg1)->getClass();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12191,7 +12490,7 @@ XS(_wrap_IDMEFPath_getValueType__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -12201,7 +12500,7 @@ XS(_wrap_IDMEFPath_getValueType__SWIG_0) {
     arg2 = static_cast< int >(val2);
     {
       try {
-        result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType(arg2);
+        result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12233,12 +12532,12 @@ XS(_wrap_IDMEFPath_getValueType__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType();
+        result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12687,7 +12986,7 @@ XS(_wrap_IDMEFPath_getIndex__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -12697,7 +12996,7 @@ XS(_wrap_IDMEFPath_getIndex__SWIG_0) {
     arg2 = static_cast< int >(val2);
     {
       try {
-        result = (int)(arg1)->getIndex(arg2);
+        result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12729,12 +13028,12 @@ XS(_wrap_IDMEFPath_getIndex__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (int)(arg1)->getIndex();
+        result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12933,7 +13232,7 @@ XS(_wrap_IDMEFPath_compare__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_compare" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_compare" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
@@ -12948,7 +13247,7 @@ XS(_wrap_IDMEFPath_compare__SWIG_0) {
     arg3 = static_cast< int >(val3);
     {
       try {
-        result = (int)(arg1)->compare(arg2,arg3);
+        result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2,arg3);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -12985,7 +13284,7 @@ XS(_wrap_IDMEFPath_compare__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_compare" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_compare" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
@@ -12995,7 +13294,7 @@ XS(_wrap_IDMEFPath_compare__SWIG_1) {
     arg2 = reinterpret_cast< Prelude::IDMEFPath * >(argp2);
     {
       try {
-        result = (int)(arg1)->compare(arg2);
+        result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13117,12 +13416,12 @@ XS(_wrap_IDMEFPath_clone) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_clone" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_clone" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (arg1)->clone();
+        result = ((Prelude::IDMEFPath const *)arg1)->clone();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13155,7 +13454,7 @@ XS(_wrap_IDMEFPath_checkOperator) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_checkOperator" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_checkOperator" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
@@ -13171,7 +13470,7 @@ XS(_wrap_IDMEFPath_checkOperator) {
     }
     {
       try {
-        result = (int)(arg1)->checkOperator(arg2);
+        result = (int)((Prelude::IDMEFPath const *)arg1)->checkOperator(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13201,12 +13500,12 @@ XS(_wrap_IDMEFPath_getApplicableOperators) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getApplicableOperators" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getApplicableOperators" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (arg1)->getApplicableOperators();
+        result = ((Prelude::IDMEFPath const *)arg1)->getApplicableOperators();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13239,7 +13538,7 @@ XS(_wrap_IDMEFPath_getName__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getName" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getName" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -13249,7 +13548,7 @@ XS(_wrap_IDMEFPath_getName__SWIG_0) {
     arg2 = static_cast< int >(val2);
     {
       try {
-        result = (char *)(arg1)->getName(arg2);
+        result = (char *)((Prelude::IDMEFPath const *)arg1)->getName(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13281,12 +13580,12 @@ XS(_wrap_IDMEFPath_getName__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getName" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getName" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (char *)(arg1)->getName();
+        result = (char *)((Prelude::IDMEFPath const *)arg1)->getName();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13388,12 +13687,12 @@ XS(_wrap_IDMEFPath_isAmbiguous) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isAmbiguous" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isAmbiguous" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (bool)(arg1)->isAmbiguous();
+        result = (bool)((Prelude::IDMEFPath const *)arg1)->isAmbiguous();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13423,12 +13722,12 @@ XS(_wrap_IDMEFPath_hasLists) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_hasLists" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_hasLists" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (int)(arg1)->hasLists();
+        result = (int)((Prelude::IDMEFPath const *)arg1)->hasLists();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13461,7 +13760,7 @@ XS(_wrap_IDMEFPath_isList__SWIG_0) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isList" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isList" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -13471,7 +13770,7 @@ XS(_wrap_IDMEFPath_isList__SWIG_0) {
     arg2 = static_cast< int >(val2);
     {
       try {
-        result = (bool)(arg1)->isList(arg2);
+        result = (bool)((Prelude::IDMEFPath const *)arg1)->isList(arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13503,12 +13802,12 @@ XS(_wrap_IDMEFPath_isList__SWIG_1) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isList" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isList" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (bool)(arg1)->isList();
+        result = (bool)((Prelude::IDMEFPath const *)arg1)->isList();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -13610,12 +13909,12 @@ XS(_wrap_IDMEFPath_getDepth) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getDepth" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getDepth" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
     {
       try {
-        result = (unsigned int)(arg1)->getDepth();
+        result = (unsigned int)((Prelude::IDMEFPath const *)arg1)->getDepth();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14629,12 +14928,12 @@ XS(_wrap_IDMEFTime_clone) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_clone" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_clone" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     {
       try {
-        result = (arg1)->clone();
+        result = ((Prelude::IDMEFTime const *)arg1)->clone();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14702,7 +15001,7 @@ XS(_wrap_IDMEFTime___ne__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ne__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ne__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14715,7 +15014,7 @@ XS(_wrap_IDMEFTime___ne__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator !=((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator !=((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14750,7 +15049,7 @@ XS(_wrap_IDMEFTime___ge__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ge__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ge__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14763,7 +15062,7 @@ XS(_wrap_IDMEFTime___ge__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14798,7 +15097,7 @@ XS(_wrap_IDMEFTime___le__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___le__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___le__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14811,7 +15110,7 @@ XS(_wrap_IDMEFTime___le__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14846,7 +15145,7 @@ XS(_wrap_IDMEFTime___eq__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___eq__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___eq__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14859,7 +15158,7 @@ XS(_wrap_IDMEFTime___eq__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14894,7 +15193,7 @@ XS(_wrap_IDMEFTime___gt__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___gt__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___gt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14907,7 +15206,7 @@ XS(_wrap_IDMEFTime___gt__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -14942,7 +15241,7 @@ XS(_wrap_IDMEFTime___lt__) {
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___lt__" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___lt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
     }
     arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
@@ -14955,7 +15254,7 @@ XS(_wrap_IDMEFTime___lt__) {
     arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
     {
       try {
-        result = (bool)(arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
+        result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;

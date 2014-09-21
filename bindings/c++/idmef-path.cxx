@@ -71,7 +71,7 @@ IDMEFPath::~IDMEFPath()
 }
 
 
-IDMEFValue IDMEFPath::get(IDMEF &message)
+IDMEFValue IDMEFPath::get(const IDMEF &message) const
 {
         int ret;
         idmef_value_t *value;
@@ -88,20 +88,20 @@ IDMEFValue IDMEFPath::get(IDMEF &message)
 
 
 
-Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath::getValueType(int depth)
+Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFPath::getValueType(int depth) const
 {
         return (Prelude::IDMEFValue::IDMEFValueTypeEnum) idmef_path_get_value_type(_path, depth);
 }
 
 
-int IDMEFPath::checkOperator(idmef_criterion_operator_t op)
+int IDMEFPath::checkOperator(idmef_criterion_operator_t op) const
 {
         return idmef_path_check_operator(_path, op);
 }
 
 
 
-idmef_criterion_operator_t IDMEFPath::getApplicableOperators()
+idmef_criterion_operator_t IDMEFPath::getApplicableOperators() const
 {
         int ret;
         idmef_criterion_operator_t res;
@@ -115,7 +115,7 @@ idmef_criterion_operator_t IDMEFPath::getApplicableOperators()
 
 
 
-void IDMEFPath::set(IDMEF &message, std::vector<IDMEF> value)
+void IDMEFPath::set(IDMEF &message, std::vector<IDMEF> value) const
 {
         int ret;
         IDMEFValue v = value;
@@ -126,7 +126,7 @@ void IDMEFPath::set(IDMEF &message, std::vector<IDMEF> value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, IDMEF *value)
+void IDMEFPath::set(IDMEF &message, IDMEF *value) const
 {
         int ret;
 
@@ -140,7 +140,7 @@ void IDMEFPath::set(IDMEF &message, IDMEF *value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, IDMEFValue *value)
+void IDMEFPath::set(IDMEF &message, IDMEFValue *value) const
 {
         int ret;
 
@@ -154,7 +154,7 @@ void IDMEFPath::set(IDMEF &message, IDMEFValue *value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, std::vector<IDMEFValue> value)
+void IDMEFPath::set(IDMEF &message, std::vector<IDMEFValue> value) const
 {
         int ret;
         IDMEFValue v = value;
@@ -165,7 +165,7 @@ void IDMEFPath::set(IDMEF &message, std::vector<IDMEFValue> value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, IDMEFValue &value)
+void IDMEFPath::set(IDMEF &message, IDMEFValue &value) const
 {
         int ret;
 
@@ -175,7 +175,7 @@ void IDMEFPath::set(IDMEF &message, IDMEFValue &value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, std::string value)
+void IDMEFPath::set(IDMEF &message, std::string value) const
 {
         int ret;
 
@@ -185,7 +185,7 @@ void IDMEFPath::set(IDMEF &message, std::string value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, const char *value)
+void IDMEFPath::set(IDMEF &message, const char *value) const
 {
         int ret;
 
@@ -200,7 +200,7 @@ void IDMEFPath::set(IDMEF &message, const char *value)
 
 
 
-void IDMEFPath::set(IDMEF &message, int8_t value)
+void IDMEFPath::set(IDMEF &message, int8_t value) const
 {
         int ret;
 
@@ -210,7 +210,7 @@ void IDMEFPath::set(IDMEF &message, int8_t value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, uint8_t value)
+void IDMEFPath::set(IDMEF &message, uint8_t value) const
 {
         int ret;
 
@@ -220,7 +220,7 @@ void IDMEFPath::set(IDMEF &message, uint8_t value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, int16_t value)
+void IDMEFPath::set(IDMEF &message, int16_t value) const
 {
         int ret;
 
@@ -230,7 +230,7 @@ void IDMEFPath::set(IDMEF &message, int16_t value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, uint16_t value)
+void IDMEFPath::set(IDMEF &message, uint16_t value) const
 {
         int ret;
 
@@ -239,26 +239,7 @@ void IDMEFPath::set(IDMEF &message, uint16_t value)
                 throw PreludeError(ret);
 }
 
-void IDMEFPath::set(IDMEF &message, int32_t value)
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-void IDMEFPath::set(IDMEF &message, uint32_t value)
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-void IDMEFPath::set(IDMEF &message, int64_t value)
+void IDMEFPath::set(IDMEF &message, int32_t value) const
 {
         int ret;
 
@@ -268,7 +249,16 @@ void IDMEFPath::set(IDMEF &message, int64_t value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, uint64_t value)
+void IDMEFPath::set(IDMEF &message, uint32_t value) const
+{
+        int ret;
+
+        ret = idmef_path_set(_path, message, IDMEFValue(value));
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+void IDMEFPath::set(IDMEF &message, int64_t value) const
 {
         int ret;
 
@@ -278,7 +268,7 @@ void IDMEFPath::set(IDMEF &message, uint64_t value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, float value)
+void IDMEFPath::set(IDMEF &message, uint64_t value) const
 {
         int ret;
 
@@ -288,7 +278,7 @@ void IDMEFPath::set(IDMEF &message, float value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, double value)
+void IDMEFPath::set(IDMEF &message, float value) const
 {
         int ret;
 
@@ -298,7 +288,17 @@ void IDMEFPath::set(IDMEF &message, double value)
 }
 
 
-void IDMEFPath::set(IDMEF &message, IDMEFTime &time)
+void IDMEFPath::set(IDMEF &message, double value) const
+{
+        int ret;
+
+        ret = idmef_path_set(_path, message, IDMEFValue(value));
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
+void IDMEFPath::set(IDMEF &message, IDMEFTime &time) const
 {
         int ret;
 
@@ -309,7 +309,7 @@ void IDMEFPath::set(IDMEF &message, IDMEFTime &time)
 
 
 
-idmef_class_id_t IDMEFPath::getClass(int depth)
+idmef_class_id_t IDMEFPath::getClass(int depth) const
 {
         return idmef_path_get_class(_path, depth);
 }
@@ -333,7 +333,7 @@ int IDMEFPath::undefineIndex(int depth)
 }
 
 
-int IDMEFPath::getIndex(int depth)
+int IDMEFPath::getIndex(int depth) const
 {
         if ( depth < 0 )
                 depth = getDepth();
@@ -355,7 +355,7 @@ int IDMEFPath::makeParent()
 }
 
 
-int IDMEFPath::compare(IDMEFPath *path, int depth)
+int IDMEFPath::compare(IDMEFPath *path, int depth) const
 {
         int ret;
 
@@ -368,7 +368,7 @@ int IDMEFPath::compare(IDMEFPath *path, int depth)
 }
 
 
-IDMEFPath IDMEFPath::clone()
+IDMEFPath IDMEFPath::clone() const
 {
         int ret;
         idmef_path_t *cpath;
@@ -381,31 +381,31 @@ IDMEFPath IDMEFPath::clone()
 }
 
 
-const char *IDMEFPath::getName(int depth)
+const char *IDMEFPath::getName(int depth) const
 {
         return idmef_path_get_name(_path, depth);
 }
 
 
-bool IDMEFPath::isAmbiguous()
+bool IDMEFPath::isAmbiguous() const
 {
         return idmef_path_is_ambiguous(_path);
 }
 
 
-int IDMEFPath::hasLists()
+int IDMEFPath::hasLists() const
 {
         return idmef_path_has_lists(_path);
 }
 
 
-bool IDMEFPath::isList(int depth)
+bool IDMEFPath::isList(int depth) const
 {
         return idmef_path_is_list(_path, depth);
 }
 
 
-unsigned int IDMEFPath::getDepth()
+unsigned int IDMEFPath::getDepth() const
 {
         return idmef_path_get_depth(_path);
 }

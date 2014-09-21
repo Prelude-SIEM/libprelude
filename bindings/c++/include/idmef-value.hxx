@@ -87,7 +87,7 @@ namespace Prelude {
                 IDMEFValue(double value);
                 IDMEFValue(Prelude::IDMEFTime &time);
 
-                int match(const IDMEFValue &value, int op);
+                int match(const IDMEFValue &value, int op) const;
                 IDMEFValue clone() const;
                 const std::string toString() const;
 
@@ -104,13 +104,13 @@ namespace Prelude {
 
                 IDMEFValue & operator=(const IDMEFValue &p);
 
-                bool operator == (const std::vector<IDMEFValue> &vlist);
-                bool operator <= (const IDMEFValue &value);
-                bool operator >= (const IDMEFValue &value);
-                bool operator < (const IDMEFValue &value);
-                bool operator > (const IDMEFValue &value);
-                bool operator == (const IDMEFValue &value);
-                bool operator != (const IDMEFValue &value);
+                bool operator == (const std::vector<IDMEFValue> &vlist) const;
+                bool operator <= (const IDMEFValue &value) const;
+                bool operator >= (const IDMEFValue &value) const;
+                bool operator < (const IDMEFValue &value) const;
+                bool operator > (const IDMEFValue &value) const;
+                bool operator == (const IDMEFValue &value) const;
+                bool operator != (const IDMEFValue &value) const;
         };
 };
 

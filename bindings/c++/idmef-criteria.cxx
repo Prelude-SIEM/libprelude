@@ -76,7 +76,7 @@ IDMEFCriteria::IDMEFCriteria()
 }
 
 
-IDMEFCriteria IDMEFCriteria::clone()
+IDMEFCriteria IDMEFCriteria::clone() const
 {
         int ret;
         idmef_criteria_t *cl;
@@ -101,7 +101,7 @@ void IDMEFCriteria::orCriteria(const IDMEFCriteria &criteria)
 }
 
 
-int IDMEFCriteria::match(IDMEF *message)
+int IDMEFCriteria::match(IDMEF *message) const
 {
         int ret;
 

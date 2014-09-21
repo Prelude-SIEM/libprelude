@@ -405,10 +405,7 @@ class IDMEFCriteria(_object):
         try: self.this.append(this)
         except: self.this = this
     def match(self, *args): return _prelude.IDMEFCriteria_match(self, *args)
-    def __deepcopy__(self, memo):
-            return _prelude.IDMEFCriteria_clone(self.this)
-
-
+    def clone(self): return _prelude.IDMEFCriteria_clone(self)
     def andCriteria(self, *args): return _prelude.IDMEFCriteria_andCriteria(self, *args)
     def orCriteria(self, *args): return _prelude.IDMEFCriteria_orCriteria(self, *args)
     def toString(self): return _prelude.IDMEFCriteria_toString(self)
@@ -481,10 +478,7 @@ class IDMEFPath(_object):
     def makeChild(self, *args): return _prelude.IDMEFPath_makeChild(self, *args)
     def makeParent(self): return _prelude.IDMEFPath_makeParent(self)
     def compare(self, *args): return _prelude.IDMEFPath_compare(self, *args)
-    def __deepcopy__(self, memo):
-            return _prelude.IDMEFPath_clone(self.this)
-
-
+    def clone(self): return _prelude.IDMEFPath_clone(self)
     def checkOperator(self, *args): return _prelude.IDMEFPath_checkOperator(self, *args)
     def getApplicableOperators(self): return _prelude.IDMEFPath_getApplicableOperators(self)
     def getName(self, *args): return _prelude.IDMEFPath_getName(self, *args)
@@ -515,10 +509,7 @@ class IDMEFTime(_object):
     def getSec(self): return _prelude.IDMEFTime_getSec(self)
     def getUSec(self): return _prelude.IDMEFTime_getUSec(self)
     def getGmtOffset(self): return _prelude.IDMEFTime_getGmtOffset(self)
-    def __deepcopy__(self, memo):
-            return _prelude.IDMEFTime_clone(self.this)
-
-
+    def clone(self): return _prelude.IDMEFTime_clone(self)
     def toString(self): return _prelude.IDMEFTime_toString(self)
     def __int__(self): return _prelude.IDMEFTime___int__(self)
     def __long__(self): return _prelude.IDMEFTime___long__(self)

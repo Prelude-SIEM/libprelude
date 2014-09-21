@@ -79,7 +79,7 @@ void ConnectionPool::init()
 }
 
 
-std::vector<Prelude::Connection> ConnectionPool::getConnectionList()
+std::vector<Prelude::Connection> ConnectionPool::getConnectionList() const
 {
         std::vector<Prelude::Connection> clist;
         prelude_connection_t *con;
@@ -130,13 +130,13 @@ void ConnectionPool::setConnectionString(const char *str)
 }
 
 
-const char *ConnectionPool::getConnectionString()
+const char *ConnectionPool::getConnectionString() const
 {
         return prelude_connection_pool_get_connection_string(_pool);
 }
 
 
-int ConnectionPool::getFlags()
+int ConnectionPool::getFlags() const
 {
         return prelude_connection_pool_get_flags(_pool);
 }
@@ -160,7 +160,7 @@ void ConnectionPool::setData(void *data)
 }
 
 
-void *ConnectionPool::getData()
+void *ConnectionPool::getData() const
 {
         return prelude_connection_pool_get_data(_pool);
 }
