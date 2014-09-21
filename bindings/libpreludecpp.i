@@ -259,14 +259,22 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 
 /*
  * Force SWIG to use the IDMEFValue * version of the Set() function,
- * so that the user might provide NULL IDMEFValue.
+ * so that the user might provide NULL IDMEFValue. Force usage of the
+ * std::string value, for binary data.
  */
 %ignore Prelude::IDMEF::set(char const *, int8_t);
 %ignore Prelude::IDMEF::set(char const *, uint8_t);
+%ignore Prelude::IDMEF::set(char const *, int16_t);
+%ignore Prelude::IDMEF::set(char const *, uint16_t);
+%ignore Prelude::IDMEF::set(char const *, char const *);
 %ignore Prelude::IDMEF::set(char const *, Prelude::IDMEFValue &value);
-%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, int8_t);
-%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, uint8_t);
-%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, Prelude::IDMEFValue &);
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, int8_t) const;
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, uint8_t) const;
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, int16_t) const;
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, uint16_t) const;
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, char const *) const;
+%ignore Prelude::IDMEFPath::set(Prelude::IDMEF &, Prelude::IDMEFValue &) const;
+%ignore Prelude::IDMEFValue::IDMEFValue(char const *);
 
 %ignore idmef_path_t;
 %ignore idmef_object_t;
@@ -275,6 +283,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 %ignore prelude_client_profile_t;
 %ignore prelude_connection_t;
 %ignore prelude_connection_pool_t;
+%ignore operator idmef_path_t *() const;
 %ignore operator idmef_criteria_t *() const;
 %ignore operator idmef_object_t *() const;
 %ignore operator prelude_connection_t *();

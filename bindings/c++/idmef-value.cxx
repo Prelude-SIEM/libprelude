@@ -21,6 +21,7 @@
 *
 *****/
 
+#include <string.h>
 #include <sstream>
 
 #include "prelude-error.hxx"
@@ -67,12 +68,12 @@ IDMEFValue::IDMEFValue(const IDMEFValue &value)
 }
 
 
-void IDMEFValue::_InitFromString(const char *value)
+void IDMEFValue::_InitFromString(const char *value, size_t len)
 {
         int ret;
         prelude_string_t *str;
 
-        ret = prelude_string_new_dup(&str, value);
+        ret = prelude_string_new_dup_fast(&str, value, len);
         if ( ret < 0 )
                 throw PreludeError(ret);
 
@@ -86,13 +87,13 @@ void IDMEFValue::_InitFromString(const char *value)
 
 IDMEFValue::IDMEFValue(const char *value)
 {
-        _InitFromString(value);
+        _InitFromString(value, strlen(value));
 }
 
 
-IDMEFValue::IDMEFValue(std::string value)
+IDMEFValue::IDMEFValue(const std::string &value)
 {
-        _InitFromString(value.c_str());
+        _InitFromString(value.c_str(), value.size());
 }
 
 
@@ -194,7 +195,7 @@ IDMEFValue::IDMEFValue(IDMEF *idmef)
 }
 
 
-IDMEFValue::IDMEFValue(std::vector<IDMEF> value)
+IDMEFValue::IDMEFValue(const std::vector<IDMEF> &value)
 {
         int ret;
         idmef_value_t *vitem;
@@ -214,7 +215,7 @@ IDMEFValue::IDMEFValue(std::vector<IDMEF> value)
 }
 
 
-IDMEFValue::IDMEFValue(std::vector<IDMEFValue> value)
+IDMEFValue::IDMEFValue(const std::vector<IDMEFValue> &value)
 {
         int ret;
         std::vector<Prelude::IDMEFValue>::const_iterator i;

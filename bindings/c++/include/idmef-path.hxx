@@ -46,13 +46,13 @@ namespace Prelude {
                 ~IDMEFPath();
 
                 Prelude::IDMEFValue get(const Prelude::IDMEF &message) const;
-                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEF> value) const;
+                void set(Prelude::IDMEF &message, const std::vector<Prelude::IDMEF> &value) const;
                 void set(Prelude::IDMEF &message, Prelude::IDMEF *value) const;
-                void set(Prelude::IDMEF &message, std::vector<Prelude::IDMEFValue> value) const;
+                void set(Prelude::IDMEF &message, const std::vector<Prelude::IDMEFValue> &value) const;
                 void set(Prelude::IDMEF &message, Prelude::IDMEFValue *value) const;
                 void set(Prelude::IDMEF &message, Prelude::IDMEFValue &value) const;
                 void set(Prelude::IDMEF &message, Prelude::IDMEFTime &time) const;
-                void set(Prelude::IDMEF &message, std::string value) const;
+                void set(Prelude::IDMEF &message, const std::string &value) const;
                 void set(Prelude::IDMEF &message, const char *value) const;
                 void set(Prelude::IDMEF &message, int8_t value) const;
                 void set(Prelude::IDMEF &message, uint8_t value) const;
@@ -78,7 +78,6 @@ namespace Prelude {
                 int checkOperator(idmef_criterion_operator_t op) const;
                 idmef_criterion_operator_t getApplicableOperators() const;
 
-                //ref ?
                 const char *getName(int depth=-1) const;
                 bool isAmbiguous() const;
                 int hasLists() const;
@@ -86,6 +85,7 @@ namespace Prelude {
                 unsigned int getDepth() const;
 
                 IDMEFPath &operator = (const IDMEFPath &path);
+                operator idmef_path_t*() const;
         };
 };
 

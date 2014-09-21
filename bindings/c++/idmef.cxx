@@ -41,7 +41,7 @@ IDMEF::~IDMEF()
                 idmef_object_destroy(_object);
 }
 
-void IDMEF::set(const char *path, std::vector<IDMEF> value)
+void IDMEF::set(const char *path, const std::vector<IDMEF> &value)
 {
         IDMEFPath(*this, path).set(*this, value);
 }
@@ -53,7 +53,7 @@ void IDMEF::set(const char *path, IDMEF *value)
 }
 
 
-void IDMEF::set(const char *path, std::vector<IDMEFValue> value)
+void IDMEF::set(const char *path, const std::vector<IDMEFValue> &value)
 {
         IDMEFPath(*this, path).set(*this, value);
 }
@@ -71,7 +71,7 @@ void IDMEF::set(const char *path, IDMEFValue &value)
 }
 
 
-void IDMEF::set(const char *path, std::string value)
+void IDMEF::set(const char *path, const std::string &value)
 {
         IDMEFPath(*this, path).set(*this, value);
 }

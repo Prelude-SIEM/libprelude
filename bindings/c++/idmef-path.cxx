@@ -115,7 +115,7 @@ idmef_criterion_operator_t IDMEFPath::getApplicableOperators() const
 
 
 
-void IDMEFPath::set(IDMEF &message, std::vector<IDMEF> value) const
+void IDMEFPath::set(IDMEF &message, const std::vector<IDMEF> &value) const
 {
         int ret;
         IDMEFValue v = value;
@@ -154,7 +154,7 @@ void IDMEFPath::set(IDMEF &message, IDMEFValue *value) const
 }
 
 
-void IDMEFPath::set(IDMEF &message, std::vector<IDMEFValue> value) const
+void IDMEFPath::set(IDMEF &message, const std::vector<IDMEFValue> &value) const
 {
         int ret;
         IDMEFValue v = value;
@@ -175,7 +175,7 @@ void IDMEFPath::set(IDMEF &message, IDMEFValue &value) const
 }
 
 
-void IDMEFPath::set(IDMEF &message, std::string value) const
+void IDMEFPath::set(IDMEF &message, const std::string &value) const
 {
         int ret;
 
@@ -422,3 +422,10 @@ IDMEFPath &IDMEFPath::operator=(const IDMEFPath &path)
 
         return *this;
 }
+
+
+IDMEFPath::operator idmef_path_t *() const
+{
+        return _path;
+}
+

@@ -30,14 +30,14 @@ namespace Prelude {
                 IDMEF(const IDMEF &idmef);
                 IDMEF(idmef_object_t *message);
 
-                void set(const char *path, std::vector<Prelude::IDMEF> value);
+                void set(const char *path, const std::vector<Prelude::IDMEF> &value);
                 void set(const char *path, Prelude::IDMEF *value);
-                void set(const char *path, std::vector<Prelude::IDMEFValue> value);
+                void set(const char *path, const std::vector<Prelude::IDMEFValue> &value);
+                void set(const char *path, const std::string &value);
                 void set(const char *path, Prelude::IDMEFValue *value);
                 void set(const char *path, Prelude::IDMEFValue &value);
                 void set(const char *path, Prelude::IDMEFTime &value);
                 void set(const char *path, const char *value);
-                void set(const char *path, std::string value);
                 void set(const char *path, int8_t value);
                 void set(const char *path, uint8_t value);
                 void set(const char *path, int16_t value);

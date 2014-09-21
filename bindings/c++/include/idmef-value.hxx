@@ -35,7 +35,7 @@ namespace Prelude
 namespace Prelude {
         class IDMEFValue {
             private:
-                void _InitFromString(const char *value);
+                void _InitFromString(const char *value, size_t size);
                 std::string convert_string() const;
 
             protected:
@@ -69,11 +69,11 @@ namespace Prelude {
                 IDMEFValue();
                 ~IDMEFValue();
                 IDMEFValue(IDMEF *idmef);
-                IDMEFValue(std::vector<IDMEF> value);
+                IDMEFValue(const std::vector<IDMEF> &value);
                 IDMEFValue(const IDMEFValue &value);
-                IDMEFValue(std::vector<IDMEFValue> value);
+                IDMEFValue(const std::vector<IDMEFValue> &value);
                 IDMEFValue(idmef_value_t *value);
-                IDMEFValue(std::string value);
+                IDMEFValue(const std::string &value);
                 IDMEFValue(const char *value);
                 IDMEFValue(int8_t value);
                 IDMEFValue(uint8_t value);
