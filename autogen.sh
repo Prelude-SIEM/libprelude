@@ -19,4 +19,4 @@ echo "Running autoreconf..."
 autoreconf --install --force || exit 1
 
 echo
-echo "You can now run \"./configure --enable-developer-mode\" and \"make\""
+echo "You can now run \"./configure\" and \"make\""
