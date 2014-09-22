@@ -149,7 +149,7 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
                 $action
         } catch(Prelude::PreludeError &e) {
                 if ( e.getCode() == PRELUDE_ERROR_EOF )
-                        rb_raise(rb_eEOFError, e.what());
+                        rb_raise(rb_eEOFError, "%s", e.what());
                 else
                         SWIG_exception(SWIG_RuntimeError, e.what());
 

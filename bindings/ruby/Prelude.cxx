@@ -5953,7 +5953,7 @@ _wrap_checkVersion__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (char *)Prelude::checkVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -5982,7 +5982,7 @@ _wrap_checkVersion__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (char *)Prelude::checkVersion();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6042,7 +6042,7 @@ _wrap_new_ClientProfile__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6077,7 +6077,7 @@ _wrap_new_ClientProfile__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6113,7 +6113,7 @@ _wrap_new_ClientProfile__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6167,7 +6167,7 @@ _wrap_new_ClientProfile__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6257,7 +6257,7 @@ _wrap_ClientProfile_getUid(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->getUid();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6292,7 +6292,7 @@ _wrap_ClientProfile_getGid(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->getGid();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6327,7 +6327,7 @@ _wrap_ClientProfile_getName(int argc, VALUE *argv, VALUE self) {
       result = (char *)(arg1)->getName();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6371,7 +6371,7 @@ _wrap_ClientProfile_setName(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->setName((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6408,7 +6408,7 @@ _wrap_ClientProfile_getAnalyzerId(int argc, VALUE *argv, VALUE self) {
       result = (uint64_t)(arg1)->getAnalyzerId();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6449,7 +6449,7 @@ _wrap_ClientProfile_setAnalyzerId(int argc, VALUE *argv, VALUE self) {
       (arg1)->setAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6483,7 +6483,7 @@ _wrap_ClientProfile_getConfigFilename(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6518,7 +6518,7 @@ _wrap_ClientProfile_getAnalyzeridFilename(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getAnalyzeridFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6553,7 +6553,7 @@ _wrap_ClientProfile_getTlsKeyFilename(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getTlsKeyFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6588,7 +6588,7 @@ _wrap_ClientProfile_getTlsServerCaCertFilename(int argc, VALUE *argv, VALUE self
       result = (arg1)->getTlsServerCaCertFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6623,7 +6623,7 @@ _wrap_ClientProfile_getTlsServerKeyCertFilename(int argc, VALUE *argv, VALUE sel
       result = (arg1)->getTlsServerKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6658,7 +6658,7 @@ _wrap_ClientProfile_getTlsServerCrlFilename(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getTlsServerCrlFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6693,7 +6693,7 @@ _wrap_ClientProfile_getTlsClientKeyCertFilename(int argc, VALUE *argv, VALUE sel
       result = (arg1)->getTlsClientKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6728,7 +6728,7 @@ _wrap_ClientProfile_getTlsClientTrustedCertFilename(int argc, VALUE *argv, VALUE
       result = (arg1)->getTlsClientTrustedCertFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6763,7 +6763,7 @@ _wrap_ClientProfile_getBackupDirname(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getBackupDirname();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6798,7 +6798,7 @@ _wrap_ClientProfile_getProfileDirname(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getProfileDirname();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6840,7 +6840,7 @@ _wrap_ClientProfile_setPrefix(int argc, VALUE *argv, VALUE self) {
       (arg1)->setPrefix((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6876,7 +6876,7 @@ _wrap_ClientProfile_getPrefix(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->getPrefix();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6910,7 +6910,7 @@ _wrap_new_Connection__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6945,7 +6945,7 @@ _wrap_new_Connection__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -6984,7 +6984,7 @@ _wrap_new_Connection__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7026,7 +7026,7 @@ _wrap_new_Connection__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7077,7 +7077,7 @@ _wrap_new_Connection__SWIG_4(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7178,7 +7178,7 @@ _wrap_Connection_getConnection(int argc, VALUE *argv, VALUE self) {
       result = (prelude_connection_t *)((Prelude::Connection const *)arg1)->getConnection();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7211,7 +7211,7 @@ _wrap_Connection_close(int argc, VALUE *argv, VALUE self) {
       (arg1)->close();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7262,7 +7262,7 @@ _wrap_Connection_connect(int argc, VALUE *argv, VALUE self) {
       (arg1)->connect(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7302,7 +7302,7 @@ _wrap_Connection_setState(int argc, VALUE *argv, VALUE self) {
       (arg1)->setState(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7336,7 +7336,7 @@ _wrap_Connection_getState(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::Connection const *)arg1)->getState();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7375,7 +7375,7 @@ _wrap_Connection_setData(int argc, VALUE *argv, VALUE self) {
       (arg1)->setData(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7409,7 +7409,7 @@ _wrap_Connection_getData(int argc, VALUE *argv, VALUE self) {
       result = (void *)((Prelude::Connection const *)arg1)->getData();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7444,7 +7444,7 @@ _wrap_Connection_getPermission(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::Connection const *)arg1)->getPermission();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7485,7 +7485,7 @@ _wrap_Connection_setPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
       (arg1)->setPeerAnalyzerid(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7519,7 +7519,7 @@ _wrap_Connection_getPeerAnalyzerid(int argc, VALUE *argv, VALUE self) {
       result = (uint64_t)((Prelude::Connection const *)arg1)->getPeerAnalyzerid();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7554,7 +7554,7 @@ _wrap_Connection_getLocalAddr(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::Connection const *)arg1)->getLocalAddr();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7589,7 +7589,7 @@ _wrap_Connection_getLocalPort(int argc, VALUE *argv, VALUE self) {
       result = (unsigned int)((Prelude::Connection const *)arg1)->getLocalPort();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7624,7 +7624,7 @@ _wrap_Connection_getPeerAddr(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::Connection const *)arg1)->getPeerAddr();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7659,7 +7659,7 @@ _wrap_Connection_getPeerPort(int argc, VALUE *argv, VALUE self) {
       result = (unsigned int)((Prelude::Connection const *)arg1)->getPeerPort();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7694,7 +7694,7 @@ _wrap_Connection_isAlive(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::Connection const *)arg1)->isAlive();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7729,7 +7729,7 @@ _wrap_Connection_getFd(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::Connection const *)arg1)->getFd();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7764,7 +7764,7 @@ _wrap_Connection_recvIDMEF(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->recvIDMEF();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7798,7 +7798,7 @@ _wrap_new_ConnectionPool__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7832,7 +7832,7 @@ _wrap_new_ConnectionPool__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7869,7 +7869,7 @@ _wrap_new_ConnectionPool__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -7931,7 +7931,7 @@ _wrap_new_ConnectionPool__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8021,7 +8021,7 @@ _wrap_ConnectionPool_init(int argc, VALUE *argv, VALUE self) {
       (arg1)->init();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8062,7 +8062,7 @@ _wrap_ConnectionPool_setConnectionString(int argc, VALUE *argv, VALUE self) {
       (arg1)->setConnectionString((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8098,7 +8098,7 @@ _wrap_ConnectionPool_getConnectionString(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::ConnectionPool const *)arg1)->getConnectionString();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8133,7 +8133,7 @@ _wrap_ConnectionPool_getConnectionList(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::ConnectionPool const *)arg1)->getConnectionList();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8174,7 +8174,7 @@ _wrap_ConnectionPool_setFlags(int argc, VALUE *argv, VALUE self) {
       (arg1)->setFlags(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8208,7 +8208,7 @@ _wrap_ConnectionPool_getFlags(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::ConnectionPool const *)arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8247,7 +8247,7 @@ _wrap_ConnectionPool_setData(int argc, VALUE *argv, VALUE self) {
       (arg1)->setData(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8281,7 +8281,7 @@ _wrap_ConnectionPool_getData(int argc, VALUE *argv, VALUE self) {
       result = (void *)((Prelude::ConnectionPool const *)arg1)->getData();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8328,7 +8328,7 @@ _wrap_ConnectionPool_addConnection(int argc, VALUE *argv, VALUE self) {
       (arg1)->addConnection(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8374,7 +8374,7 @@ _wrap_ConnectionPool_delConnection(int argc, VALUE *argv, VALUE self) {
       (arg1)->delConnection(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8417,7 +8417,7 @@ _wrap_ConnectionPool_setConnectionAlive(int argc, VALUE *argv, VALUE self) {
       (arg1)->setConnectionAlive(*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8460,7 +8460,7 @@ _wrap_ConnectionPool_setConnectionDead(int argc, VALUE *argv, VALUE self) {
       (arg1)->setConnectionDead(*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8500,7 +8500,7 @@ _wrap_ConnectionPool_setRequiredPermission(int argc, VALUE *argv, VALUE self) {
       (arg1)->setRequiredPermission(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8542,7 +8542,7 @@ _wrap_new_Client__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8598,7 +8598,7 @@ _wrap_new_Client__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8667,7 +8667,7 @@ _wrap_Client_start(int argc, VALUE *argv, VALUE self) {
       (arg1)->start();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8699,7 +8699,7 @@ _wrap_Client_init(int argc, VALUE *argv, VALUE self) {
       (arg1)->init();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8733,7 +8733,7 @@ _wrap_Client_getClient(int argc, VALUE *argv, VALUE self) {
       result = (prelude_client_t *)((Prelude::Client const *)arg1)->getClient();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8777,7 +8777,7 @@ _wrap_Client_sendIDMEF(int argc, VALUE *argv, VALUE self) {
       (arg1)->sendIDMEF((Prelude::IDMEF const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8830,7 +8830,7 @@ _wrap_Client_recvIDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->recvIDMEF(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8876,7 +8876,7 @@ _wrap_Client_recvIDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->recvIDMEF(*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -8966,7 +8966,7 @@ _wrap_Client_getFlags(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::Client const *)arg1)->getFlags();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9007,7 +9007,7 @@ _wrap_Client_setFlags(int argc, VALUE *argv, VALUE self) {
       (arg1)->setFlags(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9041,7 +9041,7 @@ _wrap_Client_getRequiredPermission(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::Client const *)arg1)->getRequiredPermission();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9082,7 +9082,7 @@ _wrap_Client_setRequiredPermission(int argc, VALUE *argv, VALUE self) {
       (arg1)->setRequiredPermission(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9116,7 +9116,7 @@ _wrap_Client_getConfigFilename(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::Client const *)arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9158,7 +9158,7 @@ _wrap_Client_setConfigFilename(int argc, VALUE *argv, VALUE self) {
       (arg1)->setConfigFilename((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9194,7 +9194,7 @@ _wrap_Client_getConnectionPool(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::ConnectionPool *) &(arg1)->getConnectionPool();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9241,7 +9241,7 @@ _wrap_Client_setConnectionPool(int argc, VALUE *argv, VALUE self) {
       (arg1)->setConnectionPool(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9295,7 +9295,7 @@ _wrap_Client___lshift__(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Client *) &(arg1)->operator <<(*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9350,7 +9350,7 @@ _wrap_Client___rshift__(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Client *) &(arg1)->operator >>(*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9396,7 +9396,7 @@ _wrap_Client_setRecvTimeout(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::Client *) &Prelude::Client::setRecvTimeout(*arg1,arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9431,7 +9431,7 @@ _wrap_PreludeLog_setLevel(int argc, VALUE *argv, VALUE self) {
       Prelude::PreludeLog::setLevel(arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9463,7 +9463,7 @@ _wrap_PreludeLog_setDebugLevel(int argc, VALUE *argv, VALUE self) {
       Prelude::PreludeLog::setDebugLevel(arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9495,7 +9495,7 @@ _wrap_PreludeLog_setFlags(int argc, VALUE *argv, VALUE self) {
       Prelude::PreludeLog::setFlags(arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9521,7 +9521,7 @@ _wrap_PreludeLog_getFlags(int argc, VALUE *argv, VALUE self) {
       result = (int)Prelude::PreludeLog::getFlags();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9555,7 +9555,7 @@ _wrap_PreludeLog_setLogfile(int argc, VALUE *argv, VALUE self) {
       Prelude::PreludeLog::setLogfile((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9591,7 +9591,7 @@ _wrap_PreludeLog_setCallback(int argc, VALUE *argv, VALUE self) {
       Prelude::PreludeLog::setCallback(arg1);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9634,7 +9634,7 @@ _wrap_new_PreludeLog(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9672,7 +9672,7 @@ _wrap_new_PreludeError__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9706,7 +9706,7 @@ _wrap_new_PreludeError__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9762,7 +9762,7 @@ _wrap_new_PreludeError__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9840,7 +9840,7 @@ _wrap_PreludeError_getCode(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::PreludeError const *)arg1)->getCode();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9875,7 +9875,7 @@ _wrap_PreludeError_what(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::PreludeError const *)arg1)->what();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9910,7 +9910,7 @@ _wrap_PreludeError___str__(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -9945,7 +9945,7 @@ _wrap_PreludeError___int__(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::PreludeError const *)arg1)->operator int();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10027,7 +10027,7 @@ _wrap_new_ClientEasy__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10107,7 +10107,7 @@ _wrap_new_ClientEasy__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10176,7 +10176,7 @@ _wrap_new_ClientEasy__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10234,7 +10234,7 @@ _wrap_new_ClientEasy__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10281,7 +10281,7 @@ _wrap_new_ClientEasy__SWIG_4(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10335,7 +10335,7 @@ _wrap_new_ClientEasy__SWIG_5(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10529,7 +10529,7 @@ _wrap_new_IDMEFCriterion(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10567,7 +10567,7 @@ _wrap_new_IDMEFCriteria__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10604,7 +10604,7 @@ _wrap_new_IDMEFCriteria__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10639,7 +10639,7 @@ _wrap_new_IDMEFCriteria__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10680,7 +10680,7 @@ _wrap_new_IDMEFCriteria__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10733,7 +10733,7 @@ _wrap_new_IDMEFCriteria__SWIG_4(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10835,7 +10835,7 @@ _wrap_IDMEFCriteria_match(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFCriteria const *)arg1)->match(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10879,7 +10879,7 @@ _wrap_IDMEFCriteria_clone(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFCriteria const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10923,7 +10923,7 @@ _wrap_IDMEFCriteria_andCriteria(int argc, VALUE *argv, VALUE self) {
       (arg1)->andCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -10966,7 +10966,7 @@ _wrap_IDMEFCriteria_orCriteria(int argc, VALUE *argv, VALUE self) {
       (arg1)->orCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11000,7 +11000,7 @@ _wrap_IDMEFCriteria_toString(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFCriteria const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11035,7 +11035,7 @@ _wrap_IDMEFCriteria___str__(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFCriteria const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11072,7 +11072,7 @@ _wrap_IDMEFValue_getType(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFValue const *)arg1)->getType();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11107,7 +11107,7 @@ _wrap_IDMEFValue_isNull(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->isNull();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11134,7 +11134,7 @@ _wrap_new_IDMEFValue__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11173,7 +11173,7 @@ _wrap_new_IDMEFValue__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11212,7 +11212,7 @@ _wrap_new_IDMEFValue__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11251,7 +11251,7 @@ _wrap_new_IDMEFValue__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11290,7 +11290,7 @@ _wrap_new_IDMEFValue__SWIG_4(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11326,7 +11326,7 @@ _wrap_new_IDMEFValue__SWIG_5(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11365,7 +11365,7 @@ _wrap_new_IDMEFValue__SWIG_6(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11401,7 +11401,7 @@ _wrap_new_IDMEFValue__SWIG_7(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11435,7 +11435,7 @@ _wrap_new_IDMEFValue__SWIG_8(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11469,7 +11469,7 @@ _wrap_new_IDMEFValue__SWIG_9(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11503,7 +11503,7 @@ _wrap_new_IDMEFValue__SWIG_10(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11537,7 +11537,7 @@ _wrap_new_IDMEFValue__SWIG_11(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11571,7 +11571,7 @@ _wrap_new_IDMEFValue__SWIG_12(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11605,7 +11605,7 @@ _wrap_new_IDMEFValue__SWIG_13(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11639,7 +11639,7 @@ _wrap_new_IDMEFValue__SWIG_14(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11673,7 +11673,7 @@ _wrap_new_IDMEFValue__SWIG_15(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11707,7 +11707,7 @@ _wrap_new_IDMEFValue__SWIG_16(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -11761,7 +11761,7 @@ _wrap_new_IDMEFValue__SWIG_17(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12013,7 +12013,7 @@ _wrap_IDMEFValue_match(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFValue const *)arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12057,7 +12057,7 @@ _wrap_IDMEFValue_clone(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFValue const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12105,7 +12105,7 @@ _wrap_IDMEFValue_toString(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFValue const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12163,7 +12163,7 @@ _wrap_IDMEFValue___eq____SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12220,7 +12220,7 @@ _wrap_IDMEFValue___le__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12275,7 +12275,7 @@ _wrap_IDMEFValue___ge__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12330,7 +12330,7 @@ _wrap_IDMEFValue___lt__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12385,7 +12385,7 @@ _wrap_IDMEFValue___gt__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12441,7 +12441,7 @@ _wrap_IDMEFValue___eq____SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12527,7 +12527,7 @@ _wrap_new_IDMEFPath__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12575,7 +12575,7 @@ _wrap_new_IDMEFPath__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12611,7 +12611,7 @@ _wrap_new_IDMEFPath__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12665,7 +12665,7 @@ _wrap_new_IDMEFPath__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12787,7 +12787,7 @@ _wrap_IDMEFPath_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12840,7 +12840,7 @@ _wrap_IDMEFPath_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12896,7 +12896,7 @@ _wrap_IDMEFPath_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -12949,7 +12949,7 @@ _wrap_IDMEFPath_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13003,7 +13003,7 @@ _wrap_IDMEFPath_set__SWIG_4(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13059,7 +13059,7 @@ _wrap_IDMEFPath_set__SWIG_5(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::string const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13112,7 +13112,7 @@ _wrap_IDMEFPath_set__SWIG_6(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13163,7 +13163,7 @@ _wrap_IDMEFPath_set__SWIG_7(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13214,7 +13214,7 @@ _wrap_IDMEFPath_set__SWIG_8(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13265,7 +13265,7 @@ _wrap_IDMEFPath_set__SWIG_9(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13316,7 +13316,7 @@ _wrap_IDMEFPath_set__SWIG_10(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13367,7 +13367,7 @@ _wrap_IDMEFPath_set__SWIG_11(int argc, VALUE *argv, VALUE self) {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13671,7 +13671,7 @@ _wrap_IDMEFPath_getClass__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFPath const *)arg1)->getClass(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13706,7 +13706,7 @@ _wrap_IDMEFPath_getClass__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFPath const *)arg1)->getClass();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13794,7 +13794,7 @@ _wrap_IDMEFPath_getValueType__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13829,7 +13829,7 @@ _wrap_IDMEFPath_getValueType__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13925,7 +13925,7 @@ _wrap_IDMEFPath_setIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->setIndex(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -13968,7 +13968,7 @@ _wrap_IDMEFPath_setIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->setIndex(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14068,7 +14068,7 @@ _wrap_IDMEFPath_undefineIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->undefineIndex(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14103,7 +14103,7 @@ _wrap_IDMEFPath_undefineIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->undefineIndex();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14191,7 +14191,7 @@ _wrap_IDMEFPath_getIndex__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14226,7 +14226,7 @@ _wrap_IDMEFPath_getIndex__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14323,7 +14323,7 @@ _wrap_IDMEFPath_makeChild(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->makeChild((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14360,7 +14360,7 @@ _wrap_IDMEFPath_makeParent(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->makeParent();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14411,7 +14411,7 @@ _wrap_IDMEFPath_compare__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14454,7 +14454,7 @@ _wrap_IDMEFPath_compare__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14553,7 +14553,7 @@ _wrap_IDMEFPath_clone(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFPath const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14602,7 +14602,7 @@ _wrap_IDMEFPath_checkOperator(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->checkOperator(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14637,7 +14637,7 @@ _wrap_IDMEFPath_getApplicableOperators(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFPath const *)arg1)->getApplicableOperators();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14680,7 +14680,7 @@ _wrap_IDMEFPath_getName__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::IDMEFPath const *)arg1)->getName(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14715,7 +14715,7 @@ _wrap_IDMEFPath_getName__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (char *)((Prelude::IDMEFPath const *)arg1)->getName();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14795,7 +14795,7 @@ _wrap_IDMEFPath_isAmbiguous(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFPath const *)arg1)->isAmbiguous();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14830,7 +14830,7 @@ _wrap_IDMEFPath_hasLists(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFPath const *)arg1)->hasLists();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14873,7 +14873,7 @@ _wrap_IDMEFPath_isList__SWIG_0(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFPath const *)arg1)->isList(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14908,7 +14908,7 @@ _wrap_IDMEFPath_isList__SWIG_1(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFPath const *)arg1)->isList();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -14988,7 +14988,7 @@ _wrap_IDMEFPath_getDepth(int argc, VALUE *argv, VALUE self) {
       result = (unsigned int)((Prelude::IDMEFPath const *)arg1)->getDepth();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15034,7 +15034,7 @@ _wrap_IDMEFPath_get(int argc, VALUE *argv, VALUE self) {
       result = Prelude_IDMEFPath_get(arg1,*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15076,7 +15076,7 @@ _wrap_new_IDMEFTime__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15110,7 +15110,7 @@ _wrap_new_IDMEFTime__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15144,7 +15144,7 @@ _wrap_new_IDMEFTime__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15179,7 +15179,7 @@ _wrap_new_IDMEFTime__SWIG_3(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15215,7 +15215,7 @@ _wrap_new_IDMEFTime__SWIG_4(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15269,7 +15269,7 @@ _wrap_new_IDMEFTime__SWIG_5(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15377,7 +15377,7 @@ _wrap_IDMEFTime_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
       (arg1)->set();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15417,7 +15417,7 @@ _wrap_IDMEFTime_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((time_t const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15458,7 +15458,7 @@ _wrap_IDMEFTime_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15500,7 +15500,7 @@ _wrap_IDMEFTime_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((timeval const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15613,7 +15613,7 @@ _wrap_IDMEFTime_setSec(int argc, VALUE *argv, VALUE self) {
       (arg1)->setSec(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15653,7 +15653,7 @@ _wrap_IDMEFTime_setUSec(int argc, VALUE *argv, VALUE self) {
       (arg1)->setUSec(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15693,7 +15693,7 @@ _wrap_IDMEFTime_setGmtOffset(int argc, VALUE *argv, VALUE self) {
       (arg1)->setGmtOffset(arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15727,7 +15727,7 @@ _wrap_IDMEFTime_getSec(int argc, VALUE *argv, VALUE self) {
       result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getSec();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15762,7 +15762,7 @@ _wrap_IDMEFTime_getUSec(int argc, VALUE *argv, VALUE self) {
       result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getUSec();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15797,7 +15797,7 @@ _wrap_IDMEFTime_getGmtOffset(int argc, VALUE *argv, VALUE self) {
       result = (int32_t)((Prelude::IDMEFTime const *)arg1)->getGmtOffset();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15841,7 +15841,7 @@ _wrap_IDMEFTime_clone(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFTime const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15876,7 +15876,7 @@ _wrap_IDMEFTime_toString(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFTime const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15911,7 +15911,7 @@ _wrap_IDMEFTime___int__(int argc, VALUE *argv, VALUE self) {
       result = (int)((Prelude::IDMEFTime const *)arg1)->operator int();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15946,7 +15946,7 @@ _wrap_IDMEFTime___long__(int argc, VALUE *argv, VALUE self) {
       result = (long)((Prelude::IDMEFTime const *)arg1)->operator long();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -15981,7 +15981,7 @@ _wrap_IDMEFTime___float__(int argc, VALUE *argv, VALUE self) {
       result = (double)((Prelude::IDMEFTime const *)arg1)->operator double();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16016,7 +16016,7 @@ _wrap_IDMEFTime___str__(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEFTime const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16071,7 +16071,7 @@ _wrap_IDMEFTime___ge__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16126,7 +16126,7 @@ _wrap_IDMEFTime___le__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16181,7 +16181,7 @@ _wrap_IDMEFTime___eq__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16236,7 +16236,7 @@ _wrap_IDMEFTime___gt__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16291,7 +16291,7 @@ _wrap_IDMEFTime___lt__(int argc, VALUE *argv, VALUE self) {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16325,7 +16325,7 @@ _wrap_new_IDMEF__SWIG_0(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16362,7 +16362,7 @@ _wrap_new_IDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16413,7 +16413,7 @@ _wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
       DATA_PTR(self) = result;
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16509,7 +16509,7 @@ _wrap_IDMEF_set__SWIG_0(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,(std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16562,7 +16562,7 @@ _wrap_IDMEF_set__SWIG_1(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16618,7 +16618,7 @@ _wrap_IDMEF_set__SWIG_2(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16676,7 +16676,7 @@ _wrap_IDMEF_set__SWIG_3(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,(std::string const &)*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16729,7 +16729,7 @@ _wrap_IDMEF_set__SWIG_4(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16783,7 +16783,7 @@ _wrap_IDMEF_set__SWIG_5(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16834,7 +16834,7 @@ _wrap_IDMEF_set__SWIG_6(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16885,7 +16885,7 @@ _wrap_IDMEF_set__SWIG_7(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16936,7 +16936,7 @@ _wrap_IDMEF_set__SWIG_8(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -16987,7 +16987,7 @@ _wrap_IDMEF_set__SWIG_9(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17038,7 +17038,7 @@ _wrap_IDMEF_set__SWIG_10(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17089,7 +17089,7 @@ _wrap_IDMEF_set__SWIG_11(int argc, VALUE *argv, VALUE self) {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17384,7 +17384,7 @@ _wrap_IDMEF_clone(int argc, VALUE *argv, VALUE self) {
       result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17419,7 +17419,7 @@ _wrap_IDMEF_getId(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEF const *)arg1)->getId();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17454,7 +17454,7 @@ _wrap_IDMEF_toString(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEF const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17489,7 +17489,7 @@ _wrap_IDMEF___str__(int argc, VALUE *argv, VALUE self) {
       result = ((Prelude::IDMEF const *)arg1)->operator const std::string();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17541,7 +17541,7 @@ _wrap_IDMEF___eq__(int argc, VALUE *argv, VALUE self) {
       result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17579,7 +17579,7 @@ _wrap_IDMEF_write(int argc, VALUE *argv, VALUE self) {
       Prelude_IDMEF_write(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17665,7 +17665,7 @@ _wrap_IDMEF___rshift__(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sg__Sg_(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17714,7 +17714,7 @@ _wrap_IDMEF___lshift__(int argc, VALUE *argv, VALUE self) {
       result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sl__Sl_(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
@@ -17758,7 +17758,7 @@ _wrap_IDMEF_get(int argc, VALUE *argv, VALUE self) {
       result = Prelude_IDMEF_get(arg1,(char const *)arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
-      rb_raise(rb_eEOFError, e.what());
+      rb_raise(rb_eEOFError, "%s", e.what());
       else
       SWIG_exception(SWIG_RuntimeError, e.what());
       
