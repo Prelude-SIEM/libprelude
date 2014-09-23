@@ -58412,7 +58412,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "IDMEF_LIST_PREPEND",SWIG_From_int((int)(IDMEF_LIST_PREPEND)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_TRUE",SWIG_From_int((int)(PRELUDE_BOOL_TRUE)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_FALSE",SWIG_From_int((int)(PRELUDE_BOOL_FALSE)));
-  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.6rc1"));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.6rc2"));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_ALPHA",SWIG_From_int((int)(0xa)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_BETA",SWIG_From_int((int)(0xb)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_RC",SWIG_From_int((int)(0xc)));

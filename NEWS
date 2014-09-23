@@ -1,3 +1,35 @@
+2014-09-23, libprelude-1.2.6rc2:
+
+Author: Yoann Vandoorselaere
+
+- Massive high/low level bindings renaming
+
+    - Low-level perl bindings are deleted
+    - Low-level python bindings renamed to "preludeold"
+    - High-level perl bindings renamed to "Prelude"
+    - High-level python bindings renamed to "prelude"
+    - High-level ruby bindings renamed to "Prelude"
+    - High-level lua bindings renamed to "prelude"
+
+- Python 3 build, and compatibility fixes, Unicode support for Python 2
+
+- Provide more version number information (major, minor, micro, level, serial)
+
+- Use std::string over const char *
+
+- Update GnuLib code
+
+- Add missing SWIG update
+
+- Revert "Verify ABI compatibility in prelude_init()"
+
+- Define __setitem__ for Python bindings, disable internal code when
+  used from the outside world.
+
+- Various fixes
+
+
+
 2014-09-16, libprelude-1.2.6rc1:
 
 Author: Yoann Vandoorselaere
