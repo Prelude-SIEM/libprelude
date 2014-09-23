@@ -3216,7 +3216,7 @@ void swig_python_raise_exception(int error)
 	PyObject *exception_class;
 	PyObject *exception;
 
-	module = PyImport_ImportModule("prelude");
+	module = PyImport_ImportModule("preludeold");
 	exception_class = PyObject_GetAttrString(module, "PreludeError");
 	exception = PyObject_CallFunction(exception_class, "i", error);
 
