@@ -565,6 +565,10 @@ if test x$with_lua != xno; then
       CPPFLAGS="$LUA_CFLAGS"
       AC_CHECK_HEADERS([lua.h lauxlib.h], with_lua=yes, [with_lua=no; break])
       CPPFLAGS="$old_CPPFLAGS"
+
+      LUA_VERSION=$(lua -e "print(string.sub(_VERSION, 5))")
+      AC_SUBST(LUA_VERSION)
+
    else
       dnl try lua 5.0
       AC_PATH_PROG(LUA_CONFIG, `basename $with_lua`, no, `dirname $with_lua`:$PATH)
@@ -584,6 +588,10 @@ if test x$with_lua != xno; then
          CPPFLAGS="$LUA_CFLAGS"
          AC_CHECK_HEADERS([lua.h lauxlib.h], with_lua=yes, [with_lua=no; break])
          CPPFLAGS="$old_CPPFLAGS"
+
+         LUA_VERSION=$(lua -e "print(string.sub(_VERSION, 5))")
+         AC_SUBST(LUA_VERSION)
+
       fi
    fi
 fi
