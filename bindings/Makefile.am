@@ -2,17 +2,17 @@ SUBDIRS = c++ low-level lua python ruby
 
 EXTRA_DIST = libpreludecpp.i perl/libpreludecpp-perl.i perl/Makefile.PL.in perl/Prelude.cxx perl/Prelude.pm
 
-CLEANFILES = perl/pm_to_blib perl/PreludeEasy.o perl/blib python/build
-DISTCLEANFILES=perl/PreludeEasy.cxx
+CLEANFILES = perl/pm_to_blib perl/Prelude.o perl/blib python/build
+DISTCLEANFILES=perl/Prelude.cxx
 MAINTAINERCLEANFILES =   \
-			lua/PreludeEasy.cxx	     \
+			lua/prelude.cxx	     \
 			perl/Makefile		     \
-                        perl/PreludeEasy.cxx         \
-			perl/PreludeEasy.pm	     \
-			perl/PreludeEasy.bs 	     \
-                        python/_PreludeEasy.cxx	     \
-			python/PreludeEasy.py	     \
-			ruby/PreludeEasy.cxx
+                        perl/Prelude.cxx         \
+			perl/Prelude.pm	     \
+			perl/Prelude.bs 	     \
+                        python/_prelude.cxx	     \
+			python/prelude.py	     \
+			ruby/Prelude.cxx
 
 swigdatadir = @SWIG_DATA_DIR@
 dist_swigdata_DATA = libpreludecpp.i
