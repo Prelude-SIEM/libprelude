@@ -243,7 +243,7 @@ class Client(ClientProfile):
     def init(self): return _prelude.Client_init(self)
     def getClient(self): return _prelude.Client_getClient(self)
     def sendIDMEF(self, *args): return _prelude.Client_sendIDMEF(self, *args)
-    def recvIDMEF(self, *args): return _prelude.Client_recvIDMEF(self, *args)
+    def recvIDMEF(self, *args, **kwargs): return _prelude.Client_recvIDMEF(self, *args, **kwargs)
     def getFlags(self): return _prelude.Client_getFlags(self)
     def setFlags(self, *args): return _prelude.Client_setFlags(self, *args)
     def getRequiredPermission(self): return _prelude.Client_getRequiredPermission(self)
@@ -348,8 +348,8 @@ class ClientEasy(Client):
     for _s in [Client]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
     __getattr__ = lambda self, name: _swig_getattr(self, ClientEasy, name)
     __repr__ = _swig_repr
-    def __init__(self, *args): 
-        this = _prelude.new_ClientEasy(*args)
+    def __init__(self, *args, **kwargs): 
+        this = _prelude.new_ClientEasy(*args, **kwargs)
         try: self.this.append(this)
         except: self.this = this
     __swig_destroy__ = _prelude.delete_ClientEasy
@@ -471,20 +471,20 @@ class IDMEFPath(_object):
     __del__ = lambda self : None;
     def set(self, *args): return _prelude.IDMEFPath_set(self, *args)
     def getClass(self, *args): return _prelude.IDMEFPath_getClass(self, *args)
-    def getValueType(self, *args): return _prelude.IDMEFPath_getValueType(self, *args)
-    def setIndex(self, *args): return _prelude.IDMEFPath_setIndex(self, *args)
-    def undefineIndex(self, *args): return _prelude.IDMEFPath_undefineIndex(self, *args)
-    def getIndex(self, *args): return _prelude.IDMEFPath_getIndex(self, *args)
+    def getValueType(self, *args, **kwargs): return _prelude.IDMEFPath_getValueType(self, *args, **kwargs)
+    def setIndex(self, *args, **kwargs): return _prelude.IDMEFPath_setIndex(self, *args, **kwargs)
+    def undefineIndex(self, *args, **kwargs): return _prelude.IDMEFPath_undefineIndex(self, *args, **kwargs)
+    def getIndex(self, *args, **kwargs): return _prelude.IDMEFPath_getIndex(self, *args, **kwargs)
     def makeChild(self, *args): return _prelude.IDMEFPath_makeChild(self, *args)
     def makeParent(self): return _prelude.IDMEFPath_makeParent(self)
-    def compare(self, *args): return _prelude.IDMEFPath_compare(self, *args)
+    def compare(self, *args, **kwargs): return _prelude.IDMEFPath_compare(self, *args, **kwargs)
     def clone(self): return _prelude.IDMEFPath_clone(self)
     def checkOperator(self, *args): return _prelude.IDMEFPath_checkOperator(self, *args)
     def getApplicableOperators(self): return _prelude.IDMEFPath_getApplicableOperators(self)
-    def getName(self, *args): return _prelude.IDMEFPath_getName(self, *args)
+    def getName(self, *args, **kwargs): return _prelude.IDMEFPath_getName(self, *args, **kwargs)
     def isAmbiguous(self): return _prelude.IDMEFPath_isAmbiguous(self)
     def hasLists(self): return _prelude.IDMEFPath_hasLists(self)
-    def isList(self, *args): return _prelude.IDMEFPath_isList(self, *args)
+    def isList(self, *args, **kwargs): return _prelude.IDMEFPath_isList(self, *args, **kwargs)
     def getDepth(self): return _prelude.IDMEFPath_getDepth(self)
     def get(self, *args): return _prelude.IDMEFPath_get(self, *args)
 IDMEFPath_swigregister = _prelude.IDMEFPath_swigregister

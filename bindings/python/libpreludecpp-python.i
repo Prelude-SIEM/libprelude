@@ -23,6 +23,8 @@
 
 %include std_list.i
 
+%warnfilter(511);
+
 %rename (__str__) *::operator const std::string() const;
 %rename (__str__) *::operator const char *() const;
 %rename (__int__) *::operator int() const;

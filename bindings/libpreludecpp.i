@@ -21,7 +21,7 @@
 *
 *****/
 
-#if defined(SWIGPYTHON) || defined(SWIGLUA) 
+#if defined(SWIGPYTHON) || defined(SWIGLUA)
 %module prelude
 #else
 %module Prelude
@@ -293,7 +293,6 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 %ignore operator idmef_value_t *() const;
 %ignore operator prelude_client_profile_t *() const;
 
-
 /*
  * We need to unlock the interpreter lock before calling certain methods
  * because they might acquire internal libprelude mutex that may also be
@@ -326,6 +325,17 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
  */
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
+%feature("kwargs") Prelude::ClientEasy::ClientEasy;
+%feature("kwargs") Prelude::Client::recvIDMEF;
+%feature("kwargs") Prelude::IDMEFClass::getPath;
+%feature("kwargs") Prelude::IDMEFPath::getValueType;
+%feature("kwargs") Prelude::IDMEFPath::setIndex;
+%feature("kwargs") Prelude::IDMEFPath::getIndex;
+%feature("kwargs") Prelude::IDMEFPath::undefineIndex;
+%feature("kwargs") Prelude::IDMEFPath::compare;
+%feature("kwargs") Prelude::IDMEFPath::getName;
+%feature("kwargs") Prelude::IDMEFPath::isList;
+
 %include prelude.hxx
 %include prelude-client-profile.hxx
 
