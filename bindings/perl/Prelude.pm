@@ -696,6 +696,53 @@ sub ACQUIRE {
 }
 
 
+############# Class : Prelude::IDMEFClass ##############
+
+package Prelude::IDMEFClass;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Prelude );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = Preludec::new_IDMEFClass(@_);
+    bless $self, $pkg if defined($self);
+}
+
+*getDepth = *Preludec::IDMEFClass_getDepth;
+*getChild = *Preludec::IDMEFClass_getChild;
+*get = *Preludec::IDMEFClass_get;
+*isList = *Preludec::IDMEFClass_isList;
+*isKeyedList = *Preludec::IDMEFClass_isKeyedList;
+*getName = *Preludec::IDMEFClass_getName;
+*getValueType = *Preludec::IDMEFClass_getValueType;
+*getPath = *Preludec::IDMEFClass_getPath;
+*getEnumValues = *Preludec::IDMEFClass_getEnumValues;
+*getApplicableOperator = *Preludec::IDMEFClass_getApplicableOperator;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Preludec::delete_IDMEFClass($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : Prelude::IDMEF ##############
 
 package Prelude::IDMEF;

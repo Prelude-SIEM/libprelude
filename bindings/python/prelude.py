@@ -470,7 +470,7 @@ class IDMEFPath(_object):
     __swig_destroy__ = _prelude.delete_IDMEFPath
     __del__ = lambda self : None;
     def set(self, *args): return _prelude.IDMEFPath_set(self, *args)
-    def getClass(self, *args): return _prelude.IDMEFPath_getClass(self, *args)
+    def getClass(self, *args, **kwargs): return _prelude.IDMEFPath_getClass(self, *args, **kwargs)
     def getValueType(self, *args, **kwargs): return _prelude.IDMEFPath_getValueType(self, *args, **kwargs)
     def setIndex(self, *args, **kwargs): return _prelude.IDMEFPath_setIndex(self, *args, **kwargs)
     def undefineIndex(self, *args, **kwargs): return _prelude.IDMEFPath_undefineIndex(self, *args, **kwargs)
@@ -523,6 +523,46 @@ class IDMEFTime(_object):
     def __lt__(self, *args): return _prelude.IDMEFTime___lt__(self, *args)
 IDMEFTime_swigregister = _prelude.IDMEFTime_swigregister
 IDMEFTime_swigregister(IDMEFTime)
+
+class IDMEFClass(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, IDMEFClass, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, IDMEFClass, name)
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = _prelude.new_IDMEFClass(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def getDepth(self): return _prelude.IDMEFClass_getDepth(self)
+    def getChild(self, *args): return _prelude.IDMEFClass_getChild(self, *args)
+    def get(self, *args): return _prelude.IDMEFClass_get(self, *args)
+    def isList(self): return _prelude.IDMEFClass_isList(self)
+    def isKeyedList(self): return _prelude.IDMEFClass_isKeyedList(self)
+    def getName(self): return _prelude.IDMEFClass_getName(self)
+    def getValueType(self): return _prelude.IDMEFClass_getValueType(self)
+    def getPath(self, *args, **kwargs): return _prelude.IDMEFClass_getPath(self, *args, **kwargs)
+    def getEnumValues(self): return _prelude.IDMEFClass_getEnumValues(self)
+    def getApplicableOperator(self): return _prelude.IDMEFClass_getApplicableOperator(self)
+    def __getitem__(self, key):
+            if isinstance(key, slice):
+                    return itertools.islice(self, key.start, key.stop, key.step)
+
+            try:
+                    return self.get(key)
+            except Exception as e:
+                    raise IndexError
+
+    def __str__(self):
+            return self.getName()
+
+    def __repr__(self):
+            return "IDMEFClass(" + self.getName() + ", ".join([repr(i) for i in self]) + "\n)"
+
+    __swig_destroy__ = _prelude.delete_IDMEFClass
+    __del__ = lambda self : None;
+IDMEFClass_swigregister = _prelude.IDMEFClass_swigregister
+IDMEFClass_swigregister(IDMEFClass)
 
 class IDMEF(_object):
     __swig_setmethods__ = {}

@@ -7,6 +7,7 @@ libpreludecpp_ladir = ${prefix}/lib
 libpreludecpp_la_SOURCES = \
 	prelude-error.cxx \
 	idmef.cxx \
+	idmef-class.cxx \
 	idmef-criteria.cxx \
 	idmef-path.cxx \
 	idmef-time.cxx \

@@ -236,6 +236,26 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         }
 }
 
+
+%extend Prelude::IDMEFClass {
+    %insert("python") %{
+        def __getitem__(self, key):
+                if isinstance(key, slice):
+                        return itertools.islice(self, key.start, key.stop, key.step)
+
+                try:
+                        return self.get(key)
+                except Exception as e:
+                        raise IndexError
+
+        def __str__(self):
+                return self.getName()
+
+        def __repr__(self):
+                return "IDMEFClass(" + self.getName() + ", ".join([repr(i) for i in self]) + "\n)"
+    %}
+}
+
 #endif
 
 %fragment("IDMEFValueList_to_SWIG", "header", fragment="IDMEFValue_to_SWIG") {

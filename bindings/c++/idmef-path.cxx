@@ -23,6 +23,7 @@
 
 #include "idmef.hxx"
 #include "idmef-path.hxx"
+#include "idmef-class.hxx"
 #include "prelude-error.hxx"
 
 #include "idmef-object-prv.h"
@@ -309,9 +310,9 @@ void IDMEFPath::set(IDMEF &message, IDMEFTime &time) const
 
 
 
-idmef_class_id_t IDMEFPath::getClass(int depth) const
+IDMEFClass IDMEFPath::getClass(int depth) const
 {
-        return idmef_path_get_class(_path, depth);
+        return IDMEFClass(idmef_path_get_class(_path, depth));
 }
 
 

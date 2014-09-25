@@ -33,6 +33,8 @@
 
 
 namespace Prelude {
+        class IDMEFClass;
+
         class IDMEFPath {
             private:
                 idmef_path_t *_path;
@@ -65,7 +67,7 @@ namespace Prelude {
                 void set(Prelude::IDMEF &message, float value) const;
                 void set(Prelude::IDMEF &message, double value) const;
 
-                idmef_class_id_t getClass(int depth=-1) const;
+                Prelude::IDMEFClass getClass(int depth=-1) const;
                 Prelude::IDMEFValue::IDMEFValueTypeEnum getValueType(int depth=-1) const;
                 int setIndex(unsigned int index, int depth=-1);
                 int undefineIndex(int depth=-1);

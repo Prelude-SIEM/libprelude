@@ -32,6 +32,7 @@
 #include "prelude-connection-pool.hxx"
 
 #include "idmef.hxx"
+#include "idmef-class.hxx"
 #include "idmef-path.hxx"
 #include "idmef-value.hxx"
 #include "idmef-criteria.hxx"

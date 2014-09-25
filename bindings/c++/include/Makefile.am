@@ -3,6 +3,7 @@ includedir = $(prefix)/include/libprelude
 include_HEADERS = \
 	prelude-error.hxx \
 	idmef.hxx \
+	idmef-class.hxx \
 	idmef-criteria.hxx \
 	idmef-path.hxx \
 	idmef-time.hxx \

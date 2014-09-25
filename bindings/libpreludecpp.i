@@ -70,6 +70,10 @@ typedef unsigned long long uint64_t;
 %ignore prelude_error_t;
 typedef signed int prelude_error_t;
 
+%ignore idmef_class_id_t;
+typedef int idmef_class_id_t;
+
+
 %exception {
         try {
                 $action
@@ -328,6 +332,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 %feature("kwargs") Prelude::ClientEasy::ClientEasy;
 %feature("kwargs") Prelude::Client::recvIDMEF;
 %feature("kwargs") Prelude::IDMEFClass::getPath;
+%feature("kwargs") Prelude::IDMEFPath::getClass;
 %feature("kwargs") Prelude::IDMEFPath::getValueType;
 %feature("kwargs") Prelude::IDMEFPath::setIndex;
 %feature("kwargs") Prelude::IDMEFPath::getIndex;
@@ -352,6 +357,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
 %include idmef-value.hxx
 %include idmef-path.hxx
 %include idmef-time.hxx
+%include idmef-class.hxx
 %include idmef.hxx
 #endif
 
