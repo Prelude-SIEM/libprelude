@@ -188,10 +188,15 @@ IDMEFValue::IDMEFValue(IDMEFTime &time)
 IDMEFValue::IDMEFValue(IDMEF *idmef)
 {
         int ret;
+        idmef_value_t *v = NULL;
 
-        ret = idmef_value_new_class(&_value, idmef->getId(), idmef_object_ref((idmef_object_t *) *idmef));
-        if ( ret < 0 )
-                throw PreludeError(ret);
+        if (  idmef ) {
+                ret = idmef_value_new_class(&v, idmef->getId(), idmef_object_ref((idmef_object_t *) *idmef));
+                if ( ret < 0 )
+                       throw PreludeError(ret);
+        }
+
+        _value = v;
 }
 
 
