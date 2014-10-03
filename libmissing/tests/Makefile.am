@@ -296,6 +296,13 @@ EXTRA_DIST += test-fopen.h test-fopen.c signature.h macros.h
 
 ## end   gnulib module fopen-tests
 
+## begin gnulib module fpucw
+
+
+EXTRA_DIST += fpucw.h
+
+## end   gnulib module fpucw
+
 ## begin gnulib module fpurge-tests
 
 TESTS += test-fpurge
@@ -329,24 +336,6 @@ MOSTLYCLEANFILES += t-freading.tmp
 EXTRA_DIST += test-freading.c macros.h
 
 ## end   gnulib module freading-tests
-
-## begin gnulib module frexp-nolibm-tests
-
-TESTS += test-frexp-nolibm
-check_PROGRAMS += test-frexp-nolibm
-test_frexp_nolibm_SOURCES = test-frexp.c randomd.c
-EXTRA_DIST += test-frexp.c test-frexp.h minus-zero.h infinity.h nan.h signature.h macros.h randomd.c
-
-## end   gnulib module frexp-nolibm-tests
-
-## begin gnulib module frexpl-nolibm-tests
-
-TESTS += test-frexpl-nolibm
-check_PROGRAMS += test-frexpl-nolibm
-test_frexpl_nolibm_SOURCES = test-frexpl.c randoml.c
-EXTRA_DIST += test-frexpl.c test-frexp.h minus-zero.h infinity.h nan.h signature.h macros.h randoml.c
-
-## end   gnulib module frexpl-nolibm-tests
 
 ## begin gnulib module fseek-tests
 
@@ -615,33 +604,6 @@ EXTRA_DIST += test-ioctl.c signature.h macros.h
 
 ## end   gnulib module ioctl-tests
 
-## begin gnulib module isnand-nolibm-tests
-
-TESTS += test-isnand-nolibm
-check_PROGRAMS += test-isnand-nolibm
-
-EXTRA_DIST += test-isnand-nolibm.c test-isnand.h minus-zero.h infinity.h nan.h macros.h
-
-## end   gnulib module isnand-nolibm-tests
-
-## begin gnulib module isnanf-nolibm-tests
-
-TESTS += test-isnanf-nolibm
-check_PROGRAMS += test-isnanf-nolibm
-
-EXTRA_DIST += test-isnanf-nolibm.c test-isnanf.h minus-zero.h infinity.h nan.h macros.h
-
-## end   gnulib module isnanf-nolibm-tests
-
-## begin gnulib module isnanl-nolibm-tests
-
-TESTS += test-isnanl-nolibm
-check_PROGRAMS += test-isnanl-nolibm
-
-EXTRA_DIST += test-isnanl-nolibm.c test-isnanl.h minus-zero.h infinity.h nan.h macros.h
-
-## end   gnulib module isnanl-nolibm-tests
-
 ## begin gnulib module langinfo-tests
 
 TESTS += test-langinfo
@@ -743,14 +705,6 @@ check_PROGRAMS += test-malloca
 EXTRA_DIST += test-malloca.c
 
 ## end   gnulib module malloca-tests
-
-## begin gnulib module math-tests
-
-TESTS += test-math
-check_PROGRAMS += test-math
-EXTRA_DIST += test-math.c macros.h
-
-## end   gnulib module math-tests
 
 ## begin gnulib module mbrtowc-tests
 
@@ -888,22 +842,6 @@ EXTRA_DIST += test-poll.c signature.h macros.h
 
 ## end   gnulib module poll-tests
 
-## begin gnulib module printf-frexp-tests
-
-TESTS += test-printf-frexp
-check_PROGRAMS += test-printf-frexp
-EXTRA_DIST += test-printf-frexp.c macros.h
-
-## end   gnulib module printf-frexp-tests
-
-## begin gnulib module printf-frexpl-tests
-
-TESTS += test-printf-frexpl
-check_PROGRAMS += test-printf-frexpl
-EXTRA_DIST += test-printf-frexpl.c macros.h
-
-## end   gnulib module printf-frexpl-tests
-
 ## begin gnulib module putenv
 
 
@@ -1004,15 +942,6 @@ check_PROGRAMS += test-signal-h
 EXTRA_DIST += test-signal-h.c
 
 ## end   gnulib module signal-h-tests
-
-## begin gnulib module signbit-tests
-
-TESTS += test-signbit
-check_PROGRAMS += test-signbit
-
-EXTRA_DIST += test-signbit.c minus-zero.h infinity.h macros.h
-
-## end   gnulib module signbit-tests
 
 ## begin gnulib module sigprocmask-tests
 
@@ -1135,15 +1064,6 @@ WARN_ON_USE_H=warn-on-use.h
 EXTRA_DIST += $(top_srcdir)/./snippet/warn-on-use.h
 
 ## end   gnulib module snippet/warn-on-use
-
-## begin gnulib module snprintf-posix-tests
-
-TESTS += test-snprintf-posix test-snprintf
-check_PROGRAMS += test-snprintf-posix test-snprintf
-
-EXTRA_DIST += test-snprintf-posix.c test-snprintf-posix.h test-snprintf.c minus-zero.h infinity.h nan.h signature.h macros.h
-
-## end   gnulib module snprintf-posix-tests
 
 ## begin gnulib module snprintf-tests
 
@@ -1437,15 +1357,6 @@ check_PROGRAMS += test-verify
 EXTRA_DIST += test-verify.c test-verify.sh
 
 ## end   gnulib module verify-tests
-
-## begin gnulib module vsnprintf-posix-tests
-
-TESTS += test-vsnprintf-posix test-vsnprintf
-check_PROGRAMS += test-vsnprintf-posix test-vsnprintf
-
-EXTRA_DIST += test-vsnprintf-posix.c test-snprintf-posix.h test-vsnprintf.c minus-zero.h infinity.h nan.h signature.h macros.h
-
-## end   gnulib module vsnprintf-posix-tests
 
 ## begin gnulib module vsnprintf-tests
 
