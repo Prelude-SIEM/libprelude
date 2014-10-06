@@ -1,4 +1,4 @@
-AM_CPPFLAGS = @PCFLAGS@ -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing -I$(top_builddir)/src/libprelude-error @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @PRELUDE_ADMIN_CFLAGS@ 
+AM_CPPFLAGS = @PCFLAGS@ -I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing -I$(top_builddir)/src/libprelude-error @LIBPRELUDE_CFLAGS@ @PRELUDE_ADMIN_CFLAGS@
 
 bin_PROGRAMS = prelude-admin
 bin_SCRIPTS = prelude-adduser
