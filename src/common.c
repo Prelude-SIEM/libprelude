@@ -644,3 +644,39 @@ void _prelude_unload_file(unsigned char *fdata, size_t size)
         free(fdata);
 #endif
 }
+
+
+double prelude_simple_strtod(const char *s, char **endptr)
+{
+        double neg = 1, ret = 0, fp = 1.0;
+        int got_point = 0, d;
+
+        if ( *s == '-' ) {
+                neg = -1;
+                s++;
+        }
+
+        for ( ; *s; s++) {
+                if ( *s == '.' ) {
+                        got_point = 1;
+                        continue;
+                }
+
+                d = *s - '0';
+                if ( d < 0 || d > 9 )
+                        break;
+
+                else if ( ! got_point )
+                        ret = (10 * ret) + d;
+
+                else {
+                        fp *= 0.1;
+                        ret += fp * d;
+                }
+        }
+
+        if ( endptr )
+                *endptr = s;
+
+        return ret * neg;
+}

@@ -95,6 +95,8 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 
 void _prelude_unload_file(unsigned char *fdata, size_t size);
 
+double prelude_simple_strtod(const char *s, char **endptr);
+
 #ifdef __cplusplus
  }
 #endif
