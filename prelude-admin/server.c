@@ -152,7 +152,7 @@ static gnutls_session_t new_tls_session(int sock)
 #endif
 
 #ifdef GNUTLS_SRP_ENABLED
-        const char *pstring = "NORMAL:+SRP:+SRP-DSS:+SRP-RSA" TLS_DH_STR;
+        const char *pstring = "NORMAL:+SRP:+SRP-DSS:+SRP-RSA:" TLS_DH_STR;
 #else
         const char *pstring = "NORMAL:" TLS_DH_STR;
 #endif
