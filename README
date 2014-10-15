@@ -5,23 +5,23 @@ The Prelude Library is brought to you by CS (http://www.c-s.fr).
 Prelude Library Overview
 ========================
 
-The Prelude Library is used to make sensor developers' life better by 
+The Prelude Library is used to make sensor developers' life better by
 providing features used by every sensor:
 
-    - Manager(s) Connection management (with fallback in case all 
+    - Manager(s) Connection management (with fallback in case all
       configured Managers are down, and automatic reconnection).
-    
+
     - Interface to communicate with the Prelude Manager.
-    
-    - Asynchronous Message interface (allowing sensor to emit message 
+
+    - Asynchronous Message interface (allowing sensor to emit message
       without blocking, even if there is latency on the wire).
 
     - Asynchronous timer interface.
 
-    - Generic configuration API, providing a generic abstraction for 
+    - Generic configuration API, providing a generic abstraction for
       command-line, configuration file option, and wide option support.
 
-    - Wide option managment allowing sensor-exported options to be directly 
+    - Wide option managment allowing sensor-exported options to be directly
       accessible from the Manager administrative console.
 
     - Generic plugin API.
@@ -32,20 +32,45 @@ providing features used by every sensor:
 Prelude Communication
 =====================
 
-    Prelude IDS uses unique optimized implementation of the XML based IDMEF 
-    message format to transmit alerts between the sensors and the manager 
+    Prelude IDS uses unique optimized implementation of the XML based IDMEF
+    message format to transmit alerts between the sensors and the manager
     and between managers.
-    
-    Using IDMEF, Prelude provides a generic method for virtually any type 
+
+    Using IDMEF, Prelude provides a generic method for virtually any type
     of sensors to describe precisely the content of an alert.
+
+
+
+Dependencies
+============
+
+   For Redhat based systems (CentOS, Fedora, etc.)
+       Minimal            :    gcc gcc-c++ gnutls-devel (Fedora += libgcrypt-devel)
+       Documentation      :    gtk-doc
+       Binding Perl       :    perl perl-devel
+       Binding Python     :    python python-devel
+       Binding LUA        :    lua lua-devel
+       Binding Ruby       :    ruby ruby-devel
+
+   For Debian systems
+       Minimal            :    gcc g++ libcurl4-gnutls-dev
+       Documentation      :    gtk-doc-tools
+       Binding Perl       :    perl
+       Binding Python     :    python python-dev
+       Binding Ruby       :    ruby ruby-dev
+
+       For Debian 7
+              Binding LUA :    lua5.2 lua5.2-dev
+       For Debian 6
+              Binding LUA :    lua5.1 lua5.1-dev
 
 
 
 IRC
 ===
 
-If there's something you just can't find out elsewhere, you want to 
-give feedback directly to the authors or you're just bored, visit 
+If there's something you just can't find out elsewhere, you want to
+give feedback directly to the authors or you're just bored, visit
 #prelude on irc.freenode.net
 
 
@@ -73,13 +98,13 @@ Help development
 1. SUBMITTING PATCHES
 
 The Prelude source is constantly changing. If you want to submit a patch,
-please do so from the most recent GIT source tree, subscribe to the 
+please do so from the most recent GIT source tree, subscribe to the
 prelude-devel mailing list by sending a mail to:
 
         prelude-devel-subscribe@prelude-ids.com
 
 and post your patch with a description of functionality.
-You can also attach patches to bugs on 
+You can also attach patches to bugs on
 
         https://www.prelude-ids.org
 
@@ -106,7 +131,7 @@ How to install the Prelude Library
 
 1. Prelude Library installation
 
-If you don't want to build the Prelude Library yourself, you can get 
+If you don't want to build the Prelude Library yourself, you can get
 prebuild rpm and debian packages at http://www.prelude-ids.org.
 
 If you want to build Prelude, unpack the tarball and cd into the
@@ -114,7 +139,7 @@ newly created directory. Then type :
 
 	./configure
 	make
-	
+
 If everything works, su to root and type:
 
 	make install
@@ -131,14 +156,14 @@ These files contain entries that *may* be shared between several sensors.
 If a sensor provides the same entry in its own configuration file,
 then the sensor will by default use its own entry.
 
-Example of a shared entry (in the default provided generic sensor 
+Example of a shared entry (in the default provided generic sensor
 configuration file) is :
 
 server-addr = 127.0.0.1:4690 || x.x.x.x;
 
-Which tells the sensor to try to connect to both 127.0.0.1:4690 
+Which tells the sensor to try to connect to both 127.0.0.1:4690
 and x.x.x.x:4690. If both connections work, only the first will be used,
-but the contrary would happen if you were to use : 
+but the contrary would happen if you were to use :
 
 server-addr = 127.0.0.1:4690 && x.x.x.x;
 
@@ -146,7 +171,7 @@ Which mean that both connections should be okay for a sensor message to
 be considered to be successfully sent.
 
 
-When linked against the Prelude Library, the sensors should be registered 
+When linked against the Prelude Library, the sensors should be registered
 in order to setup the sensor for the first time.
 
 If you start a sensor without registering it, it'll print out a message
@@ -164,10 +189,10 @@ Starting this program with the sensor provided arguments will start
 the registration procedure for this sensor.
 
 
-The prelude-adduser program will ask you to start the prelude-adduser program 
+The prelude-adduser program will ask you to start the prelude-adduser program
 on the Manager host:
 
-" 
+"
   You now need to start "prelude-adduser" on the server host where
   you need to register to:
 
@@ -175,13 +200,13 @@ on the Manager host:
 "
 
 "analyzer-name" should be substituted by the name of your Manager
-(prelude-manager is the default, unless you provided a customized 
+(prelude-manager is the default, unless you provided a customized
 analyzer-name option on the prelude-manager command line, or in it's
 configuration file).
 
-The manager host prelude-adduser program will provide you a randomly 
+The manager host prelude-adduser program will provide you a randomly
 generated password to be used when sensor side prelude-adduser request it.
 
 The prelude-adduser program will then ask you several question, and it will
-connect to the manager-adduser program. If authentication is okay, the sensors 
+connect to the manager-adduser program. If authentication is okay, the sensors
 and the Manager will be able to exchange their certificates.
