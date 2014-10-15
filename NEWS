@@ -1,4 +1,30 @@
-2014-09-23, libprelude-1.2.6rc2:
+* 2014-10-15, libprelude-1.2.6rc3:
+
+Author: Yoann Vandoorselaere
+
+- Fix #410: gnutls priority error on system with SRP support
+
+- Implement simple, locale independant strtod() function
+
+- Fix #390: Correct library ordering for prelude-admin
+
+- Use --lgpl=2 when invoking GnuLib, remove obsolete GnuLib files
+
+- Handle NULL on IDMEFValue() for IDMEF object constructor
+
+- Introduce support for the IDMEFClass class
+
+- Enable SWIG support for keywords arguments
+
+Author: Thomas Andrejak
+
+- Force definition of LUA_VERSION
+
+- Missing files while generating dist
+
+
+
+* 2014-09-23, libprelude-1.2.6rc2:
 
 Author: Yoann Vandoorselaere
 
@@ -30,7 +56,7 @@ Author: Yoann Vandoorselaere
 
 
 
-2014-09-16, libprelude-1.2.6rc1:
+* 2014-09-16, libprelude-1.2.6rc1:
 
 Author: Yoann Vandoorselaere
 
