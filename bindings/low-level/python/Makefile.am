@@ -18,7 +18,7 @@ clean-local:
 
 _preludeold.c: $(top_srcdir)/bindings/low-level/libprelude.i libprelude-python.i
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/bindings -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _preludeold -module _preludeold $(top_srcdir)/bindings/low-level/libprelude.i
+	$(SWIG) -I$(top_srcdir)/bindings/low-level -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _preludeold -module _preludeold $(top_srcdir)/bindings/low-level/libprelude.i
 endif
 
 endif

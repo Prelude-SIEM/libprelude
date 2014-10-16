@@ -85,10 +85,6 @@ typedef enum {
 #endif /* ! SWIGPYTHON */
 
 
-#ifdef SWIGPERL
-%include perl/libprelude_perl.i
-#endif /* ! SWIGPERL */
-
 /*
  * Double pointer typemap
  */
