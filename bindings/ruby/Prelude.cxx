@@ -18205,7 +18205,7 @@ SWIGEXPORT void Init_Prelude(void) {
   SwigClassPreludeLog.destroy = (void (*)(void *)) free_Prelude_PreludeLog;
   SwigClassPreludeLog.trackObjects = 0;
   
-  SwigClassPreludeError.klass = rb_define_class_under(mPrelude, "PreludeError", rb_cObject);
+  SwigClassPreludeError.klass = rb_define_class_under(mPrelude, "PreludeError", rb_eRuntimeError);
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__PreludeError, (void *) &SwigClassPreludeError);
   rb_define_alloc_func(SwigClassPreludeError.klass, _wrap_PreludeError_allocate);
   rb_define_method(SwigClassPreludeError.klass, "initialize", VALUEFUNC(_wrap_new_PreludeError), -1);

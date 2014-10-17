@@ -329,6 +329,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
  */
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
+%feature("exceptionclass") Prelude::PreludeError;
 %feature("kwargs") Prelude::ClientEasy::ClientEasy;
 %feature("kwargs") Prelude::Client::recvIDMEF;
 %feature("kwargs") Prelude::IDMEFClass::getPath;

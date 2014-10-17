@@ -6273,9 +6273,11 @@ SWIGINTERN PyObject *_wrap_checkVersion__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6299,9 +6301,11 @@ SWIGINTERN PyObject *_wrap_checkVersion__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6354,9 +6358,11 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_0(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6388,9 +6394,11 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_1(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6423,9 +6431,11 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_2(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6459,9 +6469,11 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_3(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6541,9 +6553,11 @@ SWIGINTERN PyObject *_wrap_delete_ClientProfile(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6574,9 +6588,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getUid(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6607,9 +6623,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getGid(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6640,9 +6658,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getName(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6683,9 +6703,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setName(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6718,9 +6740,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzerId(PyObject *SWIGUNUSEDPARM(
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6759,9 +6783,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setAnalyzerId(PyObject *SWIGUNUSEDPARM(
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6792,9 +6818,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getConfigFilename(PyObject *SWIGUNUSEDP
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6825,9 +6853,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzeridFilename(PyObject *SWIGUNU
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6858,9 +6888,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsKeyFilename(PyObject *SWIGUNUSEDP
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6891,9 +6923,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCaCertFilename(PyObject *SW
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6924,9 +6958,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerKeyCertFilename(PyObject *S
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6957,9 +6993,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCrlFilename(PyObject *SWIGU
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -6990,9 +7028,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientKeyCertFilename(PyObject *S
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7023,9 +7063,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientTrustedCertFilename(PyObjec
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7056,9 +7098,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getBackupDirname(PyObject *SWIGUNUSEDPA
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7089,9 +7133,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getProfileDirname(PyObject *SWIGUNUSEDP
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7131,9 +7177,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setPrefix(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7166,9 +7214,11 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getPrefix(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7209,9 +7259,11 @@ SWIGINTERN PyObject *_wrap_delete_Connection(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7237,9 +7289,11 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7275,9 +7329,11 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7317,9 +7373,11 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7363,9 +7421,11 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7400,9 +7460,11 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_4(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7503,9 +7565,11 @@ SWIGINTERN PyObject *_wrap_Connection_getConnection(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7539,9 +7603,11 @@ SWIGINTERN PyObject *_wrap_Connection_close(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7596,9 +7662,11 @@ SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7641,9 +7709,11 @@ SWIGINTERN PyObject *_wrap_Connection_setState(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7678,9 +7748,11 @@ SWIGINTERN PyObject *_wrap_Connection_getState(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7721,9 +7793,11 @@ SWIGINTERN PyObject *_wrap_Connection_setData(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7758,9 +7832,11 @@ SWIGINTERN PyObject *_wrap_Connection_getData(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7795,9 +7871,11 @@ SWIGINTERN PyObject *_wrap_Connection_getPermission(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7840,9 +7918,11 @@ SWIGINTERN PyObject *_wrap_Connection_setPeerAnalyzerid(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7877,9 +7957,11 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerAnalyzerid(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7914,9 +7996,11 @@ SWIGINTERN PyObject *_wrap_Connection_getLocalAddr(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7951,9 +8035,11 @@ SWIGINTERN PyObject *_wrap_Connection_getLocalPort(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -7988,9 +8074,11 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerAddr(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8025,9 +8113,11 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerPort(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8062,9 +8152,11 @@ SWIGINTERN PyObject *_wrap_Connection_isAlive(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8099,9 +8191,11 @@ SWIGINTERN PyObject *_wrap_Connection_getFd(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8136,9 +8230,11 @@ SWIGINTERN PyObject *_wrap_Connection_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8179,9 +8275,11 @@ SWIGINTERN PyObject *_wrap_delete_ConnectionPool(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8207,9 +8305,11 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8244,9 +8344,11 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8284,9 +8386,11 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_2(PyObject *SWIGUNUSEDPARM(s
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8333,9 +8437,11 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_3(PyObject *SWIGUNUSEDPARM(s
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8426,9 +8532,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_init(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8472,9 +8580,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionString(PyObject *SWIGUNUS
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8511,9 +8621,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionString(PyObject *SWIGUNUS
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8548,9 +8660,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionList(PyObject *SWIGUNUSED
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8593,9 +8707,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setFlags(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8630,9 +8746,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getFlags(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8673,9 +8791,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setData(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8710,9 +8830,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getData(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8763,9 +8885,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_addConnection(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8816,9 +8940,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_delConnection(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8864,9 +8990,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionAlive(PyObject *SWIGUNUSE
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8912,9 +9040,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionDead(PyObject *SWIGUNUSED
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -8957,9 +9087,11 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setRequiredPermission(PyObject *SWIGUN
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9000,9 +9132,11 @@ SWIGINTERN PyObject *_wrap_delete_Client(PyObject *SWIGUNUSEDPARM(self), PyObjec
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9038,9 +9172,11 @@ SWIGINTERN PyObject *_wrap_new_Client__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9080,9 +9216,11 @@ SWIGINTERN PyObject *_wrap_new_Client__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9152,9 +9290,11 @@ SWIGINTERN PyObject *_wrap_Client_start(PyObject *SWIGUNUSEDPARM(self), PyObject
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9188,9 +9328,11 @@ SWIGINTERN PyObject *_wrap_Client_init(PyObject *SWIGUNUSEDPARM(self), PyObject 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9225,9 +9367,11 @@ SWIGINTERN PyObject *_wrap_Client_getClient(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9273,9 +9417,11 @@ SWIGINTERN PyObject *_wrap_Client_sendIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9336,9 +9482,11 @@ SWIGINTERN PyObject *_wrap_Client_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9373,9 +9521,11 @@ SWIGINTERN PyObject *_wrap_Client_getFlags(PyObject *SWIGUNUSEDPARM(self), PyObj
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9418,9 +9568,11 @@ SWIGINTERN PyObject *_wrap_Client_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObj
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9455,9 +9607,11 @@ SWIGINTERN PyObject *_wrap_Client_getRequiredPermission(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9500,9 +9654,11 @@ SWIGINTERN PyObject *_wrap_Client_setRequiredPermission(PyObject *SWIGUNUSEDPARM
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9537,9 +9693,11 @@ SWIGINTERN PyObject *_wrap_Client_getConfigFilename(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9583,9 +9741,11 @@ SWIGINTERN PyObject *_wrap_Client_setConfigFilename(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9622,9 +9782,11 @@ SWIGINTERN PyObject *_wrap_Client_getConnectionPool(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9675,9 +9837,11 @@ SWIGINTERN PyObject *_wrap_Client_setConnectionPool(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9724,9 +9888,11 @@ SWIGINTERN PyObject *_wrap_Client___lshift__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9773,9 +9939,11 @@ SWIGINTERN PyObject *_wrap_Client___rshift__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9822,9 +9990,11 @@ SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9861,9 +10031,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setLevel(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9893,9 +10065,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setDebugLevel(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9925,9 +10099,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setFlags(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9949,9 +10125,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_getFlags(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -9982,9 +10160,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setLogfile(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10021,9 +10201,11 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setCallback(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10045,9 +10227,11 @@ SWIGINTERN PyObject *_wrap_new_PreludeLog(PyObject *SWIGUNUSEDPARM(self), PyObje
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10077,9 +10261,11 @@ SWIGINTERN PyObject *_wrap_delete_PreludeLog(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10116,9 +10302,11 @@ SWIGINTERN PyObject *_wrap_delete_PreludeError(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10140,9 +10328,11 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10173,9 +10363,11 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10211,9 +10403,11 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_2(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10288,9 +10482,11 @@ SWIGINTERN PyObject *_wrap_PreludeError_getCode(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10321,9 +10517,11 @@ SWIGINTERN PyObject *_wrap_PreludeError_what(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10354,9 +10552,11 @@ SWIGINTERN PyObject *_wrap_PreludeError___str__(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10387,9 +10587,11 @@ SWIGINTERN PyObject *_wrap_PreludeError___int__(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10490,9 +10692,11 @@ SWIGINTERN PyObject *_wrap_new_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyObje
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10532,9 +10736,11 @@ SWIGINTERN PyObject *_wrap_delete_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10563,9 +10769,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriterion(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10595,9 +10803,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFCriterion(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10634,9 +10844,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFCriteria(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10658,9 +10870,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_0(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10694,9 +10908,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_1(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10728,9 +10944,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_2(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10768,9 +10986,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_3(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10803,9 +11023,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_4(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10904,9 +11126,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_match(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10937,9 +11161,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_clone(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -10981,9 +11207,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_andCriteria(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11025,9 +11253,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_orCriteria(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11058,9 +11288,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_toString(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11091,9 +11323,11 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria___str__(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11131,9 +11365,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_getType(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11164,9 +11400,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_isNull(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11188,9 +11426,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11220,9 +11460,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFValue(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11253,9 +11495,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11291,9 +11535,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11329,9 +11575,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11367,9 +11615,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_4(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11402,9 +11652,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_5(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11440,9 +11692,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_6(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11475,9 +11729,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_7(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11508,9 +11764,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_8(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11541,9 +11799,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_9(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11574,9 +11834,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_10(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11607,9 +11869,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_11(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11640,9 +11904,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_12(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11673,9 +11939,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_13(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11706,9 +11974,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_14(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11739,9 +12009,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_15(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11772,9 +12044,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_16(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -11808,9 +12082,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_17(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12060,9 +12336,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12093,9 +12371,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_clone(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12140,9 +12420,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_toString(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12187,9 +12469,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_0(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12234,9 +12518,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___le__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12279,9 +12565,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ge__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12324,9 +12612,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___lt__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12369,9 +12659,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___gt__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12414,9 +12706,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_1(PyObject *SWIGUNUSEDPARM(se
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12502,9 +12796,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ne__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12535,9 +12831,11 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___hash__(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12576,9 +12874,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12624,9 +12924,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12659,9 +12961,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12695,9 +12999,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12787,9 +13093,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFPath(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12845,9 +13153,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12900,9 +13210,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -12958,9 +13270,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13013,9 +13327,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13069,9 +13385,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13127,9 +13445,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13182,9 +13502,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13235,9 +13557,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13288,9 +13612,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13341,9 +13667,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13394,9 +13722,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13447,9 +13777,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13755,9 +14087,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getClass(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13802,9 +14136,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getValueType(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13858,9 +14194,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_setIndex(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13905,9 +14243,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_undefineIndex(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -13952,9 +14292,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getIndex(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14004,9 +14346,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_makeChild(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14039,9 +14383,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_makeParent(PyObject *SWIGUNUSEDPARM(self), 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14095,9 +14441,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_compare(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14128,9 +14476,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_clone(PyObject *SWIGUNUSEDPARM(self), PyObj
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14178,9 +14528,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_checkOperator(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14211,9 +14563,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getApplicableOperators(PyObject *SWIGUNUSED
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14258,9 +14612,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getName(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14291,9 +14647,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_isAmbiguous(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14324,9 +14682,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_hasLists(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14371,9 +14731,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_isList(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14404,9 +14766,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getDepth(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14449,9 +14813,11 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14494,9 +14860,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14527,9 +14895,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14560,9 +14930,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14594,9 +14966,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14629,9 +15003,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14665,9 +15041,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14767,9 +15145,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFTime(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14799,9 +15179,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14840,9 +15222,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14882,9 +15266,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -14925,9 +15311,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15038,9 +15426,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setSec(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15079,9 +15469,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setUSec(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15120,9 +15512,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setGmtOffset(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15153,9 +15547,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getSec(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15186,9 +15582,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getUSec(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15219,9 +15617,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getGmtOffset(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15252,9 +15652,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_clone(PyObject *SWIGUNUSEDPARM(self), PyObj
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15285,9 +15687,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_toString(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15318,9 +15722,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___int__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15351,9 +15757,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___long__(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15384,9 +15792,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___float__(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15417,9 +15827,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___str__(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15462,9 +15874,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15507,9 +15921,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15552,9 +15968,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15597,9 +16015,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15642,9 +16062,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15687,9 +16109,11 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15727,9 +16151,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15751,9 +16177,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15787,9 +16215,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15825,9 +16255,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15911,9 +16343,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getDepth(PyObject *SWIGUNUSEDPARM(self), P
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -15953,9 +16387,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getChild__SWIG_0(PyObject *SWIGUNUSEDPARM(
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16000,9 +16436,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getChild__SWIG_1(PyObject *SWIGUNUSEDPARM(
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16092,9 +16530,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16139,9 +16579,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16222,9 +16664,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_isList(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16255,9 +16699,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_isKeyedList(PyObject *SWIGUNUSEDPARM(self)
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16288,9 +16734,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getName(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16321,9 +16769,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getValueType(PyObject *SWIGUNUSEDPARM(self
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16413,9 +16863,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getPath(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16450,9 +16902,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getEnumValues(PyObject *SWIGUNUSEDPARM(sel
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16483,9 +16937,11 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getApplicableOperator(PyObject *SWIGUNUSED
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16515,9 +16971,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFClass(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16554,9 +17012,11 @@ SWIGINTERN PyObject *_wrap_delete_IDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16578,9 +17038,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16614,9 +17076,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16647,9 +17111,11 @@ SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16744,9 +17210,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16799,9 +17267,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16857,9 +17327,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16917,9 +17389,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -16972,9 +17446,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17028,9 +17504,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17081,9 +17559,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17134,9 +17614,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17187,9 +17669,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17240,9 +17724,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyO
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17293,9 +17779,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17346,9 +17834,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), Py
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17630,9 +18120,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_clone(PyObject *SWIGUNUSEDPARM(self), PyObject 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17663,9 +18155,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_getId(PyObject *SWIGUNUSEDPARM(self), PyObject 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17696,9 +18190,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_toString(PyObject *SWIGUNUSEDPARM(self), PyObje
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17729,9 +18225,11 @@ SWIGINTERN PyObject *_wrap_IDMEF___str__(PyObject *SWIGUNUSEDPARM(self), PyObjec
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17771,9 +18269,11 @@ SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17823,9 +18323,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_write(PyObject *SWIGUNUSEDPARM(self), PyObject 
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17927,9 +18429,11 @@ SWIGINTERN PyObject *_wrap_IDMEF___rshift__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -17980,9 +18484,11 @@ SWIGINTERN PyObject *_wrap_IDMEF___lshift__(PyObject *SWIGUNUSEDPARM(self), PyOb
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }
@@ -18023,9 +18529,11 @@ SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
-      } else
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      }
       SWIG_fail;
     }
   }

@@ -174,9 +174,11 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
         } catch(Prelude::PreludeError &e) {
                 if ( e.getCode() == PRELUDE_ERROR_EOF ) {
                         PyErr_SetString(PyExc_EOFError, e.what());
-                } else
-                        SWIG_exception(SWIG_RuntimeError, e.what());
-
+                } else {
+                        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+                                                             SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+                                          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+                }
                 SWIG_fail;
         }
 }

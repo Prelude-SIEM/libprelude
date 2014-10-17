@@ -321,7 +321,7 @@ def PreludeLog_setCallback(*args):
   return _prelude.PreludeLog_setCallback(*args)
 PreludeLog_setCallback = _prelude.PreludeLog_setCallback
 
-class PreludeError(_object):
+class PreludeError(Exception):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, PreludeError, name, value)
     __swig_getmethods__ = {}
