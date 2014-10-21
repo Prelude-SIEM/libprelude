@@ -77,6 +77,7 @@
 %rename (__str__) *::operator const char *() const;
 
 %begin %{
+#define TARGET_LANGUAGE_SELF void *
 #define TARGET_LANGUAGE_OUTPUT_TYPE int *
 %}
 
@@ -288,9 +289,9 @@ static ssize_t _cb_lua_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %fragment("IDMEFValueList_to_SWIG", "header") {
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
-int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
+int IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &value, void *extra)
 {
         bool is_list;
         int index = 0, ret, unused;
@@ -312,7 +313,7 @@ int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                         if ( is_list )
                                 lua_pushnumber((lua_State *) extra, ++index);
 
-                        ret = IDMEFValue_to_SWIG(*i, extra, &unused);
+                        ret = IDMEFValue_to_SWIG(&unused, *i, extra, &unused);
                         if ( ret < 0 )
                                 return -1;
 
@@ -334,7 +335,7 @@ int IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                 lua_pushnil(L);
                 SWIG_arg = 1;
         } else {
-                SWIG_arg = IDMEFValue_to_SWIG($1, L, &unused);
+                SWIG_arg = IDMEFValue_to_SWIG(&unused, $1, L, &unused);
                 if ( SWIG_arg < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";

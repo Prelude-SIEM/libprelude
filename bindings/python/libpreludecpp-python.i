@@ -34,6 +34,7 @@
 %ignore *::operator =;
 
 %begin %{
+#define TARGET_LANGUAGE_SELF PyObject *
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
 %}
 
@@ -261,9 +262,9 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 #endif
 
 %fragment("IDMEFValueList_to_SWIG", "header", fragment="IDMEFValue_to_SWIG") {
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
-PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
+PyObject *IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &value, void *extra)
 {
         int j = 0, ret;
         PyObject *pytuple;
@@ -279,7 +280,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                         Py_INCREF(Py_None);
                         val = Py_None;
                 } else {
-                        ret = IDMEFValue_to_SWIG(*i, NULL, &val);
+                        ret = IDMEFValue_to_SWIG(self, *i, NULL, &val);
                         if ( ret < 0 )
                                 return NULL;
                 }
@@ -299,7 +300,11 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                 Py_INCREF(Py_None);
                 $result = Py_None;
         } else {
-                ret = IDMEFValue_to_SWIG($1, NULL, &$result);
+#ifdef SWIGPYTHON_BUILTIN
+                ret = IDMEFValue_to_SWIG(self, $1, NULL, &$result);
+#else
+                ret = IDMEFValue_to_SWIG(NULL, $1, NULL, &$result);
+#endif
                 if ( ret < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
@@ -316,7 +321,7 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 
 
 %init {
-        int argc, ret, i;
+        int argc, ret, idx;
         char **argv = NULL;
         PyObject *sys = PyImport_ImportModule("sys");
         PyObject *pyargv = PyObject_GetAttrString(sys, "argv");
@@ -332,18 +337,18 @@ PyObject *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
         if ( ! argv )
                 throw PreludeError("Allocation failure");
 
-        for ( i = 0; i < argc; i++ ) {
-                PyObject *o = PyList_GetItem(pyargv, i);
+        for ( idx = 0; idx < argc; idx++ ) {
+                PyObject *o = PyList_GetItem(pyargv, idx);
 #if PY_VERSION_HEX < 0x03000000
-                PyArg_Parse(o, "et", Py_FileSystemDefaultEncoding, &argv[i]);
+                PyArg_Parse(o, "et", Py_FileSystemDefaultEncoding, &argv[idx]);
 #else
-                argv[i] = PyString_AsString(o);
+                argv[idx] = PyString_AsString(o);
 #endif
-                if ( ! argv[i] )
+                if ( ! argv[idx] )
                         break;
         }
 
-        argv[i] = NULL;
+        argv[idx] = NULL;
 
         ret = prelude_init(&argc, argv);
         if ( ret < 0 ) {

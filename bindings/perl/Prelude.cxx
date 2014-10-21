@@ -1637,6 +1637,7 @@ void SwigSvFromString(SV* sv, const std::string& s) {
 using namespace Prelude;
 
 
+#define TARGET_LANGUAGE_SELF SV *
 #define TARGET_LANGUAGE_OUTPUT_TYPE SV **
 
 
@@ -2372,9 +2373,9 @@ SWIG_From_float  SWIG_PERL_DECL_ARGS_1(float value)
 #endif
 
 
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
-SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
+SV *IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &value, void *extra)
 {
         int j = 0, ret;
         std::vector<Prelude::IDMEFValue> result = value;
@@ -2388,7 +2389,7 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                         SvREFCNT_inc(& PL_sv_undef);
                         svs[j++] = &PL_sv_undef;
                 } else {
-                        ret = IDMEFValue_to_SWIG(*i, NULL, &svs[j++]);
+                        ret = IDMEFValue_to_SWIG(self, *i, NULL, &svs[j++]);
                         if ( ret < 0 )
                                 return NULL;
                 }
@@ -2405,7 +2406,7 @@ SV *IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
 
 
 
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -2457,7 +2458,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result, extra);
+                *ret = IDMEFValueList_to_SWIG(self, result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);
@@ -8870,7 +8871,7 @@ XS(_wrap_IDMEFValue_clone) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
+        ret = IDMEFValue_to_SWIG(NULL, result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
@@ -11763,7 +11764,7 @@ XS(_wrap_IDMEFPath_get) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
+        ret = IDMEFValue_to_SWIG(NULL, result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
@@ -15782,7 +15783,7 @@ XS(_wrap_IDMEF_get) {
       } else {
         SV *mysv;
         
-        ret = IDMEFValue_to_SWIG(result, NULL, &mysv);
+        ret = IDMEFValue_to_SWIG(NULL, result, NULL, &mysv);
         if ( ret < 0 ) {
           std::stringstream s;
           s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";

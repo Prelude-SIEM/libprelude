@@ -159,7 +159,7 @@ typedef int idmef_class_id_t;
                                           fragment="SWIG_FromCharPtr", fragment="SWIG_FromCharPtrAndSize", fragment="SWIG_FromBytePtrAndSize",
                                           fragment="IDMEFValueList_to_SWIG") {
 
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
         std::stringstream s;
         idmef_value_t *value = result;
@@ -211,7 +211,7 @@ int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LA
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_LIST )
-                *ret = IDMEFValueList_to_SWIG(result, extra);
+                *ret = IDMEFValueList_to_SWIG(self, result, extra);
 
         else if ( type == Prelude::IDMEFValue::TYPE_DATA ) {
                 idmef_data_t *d = idmef_value_get_data(value);

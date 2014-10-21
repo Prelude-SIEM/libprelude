@@ -32,6 +32,7 @@
 
 
 %header %{
+#define TARGET_LANGUAGE_SELF VALUE
 #define TARGET_LANGUAGE_OUTPUT_TYPE VALUE *
 %}
 
@@ -192,9 +193,9 @@ static ssize_t _cb_ruby_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 %fragment("IDMEFValueList_to_SWIG", "header") {
-int IDMEFValue_to_SWIG(const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
+int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret);
 
-VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
+VALUE IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &value, void *extra)
 {
         int ret;
         VALUE ary;
@@ -209,7 +210,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
                 if ( (*i).isNull() )
                         val = Qnil;
                 else {
-                        ret = IDMEFValue_to_SWIG(*i, extra, &val);
+                        ret = IDMEFValue_to_SWIG(self, *i, extra, &val);
                         if ( ret < 0 )
                                 return Qnil;
                 }
@@ -229,7 +230,7 @@ VALUE IDMEFValueList_to_SWIG(const Prelude::IDMEFValue &value, void *extra)
         if ( $1.isNull() )
                 $result = Qnil;
         else {
-                ret = IDMEFValue_to_SWIG($1, NULL, &$result);
+                ret = IDMEFValue_to_SWIG(self, $1, NULL, &$result);
                 if ( ret < 0 ) {
                         std::stringstream s;
                         s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
