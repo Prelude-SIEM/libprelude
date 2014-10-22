@@ -14,7 +14,9 @@
 
 #define SWIGPYTHON
 #define SWIG_PYTHON_THREADS
+#define SWIG_PYTHON_NO_BUILD_NONE
 #define SWIG_PYTHON_DIRECTOR_NO_VTABLE
+#define SWIGPYTHON_BUILTIN
 
 
 #ifdef __cplusplus
@@ -2929,6 +2931,521 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 }
 #endif
 
+#define SWIGPY_UNARYFUNC_CLOSURE(wrapper)	\
+SWIGINTERN PyObject *				\
+wrapper##_closure(PyObject *a) {		\
+  return wrapper(a, NULL);			\
+}
+
+#define SWIGPY_DESTRUCTOR_CLOSURE(wrapper)	\
+SWIGINTERN void					\
+wrapper##_closure(PyObject *a) {		\
+    SwigPyObject *sobj;				\
+    sobj = (SwigPyObject *)a;			\
+    if (sobj->own) {				\
+	PyObject *o = wrapper(a, NULL);		\
+	Py_XDECREF(o);				\
+    }						\
+    if (PyType_IS_GC(a->ob_type)) {		\
+	PyObject_GC_Del(a);			\
+    } else {					\
+	PyObject_Del(a);			\
+    }						\
+}
+
+#define SWIGPY_INQUIRY_CLOSURE(wrapper)				\
+SWIGINTERN int							\
+wrapper##_closure(PyObject *a) {				\
+    PyObject *pyresult;						\
+    int result;							\
+    pyresult = wrapper(a, NULL);				\
+    result = pyresult && PyObject_IsTrue(pyresult) ? 1 : 0;	\
+    Py_XDECREF(pyresult);					\
+    return result;						\
+}
+
+#define SWIGPY_BINARYFUNC_CLOSURE(wrapper)	\
+SWIGINTERN PyObject *				\
+wrapper##_closure(PyObject *a, PyObject *b) {	\
+    PyObject *tuple, *result;			\
+    tuple = PyTuple_New(1);			\
+    assert(tuple);				\
+    PyTuple_SET_ITEM(tuple, 0, b);		\
+    Py_XINCREF(b);				\
+    result = wrapper(a, tuple);			\
+    Py_DECREF(tuple);				\
+    return result;				\
+}
+
+typedef ternaryfunc ternarycallfunc;
+
+#define SWIGPY_TERNARYFUNC_CLOSURE(wrapper)			\
+SWIGINTERN PyObject *						\
+wrapper##_closure(PyObject *a, PyObject *b, PyObject *c) {	\
+    PyObject *tuple, *result;					\
+    tuple = PyTuple_New(2);					\
+    assert(tuple);						\
+    PyTuple_SET_ITEM(tuple, 0, b);				\
+    PyTuple_SET_ITEM(tuple, 1, c);				\
+    Py_XINCREF(b);						\
+    Py_XINCREF(c);						\
+    result = wrapper(a, tuple);					\
+    Py_DECREF(tuple);						\
+    return result;						\
+}
+
+#define SWIGPY_TERNARYCALLFUNC_CLOSURE(wrapper)			\
+SWIGINTERN PyObject *						\
+wrapper##_closure(PyObject *callable_object, PyObject *args, PyObject *) {	\
+    return wrapper(callable_object, args);			\
+}
+
+#define SWIGPY_LENFUNC_CLOSURE(wrapper)			\
+SWIGINTERN Py_ssize_t					\
+wrapper##_closure(PyObject *a) {			\
+    PyObject *resultobj;				\
+    Py_ssize_t result;					\
+    resultobj = wrapper(a, NULL);			\
+    result = PyNumber_AsSsize_t(resultobj, NULL);	\
+    Py_DECREF(resultobj);				\
+    return result;					\
+}
+
+#define SWIGPY_SSIZESSIZEARGFUNC_CLOSURE(wrapper)		\
+SWIGINTERN PyObject *						\
+wrapper##_closure(PyObject *a, Py_ssize_t b, Py_ssize_t c) {	\
+    PyObject *tuple, *result;					\
+    tuple = PyTuple_New(2);					\
+    assert(tuple);						\
+    PyTuple_SET_ITEM(tuple, 0, _PyLong_FromSsize_t(b));		\
+    PyTuple_SET_ITEM(tuple, 1, _PyLong_FromSsize_t(c));		\
+    result = wrapper(a, tuple);					\
+    Py_DECREF(tuple);						\
+    return result;						\
+}
+
+#define SWIGPY_SSIZESSIZEOBJARGPROC_CLOSURE(wrapper)			\
+SWIGINTERN int								\
+wrapper##_closure(PyObject *a, Py_ssize_t b, Py_ssize_t c, PyObject *d) { \
+    PyObject *tuple, *resultobj;					\
+    int result;								\
+    tuple = PyTuple_New(d ? 3 : 2);					\
+    assert(tuple);							\
+    PyTuple_SET_ITEM(tuple, 0, _PyLong_FromSsize_t(b));			\
+    PyTuple_SET_ITEM(tuple, 1, _PyLong_FromSsize_t(c));			\
+    if (d) {								\
+        PyTuple_SET_ITEM(tuple, 2, d);					\
+        Py_INCREF(d);							\
+    }									\
+    resultobj = wrapper(a, tuple);					\
+    result = resultobj ? 0 : -1;					\
+    Py_DECREF(tuple);							\
+    Py_XDECREF(resultobj);						\
+    return result;							\
+}
+
+#define SWIGPY_SSIZEARGFUNC_CLOSURE(wrapper)		\
+SWIGINTERN PyObject *					\
+wrapper##_closure(PyObject *a, Py_ssize_t b) {		\
+    PyObject *tuple, *result;				\
+    tuple = PyTuple_New(1);				\
+    assert(tuple);					\
+    PyTuple_SET_ITEM(tuple, 0, _PyLong_FromSsize_t(b));	\
+    result = wrapper(a, tuple);				\
+    Py_DECREF(tuple);					\
+    return result;					\
+}
+
+#define SWIGPY_FUNPACK_SSIZEARGFUNC_CLOSURE(wrapper)		\
+SWIGINTERN PyObject *					\
+wrapper##_closure(PyObject *a, Py_ssize_t b) {		\
+    PyObject *arg, *result;				\
+    arg = _PyLong_FromSsize_t(b);			\
+    result = wrapper(a, arg);				\
+    Py_DECREF(arg);					\
+    return result;					\
+}
+
+#define SWIGPY_SSIZEOBJARGPROC_CLOSURE(wrapper)			\
+SWIGINTERN int							\
+wrapper##_closure(PyObject *a, Py_ssize_t b, PyObject *c) {	\
+    PyObject *tuple, *resultobj;				\
+    int result;							\
+    tuple = PyTuple_New(2);					\
+    assert(tuple);						\
+    PyTuple_SET_ITEM(tuple, 0, _PyLong_FromSsize_t(b));		\
+    PyTuple_SET_ITEM(tuple, 1, c);				\
+    Py_XINCREF(c);						\
+    resultobj = wrapper(a, tuple);				\
+    result = resultobj ? 0 : -1;				\
+    Py_XDECREF(resultobj);					\
+    Py_DECREF(tuple);						\
+    return result;						\
+}
+
+#define SWIGPY_OBJOBJARGPROC_CLOSURE(wrapper)			\
+SWIGINTERN int							\
+wrapper##_closure(PyObject *a, PyObject *b, PyObject *c) {	\
+    PyObject *tuple, *resultobj;				\
+    int result;							\
+    tuple = PyTuple_New(c ? 2 : 1);				\
+    assert(tuple);						\
+    PyTuple_SET_ITEM(tuple, 0, b);				\
+    Py_XINCREF(b);						\
+    if (c) {							\
+        PyTuple_SET_ITEM(tuple, 1, c);				\
+        Py_XINCREF(c);						\
+    }								\
+    resultobj = wrapper(a, tuple);				\
+    result = resultobj ? 0 : -1;				\
+    Py_XDECREF(resultobj);					\
+    Py_DECREF(tuple);						\
+    return result;						\
+}
+
+#define SWIGPY_REPRFUNC_CLOSURE(wrapper)	\
+SWIGINTERN PyObject *				\
+wrapper##_closure(PyObject *a) {		\
+    return wrapper(a, NULL);			\
+}
+
+#define SWIGPY_HASHFUNC_CLOSURE(wrapper)	\
+SWIGINTERN long					\
+wrapper##_closure(PyObject *a) {		\
+    PyObject *pyresult;				\
+    long result;				\
+    pyresult = wrapper(a, NULL);		\
+    if (!pyresult || !PyLong_Check(pyresult))	\
+	return -1;				\
+    result = PyLong_AsLong(pyresult);		\
+    Py_DECREF(pyresult);			\
+    return result;				\
+}
+
+#define SWIGPY_ITERNEXT_CLOSURE(wrapper)	\
+SWIGINTERN PyObject *				\
+wrapper##_closure(PyObject *a) {		\
+    PyObject *result;				\
+    result = wrapper(a, NULL);			\
+    if (result && result == Py_None) {		\
+	Py_DECREF(result);			\
+	result = NULL;				\
+    }						\
+    return result;				\
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+SWIGINTERN int
+SwigPyBuiltin_BadInit(PyObject *self, PyObject *SWIGUNUSEDPARM(args), PyObject *SWIGUNUSEDPARM(kwds)) {
+  PyErr_Format(PyExc_TypeError, "Cannot create new instances of type '%.300s'", self->ob_type->tp_name);
+  return -1;
+}
+
+SWIGINTERN void
+SwigPyBuiltin_BadDealloc(PyObject *pyobj) {
+  SwigPyObject *sobj;
+  sobj = (SwigPyObject *)pyobj;
+  if (sobj->own) {
+    PyErr_Format(PyExc_TypeError, "Swig detected a memory leak in type '%.300s': no callable destructor found.", pyobj->ob_type->tp_name);
+  }
+}
+
+typedef struct {
+  PyCFunction get;
+  PyCFunction set;
+} SwigPyGetSet;
+
+SWIGINTERN PyObject *
+SwigPyBuiltin_GetterClosure (PyObject *obj, void *closure) {
+  SwigPyGetSet *getset;
+  PyObject *tuple, *result;
+  if (!closure)
+    return SWIG_Py_Void();
+  getset = (SwigPyGetSet *)closure;
+  if (!getset->get)
+    return SWIG_Py_Void();
+  tuple = PyTuple_New(0);
+  assert(tuple);
+  result = (*getset->get)(obj, tuple);
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyObject *
+SwigPyBuiltin_FunpackGetterClosure (PyObject *obj, void *closure) {
+  SwigPyGetSet *getset;
+  PyObject *result;
+  if (!closure)
+    return SWIG_Py_Void();
+  getset = (SwigPyGetSet *)closure;
+  if (!getset->get)
+    return SWIG_Py_Void();
+  result = (*getset->get)(obj, NULL);
+  return result;
+}
+
+SWIGINTERN int
+SwigPyBuiltin_SetterClosure (PyObject *obj, PyObject *val, void *closure) {
+  SwigPyGetSet *getset;
+  PyObject *tuple, *result;
+  if (!closure) {
+    PyErr_Format(PyExc_TypeError, "Missing getset closure");
+    return -1;
+  }
+  getset = (SwigPyGetSet *)closure;
+  if (!getset->set) {
+    PyErr_Format(PyExc_TypeError, "Illegal member variable assignment in type '%.300s'", obj->ob_type->tp_name);
+    return -1;
+  }
+  tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, val);
+  Py_XINCREF(val);
+  result = (*getset->set)(obj, tuple);
+  Py_DECREF(tuple);
+  Py_XDECREF(result);
+  return result ? 0 : -1;
+}
+
+SWIGINTERN int
+SwigPyBuiltin_FunpackSetterClosure (PyObject *obj, PyObject *val, void *closure) {
+  SwigPyGetSet *getset;
+  PyObject *result;
+  if (!closure) {
+    PyErr_Format(PyExc_TypeError, "Missing getset closure");
+    return -1;
+  }
+  getset = (SwigPyGetSet *)closure;
+  if (!getset->set) {
+    PyErr_Format(PyExc_TypeError, "Illegal member variable assignment in type '%.300s'", obj->ob_type->tp_name);
+    return -1;
+  }
+  result = (*getset->set)(obj, val);
+  Py_XDECREF(result);
+  return result ? 0 : -1;
+}
+
+SWIGINTERN void
+SwigPyStaticVar_dealloc(PyDescrObject *descr) {
+  _PyObject_GC_UNTRACK(descr);
+  Py_XDECREF(PyDescr_TYPE(descr));
+  Py_XDECREF(PyDescr_NAME(descr));
+  PyObject_GC_Del(descr);
+}
+
+SWIGINTERN PyObject *
+SwigPyStaticVar_repr(PyGetSetDescrObject *descr) {
+#if PY_VERSION_HEX >= 0x03000000
+
+  return PyUnicode_FromFormat("<class attribute '%S' of type '%s'>", PyDescr_NAME(descr), PyDescr_TYPE(descr)->tp_name);
+#else
+  return PyString_FromFormat("<class attribute '%s' of type '%s'>", PyString_AsString(PyDescr_NAME(descr)), PyDescr_TYPE(descr)->tp_name);
+#endif
+}
+
+SWIGINTERN int
+SwigPyStaticVar_traverse(PyObject *self, visitproc visit, void *arg) {
+  PyDescrObject *descr;
+  descr = (PyDescrObject *)self;
+  Py_VISIT((PyObject*) PyDescr_TYPE(descr));
+  return 0;
+}
+
+SWIGINTERN PyObject *
+SwigPyStaticVar_get(PyGetSetDescrObject *descr, PyObject *obj, PyObject *SWIGUNUSEDPARM(type)) {
+  if (descr->d_getset->get != NULL)
+    return descr->d_getset->get(obj, descr->d_getset->closure);
+#if PY_VERSION_HEX >= 0x03000000
+  PyErr_Format(PyExc_AttributeError, "attribute '%.300S' of '%.100s' objects is not readable", PyDescr_NAME(descr), PyDescr_TYPE(descr)->tp_name);
+#else
+  PyErr_Format(PyExc_AttributeError, "attribute '%.300s' of '%.100s' objects is not readable", PyString_AsString(PyDescr_NAME(descr)), PyDescr_TYPE(descr)->tp_name);
+#endif
+  return NULL;
+}
+
+SWIGINTERN int
+SwigPyStaticVar_set(PyGetSetDescrObject *descr, PyObject *obj, PyObject *value) {
+  if (descr->d_getset->set != NULL)
+    return descr->d_getset->set(obj, value, descr->d_getset->closure);
+#if PY_VERSION_HEX >= 0x03000000
+  PyErr_Format(PyExc_AttributeError, "attribute '%.300S' of '%.100s' objects is not writable", PyDescr_NAME(descr), PyDescr_TYPE(descr)->tp_name);
+#else
+  PyErr_Format(PyExc_AttributeError, "attribute '%.300s' of '%.100s' objects is not writable", PyString_AsString(PyDescr_NAME(descr)), PyDescr_TYPE(descr)->tp_name);
+#endif
+  return -1;
+}
+
+SWIGINTERN int
+SwigPyObjectType_setattro(PyTypeObject *type, PyObject *name, PyObject *value) {
+  PyObject *attribute;
+  descrsetfunc local_set;
+  attribute = _PyType_Lookup(type, name);
+  if (attribute != NULL) {
+    /* Implement descriptor functionality, if any */
+    local_set = attribute->ob_type->tp_descr_set;
+    if (local_set != NULL)
+      return local_set(attribute, (PyObject *)type, value);
+#if PY_VERSION_HEX >= 0x03000000
+    PyErr_Format(PyExc_AttributeError, "cannot modify read-only attribute '%.50s.%.400S'", type->tp_name, name);
+#else 
+    PyErr_Format(PyExc_AttributeError, "cannot modify read-only attribute '%.50s.%.400s'", type->tp_name, PyString_AS_STRING(name));
+#endif
+  } else {
+#if PY_VERSION_HEX >= 0x03000000
+    PyErr_Format(PyExc_AttributeError, "type '%.50s' has no attribute '%.400S'", type->tp_name, name);
+#else
+    PyErr_Format(PyExc_AttributeError, "type '%.50s' has no attribute '%.400s'", type->tp_name, PyString_AS_STRING(name));
+#endif
+  }
+
+  return -1;
+}
+
+SWIGINTERN PyTypeObject*
+SwigPyStaticVar_Type(void) {
+  static PyTypeObject staticvar_type;
+  static int type_init = 0;
+  if (!type_init) {
+    const PyTypeObject tmp = {
+      /* PyObject header changed in Python 3 */
+#if PY_VERSION_HEX >= 0x03000000
+      PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
+      PyObject_HEAD_INIT(&PyType_Type)
+      0,
+#endif
+      "swig_static_var_getset_descriptor",
+      sizeof(PyGetSetDescrObject),
+      0,
+      (destructor)SwigPyStaticVar_dealloc,      /* tp_dealloc */
+      0,                                        /* tp_print */
+      0,                                        /* tp_getattr */
+      0,                                        /* tp_setattr */
+      0,                                        /* tp_compare */
+      (reprfunc)SwigPyStaticVar_repr,           /* tp_repr */
+      0,                                        /* tp_as_number */
+      0,                                        /* tp_as_sequence */
+      0,                                        /* tp_as_mapping */
+      0,                                        /* tp_hash */
+      0,                                        /* tp_call */
+      0,                                        /* tp_str */
+      PyObject_GenericGetAttr,                  /* tp_getattro */
+      0,                                        /* tp_setattro */
+      0,                                        /* tp_as_buffer */
+      Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_HAVE_CLASS, /* tp_flags */
+      0,                                        /* tp_doc */
+      SwigPyStaticVar_traverse,                 /* tp_traverse */
+      0,                                        /* tp_clear */
+      0,                                        /* tp_richcompare */
+      0,                                        /* tp_weaklistoffset */
+      0,                                        /* tp_iter */
+      0,                                        /* tp_iternext */
+      0,                                        /* tp_methods */
+      0,                                        /* tp_members */
+      0,                                        /* tp_getset */
+      0,                                        /* tp_base */
+      0,                                        /* tp_dict */
+      (descrgetfunc)SwigPyStaticVar_get,        /* tp_descr_get */
+      (descrsetfunc)SwigPyStaticVar_set,        /* tp_descr_set */
+      0,                                        /* tp_dictoffset */
+      0,                                        /* tp_init */
+      0,                                        /* tp_alloc */
+      0,                                        /* tp_new */
+      0,                                        /* tp_free */
+      0,                                        /* tp_is_gc */
+      0,                                        /* tp_bases */
+      0,                                        /* tp_mro */
+      0,                                        /* tp_cache */
+      0,                                        /* tp_subclasses */
+      0,                                        /* tp_weaklist */
+#if PY_VERSION_HEX >= 0x02030000
+      0,                                        /* tp_del */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+      0,                                        /* tp_version */
+#endif
+#ifdef COUNT_ALLOCS
+      0,0,0,0                                   /* tp_alloc -> tp_next */
+#endif
+    };
+    staticvar_type = tmp;
+    type_init = 1;
+#if PY_VERSION_HEX < 0x02020000
+    staticvar_type.ob_type = &PyType_Type;
+#else
+    if (PyType_Ready(&staticvar_type) < 0)
+      return NULL;
+#endif
+  }
+  return &staticvar_type;
+}
+
+SWIGINTERN PyGetSetDescrObject *
+SwigPyStaticVar_new_getset(PyTypeObject *type, PyGetSetDef *getset) {
+
+  PyGetSetDescrObject *descr;
+  descr = (PyGetSetDescrObject *)PyType_GenericAlloc(SwigPyStaticVar_Type(), 0);
+  assert(descr);
+  Py_XINCREF(type);
+  PyDescr_TYPE(descr) = type;
+  PyDescr_NAME(descr) = PyString_InternFromString(getset->name);
+  descr->d_getset = getset;
+  if (PyDescr_NAME(descr) == NULL) {
+    Py_DECREF(descr);
+    descr = NULL;
+  }
+  return descr;
+}
+
+SWIGINTERN void
+SwigPyBuiltin_InitBases (PyTypeObject *type, PyTypeObject **bases) {
+  int base_count = 0;
+  PyTypeObject **b;
+  PyObject *tuple;
+  int i;
+
+  if (!bases[0]) {
+    bases[0] = SwigPyObject_type();
+    bases[1] = NULL;
+  }
+  type->tp_base = bases[0];
+  Py_INCREF((PyObject *)bases[0]);
+  for (b = bases; *b != NULL; ++b)
+    ++base_count;
+  tuple = PyTuple_New(base_count);
+  for (i = 0; i < base_count; ++i) {
+    PyTuple_SET_ITEM(tuple, i, (PyObject *)bases[i]);
+    Py_INCREF((PyObject *)bases[i]);
+  }
+  type->tp_bases = tuple;
+}
+
+SWIGINTERN PyObject *
+SwigPyBuiltin_ThisClosure (PyObject *self, void *SWIGUNUSEDPARM(closure)) {
+  PyObject *result;
+  result = (PyObject *)SWIG_Python_GetSwigThis(self);
+  Py_XINCREF(result);
+  return result;
+}
+
+SWIGINTERN void
+SwigPyBuiltin_SetMetaType (PyTypeObject *type, PyTypeObject *metatype)
+{
+#if PY_VERSION_HEX >= 0x03000000
+    type->ob_base.ob_base.ob_type = metatype;
+#else
+    type->ob_type = metatype;
+#endif
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 
 #define SWIG_exception_fail(code, msg) do { SWIG_Error(code, msg); SWIG_fail; } while(0) 
@@ -2956,37 +3473,38 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 #define SWIGTYPE_p_Prelude__IDMEFValue swig_types[11]
 #define SWIGTYPE_p_Prelude__PreludeError swig_types[12]
 #define SWIGTYPE_p_Prelude__PreludeLog swig_types[13]
-#define SWIGTYPE_p_allocator_type swig_types[14]
-#define SWIGTYPE_p_char swig_types[15]
-#define SWIGTYPE_p_difference_type swig_types[16]
-#define SWIGTYPE_p_f_int_p_q_const__char__void swig_types[17]
-#define SWIGTYPE_p_idmef_criteria_t swig_types[18]
-#define SWIGTYPE_p_idmef_criterion_operator_t swig_types[19]
-#define SWIGTYPE_p_idmef_object_t swig_types[20]
-#define SWIGTYPE_p_idmef_path_t swig_types[21]
-#define SWIGTYPE_p_idmef_time_t swig_types[22]
-#define SWIGTYPE_p_idmef_value_t swig_types[23]
-#define SWIGTYPE_p_int swig_types[24]
-#define SWIGTYPE_p_long_long swig_types[25]
-#define SWIGTYPE_p_prelude_client_profile_t swig_types[26]
-#define SWIGTYPE_p_prelude_client_t swig_types[27]
-#define SWIGTYPE_p_prelude_connection_pool_t swig_types[28]
-#define SWIGTYPE_p_prelude_connection_t swig_types[29]
-#define SWIGTYPE_p_short swig_types[30]
-#define SWIGTYPE_p_size_type swig_types[31]
-#define SWIGTYPE_p_std__exception swig_types[32]
-#define SWIGTYPE_p_std__invalid_argument swig_types[33]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[34]
-#define SWIGTYPE_p_time_t swig_types[35]
-#define SWIGTYPE_p_timeval swig_types[36]
-#define SWIGTYPE_p_unsigned_char swig_types[37]
-#define SWIGTYPE_p_unsigned_int swig_types[38]
-#define SWIGTYPE_p_unsigned_long_long swig_types[39]
-#define SWIGTYPE_p_unsigned_short swig_types[40]
-#define SWIGTYPE_p_value_type swig_types[41]
-#define SWIGTYPE_p_void swig_types[42]
-static swig_type_info *swig_types[44];
-static swig_module_info swig_module = {swig_types, 43, 0, 0, 0, 0};
+#define SWIGTYPE_p_SwigPyObject swig_types[14]
+#define SWIGTYPE_p_allocator_type swig_types[15]
+#define SWIGTYPE_p_char swig_types[16]
+#define SWIGTYPE_p_difference_type swig_types[17]
+#define SWIGTYPE_p_f_int_p_q_const__char__void swig_types[18]
+#define SWIGTYPE_p_idmef_criteria_t swig_types[19]
+#define SWIGTYPE_p_idmef_criterion_operator_t swig_types[20]
+#define SWIGTYPE_p_idmef_object_t swig_types[21]
+#define SWIGTYPE_p_idmef_path_t swig_types[22]
+#define SWIGTYPE_p_idmef_time_t swig_types[23]
+#define SWIGTYPE_p_idmef_value_t swig_types[24]
+#define SWIGTYPE_p_int swig_types[25]
+#define SWIGTYPE_p_long_long swig_types[26]
+#define SWIGTYPE_p_prelude_client_profile_t swig_types[27]
+#define SWIGTYPE_p_prelude_client_t swig_types[28]
+#define SWIGTYPE_p_prelude_connection_pool_t swig_types[29]
+#define SWIGTYPE_p_prelude_connection_t swig_types[30]
+#define SWIGTYPE_p_short swig_types[31]
+#define SWIGTYPE_p_size_type swig_types[32]
+#define SWIGTYPE_p_std__exception swig_types[33]
+#define SWIGTYPE_p_std__invalid_argument swig_types[34]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[35]
+#define SWIGTYPE_p_time_t swig_types[36]
+#define SWIGTYPE_p_timeval swig_types[37]
+#define SWIGTYPE_p_unsigned_char swig_types[38]
+#define SWIGTYPE_p_unsigned_int swig_types[39]
+#define SWIGTYPE_p_unsigned_long_long swig_types[40]
+#define SWIGTYPE_p_unsigned_short swig_types[41]
+#define SWIGTYPE_p_value_type swig_types[42]
+#define SWIGTYPE_p_void swig_types[43]
+static swig_type_info *swig_types[45];
+static swig_module_info swig_module = {swig_types, 44, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2997,6 +3515,19 @@ static swig_module_info swig_module = {swig_types, 43, 0, 0, 0, 0};
 #  error "This python version requires swig to be run with the '-classic' option"
 # endif
 #endif
+#if (PY_VERSION_HEX <= 0x02020000)
+# error "This python version requires swig to be run with the '-nomodern' option"
+#endif
+#if (PY_VERSION_HEX <= 0x02020000)
+# error "This python version requires swig to be run with the '-nomodernargs' option"
+#endif
+#ifndef METH_O
+# error "This python version requires swig to be run with the '-nofastunpack' option"
+#endif
+#ifdef SWIG_TypeQuery
+# undef SWIG_TypeQuery
+#endif
+#define SWIG_TypeQuery SWIG_Python_TypeQuery
 
 /*-----------------------------------------------
               @(target):= _prelude.so
@@ -3083,6 +3614,9 @@ namespace swig {
 }
 
 
+#include <stddef.h>
+
+
 #include <string>
 
 
@@ -3103,9 +3637,6 @@ namespace swig {
 #     define SWIG_STD_NOMODERN_STL
 #  endif
 #endif
-
-
-#include <stddef.h>
 
 
 namespace swig {
@@ -3456,6 +3987,8 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <vector>
 
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 #include <list>
 #include <sstream>
 
@@ -3550,6 +4083,24 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 #endif
         return ret;
 }
+
+
+extern "C" {
+SWIGINTERN PyObject *_wrap_IDMEF___contains__(PyObject *self, PyObject *args);
+}
+
+#define MYPY_OBJOBJPROC_CLOSURE(wrapper)                        \
+SWIGINTERN int                                                  \
+wrapper##_closure(PyObject *a, PyObject *b) {                   \
+    PyObject *pyresult;                                         \
+    int result;                                                 \
+    pyresult = wrapper(a, b);                                   \
+    result = pyresult && PyObject_IsTrue(pyresult) ? 1 : 0;     \
+    Py_XDECREF(pyresult);                                       \
+    return result;                                              \
+}
+
+MYPY_OBJOBJPROC_CLOSURE(_wrap_IDMEF___contains__)
 
 
 namespace swig {  
@@ -5298,9 +5849,6 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
         return 1;
 }
 
-SWIGINTERN long Prelude_IDMEFValue___hash__(Prelude::IDMEFValue *self){
-                return self->getType();
-        }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
                 Prelude::IDMEFValue value;
 
@@ -5311,6 +5859,9 @@ SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Pr
                 }
 
                 return value;
+        }
+SWIGINTERN long Prelude_IDMEFTime__getSec2(Prelude::IDMEFTime *self){
+                return self->getSec();
         }
 
 SWIGINTERNINLINE PyObject* 
@@ -5375,6 +5926,12 @@ namespace swig {
 	};
       }
     
+SWIGINTERN Prelude::IDMEFClass Prelude_IDMEFClass__get2(Prelude::IDMEFClass *self,int i){
+                return self->get(i);
+        }
+SWIGINTERN int Prelude_IDMEF___contains__(Prelude::IDMEF *self,char const *key){
+                return self->get(key).isNull() ? FALSE : TRUE;
+        }
 SWIGINTERN void Prelude_IDMEF_write(Prelude::IDMEF *self,void *nocast_file_p){
                 self->_genericWrite(_cb_python_write, nocast_file_p);
         }
@@ -5382,13 +5939,9 @@ SWIGINTERN int Prelude_IDMEF_read(Prelude::IDMEF *self,void *nocast_file_p){
                 self->_genericRead(_cb_python_read, nocast_file_p);
                 return 1;
         }
-SWIGINTERN Prelude::IDMEF &Prelude_IDMEF_operator_Sg__Sg_(Prelude::IDMEF *self,void *nocast_file_p){
-                self->_genericWrite(_cb_python_write, nocast_file_p);
-                return *self;
-        }
-SWIGINTERN Prelude::IDMEF &Prelude_IDMEF_operator_Sl__Sl_(Prelude::IDMEF *self,void *nocast_file_p){
+SWIGINTERN int Prelude_IDMEF_readExcept(Prelude::IDMEF *self,void *nocast_file_p){
                 self->_genericRead(_cb_python_read, nocast_file_p);
-                return *self;
+                return 1;
         }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_get(Prelude::IDMEF *self,char const *path){
                 Prelude::IDMEFValue value;
@@ -5405,15 +5958,15 @@ SWIGINTERN Prelude::IDMEFValue Prelude_IDMEF_get(Prelude::IDMEF *self,char const
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap_delete_SwigPyIterator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_SwigPyIterator(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_SwigPyIterator",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_SwigPyIterator",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SwigPyIterator" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5426,16 +5979,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_value(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_value(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   PyObject *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_value",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"SwigPyIterator_value",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_value" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
@@ -5458,7 +6011,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_incr__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_incr__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   size_t arg2 ;
@@ -5466,17 +6019,15 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator_incr__SWIG_0(PyObject *SWIGUNUSEDPARM(
   int res1 = 0 ;
   size_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator_incr",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_incr" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_size_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator_incr" "', argument " "2"" of type '" "size_t""'");
   } 
@@ -5499,16 +6050,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_incr__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_incr__SWIG_1(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_incr",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_incr" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5534,36 +6084,14 @@ fail:
 SWIGINTERN PyObject *_wrap_SwigPyIterator_incr(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"SwigPyIterator_incr",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_SwigPyIterator_incr__SWIG_1(self, args);
-    }
+    return _wrap_SwigPyIterator_incr__SWIG_1(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_size_t(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_SwigPyIterator_incr__SWIG_0(self, args);
-      }
-    }
+    return _wrap_SwigPyIterator_incr__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -5575,7 +6103,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_decr__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_decr__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   size_t arg2 ;
@@ -5583,17 +6111,15 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator_decr__SWIG_0(PyObject *SWIGUNUSEDPARM(
   int res1 = 0 ;
   size_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator_decr",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_decr" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_size_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator_decr" "', argument " "2"" of type '" "size_t""'");
   } 
@@ -5616,16 +6142,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_decr__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_decr__SWIG_1(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_decr",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_decr" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5651,36 +6176,14 @@ fail:
 SWIGINTERN PyObject *_wrap_SwigPyIterator_decr(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"SwigPyIterator_decr",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_SwigPyIterator_decr__SWIG_1(self, args);
-    }
+    return _wrap_SwigPyIterator_decr__SWIG_1(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_size_t(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_SwigPyIterator_decr__SWIG_0(self, args);
-      }
-    }
+    return _wrap_SwigPyIterator_decr__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -5692,7 +6195,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_distance(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_distance(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   swig::SwigPyIterator *arg2 = 0 ;
@@ -5700,17 +6203,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator_distance(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   ptrdiff_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator_distance",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_distance" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwigPyIterator_distance" "', argument " "2"" of type '" "swig::SwigPyIterator const &""'"); 
   }
@@ -5732,7 +6235,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_equal(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_equal(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   swig::SwigPyIterator *arg2 = 0 ;
@@ -5740,17 +6243,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator_equal(PyObject *SWIGUNUSEDPARM(self), 
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator_equal",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_equal" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwigPyIterator_equal" "', argument " "2"" of type '" "swig::SwigPyIterator const &""'"); 
   }
@@ -5772,16 +6275,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_copy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_copy(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_copy",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"SwigPyIterator_copy",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_copy" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
@@ -5794,16 +6297,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_next(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_next(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   PyObject *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_next",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"SwigPyIterator_next",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_next" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5826,16 +6329,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___next__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___next__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   PyObject *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator___next__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"SwigPyIterator___next__",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___next__" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5858,16 +6361,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_previous(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_ITERNEXT_CLOSURE(_wrap_SwigPyIterator___next__)
+
+SWIGINTERN PyObject *_wrap_SwigPyIterator_previous(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   PyObject *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SwigPyIterator_previous",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"SwigPyIterator_previous",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_previous" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
@@ -5890,7 +6395,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator_advance(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator_advance(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   ptrdiff_t arg2 ;
@@ -5898,17 +6403,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator_advance(PyObject *SWIGUNUSEDPARM(self)
   int res1 = 0 ;
   ptrdiff_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator_advance",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator_advance" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_ptrdiff_t(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator_advance" "', argument " "2"" of type '" "ptrdiff_t""'");
   } 
@@ -5931,7 +6436,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___eq__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   swig::SwigPyIterator *arg2 = 0 ;
@@ -5939,17 +6444,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___eq__(PyObject *SWIGUNUSEDPARM(self),
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___eq__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___eq__" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwigPyIterator___eq__" "', argument " "2"" of type '" "swig::SwigPyIterator const &""'"); 
   }
@@ -5965,7 +6470,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___ne__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___ne__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   swig::SwigPyIterator *arg2 = 0 ;
@@ -5973,17 +6478,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___ne__(PyObject *SWIGUNUSEDPARM(self),
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___ne__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___ne__" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwigPyIterator___ne__" "', argument " "2"" of type '" "swig::SwigPyIterator const &""'"); 
   }
@@ -5999,7 +6504,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___iadd__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___iadd__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   ptrdiff_t arg2 ;
@@ -6007,17 +6512,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___iadd__(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   ptrdiff_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___iadd__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___iadd__" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_ptrdiff_t(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator___iadd__" "', argument " "2"" of type '" "ptrdiff_t""'");
   } 
@@ -6040,7 +6545,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___isub__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___isub__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   ptrdiff_t arg2 ;
@@ -6048,17 +6553,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___isub__(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   ptrdiff_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___isub__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___isub__" "', argument " "1"" of type '" "swig::SwigPyIterator *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_ptrdiff_t(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator___isub__" "', argument " "2"" of type '" "ptrdiff_t""'");
   } 
@@ -6081,7 +6586,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___add__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___add__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   ptrdiff_t arg2 ;
@@ -6089,17 +6594,17 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___add__(PyObject *SWIGUNUSEDPARM(self)
   int res1 = 0 ;
   ptrdiff_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___add__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___add__" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_ptrdiff_t(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator___add__" "', argument " "2"" of type '" "ptrdiff_t""'");
   } 
@@ -6122,7 +6627,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   ptrdiff_t arg2 ;
@@ -6130,17 +6635,15 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_0(PyObject *SWIGUNUSEDPA
   int res1 = 0 ;
   ptrdiff_t val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   swig::SwigPyIterator *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___sub__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___sub__" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  ecode2 = SWIG_AsVal_ptrdiff_t(obj1, &val2);
+  ecode2 = SWIG_AsVal_ptrdiff_t(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SwigPyIterator___sub__" "', argument " "2"" of type '" "ptrdiff_t""'");
   } 
@@ -6163,7 +6666,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   swig::SwigPyIterator *arg1 = (swig::SwigPyIterator *) 0 ;
   swig::SwigPyIterator *arg2 = 0 ;
@@ -6171,17 +6674,15 @@ SWIGINTERN PyObject *_wrap_SwigPyIterator___sub____SWIG_1(PyObject *SWIGUNUSEDPA
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   ptrdiff_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SwigPyIterator___sub__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_swig__SwigPyIterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwigPyIterator___sub__" "', argument " "1"" of type '" "swig::SwigPyIterator const *""'"); 
   }
   arg1 = reinterpret_cast< swig::SwigPyIterator * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_swig__SwigPyIterator,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwigPyIterator___sub__" "', argument " "2"" of type '" "swig::SwigPyIterator const &""'"); 
   }
@@ -6200,40 +6701,22 @@ fail:
 SWIGINTERN PyObject *_wrap_SwigPyIterator___sub__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"SwigPyIterator___sub__",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_swig__SwigPyIterator, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_SwigPyIterator___sub____SWIG_1(self, args);
-      }
     }
+    if (!_v) goto check_1;
+    return _wrap_SwigPyIterator___sub____SWIG_1(self, argc, argv);
   }
+check_1:
+  
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_swig__SwigPyIterator, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_ptrdiff_t(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_SwigPyIterator___sub____SWIG_0(self, args);
-      }
-    }
+    return _wrap_SwigPyIterator___sub____SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -6242,24 +6725,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *SwigPyIterator_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_swig__SwigPyIterator, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_SwigPyIterator___sub__)
 
-SWIGINTERN PyObject *_wrap_checkVersion__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_checkVersion__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:checkVersion",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "checkVersion" "', argument " "1"" of type '" "char const *""'");
   }
@@ -6268,13 +6745,9 @@ SWIGINTERN PyObject *_wrap_checkVersion__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (char *)Prelude::checkVersion((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6287,22 +6760,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_checkVersion__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_checkVersion__SWIG_1(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":checkVersion")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (char *)Prelude::checkVersion();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6316,23 +6785,14 @@ fail:
 SWIGINTERN PyObject *_wrap_checkVersion(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"checkVersion",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_checkVersion__SWIG_1(self, args);
+    return _wrap_checkVersion__SWIG_1(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_checkVersion__SWIG_0(self, args);
-    }
+    return _wrap_checkVersion__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -6344,43 +6804,38 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ClientProfile__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_ClientProfile")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ClientProfile__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::ClientProfile *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_ClientProfile",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ClientProfile" "', argument " "1"" of type '" "char const *""'");
   }
@@ -6389,35 +6844,30 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_1(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ClientProfile__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   prelude_client_profile_t *arg1 = (prelude_client_profile_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::ClientProfile *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_ClientProfile",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_prelude_client_profile_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_prelude_client_profile_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ClientProfile" "', argument " "1"" of type '" "prelude_client_profile_t *""'"); 
   }
@@ -6426,33 +6876,28 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_2(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ClientProfile__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::ClientProfile *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_ClientProfile",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__ClientProfile,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__ClientProfile,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ClientProfile" "', argument " "1"" of type '" "Prelude::ClientProfile const &""'"); 
   }
@@ -6464,60 +6909,53 @@ SWIGINTERN PyObject *_wrap_new_ClientProfile__SWIG_3(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::ClientProfile *)new Prelude::ClientProfile((Prelude::ClientProfile const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientProfile, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ClientProfile(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_ClientProfile(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_ClientProfile",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_ClientProfile__SWIG_0(self, args);
+    return _wrap_new_ClientProfile__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_client_profile_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_ClientProfile__SWIG_2(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_client_profile_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_ClientProfile__SWIG_2(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_ClientProfile__SWIG_3(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__ClientProfile, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_3;
+    return _wrap_new_ClientProfile__SWIG_3(self, argc, argv);
   }
+check_3:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_ClientProfile__SWIG_1(self, args);
-    }
+    return _wrap_new_ClientProfile__SWIG_1(self, argc, argv);
   }
   
 fail:
@@ -6527,19 +6965,19 @@ fail:
     "    Prelude::ClientProfile::ClientProfile(char const *)\n"
     "    Prelude::ClientProfile::ClientProfile(prelude_client_profile_t *)\n"
     "    Prelude::ClientProfile::ClientProfile(Prelude::ClientProfile const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_ClientProfile(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_ClientProfile(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_ClientProfile",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_ClientProfile",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ClientProfile" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6548,13 +6986,9 @@ SWIGINTERN PyObject *_wrap_delete_ClientProfile(PyObject *SWIGUNUSEDPARM(self), 
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6565,16 +6999,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getUid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getUid(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getUid",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getUid",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getUid" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6583,13 +7017,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getUid(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (int)(arg1)->getUid();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6600,16 +7030,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getGid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getGid(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getGid",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getGid",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getGid" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6618,13 +7048,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getGid(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (int)(arg1)->getGid();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6635,16 +7061,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getName(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getName",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getName",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getName" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6653,13 +7079,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getName(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (char *)(arg1)->getName();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6670,7 +7092,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_setName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_setName(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -6679,17 +7101,17 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setName(PyObject *SWIGUNUSEDPARM(self),
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ClientProfile_setName",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_setName" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ClientProfile_setName" "', argument " "2"" of type '" "char const *""'");
   }
@@ -6698,13 +7120,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setName(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (int)(arg1)->setName((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6717,16 +7135,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzerId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzerId(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   uint64_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getAnalyzerId",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getAnalyzerId",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6735,13 +7153,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzerId(PyObject *SWIGUNUSEDPARM(
     try {
       result = (uint64_t)(arg1)->getAnalyzerId();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6752,7 +7166,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_setAnalyzerId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_setAnalyzerId(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   uint64_t arg2 ;
@@ -6760,16 +7174,16 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setAnalyzerId(PyObject *SWIGUNUSEDPARM(
   int res1 = 0 ;
   unsigned long long val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ClientProfile_setAnalyzerId",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_setAnalyzerId" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(obj1, &val2);
+  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ClientProfile_setAnalyzerId" "', argument " "2"" of type '" "uint64_t""'");
   } 
@@ -6778,13 +7192,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setAnalyzerId(PyObject *SWIGUNUSEDPARM(
     try {
       (arg1)->setAnalyzerId(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6795,16 +7205,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getConfigFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getConfigFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getConfigFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getConfigFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getConfigFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6813,13 +7223,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getConfigFilename(PyObject *SWIGUNUSEDP
     try {
       result = (arg1)->getConfigFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6830,16 +7236,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzeridFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzeridFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getAnalyzeridFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getAnalyzeridFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getAnalyzeridFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6848,13 +7254,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getAnalyzeridFilename(PyObject *SWIGUNU
     try {
       result = (arg1)->getAnalyzeridFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6865,16 +7267,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsKeyFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsKeyFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsKeyFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsKeyFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsKeyFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6883,13 +7285,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsKeyFilename(PyObject *SWIGUNUSEDP
     try {
       result = (arg1)->getTlsKeyFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6900,16 +7298,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCaCertFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCaCertFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsServerCaCertFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsServerCaCertFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsServerCaCertFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6918,13 +7316,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCaCertFilename(PyObject *SW
     try {
       result = (arg1)->getTlsServerCaCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6935,16 +7329,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerKeyCertFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerKeyCertFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsServerKeyCertFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsServerKeyCertFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsServerKeyCertFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6953,13 +7347,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerKeyCertFilename(PyObject *S
     try {
       result = (arg1)->getTlsServerKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -6970,16 +7360,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCrlFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCrlFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsServerCrlFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsServerCrlFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsServerCrlFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -6988,13 +7378,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsServerCrlFilename(PyObject *SWIGU
     try {
       result = (arg1)->getTlsServerCrlFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7005,16 +7391,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientKeyCertFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientKeyCertFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsClientKeyCertFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsClientKeyCertFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsClientKeyCertFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -7023,13 +7409,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientKeyCertFilename(PyObject *S
     try {
       result = (arg1)->getTlsClientKeyCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7040,16 +7422,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientTrustedCertFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientTrustedCertFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getTlsClientTrustedCertFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getTlsClientTrustedCertFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getTlsClientTrustedCertFilename" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -7058,13 +7440,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getTlsClientTrustedCertFilename(PyObjec
     try {
       result = (arg1)->getTlsClientTrustedCertFilename();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7075,16 +7453,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getBackupDirname(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getBackupDirname(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getBackupDirname",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getBackupDirname",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getBackupDirname" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -7093,13 +7471,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getBackupDirname(PyObject *SWIGUNUSEDPA
     try {
       result = (arg1)->getBackupDirname();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7110,16 +7484,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getProfileDirname(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getProfileDirname(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getProfileDirname",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getProfileDirname",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getProfileDirname" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -7128,13 +7502,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getProfileDirname(PyObject *SWIGUNUSEDP
     try {
       result = (arg1)->getProfileDirname();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7145,7 +7515,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_setPrefix(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_setPrefix(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -7154,16 +7524,16 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setPrefix(PyObject *SWIGUNUSEDPARM(self
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ClientProfile_setPrefix",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_setPrefix" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ClientProfile_setPrefix" "', argument " "2"" of type '" "char const *""'");
   }
@@ -7172,13 +7542,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_setPrefix(PyObject *SWIGUNUSEDPARM(self
     try {
       (arg1)->setPrefix((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7191,16 +7557,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ClientProfile_getPrefix(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ClientProfile_getPrefix(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = (Prelude::ClientProfile *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ClientProfile_getPrefix",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ClientProfile_getPrefix",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientProfile, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ClientProfile_getPrefix" "', argument " "1"" of type '" "Prelude::ClientProfile *""'"); 
   }
@@ -7209,13 +7575,9 @@ SWIGINTERN PyObject *_wrap_ClientProfile_getPrefix(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (arg1)->getPrefix();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7226,22 +7588,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *ClientProfile_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__ClientProfile, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_Connection(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_Connection(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_Connection",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_Connection",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Connection" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
@@ -7254,13 +7609,9 @@ SWIGINTERN PyObject *_wrap_delete_Connection(PyObject *SWIGUNUSEDPARM(self), PyO
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7271,11 +7622,11 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Connection__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::Connection *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_Connection")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       {
@@ -7284,34 +7635,29 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Connection__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::Connection *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Connection",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Connection" "', argument " "1"" of type '" "char const *""'");
   }
@@ -7324,35 +7670,30 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Connection__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::Connection *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Connection",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__Connection,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__Connection,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Connection" "', argument " "1"" of type '" "Prelude::Connection const &""'"); 
   }
@@ -7368,24 +7709,20 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Connection__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
   bool arg2 ;
@@ -7393,17 +7730,15 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
   int res1 = 0 ;
   bool val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   Prelude::Connection *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_Connection",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_prelude_connection_t, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_prelude_connection_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Connection" "', argument " "1"" of type '" "prelude_connection_t *""'"); 
   }
   arg1 = reinterpret_cast< prelude_connection_t * >(argp1);
-  ecode2 = SWIG_AsVal_bool(obj1, &val2);
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_Connection" "', argument " "2"" of type '" "bool""'");
   } 
@@ -7416,33 +7751,28 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Connection__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::Connection *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Connection",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_prelude_connection_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_prelude_connection_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Connection" "', argument " "1"" of type '" "prelude_connection_t *""'"); 
   }
@@ -7455,75 +7785,56 @@ SWIGINTERN PyObject *_wrap_new_Connection__SWIG_4(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Connection, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Connection(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_Connection(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_Connection",0,2,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_Connection__SWIG_0(self, args);
+    return _wrap_new_Connection__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__Connection, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_Connection__SWIG_2(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__Connection, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_Connection__SWIG_2(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_connection_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_Connection__SWIG_4(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_connection_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_3;
+    return _wrap_new_Connection__SWIG_4(self, argc, argv);
   }
+check_3:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_Connection__SWIG_1(self, args);
-    }
+    return _wrap_new_Connection__SWIG_1(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_connection_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_bool(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_new_Connection__SWIG_3(self, args);
-      }
-    }
+    return _wrap_new_Connection__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -7534,20 +7845,20 @@ fail:
     "    Prelude::Connection::Connection(Prelude::Connection const &)\n"
     "    Prelude::Connection::Connection(prelude_connection_t *,bool)\n"
     "    Prelude::Connection::Connection(prelude_connection_t *)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getConnection(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getConnection(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   prelude_connection_t *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getConnection",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getConnection",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getConnection" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7560,13 +7871,9 @@ SWIGINTERN PyObject *_wrap_Connection_getConnection(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7577,15 +7884,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_close(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_close(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_close",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_close",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_close" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
@@ -7598,13 +7905,9 @@ SWIGINTERN PyObject *_wrap_Connection_close(PyObject *SWIGUNUSEDPARM(self), PyOb
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7615,7 +7918,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   Prelude::ClientProfile *arg2 = 0 ;
@@ -7626,17 +7929,15 @@ SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *SWIGUNUSEDPARM(self), Py
   int res2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
+  PyObject *swig_obj[3] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Connection_connect",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_connect",2,2,swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_connect" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__ClientProfile,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__ClientProfile,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Connection_connect" "', argument " "2"" of type '" "Prelude::ClientProfile &""'"); 
   }
@@ -7644,7 +7945,7 @@ SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *SWIGUNUSEDPARM(self), Py
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Connection_connect" "', argument " "2"" of type '" "Prelude::ClientProfile &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::ClientProfile * >(argp2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_int(swig_obj[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Connection_connect" "', argument " "3"" of type '" "int""'");
   } 
@@ -7657,13 +7958,9 @@ SWIGINTERN PyObject *_wrap_Connection_connect(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7674,7 +7971,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_setState(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_setState(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   int arg2 ;
@@ -7682,16 +7979,16 @@ SWIGINTERN PyObject *_wrap_Connection_setState(PyObject *SWIGUNUSEDPARM(self), P
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Connection_setState",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_setState" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Connection_setState" "', argument " "2"" of type '" "int""'");
   } 
@@ -7704,13 +8001,9 @@ SWIGINTERN PyObject *_wrap_Connection_setState(PyObject *SWIGUNUSEDPARM(self), P
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7721,16 +8014,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getState(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getState(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getState",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getState",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getState" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7743,13 +8036,9 @@ SWIGINTERN PyObject *_wrap_Connection_getState(PyObject *SWIGUNUSEDPARM(self), P
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7760,23 +8049,23 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_setData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_setData(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Connection_setData",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_setData" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0],SWIG_as_voidptrptr(&arg2), 0, 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Connection_setData" "', argument " "2"" of type '" "void *""'"); 
   }
@@ -7788,13 +8077,9 @@ SWIGINTERN PyObject *_wrap_Connection_setData(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7805,16 +8090,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getData(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   void *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getData",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getData",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getData" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7827,13 +8112,9 @@ SWIGINTERN PyObject *_wrap_Connection_getData(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7844,16 +8125,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getPermission(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getPermission(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getPermission",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getPermission",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPermission" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7866,13 +8147,9 @@ SWIGINTERN PyObject *_wrap_Connection_getPermission(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7883,7 +8160,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_setPeerAnalyzerid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_setPeerAnalyzerid(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   uint64_t arg2 ;
@@ -7891,16 +8168,16 @@ SWIGINTERN PyObject *_wrap_Connection_setPeerAnalyzerid(PyObject *SWIGUNUSEDPARM
   int res1 = 0 ;
   unsigned long long val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Connection_setPeerAnalyzerid",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_setPeerAnalyzerid" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Connection * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(obj1, &val2);
+  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Connection_setPeerAnalyzerid" "', argument " "2"" of type '" "uint64_t""'");
   } 
@@ -7913,13 +8190,9 @@ SWIGINTERN PyObject *_wrap_Connection_setPeerAnalyzerid(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7930,16 +8203,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getPeerAnalyzerid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getPeerAnalyzerid(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   uint64_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getPeerAnalyzerid",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getPeerAnalyzerid",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAnalyzerid" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7952,13 +8225,9 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerAnalyzerid(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -7969,16 +8238,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getLocalAddr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getLocalAddr(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getLocalAddr",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getLocalAddr",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalAddr" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -7991,13 +8260,9 @@ SWIGINTERN PyObject *_wrap_Connection_getLocalAddr(PyObject *SWIGUNUSEDPARM(self
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8008,16 +8273,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getLocalPort(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getLocalPort(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   unsigned int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getLocalPort",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getLocalPort",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getLocalPort" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -8030,13 +8295,9 @@ SWIGINTERN PyObject *_wrap_Connection_getLocalPort(PyObject *SWIGUNUSEDPARM(self
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8047,16 +8308,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getPeerAddr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getPeerAddr(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getPeerAddr",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getPeerAddr",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerAddr" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -8069,13 +8330,9 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerAddr(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8086,16 +8343,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getPeerPort(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getPeerPort(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   unsigned int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getPeerPort",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getPeerPort",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getPeerPort" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -8108,13 +8365,9 @@ SWIGINTERN PyObject *_wrap_Connection_getPeerPort(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8125,16 +8378,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_isAlive(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_isAlive(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_isAlive",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_isAlive",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_isAlive" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -8147,13 +8400,9 @@ SWIGINTERN PyObject *_wrap_Connection_isAlive(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8164,16 +8413,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_getFd(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_getFd(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_getFd",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_getFd",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_getFd" "', argument " "1"" of type '" "Prelude::Connection const *""'"); 
   }
@@ -8186,13 +8435,9 @@ SWIGINTERN PyObject *_wrap_Connection_getFd(PyObject *SWIGUNUSEDPARM(self), PyOb
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8203,16 +8448,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Connection_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Connection_recvIDMEF(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Connection *arg1 = (Prelude::Connection *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEF result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Connection_recvIDMEF",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Connection_recvIDMEF",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Connection, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Connection_recvIDMEF" "', argument " "1"" of type '" "Prelude::Connection *""'"); 
   }
@@ -8225,13 +8470,9 @@ SWIGINTERN PyObject *_wrap_Connection_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), 
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8242,22 +8483,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *Connection_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__Connection, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_ConnectionPool(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_ConnectionPool(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_ConnectionPool",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_ConnectionPool",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ConnectionPool" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
@@ -8270,13 +8504,9 @@ SWIGINTERN PyObject *_wrap_delete_ConnectionPool(PyObject *SWIGUNUSEDPARM(self),
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8287,11 +8517,11 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ConnectionPool__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_ConnectionPool")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       {
@@ -8300,33 +8530,28 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_0(PyObject *SWIGUNUSEDPARM(s
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ConnectionPool__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   prelude_connection_pool_t *arg1 = (prelude_connection_pool_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::ConnectionPool *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_ConnectionPool",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_prelude_connection_pool_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_prelude_connection_pool_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ConnectionPool" "', argument " "1"" of type '" "prelude_connection_pool_t *""'"); 
   }
@@ -8339,33 +8564,28 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_1(PyObject *SWIGUNUSEDPARM(s
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ConnectionPool__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::ConnectionPool *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_ConnectionPool",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__ConnectionPool,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__ConnectionPool,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ConnectionPool" "', argument " "1"" of type '" "Prelude::ConnectionPool const &""'"); 
   }
@@ -8381,24 +8601,20 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_2(PyObject *SWIGUNUSEDPARM(s
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_ConnectionPool__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::ClientProfile *arg1 = 0 ;
   int arg2 ;
@@ -8406,12 +8622,10 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_3(PyObject *SWIGUNUSEDPARM(s
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   Prelude::ConnectionPool *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_ConnectionPool",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__ClientProfile,  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__ClientProfile,  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ConnectionPool" "', argument " "1"" of type '" "Prelude::ClientProfile &""'"); 
   }
@@ -8419,7 +8633,7 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_3(PyObject *SWIGUNUSEDPARM(s
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_ConnectionPool" "', argument " "1"" of type '" "Prelude::ClientProfile &""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ClientProfile * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_ConnectionPool" "', argument " "2"" of type '" "int""'");
   } 
@@ -8432,67 +8646,45 @@ SWIGINTERN PyObject *_wrap_new_ConnectionPool__SWIG_3(PyObject *SWIGUNUSEDPARM(s
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ConnectionPool, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_ConnectionPool(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_ConnectionPool(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_ConnectionPool",0,2,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_ConnectionPool__SWIG_0(self, args);
+    return _wrap_new_ConnectionPool__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_connection_pool_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_ConnectionPool__SWIG_1(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_prelude_connection_pool_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_ConnectionPool__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__ConnectionPool, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_ConnectionPool__SWIG_2(self, args);
-    }
+    return _wrap_new_ConnectionPool__SWIG_2(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__ClientProfile, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_int(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_new_ConnectionPool__SWIG_3(self, args);
-      }
-    }
+    return _wrap_new_ConnectionPool__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -8502,19 +8694,19 @@ fail:
     "    Prelude::ConnectionPool::ConnectionPool(prelude_connection_pool_t *)\n"
     "    Prelude::ConnectionPool::ConnectionPool(Prelude::ConnectionPool const &)\n"
     "    Prelude::ConnectionPool::ConnectionPool(Prelude::ClientProfile &,int)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_init(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ConnectionPool_init",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ConnectionPool_init",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_init" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
@@ -8527,13 +8719,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_init(PyObject *SWIGUNUSEDPARM(self), P
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8544,7 +8732,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -8553,16 +8741,16 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionString(PyObject *SWIGUNUS
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setConnectionString",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setConnectionString" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_setConnectionString" "', argument " "2"" of type '" "char const *""'");
   }
@@ -8575,13 +8763,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionString(PyObject *SWIGUNUS
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8594,16 +8778,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ConnectionPool_getConnectionString",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ConnectionPool_getConnectionString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionString" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
   }
@@ -8616,13 +8800,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionString(PyObject *SWIGUNUS
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8633,16 +8813,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionList(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionList(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::vector< Prelude::Connection,std::allocator< Prelude::Connection > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ConnectionPool_getConnectionList",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ConnectionPool_getConnectionList",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getConnectionList" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
   }
@@ -8655,13 +8835,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getConnectionList(PyObject *SWIGUNUSED
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8672,7 +8848,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   int arg2 ;
@@ -8680,16 +8856,16 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setFlags(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setFlags",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setFlags" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ConnectionPool_setFlags" "', argument " "2"" of type '" "int""'");
   } 
@@ -8702,13 +8878,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setFlags(PyObject *SWIGUNUSEDPARM(self
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8719,16 +8891,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_getFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_getFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ConnectionPool_getFlags",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ConnectionPool_getFlags",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getFlags" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
   }
@@ -8741,13 +8913,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getFlags(PyObject *SWIGUNUSEDPARM(self
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8758,23 +8926,23 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setData(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setData",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setData" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2), 0, 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0],SWIG_as_voidptrptr(&arg2), 0, 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_setData" "', argument " "2"" of type '" "void *""'"); 
   }
@@ -8786,13 +8954,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setData(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8803,16 +8967,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_getData(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   void *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ConnectionPool_getData",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"ConnectionPool_getData",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_getData" "', argument " "1"" of type '" "Prelude::ConnectionPool const *""'"); 
   }
@@ -8825,13 +8989,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_getData(PyObject *SWIGUNUSEDPARM(self)
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8842,7 +9002,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_addConnection(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_addConnection(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection arg2 ;
@@ -8850,17 +9010,17 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_addConnection(PyObject *SWIGUNUSEDPARM
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_addConnection",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_addConnection" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__Connection,  0  | 0);
+    res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0  | 0);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_addConnection" "', argument " "2"" of type '" "Prelude::Connection""'"); 
     }  
@@ -8880,13 +9040,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_addConnection(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8897,7 +9053,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_delConnection(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_delConnection(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection arg2 ;
@@ -8905,17 +9061,17 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_delConnection(PyObject *SWIGUNUSEDPARM
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_delConnection",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_delConnection" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__Connection,  0  | 0);
+    res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0  | 0);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_delConnection" "', argument " "2"" of type '" "Prelude::Connection""'"); 
     }  
@@ -8935,13 +9091,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_delConnection(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -8952,7 +9104,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionAlive(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionAlive(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection *arg2 = 0 ;
@@ -8960,16 +9112,16 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionAlive(PyObject *SWIGUNUSE
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setConnectionAlive",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setConnectionAlive" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_setConnectionAlive" "', argument " "2"" of type '" "Prelude::Connection &""'"); 
   }
@@ -8985,13 +9137,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionAlive(PyObject *SWIGUNUSE
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9002,7 +9150,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionDead(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionDead(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   Prelude::Connection *arg2 = 0 ;
@@ -9010,16 +9158,16 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionDead(PyObject *SWIGUNUSED
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setConnectionDead",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setConnectionDead" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__Connection,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConnectionPool_setConnectionDead" "', argument " "2"" of type '" "Prelude::Connection &""'"); 
   }
@@ -9035,13 +9183,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setConnectionDead(PyObject *SWIGUNUSED
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9052,7 +9196,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ConnectionPool_setRequiredPermission(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ConnectionPool_setRequiredPermission(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ConnectionPool *arg1 = (Prelude::ConnectionPool *) 0 ;
   int arg2 ;
@@ -9060,16 +9204,16 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setRequiredPermission(PyObject *SWIGUN
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:ConnectionPool_setRequiredPermission",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ConnectionPool, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConnectionPool_setRequiredPermission" "', argument " "1"" of type '" "Prelude::ConnectionPool *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::ConnectionPool * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ConnectionPool_setRequiredPermission" "', argument " "2"" of type '" "int""'");
   } 
@@ -9082,13 +9226,9 @@ SWIGINTERN PyObject *_wrap_ConnectionPool_setRequiredPermission(PyObject *SWIGUN
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9099,22 +9239,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *ConnectionPool_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__ConnectionPool, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_Client(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_Client(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_Client",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_Client",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Client" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
@@ -9127,13 +9260,9 @@ SWIGINTERN PyObject *_wrap_delete_Client(PyObject *SWIGUNUSEDPARM(self), PyObjec
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9144,17 +9273,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Client__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Client__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::Client *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Client",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Client" "', argument " "1"" of type '" "char const *""'");
   }
@@ -9167,35 +9295,30 @@ SWIGINTERN PyObject *_wrap_new_Client__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Client, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Client, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Client__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_Client__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::Client *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Client",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__Client,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__Client,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Client" "', argument " "1"" of type '" "Prelude::Client const &""'"); 
   }
@@ -9211,48 +9334,38 @@ SWIGINTERN PyObject *_wrap_new_Client__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Client, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__Client, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Client(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_Client(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_Client",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__Client, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_Client__SWIG_1(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__Client, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_1;
+    return _wrap_new_Client__SWIG_1(self, argc, argv);
   }
+check_1:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_Client__SWIG_0(self, args);
-    }
+    return _wrap_new_Client__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -9260,19 +9373,19 @@ fail:
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::Client::Client(char const *)\n"
     "    Prelude::Client::Client(Prelude::Client const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_start(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_start(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_start",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_start",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_start" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
@@ -9285,13 +9398,9 @@ SWIGINTERN PyObject *_wrap_Client_start(PyObject *SWIGUNUSEDPARM(self), PyObject
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9302,15 +9411,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_init(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_init",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_init",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_init" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
@@ -9323,13 +9432,9 @@ SWIGINTERN PyObject *_wrap_Client_init(PyObject *SWIGUNUSEDPARM(self), PyObject 
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9340,16 +9445,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_getClient(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_getClient(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   prelude_client_t *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_getClient",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_getClient",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getClient" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
   }
@@ -9362,13 +9467,9 @@ SWIGINTERN PyObject *_wrap_Client_getClient(PyObject *SWIGUNUSEDPARM(self), PyOb
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9379,7 +9480,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_sendIDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_sendIDMEF(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9387,16 +9488,16 @@ SWIGINTERN PyObject *_wrap_Client_sendIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_sendIDMEF",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_sendIDMEF" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Client_sendIDMEF" "', argument " "2"" of type '" "Prelude::IDMEF const &""'"); 
   }
@@ -9412,13 +9513,9 @@ SWIGINTERN PyObject *_wrap_Client_sendIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9429,7 +9526,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_Client_recvIDMEF(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9440,16 +9537,15 @@ SWIGINTERN PyObject *_wrap_Client_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "idmef",(char *) "timeout", NULL 
+    (char *) "idmef",(char *) "timeout", NULL 
   };
   int result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OO|O:Client_recvIDMEF",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:Client_recvIDMEF",kwnames,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_recvIDMEF" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
@@ -9477,13 +9573,9 @@ SWIGINTERN PyObject *_wrap_Client_recvIDMEF(PyObject *SWIGUNUSEDPARM(self), PyOb
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9494,16 +9586,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_getFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_getFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_getFlags",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_getFlags",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getFlags" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
   }
@@ -9516,13 +9608,9 @@ SWIGINTERN PyObject *_wrap_Client_getFlags(PyObject *SWIGUNUSEDPARM(self), PyObj
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9533,7 +9621,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_setFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   int arg2 ;
@@ -9541,16 +9629,16 @@ SWIGINTERN PyObject *_wrap_Client_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObj
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_setFlags",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_setFlags" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Client_setFlags" "', argument " "2"" of type '" "int""'");
   } 
@@ -9563,13 +9651,9 @@ SWIGINTERN PyObject *_wrap_Client_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObj
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9580,16 +9664,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_getRequiredPermission(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_getRequiredPermission(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_getRequiredPermission",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_getRequiredPermission",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getRequiredPermission" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
   }
@@ -9602,13 +9686,9 @@ SWIGINTERN PyObject *_wrap_Client_getRequiredPermission(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9619,7 +9699,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_setRequiredPermission(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_setRequiredPermission(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   int arg2 ;
@@ -9627,16 +9707,16 @@ SWIGINTERN PyObject *_wrap_Client_setRequiredPermission(PyObject *SWIGUNUSEDPARM
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_setRequiredPermission",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_setRequiredPermission" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Client_setRequiredPermission" "', argument " "2"" of type '" "int""'");
   } 
@@ -9649,13 +9729,9 @@ SWIGINTERN PyObject *_wrap_Client_setRequiredPermission(PyObject *SWIGUNUSEDPARM
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9666,16 +9742,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_getConfigFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_getConfigFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_getConfigFilename",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_getConfigFilename",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getConfigFilename" "', argument " "1"" of type '" "Prelude::Client const *""'"); 
   }
@@ -9688,13 +9764,9 @@ SWIGINTERN PyObject *_wrap_Client_getConfigFilename(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9705,7 +9777,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_setConfigFilename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_setConfigFilename(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -9714,16 +9786,16 @@ SWIGINTERN PyObject *_wrap_Client_setConfigFilename(PyObject *SWIGUNUSEDPARM(sel
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_setConfigFilename",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_setConfigFilename" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Client_setConfigFilename" "', argument " "2"" of type '" "char const *""'");
   }
@@ -9736,13 +9808,9 @@ SWIGINTERN PyObject *_wrap_Client_setConfigFilename(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9755,16 +9823,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_getConnectionPool(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_getConnectionPool(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::ConnectionPool *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Client_getConnectionPool",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_getConnectionPool",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getConnectionPool" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
@@ -9777,13 +9845,9 @@ SWIGINTERN PyObject *_wrap_Client_getConnectionPool(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9794,7 +9858,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_setConnectionPool(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_setConnectionPool(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::ConnectionPool arg2 ;
@@ -9802,17 +9866,17 @@ SWIGINTERN PyObject *_wrap_Client_setConnectionPool(PyObject *SWIGUNUSEDPARM(sel
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_setConnectionPool",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_setConnectionPool" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__ConnectionPool,  0  | 0);
+    res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__ConnectionPool,  0  | 0);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Client_setConnectionPool" "', argument " "2"" of type '" "Prelude::ConnectionPool""'"); 
     }  
@@ -9832,13 +9896,9 @@ SWIGINTERN PyObject *_wrap_Client_setConnectionPool(PyObject *SWIGUNUSEDPARM(sel
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9849,7 +9909,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client___lshift__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client___lshift__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9857,17 +9917,17 @@ SWIGINTERN PyObject *_wrap_Client___lshift__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   Prelude::Client *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client___lshift__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client___lshift__" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Client___lshift__" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -9883,13 +9943,9 @@ SWIGINTERN PyObject *_wrap_Client___lshift__(PyObject *SWIGUNUSEDPARM(self), PyO
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9900,7 +9956,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client___rshift__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client___rshift__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = (Prelude::Client *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9908,17 +9964,17 @@ SWIGINTERN PyObject *_wrap_Client___rshift__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   Prelude::Client *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client___rshift__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__Client, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client___rshift__" "', argument " "1"" of type '" "Prelude::Client *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Client___rshift__" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -9934,13 +9990,9 @@ SWIGINTERN PyObject *_wrap_Client___rshift__(PyObject *SWIGUNUSEDPARM(self), PyO
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -9951,7 +10003,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::Client *arg1 = 0 ;
   int arg2 ;
@@ -9959,12 +10011,11 @@ SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *SWIGUNUSEDPARM(self),
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   Prelude::Client *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Client_setRecvTimeout",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__Client,  0 );
+  if (!SWIG_Python_UnpackTuple(args,"Client_setRecvTimeout",2,2,swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__Client,  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_setRecvTimeout" "', argument " "1"" of type '" "Prelude::Client &""'"); 
   }
@@ -9972,7 +10023,7 @@ SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Client_setRecvTimeout" "', argument " "1"" of type '" "Prelude::Client &""'"); 
   }
   arg1 = reinterpret_cast< Prelude::Client * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Client_setRecvTimeout" "', argument " "2"" of type '" "int""'");
   } 
@@ -9985,13 +10036,9 @@ SWIGINTERN PyObject *_wrap_Client_setRecvTimeout(PyObject *SWIGUNUSEDPARM(self),
         SWIG_PYTHON_THREAD_END_ALLOW;
       }
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10002,22 +10049,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *Client_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__Client, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_PreludeLog_setLevel(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_setLevel(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeLog_setLevel",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "PreludeLog_setLevel" "', argument " "1"" of type '" "int""'");
   } 
@@ -10026,13 +10067,9 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setLevel(PyObject *SWIGUNUSEDPARM(self), P
     try {
       Prelude::PreludeLog::setLevel(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10043,15 +10080,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeLog_setDebugLevel(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_setDebugLevel(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeLog_setDebugLevel",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "PreludeLog_setDebugLevel" "', argument " "1"" of type '" "int""'");
   } 
@@ -10060,13 +10098,9 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setDebugLevel(PyObject *SWIGUNUSEDPARM(sel
     try {
       Prelude::PreludeLog::setDebugLevel(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10077,15 +10111,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeLog_setFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_setFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeLog_setFlags",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "PreludeLog_setFlags" "', argument " "1"" of type '" "int""'");
   } 
@@ -10094,13 +10129,9 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setFlags(PyObject *SWIGUNUSEDPARM(self), P
     try {
       Prelude::PreludeLog::setFlags(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10111,22 +10142,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeLog_getFlags(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_getFlags(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)":PreludeLog_getFlags")) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args,"PreludeLog_getFlags",0,0,0)) SWIG_fail;
   {
     try {
       result = (int)Prelude::PreludeLog::getFlags();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10137,16 +10164,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeLog_setLogfile(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_setLogfile(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeLog_setLogfile",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeLog_setLogfile" "', argument " "1"" of type '" "char const *""'");
   }
@@ -10155,13 +10183,9 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setLogfile(PyObject *SWIGUNUSEDPARM(self),
     try {
       Prelude::PreludeLog::setLogfile((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10174,21 +10198,22 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeLog_setCallback(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeLog_setCallback(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   void (*arg1)(int,char const *) = (void (*)(int,char const *)) 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeLog_setCallback",&obj0)) SWIG_fail;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
   {
-    if ( ! PyCallable_Check(obj0) )
+    if ( ! PyCallable_Check(swig_obj[0]) )
     SWIG_exception_fail(SWIG_ValueError, "Argument is not a callable object");
     
     if ( __prelude_log_func )
     Py_DECREF(__prelude_log_func);
     
-    __prelude_log_func = obj0;
-    Py_INCREF(obj0);
+    __prelude_log_func = swig_obj[0];
+    Py_INCREF(swig_obj[0]);
     
     arg1 = _cb_python_log;
   }
@@ -10196,13 +10221,9 @@ SWIGINTERN PyObject *_wrap_PreludeLog_setCallback(PyObject *SWIGUNUSEDPARM(self)
     try {
       Prelude::PreludeLog::setCallback(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10213,41 +10234,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeLog(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_PreludeLog(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::PreludeLog *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_PreludeLog")) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args,"new_PreludeLog",0,0,0)) SWIG_fail;
   {
     try {
       result = (Prelude::PreludeLog *)new Prelude::PreludeLog();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeLog, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeLog, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_PreludeLog(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_PreludeLog(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::PreludeLog *arg1 = (Prelude::PreludeLog *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_PreludeLog",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeLog, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_PreludeLog",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeLog, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_PreludeLog" "', argument " "1"" of type '" "Prelude::PreludeLog *""'"); 
   }
@@ -10256,13 +10273,9 @@ SWIGINTERN PyObject *_wrap_delete_PreludeLog(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10273,22 +10286,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *PreludeLog_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__PreludeLog, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_PreludeError(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_PreludeError(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_PreludeError",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_PreludeError",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_PreludeError" "', argument " "1"" of type '" "Prelude::PreludeError *""'"); 
   }
@@ -10297,13 +10303,9 @@ SWIGINTERN PyObject *_wrap_delete_PreludeError(PyObject *SWIGUNUSEDPARM(self), P
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10314,42 +10316,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_PreludeError__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::PreludeError *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_PreludeError")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::PreludeError *)new Prelude::PreludeError();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_PreludeError__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::PreludeError *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_PreludeError",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_PreludeError" "', argument " "1"" of type '" "int""'");
   } 
@@ -10358,34 +10355,29 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = (Prelude::PreludeError *)new Prelude::PreludeError(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_PreludeError__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::PreludeError *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_PreludeError",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(obj0, &ptr);
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PreludeError" "', argument " "1"" of type '" "std::string const &""'"); 
     }
@@ -10398,55 +10390,45 @@ SWIGINTERN PyObject *_wrap_new_PreludeError__SWIG_2(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = (Prelude::PreludeError *)new Prelude::PreludeError((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__PreludeError, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_PreludeError(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_PreludeError(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_PreludeError",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_PreludeError__SWIG_0(self, args);
+    return _wrap_new_PreludeError__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_int(argv[0], NULL);
-      _v = SWIG_CheckState(res);
+      {
+        int res = SWIG_AsVal_int(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
     }
-    if (_v) {
-      return _wrap_new_PreludeError__SWIG_1(self, args);
-    }
+    if (!_v) goto check_2;
+    return _wrap_new_PreludeError__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_PreludeError__SWIG_2(self, args);
-    }
+    return _wrap_new_PreludeError__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -10455,20 +10437,20 @@ fail:
     "    Prelude::PreludeError::PreludeError()\n"
     "    Prelude::PreludeError::PreludeError(int)\n"
     "    Prelude::PreludeError::PreludeError(std::string const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeError_getCode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeError_getCode(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeError_getCode",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"PreludeError_getCode",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError_getCode" "', argument " "1"" of type '" "Prelude::PreludeError const *""'"); 
   }
@@ -10477,13 +10459,9 @@ SWIGINTERN PyObject *_wrap_PreludeError_getCode(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (int)((Prelude::PreludeError const *)arg1)->getCode();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10494,16 +10472,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeError_what(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_PreludeError_what(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   char *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeError_what",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"PreludeError_what",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError_what" "', argument " "1"" of type '" "Prelude::PreludeError const *""'"); 
   }
@@ -10512,13 +10490,9 @@ SWIGINTERN PyObject *_wrap_PreludeError_what(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (char *)((Prelude::PreludeError const *)arg1)->what();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10529,84 +10503,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PreludeError___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  char *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeError___str__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError___str__" "', argument " "1"" of type '" "Prelude::PreludeError const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
-  {
-    try {
-      result = (char *)((Prelude::PreludeError const *)arg1)->operator const char*();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_FromCharPtr((const char *)result);
-  return resultobj;
-fail:
-  return NULL;
-}
+SWIGPY_REPRFUNC_CLOSURE(_wrap_PreludeError_what)
 
-
-SWIGINTERN PyObject *_wrap_PreludeError___int__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::PreludeError *arg1 = (Prelude::PreludeError *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:PreludeError___int__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__PreludeError, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PreludeError___int__" "', argument " "1"" of type '" "Prelude::PreludeError const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::PreludeError * >(argp1);
-  {
-    try {
-      result = (int)((Prelude::PreludeError const *)arg1)->operator int();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *PreludeError_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__PreludeError, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_new_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN int _wrap_new_ClientEasy(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int arg2 = (int) Prelude::Client::IDMEF_WRITE ;
@@ -10631,53 +10530,53 @@ SWIGINTERN PyObject *_wrap_new_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyObje
   int res6 ;
   char *buf6 = 0 ;
   int alloc6 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   char *  kwnames[] = {
     (char *) "profile",(char *) "permission",(char *) "model",(char *) "classname",(char *) "manufacturer",(char *) "version", NULL 
   };
   Prelude::ClientEasy *result = 0 ;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|OOOOO:new_ClientEasy",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|OOOOO:new_ClientEasy",kwnames,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(obj1, &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ClientEasy" "', argument " "1"" of type '" "char const *""'");
   }
   arg1 = reinterpret_cast< char * >(buf1);
-  if (obj1) {
-    ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (obj2) {
+    ecode2 = SWIG_AsVal_int(obj2, &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_ClientEasy" "', argument " "2"" of type '" "int""'");
     } 
     arg2 = static_cast< int >(val2);
   }
-  if (obj2) {
-    res3 = SWIG_AsCharPtrAndSize(obj2, &buf3, NULL, &alloc3);
+  if (obj3) {
+    res3 = SWIG_AsCharPtrAndSize(obj3, &buf3, NULL, &alloc3);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_ClientEasy" "', argument " "3"" of type '" "char const *""'");
     }
     arg3 = reinterpret_cast< char * >(buf3);
   }
-  if (obj3) {
-    res4 = SWIG_AsCharPtrAndSize(obj3, &buf4, NULL, &alloc4);
+  if (obj4) {
+    res4 = SWIG_AsCharPtrAndSize(obj4, &buf4, NULL, &alloc4);
     if (!SWIG_IsOK(res4)) {
       SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "new_ClientEasy" "', argument " "4"" of type '" "char const *""'");
     }
     arg4 = reinterpret_cast< char * >(buf4);
   }
-  if (obj4) {
-    res5 = SWIG_AsCharPtrAndSize(obj4, &buf5, NULL, &alloc5);
+  if (obj5) {
+    res5 = SWIG_AsCharPtrAndSize(obj5, &buf5, NULL, &alloc5);
     if (!SWIG_IsOK(res5)) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "new_ClientEasy" "', argument " "5"" of type '" "char const *""'");
     }
     arg5 = reinterpret_cast< char * >(buf5);
   }
-  if (obj5) {
-    res6 = SWIG_AsCharPtrAndSize(obj5, &buf6, NULL, &alloc6);
+  if (obj6) {
+    res6 = SWIG_AsCharPtrAndSize(obj6, &buf6, NULL, &alloc6);
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "new_ClientEasy" "', argument " "6"" of type '" "char const *""'");
     }
@@ -10687,42 +10586,38 @@ SWIGINTERN PyObject *_wrap_new_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = (Prelude::ClientEasy *)new Prelude::ClientEasy((char const *)arg1,arg2,(char const *)arg3,(char const *)arg4,(char const *)arg5,(char const *)arg6);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientEasy, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__ClientEasy, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
   if (alloc3 == SWIG_NEWOBJ) delete[] buf3;
   if (alloc4 == SWIG_NEWOBJ) delete[] buf4;
   if (alloc5 == SWIG_NEWOBJ) delete[] buf5;
   if (alloc6 == SWIG_NEWOBJ) delete[] buf6;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
   if (alloc3 == SWIG_NEWOBJ) delete[] buf3;
   if (alloc4 == SWIG_NEWOBJ) delete[] buf4;
   if (alloc5 == SWIG_NEWOBJ) delete[] buf5;
   if (alloc6 == SWIG_NEWOBJ) delete[] buf6;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_ClientEasy(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::ClientEasy *arg1 = (Prelude::ClientEasy *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_ClientEasy",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__ClientEasy, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_ClientEasy",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__ClientEasy, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ClientEasy" "', argument " "1"" of type '" "Prelude::ClientEasy *""'"); 
   }
@@ -10731,13 +10626,9 @@ SWIGINTERN PyObject *_wrap_delete_ClientEasy(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10748,48 +10639,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *ClientEasy_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__ClientEasy, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_new_IDMEFCriterion(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriterion(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriterion *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEFCriterion")) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args,"new_IDMEFCriterion",0,0,0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEFCriterion *)new Prelude::IDMEFCriterion();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriterion, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriterion, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_IDMEFCriterion(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEFCriterion(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriterion *arg1 = (Prelude::IDMEFCriterion *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFCriterion",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriterion, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFCriterion",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriterion, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFCriterion" "', argument " "1"" of type '" "Prelude::IDMEFCriterion *""'"); 
   }
@@ -10798,13 +10678,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFCriterion(PyObject *SWIGUNUSEDPARM(self),
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10815,22 +10691,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *IDMEFCriterion_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFCriterion, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_IDMEFCriteria(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEFCriteria(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFCriteria",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFCriteria",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFCriteria" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
   }
@@ -10839,13 +10708,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFCriteria(PyObject *SWIGUNUSEDPARM(self), 
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -10856,42 +10721,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEFCriteria")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFCriteria *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFCriteria",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFCriteria" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const &""'"); 
   }
@@ -10903,34 +10763,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_1(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((Prelude::IDMEFCriteria const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFCriteria *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFCriteria",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFCriteria" "', argument " "1"" of type '" "char const *""'");
   }
@@ -10939,36 +10794,31 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_2(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFCriteria *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFCriteria",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(obj0, &ptr);
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFCriteria" "', argument " "1"" of type '" "std::string const &""'"); 
     }
@@ -10981,35 +10831,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_3(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFCriteria *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFCriteria",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_idmef_criteria_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_idmef_criteria_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFCriteria" "', argument " "1"" of type '" "idmef_criteria_t *""'"); 
   }
@@ -11018,68 +10863,64 @@ SWIGINTERN PyObject *_wrap_new_IDMEFCriteria__SWIG_4(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (Prelude::IDMEFCriteria *)new Prelude::IDMEFCriteria(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFCriteria(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFCriteria(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEFCriteria",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_IDMEFCriteria__SWIG_0(self, args);
+    return _wrap_new_IDMEFCriteria__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFCriteria, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFCriteria__SWIG_1(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFCriteria, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEFCriteria__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_criteria_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFCriteria__SWIG_4(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_criteria_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_3;
+    return _wrap_new_IDMEFCriteria__SWIG_4(self, argc, argv);
   }
+check_3:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFCriteria__SWIG_3(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_4;
+    return _wrap_new_IDMEFCriteria__SWIG_3(self, argc, argv);
   }
+check_4:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFCriteria__SWIG_2(self, args);
-    }
+    return _wrap_new_IDMEFCriteria__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -11090,11 +10931,11 @@ fail:
     "    Prelude::IDMEFCriteria::IDMEFCriteria(char const *)\n"
     "    Prelude::IDMEFCriteria::IDMEFCriteria(std::string const &)\n"
     "    Prelude::IDMEFCriteria::IDMEFCriteria(idmef_criteria_t *)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria_match(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFCriteria_match(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
@@ -11102,17 +10943,17 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_match(PyObject *SWIGUNUSEDPARM(self), P
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFCriteria_match",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_match" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFCriteria_match" "', argument " "2"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -11121,13 +10962,9 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_match(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (int)((Prelude::IDMEFCriteria const *)arg1)->match(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11138,16 +10975,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria_clone(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFCriteria_clone(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEFCriteria result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFCriteria_clone",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFCriteria_clone",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_clone" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
   }
@@ -11156,13 +10993,9 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_clone(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((Prelude::IDMEFCriteria const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11173,7 +11006,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria_andCriteria(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFCriteria_andCriteria(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEFCriteria *arg2 = 0 ;
@@ -11181,16 +11014,16 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_andCriteria(PyObject *SWIGUNUSEDPARM(se
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFCriteria_andCriteria",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_andCriteria" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFCriteria_andCriteria" "', argument " "2"" of type '" "Prelude::IDMEFCriteria const &""'"); 
   }
@@ -11202,13 +11035,9 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_andCriteria(PyObject *SWIGUNUSEDPARM(se
     try {
       (arg1)->andCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11219,7 +11048,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria_orCriteria(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFCriteria_orCriteria(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   Prelude::IDMEFCriteria *arg2 = 0 ;
@@ -11227,16 +11056,16 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_orCriteria(PyObject *SWIGUNUSEDPARM(sel
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFCriteria_orCriteria",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_orCriteria" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFCriteria,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFCriteria_orCriteria" "', argument " "2"" of type '" "Prelude::IDMEFCriteria const &""'"); 
   }
@@ -11248,13 +11077,9 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_orCriteria(PyObject *SWIGUNUSEDPARM(sel
     try {
       (arg1)->orCriteria((Prelude::IDMEFCriteria const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11265,16 +11090,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria_toString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFCriteria_toString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFCriteria_toString",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFCriteria_toString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria_toString" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
   }
@@ -11283,13 +11108,9 @@ SWIGINTERN PyObject *_wrap_IDMEFCriteria_toString(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = ((Prelude::IDMEFCriteria const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11300,58 +11121,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFCriteria___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  std::string result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFCriteria___str__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria___str__" "', argument " "1"" of type '" "Prelude::IDMEFCriteria const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
-  {
-    try {
-      result = ((Prelude::IDMEFCriteria const *)arg1)->operator const std::string();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFCriteria_toString)
 
-
-SWIGINTERN PyObject *IDMEFCriteria_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFCriteria, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_IDMEFValue_getType(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue_getType(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEFValue::IDMEFValueTypeEnum result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFValue_getType",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFValue_getType",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_getType" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
@@ -11360,13 +11141,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_getType(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFValue const *)arg1)->getType();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11377,16 +11154,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue_isNull(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue_isNull(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFValue_isNull",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFValue_isNull",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_isNull" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
@@ -11395,13 +11172,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_isNull(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->isNull();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11412,41 +11185,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEFValue")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_IDMEFValue(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEFValue(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFValue",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFValue",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFValue" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
   }
@@ -11455,13 +11224,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFValue(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -11472,16 +11237,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -11490,34 +11254,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
-    res1 = swig::asptr(obj0, &ptr);
+    res1 = swig::asptr(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &""'"); 
     }
@@ -11530,35 +11289,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -11570,34 +11324,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((Prelude::IDMEFValue const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
-    res1 = swig::asptr(obj0, &ptr);
+    res1 = swig::asptr(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &""'"); 
     }
@@ -11610,35 +11359,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_4(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_5(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_value_t *arg1 = (idmef_value_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_idmef_value_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_idmef_value_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "idmef_value_t *""'"); 
   }
@@ -11647,34 +11391,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_5(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_6(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(obj0, &ptr);
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::string const &""'"); 
     }
@@ -11687,35 +11426,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_6(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_7(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int8_t arg1 ;
   char val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_char(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_char(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int8_t""'");
   } 
@@ -11724,33 +11458,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_7(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   uint8_t arg1 ;
   unsigned char val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_char(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_char(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint8_t""'");
   } 
@@ -11759,33 +11488,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_8(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int16_t arg1 ;
   short val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_short(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_short(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int16_t""'");
   } 
@@ -11794,33 +11518,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_9(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   uint16_t arg1 ;
   unsigned short val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_short(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_short(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint16_t""'");
   } 
@@ -11829,33 +11548,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_10(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int32_t arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int32_t""'");
   } 
@@ -11864,33 +11578,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_11(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_12(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_12(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   uint32_t arg1 ;
   unsigned int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_int(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint32_t""'");
   } 
@@ -11899,33 +11608,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_12(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_13(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_13(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int64_t arg1 ;
   long long val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_long_SS_long(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_long_SS_long(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int64_t""'");
   } 
@@ -11934,33 +11638,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_13(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_14(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_14(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   uint64_t arg1 ;
   unsigned long long val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_long_SS_long(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint64_t""'");
   } 
@@ -11969,33 +11668,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_14(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_15(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_15(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   float arg1 ;
   float val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "float""'");
   } 
@@ -12004,33 +11698,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_15(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_16(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_16(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_double(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "double""'");
   } 
@@ -12039,33 +11728,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_16(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_17(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_17(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFValue",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "Prelude::IDMEFTime &""'"); 
   }
@@ -12077,194 +11761,229 @@ SWIGINTERN PyObject *_wrap_new_IDMEFValue__SWIG_17(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFValue(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEFValue",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_IDMEFValue__SWIG_0(self, args);
+    return _wrap_new_IDMEFValue__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_1(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFValue, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_3(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_value_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_5(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_17(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_unsigned_SS_char(argv[0], NULL);
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_8(self, args);
-    }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEFValue__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_unsigned_SS_short(argv[0], NULL);
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFValue, 0);
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_10(self, args);
-    }
+    if (!_v) goto check_3;
+    return _wrap_new_IDMEFValue__SWIG_3(self, argc, argv);
   }
+check_3:
+  
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_short(argv[0], NULL);
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_value_t, 0);
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_9(self, args);
-    }
+    if (!_v) goto check_4;
+    return _wrap_new_IDMEFValue__SWIG_5(self, argc, argv);
   }
+check_4:
+  
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_unsigned_SS_int(argv[0], NULL);
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_12(self, args);
-    }
+    if (!_v) goto check_5;
+    return _wrap_new_IDMEFValue__SWIG_17(self, argc, argv);
   }
+check_5:
+  
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_int(argv[0], NULL);
+      {
+        int res = SWIG_AsVal_unsigned_SS_char(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_6;
+    return _wrap_new_IDMEFValue__SWIG_8(self, argc, argv);
+  }
+check_6:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_short(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_7;
+    return _wrap_new_IDMEFValue__SWIG_10(self, argc, argv);
+  }
+check_7:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_short(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_8;
+    return _wrap_new_IDMEFValue__SWIG_9(self, argc, argv);
+  }
+check_8:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_9;
+    return _wrap_new_IDMEFValue__SWIG_12(self, argc, argv);
+  }
+check_9:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_10;
+    return _wrap_new_IDMEFValue__SWIG_11(self, argc, argv);
+  }
+check_10:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_11;
+    return _wrap_new_IDMEFValue__SWIG_14(self, argc, argv);
+  }
+check_11:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_long_SS_long(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_12;
+    return _wrap_new_IDMEFValue__SWIG_13(self, argc, argv);
+  }
+check_12:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_float(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_13;
+    return _wrap_new_IDMEFValue__SWIG_15(self, argc, argv);
+  }
+check_13:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    return _wrap_new_IDMEFValue__SWIG_16(self, argc, argv);
+  }
+check_14:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_char(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_15;
+    return _wrap_new_IDMEFValue__SWIG_7(self, argc, argv);
+  }
+check_15:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_11(self, args);
-    }
+    if (!_v) goto check_16;
+    return _wrap_new_IDMEFValue__SWIG_6(self, argc, argv);
   }
+check_16:
+  
   if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], NULL);
+      int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_14(self, args);
-    }
+    if (!_v) goto check_17;
+    return _wrap_new_IDMEFValue__SWIG_4(self, argc, argv);
   }
+check_17:
+  
   if (argc == 1) {
-    int _v;
-    {
-      int res = SWIG_AsVal_long_SS_long(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_13(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      int res = SWIG_AsVal_float(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_15(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      int res = SWIG_AsVal_double(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_16(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      int res = SWIG_AsVal_char(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_7(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_6(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_4(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_2(self, args);
-    }
+    return _wrap_new_IDMEFValue__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -12288,11 +12007,11 @@ fail:
     "    Prelude::IDMEFValue::IDMEFValue(float)\n"
     "    Prelude::IDMEFValue::IDMEFValue(double)\n"
     "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEFTime &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12303,18 +12022,16 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
+  PyObject *swig_obj[3] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFValue_match",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFValue_match",2,2,swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_match" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue_match" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12322,7 +12039,7 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *SWIGUNUSEDPARM(self), PyOb
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFValue_match" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEFValue * >(argp2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_int(swig_obj[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFValue_match" "', argument " "3"" of type '" "int""'");
   } 
@@ -12331,13 +12048,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_match(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (int)((Prelude::IDMEFValue const *)arg1)->match((Prelude::IDMEFValue const &)*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12348,16 +12061,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue_clone(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue_clone(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEFValue result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFValue_clone",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFValue_clone",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_clone" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
@@ -12366,13 +12079,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_clone(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((Prelude::IDMEFValue const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12383,12 +12092,15 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_clone(PyObject *SWIGUNUSEDPARM(self), PyOb
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(NULL, result, NULL, &resultobj);
+      ret = IDMEFValue_to_SWIG(self, result, NULL, &resultobj);
+      
+      
       
       if ( ret < 0 ) {
-        std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
-        SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
+        std::string s = "IDMEFValue typemap does not handle value of type '";
+        s += idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType());
+        s += "'";
+        SWIG_exception_fail(SWIG_ValueError, s.c_str());
       }
     }
   }
@@ -12398,16 +12110,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue_toString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue_toString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFValue_toString",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFValue_toString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue_toString" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
@@ -12416,13 +12128,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue_toString(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((Prelude::IDMEFValue const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12433,26 +12141,26 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFValue_toString)
+
+SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___eq__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
-    res2 = swig::asptr(obj1, &ptr);
+    res2 = swig::asptr(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___eq__" "', argument " "2"" of type '" "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &""'"); 
     }
@@ -12465,13 +12173,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_0(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12484,7 +12188,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___le__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___le__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12492,17 +12196,17 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___le__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___le__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___le__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___le__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12514,13 +12218,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___le__(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12531,7 +12231,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___ge__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___ge__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12539,17 +12239,17 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ge__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___ge__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ge__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___ge__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12561,13 +12261,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ge__(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12578,7 +12274,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___lt__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___lt__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12586,17 +12282,17 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___lt__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___lt__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___lt__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___lt__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12608,13 +12304,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___lt__(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator <((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12625,7 +12317,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___gt__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___gt__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12633,17 +12325,17 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___gt__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___gt__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___gt__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___gt__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12655,13 +12347,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___gt__(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator >((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12672,7 +12360,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12680,17 +12368,15 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_1(PyObject *SWIGUNUSEDPARM(se
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___eq__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___eq__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___eq__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12702,13 +12388,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___eq____SWIG_1(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator ==((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12722,38 +12404,22 @@ fail:
 SWIGINTERN PyObject *_wrap_IDMEFValue___eq__(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"IDMEFValue___eq__",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_Prelude__IDMEFValue, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFValue___eq____SWIG_1(self, args);
-      }
     }
+    if (!_v) goto check_1;
+    return _wrap_IDMEFValue___eq____SWIG_1(self, argc, argv);
   }
+check_1:
+  
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = swig::asptr(argv[1], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFValue___eq____SWIG_0(self, args);
-      }
-    }
+    return _wrap_IDMEFValue___eq____SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -12762,7 +12428,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___ne__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFValue___ne__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
   Prelude::IDMEFValue *arg2 = 0 ;
@@ -12770,17 +12436,17 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ne__(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFValue___ne__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___ne__" "', argument " "1"" of type '" "Prelude::IDMEFValue const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFValue,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFValue___ne__" "', argument " "2"" of type '" "Prelude::IDMEFValue const &""'"); 
   }
@@ -12792,13 +12458,9 @@ SWIGINTERN PyObject *_wrap_IDMEFValue___ne__(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)((Prelude::IDMEFValue const *)arg1)->operator !=((Prelude::IDMEFValue const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -12809,59 +12471,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFValue___hash__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFValue *arg1 = (Prelude::IDMEFValue *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  long result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFValue___hash__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFValue___hash__" "', argument " "1"" of type '" "Prelude::IDMEFValue *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFValue * >(argp1);
-  {
-    try {
-      result = (long)Prelude_IDMEFValue___hash__(arg1);
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_long(static_cast< long >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *IDMEFValue_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFValue, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFPath__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFPath *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFPath",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "char const *""'");
   }
@@ -12870,26 +12489,22 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFPath__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = 0 ;
   char *arg2 = (char *) 0 ;
@@ -12898,12 +12513,10 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   Prelude::IDMEFPath *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_IDMEFPath",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -12911,7 +12524,7 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_IDMEFPath" "', argument " "2"" of type '" "char const *""'");
   }
@@ -12920,35 +12533,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(*arg1,(char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_BUILTIN_INIT |  0 );
   if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFPath__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_path_t *arg1 = (idmef_path_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFPath *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFPath",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_idmef_path_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_idmef_path_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "idmef_path_t *""'"); 
   }
@@ -12957,33 +12565,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFPath__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFPath *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFPath",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFPath,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFPath,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEFPath const &""'"); 
   }
@@ -12995,70 +12598,53 @@ SWIGINTERN PyObject *_wrap_new_IDMEFPath__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFPath *)new Prelude::IDMEFPath((Prelude::IDMEFPath const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFPath, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFPath(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFPath(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEFPath",0,2,argv))) SWIG_fail;
+  --argc;
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_path_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_2(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_path_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_1;
+    return _wrap_new_IDMEFPath__SWIG_2(self, argc, argv);
   }
+check_1:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_3(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEFPath__SWIG_3(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFPath__SWIG_0(self, args);
-    }
+    return _wrap_new_IDMEFPath__SWIG_0(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_new_IDMEFPath__SWIG_1(self, args);
-      }
-    }
+    return _wrap_new_IDMEFPath__SWIG_1(self, argc, argv);
   }
   
 fail:
@@ -13068,19 +12654,19 @@ fail:
     "    Prelude::IDMEFPath::IDMEFPath(Prelude::IDMEF &,char const *)\n"
     "    Prelude::IDMEFPath::IDMEFPath(idmef_path_t *)\n"
     "    Prelude::IDMEFPath::IDMEFPath(Prelude::IDMEFPath const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_IDMEFPath(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEFPath(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFPath",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFPath",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFPath" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
@@ -13089,13 +12675,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFPath(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13106,7 +12688,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13116,17 +12698,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   void *argp2 = 0 ;
   int res2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13136,7 +12715,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
-    res3 = swig::asptr(obj2, &ptr);
+    res3 = swig::asptr(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &""'"); 
     }
@@ -13149,13 +12728,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13168,7 +12743,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13179,17 +12754,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13197,7 +12769,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -13206,13 +12778,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13223,7 +12791,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13233,17 +12801,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
   void *argp2 = 0 ;
   int res2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13253,7 +12818,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
-    res3 = swig::asptr(obj2, &ptr);
+    res3 = swig::asptr(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &""'"); 
     }
@@ -13266,13 +12831,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13285,7 +12846,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13296,17 +12857,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13314,7 +12872,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFValue *""'"); 
   }
@@ -13323,13 +12881,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13340,7 +12894,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13351,17 +12905,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13369,7 +12920,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
   }
@@ -13381,13 +12932,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13398,7 +12945,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13408,17 +12955,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
   void *argp2 = 0 ;
   int res2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13428,7 +12972,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
   {
     std::string *ptr = (std::string *)0;
-    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    res3 = SWIG_AsPtr_std_string(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "std::string const &""'"); 
     }
@@ -13441,13 +12985,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,(std::string const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13460,7 +13000,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13471,17 +13011,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13489,7 +13026,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int32_t""'");
   } 
@@ -13498,13 +13035,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13515,7 +13048,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13526,17 +13059,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   unsigned int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13544,7 +13074,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint32_t""'");
   } 
@@ -13553,13 +13083,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13570,7 +13096,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13581,17 +13107,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   long long val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13599,7 +13122,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_long_SS_long(obj2, &val3);
+  ecode3 = SWIG_AsVal_long_SS_long(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "int64_t""'");
   } 
@@ -13608,13 +13131,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13625,7 +13144,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13636,17 +13155,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self),
   int res2 = 0 ;
   unsigned long long val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13654,7 +13170,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(obj2, &val3);
+  ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint64_t""'");
   } 
@@ -13663,13 +13179,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self),
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13680,7 +13192,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13691,17 +13203,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self)
   int res2 = 0 ;
   float val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13709,7 +13218,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self)
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  ecode3 = SWIG_AsVal_float(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "float""'");
   } 
@@ -13718,13 +13227,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self)
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13735,7 +13240,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13746,17 +13251,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self)
   int res2 = 0 ;
   double val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -13764,7 +13266,7 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self)
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
   arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "double""'");
   } 
@@ -13773,13 +13275,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self)
     try {
       ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -13793,243 +13291,147 @@ fail:
 SWIGINTERN PyObject *_wrap_IDMEFPath_set(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 3) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"IDMEFPath_set",0,3,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+    }
+    if (!_v) goto check_1;
+    return _wrap_IDMEFPath_set__SWIG_1(self, argc, argv);
+  }
+check_1:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_2;
+    return _wrap_IDMEFPath_set__SWIG_3(self, argc, argv);
+  }
+check_2:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
+    return _wrap_IDMEFPath_set__SWIG_4(self, argc, argv);
+  }
+check_3:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_1(self, args);
-        }
       }
     }
+    if (!_v) goto check_4;
+    return _wrap_IDMEFPath_set__SWIG_7(self, argc, argv);
   }
+check_4:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_3(self, args);
-        }
       }
     }
+    if (!_v) goto check_5;
+    return _wrap_IDMEFPath_set__SWIG_6(self, argc, argv);
   }
+check_5:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_4(self, args);
-        }
       }
     }
+    if (!_v) goto check_6;
+    return _wrap_IDMEFPath_set__SWIG_9(self, argc, argv);
   }
+check_6:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_7(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_int(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_6(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_9(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_long_SS_long(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_8(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_float(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_10(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_double(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_11(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_long_SS_long(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_5(self, args);
-        }
       }
     }
+    if (!_v) goto check_7;
+    return _wrap_IDMEFPath_set__SWIG_8(self, argc, argv);
   }
+check_7:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_float(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_2(self, args);
-        }
       }
     }
+    if (!_v) goto check_8;
+    return _wrap_IDMEFPath_set__SWIG_10(self, argc, argv);
   }
+check_8:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_0(self, args);
-        }
       }
     }
+    if (!_v) goto check_9;
+    return _wrap_IDMEFPath_set__SWIG_11(self, argc, argv);
+  }
+check_9:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_10;
+    return _wrap_IDMEFPath_set__SWIG_5(self, argc, argv);
+  }
+check_10:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_11;
+    return _wrap_IDMEFPath_set__SWIG_2(self, argc, argv);
+  }
+check_11:
+  
+  if (argc == 3) {
+    return _wrap_IDMEFPath_set__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -14051,7 +13453,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getClass(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGPY_OBJOBJARGPROC_CLOSURE(_wrap_IDMEFPath_set)
+
+SWIGINTERN PyObject *_wrap_IDMEFPath_getClass(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14059,15 +13463,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getClass(PyObject *SWIGUNUSEDPARM(self), Py
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   Prelude::IDMEFClass result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_getClass",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_getClass",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getClass" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14083,13 +13486,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getClass(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = ((Prelude::IDMEFPath const *)arg1)->getClass(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14100,7 +13499,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getValueType(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_getValueType(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14108,15 +13507,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getValueType(PyObject *SWIGUNUSEDPARM(self)
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   Prelude::IDMEFValue::IDMEFValueTypeEnum result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_getValueType",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_getValueType",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14132,13 +13530,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getValueType(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)((Prelude::IDMEFPath const *)arg1)->getValueType(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14149,7 +13543,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_setIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_setIndex(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   unsigned int arg2 ;
@@ -14160,16 +13554,15 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_setIndex(PyObject *SWIGUNUSEDPARM(self), Py
   int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "index",(char *) "depth", NULL 
+    (char *) "index",(char *) "depth", NULL 
   };
   int result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OO|O:IDMEFPath_setIndex",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_setIndex",kwnames,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_setIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
@@ -14190,13 +13583,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_setIndex(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (int)(arg1)->setIndex(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14207,7 +13596,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_undefineIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_undefineIndex(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14215,15 +13604,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_undefineIndex(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   int result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_undefineIndex",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_undefineIndex",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_undefineIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
@@ -14239,13 +13627,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_undefineIndex(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (int)(arg1)->undefineIndex(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14256,7 +13640,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_getIndex(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14264,15 +13648,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getIndex(PyObject *SWIGUNUSEDPARM(self), Py
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   int result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_getIndex",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_getIndex",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getIndex" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14288,13 +13671,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getIndex(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (int)((Prelude::IDMEFPath const *)arg1)->getIndex(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14305,7 +13684,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_makeChild(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_makeChild(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -14317,23 +13696,21 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_makeChild(PyObject *SWIGUNUSEDPARM(self), P
   int alloc2 = 0 ;
   unsigned int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
+  PyObject *swig_obj[3] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEFPath_makeChild",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_makeChild",2,2,swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_makeChild" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_makeChild" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(swig_obj[1], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_makeChild" "', argument " "3"" of type '" "unsigned int""'");
   } 
@@ -14342,13 +13719,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_makeChild(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (int)(arg1)->makeChild((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14361,16 +13734,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_makeParent(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_makeParent(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_makeParent",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_makeParent",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_makeParent" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
@@ -14379,13 +13752,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_makeParent(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (int)(arg1)->makeParent();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14396,7 +13765,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_compare(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_compare(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
@@ -14407,16 +13776,15 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_compare(PyObject *SWIGUNUSEDPARM(self), PyO
   int res2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "path",(char *) "depth", NULL 
+    (char *) "path",(char *) "depth", NULL 
   };
   int result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OO|O:IDMEFPath_compare",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_compare",kwnames,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_compare" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14437,13 +13805,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_compare(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (int)((Prelude::IDMEFPath const *)arg1)->compare(arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14454,16 +13818,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_clone(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_clone(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   SwigValueWrapper< Prelude::IDMEFPath > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_clone",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_clone",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_clone" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14472,13 +13836,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_clone(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = ((Prelude::IDMEFPath const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14489,7 +13849,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_checkOperator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_checkOperator(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   idmef_criterion_operator_t arg2 ;
@@ -14497,18 +13857,18 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_checkOperator(PyObject *SWIGUNUSEDPARM(self
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFPath_checkOperator",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_checkOperator" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_idmef_criterion_operator_t,  0  | 0);
+    res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_idmef_criterion_operator_t,  0  | 0);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_checkOperator" "', argument " "2"" of type '" "idmef_criterion_operator_t""'"); 
     }  
@@ -14524,13 +13884,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_checkOperator(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (int)((Prelude::IDMEFPath const *)arg1)->checkOperator(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14541,16 +13897,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getApplicableOperators(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_getApplicableOperators(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   idmef_criterion_operator_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_getApplicableOperators",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_getApplicableOperators",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getApplicableOperators" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14559,13 +13915,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getApplicableOperators(PyObject *SWIGUNUSED
     try {
       result = ((Prelude::IDMEFPath const *)arg1)->getApplicableOperators();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14576,7 +13928,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getName(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_getName(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14584,15 +13936,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getName(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   char *result = 0 ;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_getName",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_getName",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getName" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14608,13 +13959,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getName(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (char *)((Prelude::IDMEFPath const *)arg1)->getName(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14625,16 +13972,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_isAmbiguous(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_isAmbiguous(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_isAmbiguous",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_isAmbiguous",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isAmbiguous" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14643,13 +13990,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_isAmbiguous(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (bool)((Prelude::IDMEFPath const *)arg1)->isAmbiguous();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14660,16 +14003,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_hasLists(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_hasLists(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_hasLists",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_hasLists",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_hasLists" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14678,13 +14021,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_hasLists(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (int)((Prelude::IDMEFPath const *)arg1)->hasLists();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14695,7 +14034,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_isList(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_isList(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   int arg2 = (int) -1 ;
@@ -14703,15 +14042,14 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_isList(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "depth", NULL 
+    (char *) "depth", NULL 
   };
   bool result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|O:IDMEFPath_isList",kwnames,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|O:IDMEFPath_isList",kwnames,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_isList" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14727,13 +14065,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_isList(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFPath const *)arg1)->isList(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14744,16 +14078,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_getDepth(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_getDepth(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   unsigned int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFPath_getDepth",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath_getDepth",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_getDepth" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
   }
@@ -14762,13 +14096,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getDepth(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (unsigned int)((Prelude::IDMEFPath const *)arg1)->getDepth();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14779,7 +14109,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -14787,17 +14117,17 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   Prelude::IDMEFValue result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFPath_get",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_get" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_get" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
   }
@@ -14809,13 +14139,9 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = Prelude_IDMEFPath_get(arg1,*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -14826,12 +14152,15 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(NULL, result, NULL, &resultobj);
+      ret = IDMEFValue_to_SWIG(self, result, NULL, &resultobj);
+      
+      
       
       if ( ret < 0 ) {
-        std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
-        SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
+        std::string s = "IDMEFValue typemap does not handle value of type '";
+        s += idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType());
+        s += "'";
+        SWIG_exception_fail(SWIG_ValueError, s.c_str());
       }
     }
   }
@@ -14841,49 +14170,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *IDMEFPath_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFPath, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEFTime")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_time_t *arg1 = (idmef_time_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_idmef_time_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_idmef_time_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFTime" "', argument " "1"" of type '" "idmef_time_t *""'"); 
   }
@@ -14892,33 +14209,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   time_t *arg1 = (time_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_time_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_time_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFTime" "', argument " "1"" of type '" "time_t const *""'"); 
   }
@@ -14927,34 +14239,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((time_t const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
   char *buf1 = 0 ;
   int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFTime" "', argument " "1"" of type '" "char const *""'");
   }
@@ -14963,35 +14270,30 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((char const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   timeval *arg1 = (timeval *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_timeval, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_timeval, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFTime" "', argument " "1"" of type '" "timeval const *""'"); 
   }
@@ -15000,33 +14302,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((timeval const *)arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime__SWIG_5(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFTime *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFTime" "', argument " "1"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -15038,78 +14335,77 @@ SWIGINTERN PyObject *_wrap_new_IDMEFTime__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((Prelude::IDMEFTime const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFTime(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFTime(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEFTime",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_IDMEFTime__SWIG_0(self, args);
+    return _wrap_new_IDMEFTime__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_time_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_1(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_time_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEFTime__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_time_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_2(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_time_t, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_3;
+    return _wrap_new_IDMEFTime__SWIG_2(self, argc, argv);
   }
+check_3:
+  
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_timeval, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_4(self, args);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_timeval, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_4;
+    return _wrap_new_IDMEFTime__SWIG_4(self, argc, argv);
   }
+check_4:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_5(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_5;
+    return _wrap_new_IDMEFTime__SWIG_5(self, argc, argv);
   }
+check_5:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_3(self, args);
-    }
+    return _wrap_new_IDMEFTime__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -15121,19 +14417,19 @@ fail:
     "    Prelude::IDMEFTime::IDMEFTime(char const *)\n"
     "    Prelude::IDMEFTime::IDMEFTime(timeval const *)\n"
     "    Prelude::IDMEFTime::IDMEFTime(Prelude::IDMEFTime const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_IDMEFTime(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEFTime(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFTime",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFTime",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFTime" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
@@ -15142,13 +14438,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFTime(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15159,15 +14451,14 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_set",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_set" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
@@ -15176,13 +14467,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->set();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15193,7 +14480,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   time_t *arg2 = (time_t *) 0 ;
@@ -15201,16 +14488,14 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_set" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_time_t, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_time_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime_set" "', argument " "2"" of type '" "time_t const *""'"); 
   }
@@ -15219,13 +14504,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->set((time_t const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15236,7 +14517,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -15245,16 +14526,14 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_set" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime_set" "', argument " "2"" of type '" "char const *""'");
   }
@@ -15263,13 +14542,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->set((char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15282,7 +14557,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   timeval *arg2 = (timeval *) 0 ;
@@ -15290,16 +14565,14 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_set" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_timeval, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_timeval, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime_set" "', argument " "2"" of type '" "timeval const *""'"); 
   }
@@ -15308,13 +14581,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->set((timeval const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15328,62 +14597,38 @@ fail:
 SWIGINTERN PyObject *_wrap_IDMEFTime_set(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"IDMEFTime_set",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_IDMEFTime_set__SWIG_0(self, args);
-    }
+    return _wrap_IDMEFTime_set__SWIG_0(self, argc, argv);
   }
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       void *vptr = 0;
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_time_t, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFTime_set__SWIG_1(self, args);
-      }
     }
+    if (!_v) goto check_2;
+    return _wrap_IDMEFTime_set__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       void *vptr = 0;
       int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_timeval, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFTime_set__SWIG_3(self, args);
-      }
     }
+    if (!_v) goto check_3;
+    return _wrap_IDMEFTime_set__SWIG_3(self, argc, argv);
   }
+check_3:
+  
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFTime_set__SWIG_2(self, args);
-      }
-    }
+    return _wrap_IDMEFTime_set__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -15397,7 +14642,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_setSec(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_OBJOBJARGPROC_CLOSURE(_wrap_IDMEFTime_set)
+
+SWIGINTERN PyObject *_wrap_IDMEFTime_setSec(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   uint32_t arg2 ;
@@ -15405,16 +14652,16 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setSec(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   unsigned int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_setSec",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_setSec" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFTime_setSec" "', argument " "2"" of type '" "uint32_t""'");
   } 
@@ -15423,13 +14670,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setSec(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       (arg1)->setSec(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15440,7 +14683,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_setUSec(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_setUSec(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   uint32_t arg2 ;
@@ -15448,16 +14691,16 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setUSec(PyObject *SWIGUNUSEDPARM(self), PyO
   int res1 = 0 ;
   unsigned int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_setUSec",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_setUSec" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFTime_setUSec" "', argument " "2"" of type '" "uint32_t""'");
   } 
@@ -15466,13 +14709,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setUSec(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->setUSec(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15483,7 +14722,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_setGmtOffset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_setGmtOffset(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   int32_t arg2 ;
@@ -15491,16 +14730,16 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setGmtOffset(PyObject *SWIGUNUSEDPARM(self)
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime_setGmtOffset",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_setGmtOffset" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFTime_setGmtOffset" "', argument " "2"" of type '" "int32_t""'");
   } 
@@ -15509,13 +14748,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_setGmtOffset(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->setGmtOffset(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15526,16 +14761,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_getSec(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_getSec(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_getSec",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_getSec",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_getSec" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
@@ -15544,13 +14779,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getSec(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getSec();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15561,16 +14792,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_getUSec(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_UNARYFUNC_CLOSURE(_wrap_IDMEFTime_getSec)
+
+SWIGINTERN PyObject *_wrap_IDMEFTime_getUSec(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   uint32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_getUSec",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_getUSec",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_getUSec" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
@@ -15579,13 +14812,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getUSec(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (uint32_t)((Prelude::IDMEFTime const *)arg1)->getUSec();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15596,16 +14825,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_getGmtOffset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_getGmtOffset(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   int32_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_getGmtOffset",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_getGmtOffset",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_getGmtOffset" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
@@ -15614,13 +14843,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime_getGmtOffset(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (int32_t)((Prelude::IDMEFTime const *)arg1)->getGmtOffset();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15631,171 +14856,27 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime_clone(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime_getTime(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  Prelude::IDMEFTime result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_clone",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_clone" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  {
-    try {
-      result = ((Prelude::IDMEFTime const *)arg1)->clone();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new Prelude::IDMEFTime(static_cast< const Prelude::IDMEFTime& >(result))), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFTime_toString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  std::string result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime_toString",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_toString" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  {
-    try {
-      result = ((Prelude::IDMEFTime const *)arg1)->toString();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFTime___int__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime___int__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___int__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  {
-    try {
-      result = (int)((Prelude::IDMEFTime const *)arg1)->operator int();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFTime___long__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  long result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime___long__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___long__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  {
-    try {
-      result = (long)((Prelude::IDMEFTime const *)arg1)->operator long();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_long(static_cast< long >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFTime___float__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime___float__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_getTime",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___float__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_getTime" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = (double)((Prelude::IDMEFTime const *)arg1)->operator double();
+      result = (double)((Prelude::IDMEFTime const *)arg1)->getTime();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15806,31 +14887,60 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_UNARYFUNC_CLOSURE(_wrap_IDMEFTime_getTime)
+
+SWIGINTERN PyObject *_wrap_IDMEFTime_clone(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  std::string result;
+  PyObject *swig_obj[1] ;
+  Prelude::IDMEFTime result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFTime___str__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_clone",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___str__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_clone" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
   {
     try {
-      result = ((Prelude::IDMEFTime const *)arg1)->operator const std::string();
+      result = ((Prelude::IDMEFTime const *)arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new Prelude::IDMEFTime(static_cast< const Prelude::IDMEFTime& >(result))), SWIGTYPE_p_Prelude__IDMEFTime, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEFTime_toString(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  std::string result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime_toString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_toString" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
+  {
+    try {
+      result = ((Prelude::IDMEFTime const *)arg1)->toString();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15841,7 +14951,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFTime_toString)
+
+SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -15849,17 +14961,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___ne__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ne__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___ne__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -15871,13 +14983,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator !=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15888,7 +14996,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -15896,17 +15004,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___ge__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ge__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___ge__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -15918,13 +15026,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15935,7 +15039,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -15943,17 +15047,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___le__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___le__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___le__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -15965,13 +15069,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -15982,7 +15082,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -15990,17 +15090,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___eq__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___eq__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___eq__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -16012,13 +15112,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16029,7 +15125,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -16037,17 +15133,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___gt__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___gt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___gt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -16059,13 +15155,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16076,7 +15168,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
   Prelude::IDMEFTime *arg2 = 0 ;
@@ -16084,17 +15176,17 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFTime___lt__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___lt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___lt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
   }
@@ -16106,13 +15198,9 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16123,23 +15211,48 @@ fail:
 }
 
 
-SWIGINTERN PyObject *IDMEFTime_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFTime, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
+SWIGINTERN PyObject *_wrap_IDMEFTime__getSec2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  long result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFTime__getSec2",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime__getSec2" "', argument " "1"" of type '" "Prelude::IDMEFTime *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
+  {
+    try {
+      result = (long)Prelude_IDMEFTime__getSec2(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_long(static_cast< long >(result));
+  return resultobj;
+fail:
+  return NULL;
 }
 
-SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+
+SWIGPY_UNARYFUNC_CLOSURE(_wrap_IDMEFTime__getSec2)
+
+SWIGINTERN int _wrap_new_IDMEFClass__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_class_id_t arg1 ;
   int val1 ;
   int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFClass *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFClass",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFClass" "', argument " "1"" of type '" "idmef_class_id_t""'");
   } 
@@ -16148,59 +15261,50 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFClass *)new Prelude::IDMEFClass(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFClass__SWIG_1(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEFClass")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEFClass *)new Prelude::IDMEFClass();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFClass__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFClass *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFClass",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEFPath,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEFPath,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFClass" "', argument " "1"" of type '" "Prelude::IDMEFPath const &""'"); 
   }
@@ -16212,34 +15316,29 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFClass *)new Prelude::IDMEFClass((Prelude::IDMEFPath const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFClass__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEFClass *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEFClass",&obj0)) SWIG_fail;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(obj0, &ptr);
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFClass" "', argument " "1"" of type '" "std::string const &""'"); 
     }
@@ -16252,63 +15351,56 @@ SWIGINTERN PyObject *_wrap_new_IDMEFClass__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (Prelude::IDMEFClass *)new Prelude::IDMEFClass((std::string const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_BUILTIN_INIT |  0 );
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return resultobj;
+  return resultobj == Py_None ? -1 : 0;
 fail:
   if (SWIG_IsNewObj(res1)) delete arg1;
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEFClass(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEFClass(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEFClass",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_IDMEFClass__SWIG_1(self, args);
+    return _wrap_new_IDMEFClass__SWIG_1(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFClass__SWIG_2(self, args);
-    }
-  }
-  if (argc == 1) {
-    int _v;
+    int _v = 0;
     {
-      int res = SWIG_AsVal_int(argv[0], NULL);
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEFPath, 0);
       _v = SWIG_CheckState(res);
     }
-    if (_v) {
-      return _wrap_new_IDMEFClass__SWIG_0(self, args);
-    }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEFClass__SWIG_2(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEFClass__SWIG_3(self, args);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
     }
+    if (!_v) goto check_3;
+    return _wrap_new_IDMEFClass__SWIG_0(self, argc, argv);
+  }
+check_3:
+  
+  if (argc == 1) {
+    return _wrap_new_IDMEFClass__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -16318,20 +15410,20 @@ fail:
     "    Prelude::IDMEFClass::IDMEFClass()\n"
     "    Prelude::IDMEFClass::IDMEFClass(Prelude::IDMEFPath const &)\n"
     "    Prelude::IDMEFClass::IDMEFClass(std::string const &)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getDepth(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_getDepth(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   size_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_getDepth",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getDepth",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getDepth" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16340,13 +15432,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getDepth(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (arg1)->getDepth();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16357,7 +15445,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getChild__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   int arg2 ;
@@ -16365,160 +15453,15 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getChild__SWIG_0(PyObject *SWIGUNUSEDPARM(
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   Prelude::IDMEFClass result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFClass_getChild",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChild" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = (arg1)->getChild(arg2);
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new Prelude::IDMEFClass(static_cast< const Prelude::IDMEFClass& >(result))), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFClass_getChild__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-  std::string *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int res2 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  Prelude::IDMEFClass result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFClass_getChild",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChild" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
-  {
-    std::string *ptr = (std::string *)0;
-    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    arg2 = ptr;
-  }
-  {
-    try {
-      result = (arg1)->getChild((std::string const &)*arg2);
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new Prelude::IDMEFClass(static_cast< const Prelude::IDMEFClass& >(result))), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_OWN |  0 );
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return resultobj;
-fail:
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFClass_getChild(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[3];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_int(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        return _wrap_IDMEFClass_getChild__SWIG_0(self, args);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsPtr_std_string(argv[1], (std::string**)(0));
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFClass_getChild__SWIG_1(self, args);
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'IDMEFClass_getChild'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFClass::getChild(int)\n"
-    "    Prelude::IDMEFClass::getChild(std::string const &)\n");
-  return 0;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  Prelude::IDMEFClass result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFClass_get",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_get" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFClass_get" "', argument " "2"" of type '" "int""'");
   } 
@@ -16527,13 +15470,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (arg1)->get(arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16544,26 +15483,24 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
   Prelude::IDMEFClass result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEFClass_get",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_get" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
   {
     std::string *ptr = (std::string *)0;
-    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFClass_get" "', argument " "2"" of type '" "std::string const &""'"); 
     }
@@ -16576,13 +15513,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_get__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (arg1)->get((std::string const &)*arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16598,40 +15531,24 @@ fail:
 SWIGINTERN PyObject *_wrap_IDMEFClass_get(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"IDMEFClass_get",0,2,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
+    int _v = 0;
+    {
       {
         int res = SWIG_AsVal_int(argv[1], NULL);
         _v = SWIG_CheckState(res);
       }
-      if (_v) {
-        return _wrap_IDMEFClass_get__SWIG_0(self, args);
-      }
     }
+    if (!_v) goto check_1;
+    return _wrap_IDMEFClass_get__SWIG_0(self, argc, argv);
   }
+check_1:
+  
   if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsPtr_std_string(argv[1], (std::string**)(0));
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_IDMEFClass_get__SWIG_1(self, args);
-      }
-    }
+    return _wrap_IDMEFClass_get__SWIG_1(self, argc, argv);
   }
   
 fail:
@@ -16643,16 +15560,51 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_isList(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_IDMEFClass_get)
+
+SWIGINTERN PyObject *_wrap_IDMEFClass_getChildCount(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
+  size_t result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getChildCount",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChildCount" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
+  {
+    try {
+      result = (arg1)->getChildCount();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_LENFUNC_CLOSURE(_wrap_IDMEFClass_getChildCount)
+
+SWIGINTERN PyObject *_wrap_IDMEFClass_isList(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_isList",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_isList",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_isList" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16661,13 +15613,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_isList(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (bool)(arg1)->isList();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16678,16 +15626,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_isKeyedList(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_isKeyedList(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_isKeyedList",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_isKeyedList",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_isKeyedList" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16696,13 +15644,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_isKeyedList(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (bool)(arg1)->isKeyedList();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16713,16 +15657,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_getName(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_getName",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getName",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getName" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16731,13 +15675,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getName(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (arg1)->getName();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16748,16 +15688,51 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getValueType(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFClass_getName)
+
+SWIGINTERN PyObject *_wrap_IDMEFClass_toString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
+  std::string result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_toString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_toString" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
+  {
+    try {
+      result = (arg1)->toString();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFClass_toString)
+
+SWIGINTERN PyObject *_wrap_IDMEFClass_getValueType(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEFValue::IDMEFValueTypeEnum result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_getValueType",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getValueType",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getValueType" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16766,13 +15741,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getValueType(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (Prelude::IDMEFValue::IDMEFValueTypeEnum)(arg1)->getValueType();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16783,7 +15754,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getPath(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_getPath(PyObject *self, PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   int arg2 = (int) 0 ;
@@ -16800,18 +15771,17 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getPath(PyObject *SWIGUNUSEDPARM(self), Py
   int ecode3 = 0 ;
   int res4 = SWIG_OLDOBJ ;
   int res5 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "rootidx",(char *) "depth",(char *) "sep",(char *) "listidx", NULL 
+    (char *) "rootidx",(char *) "depth",(char *) "sep",(char *) "listidx", NULL 
   };
   std::string result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"O|OOOO:IDMEFClass_getPath",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"|OOOO:IDMEFClass_getPath",kwnames,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getPath" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16860,13 +15830,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getPath(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (arg1)->getPath(arg2,arg3,(std::string const &)*arg4,(std::string const &)*arg5);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16881,16 +15847,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getEnumValues(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_getEnumValues(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::vector< std::string,std::allocator< std::string > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_getEnumValues",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getEnumValues",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getEnumValues" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16899,13 +15865,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getEnumValues(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = (arg1)->getEnumValues();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16916,16 +15878,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFClass_getApplicableOperator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass_getApplicableOperator(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEFCriterion::IDMEFCriterionOperatorEnum result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEFClass_getApplicableOperator",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFClass_getApplicableOperator",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getApplicableOperator" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16934,13 +15896,9 @@ SWIGINTERN PyObject *_wrap_IDMEFClass_getApplicableOperator(PyObject *SWIGUNUSED
     try {
       result = (Prelude::IDMEFCriterion::IDMEFCriterionOperatorEnum)(arg1)->getApplicableOperator();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16951,15 +15909,56 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_IDMEFClass(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEFClass__get2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  Prelude::IDMEFClass result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass__get2" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFClass__get2" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = Prelude_IDMEFClass__get2(arg1,arg2);;
+    } catch(Prelude::PreludeError &e) {
+      if ( e.getCode() == PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD ||
+        e.getCode() == PRELUDE_ERROR_IDMEF_PATH_DEPTH )
+      SWIG_exception_fail(SWIG_IndexError, e.what());
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new Prelude::IDMEFClass(static_cast< const Prelude::IDMEFClass& >(result))), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_FUNPACK_SSIZEARGFUNC_CLOSURE(_wrap_IDMEFClass__get2)
+
+SWIGINTERN PyObject *_wrap_delete_IDMEFClass(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEFClass",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEFClass",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEFClass" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
   }
@@ -16968,13 +15967,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEFClass(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -16985,22 +15980,15 @@ fail:
 }
 
 
-SWIGINTERN PyObject *IDMEFClass_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEFClass, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_delete_IDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_IDMEF(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_IDMEF",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"delete_IDMEF",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IDMEF" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -17009,13 +15997,9 @@ SWIGINTERN PyObject *_wrap_delete_IDMEF(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       delete arg1;
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17026,42 +16010,37 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEF__SWIG_0(PyObject *self, int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)":new_IDMEF")) SWIG_fail;
+  if ((nobjs < 0) || (nobjs > 0)) SWIG_fail;
   {
     try {
       result = (Prelude::IDMEF *)new Prelude::IDMEF();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEF__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEF *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEF",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Prelude__IDMEF,  0  | 0);
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_Prelude__IDMEF,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "Prelude::IDMEF const &""'"); 
   }
@@ -17073,33 +16052,28 @@ SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (Prelude::IDMEF *)new Prelude::IDMEF((Prelude::IDMEF const &)*arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEF__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_object_t *arg1 = (idmef_object_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
   Prelude::IDMEF *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_IDMEF",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_idmef_object_t, 0 |  0 );
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_idmef_object_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "idmef_object_t *""'"); 
   }
@@ -17108,52 +16082,41 @@ SWIGINTERN PyObject *_wrap_new_IDMEF__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (Prelude::IDMEF *)new Prelude::IDMEF(arg1);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_POINTER_NEW |  0 );
-  return resultobj;
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
 fail:
-  return NULL;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_IDMEF(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new_IDMEF(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[2];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEF",0,1,argv))) SWIG_fail;
+  --argc;
   if (argc == 0) {
-    return _wrap_new_IDMEF__SWIG_0(self, args);
+    return _wrap_new_IDMEF__SWIG_0(self, argc, argv);
   }
   if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEF__SWIG_1(self, args);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEF, 0);
+      _v = SWIG_CheckState(res);
     }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEF__SWIG_1(self, argc, argv);
   }
+check_2:
+  
   if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_object_t, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_IDMEF__SWIG_2(self, args);
-    }
+    return _wrap_new_IDMEF__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -17162,11 +16125,11 @@ fail:
     "    Prelude::IDMEF::IDMEF()\n"
     "    Prelude::IDMEF::IDMEF(Prelude::IDMEF const &)\n"
     "    Prelude::IDMEF::IDMEF(idmef_object_t *)\n");
-  return 0;
+  return -1;
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17177,24 +16140,21 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyO
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *ptr = (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > > *)0;
-    res3 = swig::asptr(obj2, &ptr);
+    res3 = swig::asptr(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &""'"); 
     }
@@ -17207,13 +16167,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,(std::vector< Prelude::IDMEF,std::allocator< Prelude::IDMEF > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17228,7 +16184,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17240,22 +16196,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -17264,13 +16217,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17283,7 +16232,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17294,24 +16243,21 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyO
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *ptr = (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > *)0;
-    res3 = swig::asptr(obj2, &ptr);
+    res3 = swig::asptr(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &""'"); 
     }
@@ -17324,13 +16270,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17345,7 +16287,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17356,24 +16298,21 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyO
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   {
     std::string *ptr = (std::string *)0;
-    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    res3 = SWIG_AsPtr_std_string(swig_obj[2], &ptr);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "std::string const &""'"); 
     }
@@ -17386,13 +16325,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,(std::string const &)*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17407,7 +16342,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17419,22 +16354,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3,SWIGTYPE_p_Prelude__IDMEFValue, 0 |  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "Prelude::IDMEFValue *""'"); 
   }
@@ -17443,13 +16375,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17462,7 +16390,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_5(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17474,22 +16402,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_Prelude__IDMEFTime,  0 );
   if (!SWIG_IsOK(res3)) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "Prelude::IDMEFTime &""'"); 
   }
@@ -17501,13 +16426,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,*arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17520,7 +16441,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_6(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17532,22 +16453,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "int32_t""'");
   } 
@@ -17556,13 +16474,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17575,7 +16489,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17587,22 +16501,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   unsigned int val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "uint32_t""'");
   } 
@@ -17611,13 +16522,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17630,7 +16537,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17642,22 +16549,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   long long val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_long_SS_long(obj2, &val3);
+  ecode3 = SWIG_AsVal_long_SS_long(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "int64_t""'");
   } 
@@ -17666,13 +16570,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17685,7 +16585,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17697,22 +16597,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyO
   int alloc2 = 0 ;
   unsigned long long val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(obj2, &val3);
+  ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "uint64_t""'");
   } 
@@ -17721,13 +16618,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17740,7 +16633,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17752,22 +16645,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), Py
   int alloc2 = 0 ;
   float val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  ecode3 = SWIG_AsVal_float(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "float""'");
   } 
@@ -17776,13 +16666,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17795,7 +16681,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -17807,22 +16693,19 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), Py
   int alloc2 = 0 ;
   double val3 ;
   int ecode3 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:IDMEF_set",&obj0,&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "double""'");
   } 
@@ -17831,13 +16714,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       (arg1)->set((char const *)arg2,arg3);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -17853,231 +16732,147 @@ fail:
 SWIGINTERN PyObject *_wrap_IDMEF_set(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4];
-  int ii;
   
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 3) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
+  if (!(argc = SWIG_Python_UnpackTuple(args,"IDMEF_set",0,3,argv+1))) SWIG_fail;
+  argv[0] = self;
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
       _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
+    }
+    if (!_v) goto check_1;
+    return _wrap_IDMEF_set__SWIG_1(self, argc, argv);
+  }
+check_1:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_2;
+    return _wrap_IDMEF_set__SWIG_4(self, argc, argv);
+  }
+check_2:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
+    return _wrap_IDMEF_set__SWIG_5(self, argc, argv);
+  }
+check_3:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_1(self, args);
-        }
       }
     }
+    if (!_v) goto check_4;
+    return _wrap_IDMEF_set__SWIG_7(self, argc, argv);
   }
+check_4:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFValue, 0);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_4(self, args);
-        }
       }
     }
+    if (!_v) goto check_5;
+    return _wrap_IDMEF_set__SWIG_6(self, argc, argv);
   }
+check_5:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Prelude__IDMEFTime, 0);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_5(self, args);
-        }
       }
     }
+    if (!_v) goto check_6;
+    return _wrap_IDMEF_set__SWIG_9(self, argc, argv);
   }
+check_6:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_7(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_int(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_6(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_9(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_long_SS_long(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_8(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_float(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_10(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_double(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_11(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_long_SS_long(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_3(self, args);
-        }
       }
     }
+    if (!_v) goto check_7;
+    return _wrap_IDMEF_set__SWIG_8(self, argc, argv);
   }
+check_7:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_float(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_2(self, args);
-        }
       }
     }
+    if (!_v) goto check_8;
+    return _wrap_IDMEF_set__SWIG_10(self, argc, argv);
   }
+check_8:
+  
   if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_AsCharPtrAndSize(argv[1], 0, NULL, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[2], NULL);
         _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_0(self, args);
-        }
       }
     }
+    if (!_v) goto check_9;
+    return _wrap_IDMEF_set__SWIG_11(self, argc, argv);
+  }
+check_9:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_10;
+    return _wrap_IDMEF_set__SWIG_3(self, argc, argv);
+  }
+check_10:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_11;
+    return _wrap_IDMEF_set__SWIG_2(self, argc, argv);
+  }
+check_11:
+  
+  if (argc == 3) {
+    return _wrap_IDMEF_set__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -18099,16 +16894,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_clone(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGPY_OBJOBJARGPROC_CLOSURE(_wrap_IDMEF_set)
+
+SWIGINTERN PyObject *_wrap_IDMEF_clone(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   Prelude::IDMEF result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEF_clone",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEF_clone",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_clone" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
@@ -18117,13 +16914,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_clone(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = (arg1)->clone();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18134,16 +16927,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_getId(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_getId(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   idmef_class_id_t result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEF_getId",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEF_getId",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_getId" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
   }
@@ -18152,13 +16945,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_getId(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = (idmef_class_id_t)((Prelude::IDMEF const *)arg1)->getId();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18169,16 +16958,16 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_toString(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_toString(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
+  PyObject *swig_obj[1] ;
   std::string result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEF_toString",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args,"IDMEF_toString",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_toString" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
   }
@@ -18187,13 +16976,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_toString(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = ((Prelude::IDMEF const *)arg1)->toString();
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18204,42 +16989,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  std::string result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:IDMEF___str__",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___str__" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  {
-    try {
-      result = ((Prelude::IDMEF const *)arg1)->operator const std::string();
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
+SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEF_toString)
 
-
-SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   Prelude::IDMEF *arg2 = (Prelude::IDMEF *) 0 ;
@@ -18247,17 +16999,17 @@ SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF___eq__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___eq__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF___eq__" "', argument " "2"" of type '" "Prelude::IDMEF const *""'"); 
   }
@@ -18266,13 +17018,9 @@ SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (int)(arg1)->operator ==((Prelude::IDMEF const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18283,50 +17031,89 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF___contains__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  char *arg2 = (char *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  PyObject *swig_obj[2] ;
+  int result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___contains__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF___contains__" "', argument " "2"" of type '" "char const *""'");
+  }
+  arg2 = reinterpret_cast< char * >(buf2);
+  {
+    try {
+      result = (int)Prelude_IDMEF___contains__(arg1,(char const *)arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEF_write(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF_write",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_write" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   
 #if PY_VERSION_HEX < 0x03000000
-  if ( !PyFile_Check((PyObject *) obj1) ) {
+  if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #else
   extern PyTypeObject PyIOBase_Type;
-  if ( ! PyObject_IsInstance((PyObject *) obj1, (PyObject *) &PyIOBase_Type) ) {
+  if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #endif
   
-  arg2 = obj1;
+  arg2 = swig_obj[0];
   
   {
     try {
       Prelude_IDMEF_write(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18337,48 +17124,52 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_read(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_read(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF_read",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_read" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   
 #if PY_VERSION_HEX < 0x03000000
-  if ( !PyFile_Check((PyObject *) obj1) ) {
+  if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #else
   extern PyTypeObject PyIOBase_Type;
-  if ( ! PyObject_IsInstance((PyObject *) obj1, (PyObject *) &PyIOBase_Type) ) {
+  if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #endif
   
-  arg2 = obj1;
+  arg2 = swig_obj[0];
   
   {
     try {
       result = (int)Prelude_IDMEF_read(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF )
-      result = 0;
-      else
-      SWIG_exception_fail(SWIG_RuntimeError, e.what());
+      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
+        result = 0;
+      } else {
+        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+        SWIG_fail;
+      }
     }
   }
   resultobj = SWIG_From_int(static_cast< int >(result));
@@ -18388,43 +17179,43 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF___rshift__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_readExcept(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   void *arg2 = (void *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  Prelude::IDMEF *result = 0 ;
+  PyObject *swig_obj[2] ;
+  int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF___rshift__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___rshift__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_readExcept" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
   
 #if PY_VERSION_HEX < 0x03000000
-  if ( !PyFile_Check((PyObject *) obj1) ) {
+  if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #else
   extern PyTypeObject PyIOBase_Type;
-  if ( ! PyObject_IsInstance((PyObject *) obj1, (PyObject *) &PyIOBase_Type) ) {
+  if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
     const char *errstr = "Argument is not a file object.";
     PyErr_SetString(PyExc_RuntimeError, errstr);
     return NULL;
   }
 #endif
   
-  arg2 = obj1;
+  arg2 = swig_obj[0];
   
   {
     try {
-      result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sg__Sg_(arg1,arg2);
+      result = (int)Prelude_IDMEF_readExcept(arg1,arg2);
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF ) {
         PyErr_SetString(PyExc_EOFError, e.what());
@@ -18436,69 +17227,14 @@ SWIGINTERN PyObject *_wrap_IDMEF___rshift__(PyObject *SWIGUNUSEDPARM(self), PyOb
       SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF___lshift__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
-  void *arg2 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  Prelude::IDMEF *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF___lshift__",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___lshift__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  
-#if PY_VERSION_HEX < 0x03000000
-  if ( !PyFile_Check((PyObject *) obj1) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
-  }
-#else
-  extern PyTypeObject PyIOBase_Type;
-  if ( ! PyObject_IsInstance((PyObject *) obj1, (PyObject *) &PyIOBase_Type) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
-  }
-#endif
-  
-  arg2 = obj1;
-  
-  {
-    try {
-      result = (Prelude::IDMEF *) &Prelude_IDMEF_operator_Sl__Sl_(arg1,arg2);
-    } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -18507,17 +17243,17 @@ SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   int res2 ;
   char *buf2 = 0 ;
   int alloc2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
+  PyObject *swig_obj[2] ;
   Prelude::IDMEFValue result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:IDMEF_get",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_get" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_get" "', argument " "2"" of type '" "char const *""'");
   }
@@ -18526,13 +17262,9 @@ SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     try {
       result = Prelude_IDMEF_get(arg1,(char const *)arg2);
     } catch(Prelude::PreludeError &e) {
-      if ( e.getCode() == PRELUDE_ERROR_EOF ) {
-        PyErr_SetString(PyExc_EOFError, e.what());
-      } else {
-        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-            SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      }
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
       SWIG_fail;
     }
   }
@@ -18543,12 +17275,15 @@ SWIGINTERN PyObject *_wrap_IDMEF_get(PyObject *SWIGUNUSEDPARM(self), PyObject *a
       Py_INCREF(Py_None);
       resultobj = Py_None;
     } else {
-      ret = IDMEFValue_to_SWIG(NULL, result, NULL, &resultobj);
+      ret = IDMEFValue_to_SWIG(self, result, NULL, &resultobj);
+      
+      
       
       if ( ret < 0 ) {
-        std::stringstream s;
-        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType()) << "'";
-        SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
+        std::string s = "IDMEFValue typemap does not handle value of type '";
+        s += idmef_value_type_to_string((idmef_value_type_id_t) (&result)->getType());
+        s += "'";
+        SWIG_exception_fail(SWIG_ValueError, s.c_str());
       }
     }
   }
@@ -18560,228 +17295,2996 @@ fail:
 }
 
 
-SWIGINTERN PyObject *IDMEF_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Prelude__IDMEF, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { (char *)"delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
-	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"checkVersion", _wrap_checkVersion, METH_VARARGS, NULL},
-	 { (char *)"new_ClientProfile", _wrap_new_ClientProfile, METH_VARARGS, NULL},
-	 { (char *)"delete_ClientProfile", _wrap_delete_ClientProfile, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getUid", _wrap_ClientProfile_getUid, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getGid", _wrap_ClientProfile_getGid, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getName", _wrap_ClientProfile_getName, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_setName", _wrap_ClientProfile_setName, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getAnalyzerId", _wrap_ClientProfile_getAnalyzerId, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_setAnalyzerId", _wrap_ClientProfile_setAnalyzerId, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getConfigFilename", _wrap_ClientProfile_getConfigFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getAnalyzeridFilename", _wrap_ClientProfile_getAnalyzeridFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsKeyFilename", _wrap_ClientProfile_getTlsKeyFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsServerCaCertFilename", _wrap_ClientProfile_getTlsServerCaCertFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsServerKeyCertFilename", _wrap_ClientProfile_getTlsServerKeyCertFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsServerCrlFilename", _wrap_ClientProfile_getTlsServerCrlFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsClientKeyCertFilename", _wrap_ClientProfile_getTlsClientKeyCertFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getTlsClientTrustedCertFilename", _wrap_ClientProfile_getTlsClientTrustedCertFilename, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getBackupDirname", _wrap_ClientProfile_getBackupDirname, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getProfileDirname", _wrap_ClientProfile_getProfileDirname, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_setPrefix", _wrap_ClientProfile_setPrefix, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_getPrefix", _wrap_ClientProfile_getPrefix, METH_VARARGS, NULL},
-	 { (char *)"ClientProfile_swigregister", ClientProfile_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_Connection", _wrap_delete_Connection, METH_VARARGS, NULL},
-	 { (char *)"new_Connection", _wrap_new_Connection, METH_VARARGS, NULL},
-	 { (char *)"Connection_getConnection", _wrap_Connection_getConnection, METH_VARARGS, NULL},
-	 { (char *)"Connection_close", _wrap_Connection_close, METH_VARARGS, NULL},
-	 { (char *)"Connection_connect", _wrap_Connection_connect, METH_VARARGS, NULL},
-	 { (char *)"Connection_setState", _wrap_Connection_setState, METH_VARARGS, NULL},
-	 { (char *)"Connection_getState", _wrap_Connection_getState, METH_VARARGS, NULL},
-	 { (char *)"Connection_setData", _wrap_Connection_setData, METH_VARARGS, NULL},
-	 { (char *)"Connection_getData", _wrap_Connection_getData, METH_VARARGS, NULL},
-	 { (char *)"Connection_getPermission", _wrap_Connection_getPermission, METH_VARARGS, NULL},
-	 { (char *)"Connection_setPeerAnalyzerid", _wrap_Connection_setPeerAnalyzerid, METH_VARARGS, NULL},
-	 { (char *)"Connection_getPeerAnalyzerid", _wrap_Connection_getPeerAnalyzerid, METH_VARARGS, NULL},
-	 { (char *)"Connection_getLocalAddr", _wrap_Connection_getLocalAddr, METH_VARARGS, NULL},
-	 { (char *)"Connection_getLocalPort", _wrap_Connection_getLocalPort, METH_VARARGS, NULL},
-	 { (char *)"Connection_getPeerAddr", _wrap_Connection_getPeerAddr, METH_VARARGS, NULL},
-	 { (char *)"Connection_getPeerPort", _wrap_Connection_getPeerPort, METH_VARARGS, NULL},
-	 { (char *)"Connection_isAlive", _wrap_Connection_isAlive, METH_VARARGS, NULL},
-	 { (char *)"Connection_getFd", _wrap_Connection_getFd, METH_VARARGS, NULL},
-	 { (char *)"Connection_recvIDMEF", _wrap_Connection_recvIDMEF, METH_VARARGS, NULL},
-	 { (char *)"Connection_swigregister", Connection_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_ConnectionPool", _wrap_delete_ConnectionPool, METH_VARARGS, NULL},
-	 { (char *)"new_ConnectionPool", _wrap_new_ConnectionPool, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_init", _wrap_ConnectionPool_init, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setConnectionString", _wrap_ConnectionPool_setConnectionString, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_getConnectionString", _wrap_ConnectionPool_getConnectionString, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_getConnectionList", _wrap_ConnectionPool_getConnectionList, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setFlags", _wrap_ConnectionPool_setFlags, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_getFlags", _wrap_ConnectionPool_getFlags, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setData", _wrap_ConnectionPool_setData, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_getData", _wrap_ConnectionPool_getData, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_addConnection", _wrap_ConnectionPool_addConnection, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_delConnection", _wrap_ConnectionPool_delConnection, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setConnectionAlive", _wrap_ConnectionPool_setConnectionAlive, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setConnectionDead", _wrap_ConnectionPool_setConnectionDead, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_setRequiredPermission", _wrap_ConnectionPool_setRequiredPermission, METH_VARARGS, NULL},
-	 { (char *)"ConnectionPool_swigregister", ConnectionPool_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_Client", _wrap_delete_Client, METH_VARARGS, NULL},
-	 { (char *)"new_Client", _wrap_new_Client, METH_VARARGS, NULL},
-	 { (char *)"Client_start", _wrap_Client_start, METH_VARARGS, NULL},
-	 { (char *)"Client_init", _wrap_Client_init, METH_VARARGS, NULL},
-	 { (char *)"Client_getClient", _wrap_Client_getClient, METH_VARARGS, NULL},
-	 { (char *)"Client_sendIDMEF", _wrap_Client_sendIDMEF, METH_VARARGS, NULL},
-	 { (char *)"Client_recvIDMEF", (PyCFunction) _wrap_Client_recvIDMEF, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"Client_getFlags", _wrap_Client_getFlags, METH_VARARGS, NULL},
-	 { (char *)"Client_setFlags", _wrap_Client_setFlags, METH_VARARGS, NULL},
-	 { (char *)"Client_getRequiredPermission", _wrap_Client_getRequiredPermission, METH_VARARGS, NULL},
-	 { (char *)"Client_setRequiredPermission", _wrap_Client_setRequiredPermission, METH_VARARGS, NULL},
-	 { (char *)"Client_getConfigFilename", _wrap_Client_getConfigFilename, METH_VARARGS, NULL},
-	 { (char *)"Client_setConfigFilename", _wrap_Client_setConfigFilename, METH_VARARGS, NULL},
-	 { (char *)"Client_getConnectionPool", _wrap_Client_getConnectionPool, METH_VARARGS, NULL},
-	 { (char *)"Client_setConnectionPool", _wrap_Client_setConnectionPool, METH_VARARGS, NULL},
-	 { (char *)"Client___lshift__", _wrap_Client___lshift__, METH_VARARGS, NULL},
-	 { (char *)"Client___rshift__", _wrap_Client___rshift__, METH_VARARGS, NULL},
 	 { (char *)"Client_setRecvTimeout", _wrap_Client_setRecvTimeout, METH_VARARGS, NULL},
-	 { (char *)"Client_swigregister", Client_swigregister, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_setLevel", _wrap_PreludeLog_setLevel, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_setDebugLevel", _wrap_PreludeLog_setDebugLevel, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_setFlags", _wrap_PreludeLog_setFlags, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_getFlags", _wrap_PreludeLog_getFlags, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_setLogfile", _wrap_PreludeLog_setLogfile, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_setCallback", _wrap_PreludeLog_setCallback, METH_VARARGS, NULL},
-	 { (char *)"new_PreludeLog", _wrap_new_PreludeLog, METH_VARARGS, NULL},
-	 { (char *)"delete_PreludeLog", _wrap_delete_PreludeLog, METH_VARARGS, NULL},
-	 { (char *)"PreludeLog_swigregister", PreludeLog_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_PreludeError", _wrap_delete_PreludeError, METH_VARARGS, NULL},
-	 { (char *)"new_PreludeError", _wrap_new_PreludeError, METH_VARARGS, NULL},
-	 { (char *)"PreludeError_getCode", _wrap_PreludeError_getCode, METH_VARARGS, NULL},
-	 { (char *)"PreludeError_what", _wrap_PreludeError_what, METH_VARARGS, NULL},
-	 { (char *)"PreludeError___str__", _wrap_PreludeError___str__, METH_VARARGS, NULL},
-	 { (char *)"PreludeError___int__", _wrap_PreludeError___int__, METH_VARARGS, NULL},
-	 { (char *)"PreludeError_swigregister", PreludeError_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_ClientEasy", (PyCFunction) _wrap_new_ClientEasy, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"delete_ClientEasy", _wrap_delete_ClientEasy, METH_VARARGS, NULL},
-	 { (char *)"ClientEasy_swigregister", ClientEasy_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFCriterion", _wrap_new_IDMEFCriterion, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFCriterion", _wrap_delete_IDMEFCriterion, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriterion_swigregister", IDMEFCriterion_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFCriteria", _wrap_delete_IDMEFCriteria, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFCriteria", _wrap_new_IDMEFCriteria, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_match", _wrap_IDMEFCriteria_match, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_clone", _wrap_IDMEFCriteria_clone, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_andCriteria", _wrap_IDMEFCriteria_andCriteria, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_orCriteria", _wrap_IDMEFCriteria_orCriteria, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_toString", _wrap_IDMEFCriteria_toString, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria___str__", _wrap_IDMEFCriteria___str__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFCriteria_swigregister", IDMEFCriteria_swigregister, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_getType", _wrap_IDMEFValue_getType, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_isNull", _wrap_IDMEFValue_isNull, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFValue", _wrap_delete_IDMEFValue, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFValue", _wrap_new_IDMEFValue, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_match", _wrap_IDMEFValue_match, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_clone", _wrap_IDMEFValue_clone, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_toString", _wrap_IDMEFValue_toString, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___le__", _wrap_IDMEFValue___le__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___ge__", _wrap_IDMEFValue___ge__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___lt__", _wrap_IDMEFValue___lt__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___gt__", _wrap_IDMEFValue___gt__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___eq__", _wrap_IDMEFValue___eq__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___ne__", _wrap_IDMEFValue___ne__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue___hash__", _wrap_IDMEFValue___hash__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFValue_swigregister", IDMEFValue_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFPath", _wrap_new_IDMEFPath, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFPath", _wrap_delete_IDMEFPath, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_set", _wrap_IDMEFPath_set, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_getClass", (PyCFunction) _wrap_IDMEFPath_getClass, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_getValueType", (PyCFunction) _wrap_IDMEFPath_getValueType, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_setIndex", (PyCFunction) _wrap_IDMEFPath_setIndex, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_undefineIndex", (PyCFunction) _wrap_IDMEFPath_undefineIndex, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_getIndex", (PyCFunction) _wrap_IDMEFPath_getIndex, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_makeChild", _wrap_IDMEFPath_makeChild, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_makeParent", _wrap_IDMEFPath_makeParent, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_compare", (PyCFunction) _wrap_IDMEFPath_compare, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_clone", _wrap_IDMEFPath_clone, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_checkOperator", _wrap_IDMEFPath_checkOperator, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_getApplicableOperators", _wrap_IDMEFPath_getApplicableOperators, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_getName", (PyCFunction) _wrap_IDMEFPath_getName, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_isAmbiguous", _wrap_IDMEFPath_isAmbiguous, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_hasLists", _wrap_IDMEFPath_hasLists, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_isList", (PyCFunction) _wrap_IDMEFPath_isList, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFPath_getDepth", _wrap_IDMEFPath_getDepth, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_get", _wrap_IDMEFPath_get, METH_VARARGS, NULL},
-	 { (char *)"IDMEFPath_swigregister", IDMEFPath_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFTime", _wrap_new_IDMEFTime, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFTime", _wrap_delete_IDMEFTime, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_set", _wrap_IDMEFTime_set, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_setSec", _wrap_IDMEFTime_setSec, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_setUSec", _wrap_IDMEFTime_setUSec, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_setGmtOffset", _wrap_IDMEFTime_setGmtOffset, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_getSec", _wrap_IDMEFTime_getSec, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_getUSec", _wrap_IDMEFTime_getUSec, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_getGmtOffset", _wrap_IDMEFTime_getGmtOffset, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_clone", _wrap_IDMEFTime_clone, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_toString", _wrap_IDMEFTime_toString, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___int__", _wrap_IDMEFTime___int__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___long__", _wrap_IDMEFTime___long__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___float__", _wrap_IDMEFTime___float__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___str__", _wrap_IDMEFTime___str__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___ne__", _wrap_IDMEFTime___ne__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___ge__", _wrap_IDMEFTime___ge__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___le__", _wrap_IDMEFTime___le__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___eq__", _wrap_IDMEFTime___eq__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___gt__", _wrap_IDMEFTime___gt__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime___lt__", _wrap_IDMEFTime___lt__, METH_VARARGS, NULL},
-	 { (char *)"IDMEFTime_swigregister", IDMEFTime_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEFClass", _wrap_new_IDMEFClass, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getDepth", _wrap_IDMEFClass_getDepth, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getChild", _wrap_IDMEFClass_getChild, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_get", _wrap_IDMEFClass_get, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_isList", _wrap_IDMEFClass_isList, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_isKeyedList", _wrap_IDMEFClass_isKeyedList, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getName", _wrap_IDMEFClass_getName, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getValueType", _wrap_IDMEFClass_getValueType, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getPath", (PyCFunction) _wrap_IDMEFClass_getPath, METH_VARARGS | METH_KEYWORDS, NULL},
-	 { (char *)"IDMEFClass_getEnumValues", _wrap_IDMEFClass_getEnumValues, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_getApplicableOperator", _wrap_IDMEFClass_getApplicableOperator, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEFClass", _wrap_delete_IDMEFClass, METH_VARARGS, NULL},
-	 { (char *)"IDMEFClass_swigregister", IDMEFClass_swigregister, METH_VARARGS, NULL},
-	 { (char *)"delete_IDMEF", _wrap_delete_IDMEF, METH_VARARGS, NULL},
-	 { (char *)"new_IDMEF", _wrap_new_IDMEF, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_set", _wrap_IDMEF_set, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_clone", _wrap_IDMEF_clone, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_getId", _wrap_IDMEF_getId, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_toString", _wrap_IDMEF_toString, METH_VARARGS, NULL},
-	 { (char *)"IDMEF___str__", _wrap_IDMEF___str__, METH_VARARGS, NULL},
-	 { (char *)"IDMEF___eq__", _wrap_IDMEF___eq__, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_write", _wrap_IDMEF_write, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_read", _wrap_IDMEF_read, METH_VARARGS, NULL},
-	 { (char *)"IDMEF___rshift__", _wrap_IDMEF___rshift__, METH_VARARGS, NULL},
-	 { (char *)"IDMEF___lshift__", _wrap_IDMEF___lshift__, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_get", _wrap_IDMEF_get, METH_VARARGS, NULL},
-	 { (char *)"IDMEF_swigregister", IDMEF_swigregister, METH_VARARGS, NULL},
+	 { (char *)"PreludeLog_setLevel", (PyCFunction)_wrap_PreludeLog_setLevel, METH_O, NULL},
+	 { (char *)"PreludeLog_setDebugLevel", (PyCFunction)_wrap_PreludeLog_setDebugLevel, METH_O, NULL},
+	 { (char *)"PreludeLog_setFlags", (PyCFunction)_wrap_PreludeLog_setFlags, METH_O, NULL},
+	 { (char *)"PreludeLog_getFlags", (PyCFunction)_wrap_PreludeLog_getFlags, METH_NOARGS, NULL},
+	 { (char *)"PreludeLog_setLogfile", (PyCFunction)_wrap_PreludeLog_setLogfile, METH_O, NULL},
+	 { (char *)"PreludeLog_setCallback", (PyCFunction)_wrap_PreludeLog_setCallback, METH_O, NULL},
 	 { NULL, NULL, 0, NULL }
 };
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_SwigPyIterator)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__swig__SwigPyIterator_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__swig__SwigPyIterator_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  switch (op) {
+    case Py_EQ : result = _wrap_SwigPyIterator___eq__(self, other); break;
+    case Py_NE : result = _wrap_SwigPyIterator___ne__(self, other); break;
+    default : break;
+  }
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__swig__SwigPyIterator_methods[] = {
+  { "value", (PyCFunction) _wrap_SwigPyIterator_value, METH_NOARGS, (char*) "" },
+  { "incr", (PyCFunction) _wrap_SwigPyIterator_incr, METH_VARARGS, (char*) "" },
+  { "decr", (PyCFunction) _wrap_SwigPyIterator_decr, METH_VARARGS, (char*) "" },
+  { "distance", (PyCFunction) _wrap_SwigPyIterator_distance, METH_O, (char*) "" },
+  { "equal", (PyCFunction) _wrap_SwigPyIterator_equal, METH_O, (char*) "" },
+  { "copy", (PyCFunction) _wrap_SwigPyIterator_copy, METH_NOARGS, (char*) "" },
+  { "next", (PyCFunction) _wrap_SwigPyIterator_next, METH_NOARGS, (char*) "" },
+  { "__next__", (PyCFunction) _wrap_SwigPyIterator___next__, METH_NOARGS, (char*) "" },
+  { "previous", (PyCFunction) _wrap_SwigPyIterator_previous, METH_NOARGS, (char*) "" },
+  { "advance", (PyCFunction) _wrap_SwigPyIterator_advance, METH_O, (char*) "" },
+  { "__eq__", (PyCFunction) _wrap_SwigPyIterator___eq__, METH_O, (char*) "" },
+  { "__ne__", (PyCFunction) _wrap_SwigPyIterator___ne__, METH_O, (char*) "" },
+  { "__iadd__", (PyCFunction) _wrap_SwigPyIterator___iadd__, METH_O, (char*) "" },
+  { "__isub__", (PyCFunction) _wrap_SwigPyIterator___isub__, METH_O, (char*) "" },
+  { "__add__", (PyCFunction) _wrap_SwigPyIterator___add__, METH_O, (char*) "" },
+  { "__sub__", (PyCFunction) _wrap_SwigPyIterator___sub__, METH_VARARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__swig__SwigPyIterator_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.SwigPyIterator",                 /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_SwigPyIterator_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__swig__SwigPyIterator_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__swig__SwigPyIterator_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__swig__SwigPyIterator_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__swig__SwigPyIterator_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "swig::SwigPyIterator",                   /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__swig__SwigPyIterator_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) &swig::make_output_iterator_builtin, /* tp_iter */
+    (iternextfunc) (iternextfunc) _wrap_SwigPyIterator___next___closure, /* tp_iternext */
+    SwigPyBuiltin__swig__SwigPyIterator_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__swig__SwigPyIterator_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) SwigPyBuiltin_BadInit,         /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) (binaryfunc) _wrap_SwigPyIterator___add__, /* nb_add */
+    (binaryfunc) (binaryfunc) _wrap_SwigPyIterator___sub___closure, /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) (binaryfunc) _wrap_SwigPyIterator___iadd__, /* nb_inplace_add */
+    (binaryfunc) (binaryfunc) _wrap_SwigPyIterator___isub__, /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__swig__SwigPyIterator_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__swig__SwigPyIterator_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_ClientProfile)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__ClientProfile_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__ClientProfile_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__ClientProfile_methods[] = {
+  { "getUid", (PyCFunction) _wrap_ClientProfile_getUid, METH_NOARGS, (char*) "" },
+  { "getGid", (PyCFunction) _wrap_ClientProfile_getGid, METH_NOARGS, (char*) "" },
+  { "getName", (PyCFunction) _wrap_ClientProfile_getName, METH_NOARGS, (char*) "" },
+  { "setName", (PyCFunction) _wrap_ClientProfile_setName, METH_O, (char*) "" },
+  { "getAnalyzerId", (PyCFunction) _wrap_ClientProfile_getAnalyzerId, METH_NOARGS, (char*) "" },
+  { "setAnalyzerId", (PyCFunction) _wrap_ClientProfile_setAnalyzerId, METH_O, (char*) "" },
+  { "getConfigFilename", (PyCFunction) _wrap_ClientProfile_getConfigFilename, METH_NOARGS, (char*) "" },
+  { "getAnalyzeridFilename", (PyCFunction) _wrap_ClientProfile_getAnalyzeridFilename, METH_NOARGS, (char*) "" },
+  { "getTlsKeyFilename", (PyCFunction) _wrap_ClientProfile_getTlsKeyFilename, METH_NOARGS, (char*) "" },
+  { "getTlsServerCaCertFilename", (PyCFunction) _wrap_ClientProfile_getTlsServerCaCertFilename, METH_NOARGS, (char*) "" },
+  { "getTlsServerKeyCertFilename", (PyCFunction) _wrap_ClientProfile_getTlsServerKeyCertFilename, METH_NOARGS, (char*) "" },
+  { "getTlsServerCrlFilename", (PyCFunction) _wrap_ClientProfile_getTlsServerCrlFilename, METH_NOARGS, (char*) "" },
+  { "getTlsClientKeyCertFilename", (PyCFunction) _wrap_ClientProfile_getTlsClientKeyCertFilename, METH_NOARGS, (char*) "" },
+  { "getTlsClientTrustedCertFilename", (PyCFunction) _wrap_ClientProfile_getTlsClientTrustedCertFilename, METH_NOARGS, (char*) "" },
+  { "getBackupDirname", (PyCFunction) _wrap_ClientProfile_getBackupDirname, METH_NOARGS, (char*) "" },
+  { "getProfileDirname", (PyCFunction) _wrap_ClientProfile_getProfileDirname, METH_NOARGS, (char*) "" },
+  { "setPrefix", (PyCFunction) _wrap_ClientProfile_setPrefix, METH_O, (char*) "" },
+  { "getPrefix", (PyCFunction) _wrap_ClientProfile_getPrefix, METH_NOARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__ClientProfile_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.ClientProfile",                  /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_ClientProfile_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__ClientProfile_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__ClientProfile_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__ClientProfile_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__ClientProfile_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::ClientProfile",                 /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__ClientProfile_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__ClientProfile_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__ClientProfile_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_ClientProfile,       /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__ClientProfile_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__ClientProfile_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_Connection)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__Connection_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__Connection_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__Connection_methods[] = {
+  { "getConnection", (PyCFunction) _wrap_Connection_getConnection, METH_NOARGS, (char*) "" },
+  { "close", (PyCFunction) _wrap_Connection_close, METH_NOARGS, (char*) "" },
+  { "connect", (PyCFunction) _wrap_Connection_connect, METH_VARARGS, (char*) "" },
+  { "setState", (PyCFunction) _wrap_Connection_setState, METH_O, (char*) "" },
+  { "getState", (PyCFunction) _wrap_Connection_getState, METH_NOARGS, (char*) "" },
+  { "setData", (PyCFunction) _wrap_Connection_setData, METH_O, (char*) "" },
+  { "getData", (PyCFunction) _wrap_Connection_getData, METH_NOARGS, (char*) "" },
+  { "getPermission", (PyCFunction) _wrap_Connection_getPermission, METH_NOARGS, (char*) "" },
+  { "setPeerAnalyzerid", (PyCFunction) _wrap_Connection_setPeerAnalyzerid, METH_O, (char*) "" },
+  { "getPeerAnalyzerid", (PyCFunction) _wrap_Connection_getPeerAnalyzerid, METH_NOARGS, (char*) "" },
+  { "getLocalAddr", (PyCFunction) _wrap_Connection_getLocalAddr, METH_NOARGS, (char*) "" },
+  { "getLocalPort", (PyCFunction) _wrap_Connection_getLocalPort, METH_NOARGS, (char*) "" },
+  { "getPeerAddr", (PyCFunction) _wrap_Connection_getPeerAddr, METH_NOARGS, (char*) "" },
+  { "getPeerPort", (PyCFunction) _wrap_Connection_getPeerPort, METH_NOARGS, (char*) "" },
+  { "isAlive", (PyCFunction) _wrap_Connection_isAlive, METH_NOARGS, (char*) "" },
+  { "getFd", (PyCFunction) _wrap_Connection_getFd, METH_NOARGS, (char*) "" },
+  { "recvIDMEF", (PyCFunction) _wrap_Connection_recvIDMEF, METH_NOARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__Connection_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.Connection",                     /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_Connection_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__Connection_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__Connection_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__Connection_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__Connection_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::Connection",                    /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__Connection_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__Connection_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__Connection_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_Connection,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__Connection_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__Connection_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_ConnectionPool)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__ConnectionPool_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__ConnectionPool_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__ConnectionPool_methods[] = {
+  { "init", (PyCFunction) _wrap_ConnectionPool_init, METH_NOARGS, (char*) "" },
+  { "setConnectionString", (PyCFunction) _wrap_ConnectionPool_setConnectionString, METH_O, (char*) "" },
+  { "getConnectionString", (PyCFunction) _wrap_ConnectionPool_getConnectionString, METH_NOARGS, (char*) "" },
+  { "getConnectionList", (PyCFunction) _wrap_ConnectionPool_getConnectionList, METH_NOARGS, (char*) "" },
+  { "setFlags", (PyCFunction) _wrap_ConnectionPool_setFlags, METH_O, (char*) "" },
+  { "getFlags", (PyCFunction) _wrap_ConnectionPool_getFlags, METH_NOARGS, (char*) "" },
+  { "setData", (PyCFunction) _wrap_ConnectionPool_setData, METH_O, (char*) "" },
+  { "getData", (PyCFunction) _wrap_ConnectionPool_getData, METH_NOARGS, (char*) "" },
+  { "addConnection", (PyCFunction) _wrap_ConnectionPool_addConnection, METH_O, (char*) "" },
+  { "delConnection", (PyCFunction) _wrap_ConnectionPool_delConnection, METH_O, (char*) "" },
+  { "setConnectionAlive", (PyCFunction) _wrap_ConnectionPool_setConnectionAlive, METH_O, (char*) "" },
+  { "setConnectionDead", (PyCFunction) _wrap_ConnectionPool_setConnectionDead, METH_O, (char*) "" },
+  { "setRequiredPermission", (PyCFunction) _wrap_ConnectionPool_setRequiredPermission, METH_O, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__ConnectionPool_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.ConnectionPool",                 /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_ConnectionPool_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__ConnectionPool_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__ConnectionPool_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__ConnectionPool_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__ConnectionPool_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::ConnectionPool",                /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__ConnectionPool_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__ConnectionPool_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__ConnectionPool_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_ConnectionPool,      /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__ConnectionPool_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__ConnectionPool_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_Client)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__Client_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__Client_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__Client_methods[] = {
+  { "start", (PyCFunction) _wrap_Client_start, METH_NOARGS, (char*) "" },
+  { "init", (PyCFunction) _wrap_Client_init, METH_NOARGS, (char*) "" },
+  { "getClient", (PyCFunction) _wrap_Client_getClient, METH_NOARGS, (char*) "" },
+  { "sendIDMEF", (PyCFunction) _wrap_Client_sendIDMEF, METH_O, (char*) "" },
+  { "recvIDMEF", (PyCFunction) _wrap_Client_recvIDMEF, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "getFlags", (PyCFunction) _wrap_Client_getFlags, METH_NOARGS, (char*) "" },
+  { "setFlags", (PyCFunction) _wrap_Client_setFlags, METH_O, (char*) "" },
+  { "getRequiredPermission", (PyCFunction) _wrap_Client_getRequiredPermission, METH_NOARGS, (char*) "" },
+  { "setRequiredPermission", (PyCFunction) _wrap_Client_setRequiredPermission, METH_O, (char*) "" },
+  { "getConfigFilename", (PyCFunction) _wrap_Client_getConfigFilename, METH_NOARGS, (char*) "" },
+  { "setConfigFilename", (PyCFunction) _wrap_Client_setConfigFilename, METH_O, (char*) "" },
+  { "getConnectionPool", (PyCFunction) _wrap_Client_getConnectionPool, METH_NOARGS, (char*) "" },
+  { "setConnectionPool", (PyCFunction) _wrap_Client_setConnectionPool, METH_O, (char*) "" },
+  { "__lshift__", (PyCFunction) _wrap_Client___lshift__, METH_O, (char*) "" },
+  { "__rshift__", (PyCFunction) _wrap_Client___rshift__, METH_O, (char*) "" },
+  { "setRecvTimeout", (PyCFunction) _wrap_Client_setRecvTimeout, METH_STATIC|METH_VARARGS, "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__Client_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.Client",                         /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_Client_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__Client_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__Client_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__Client_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__Client_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::Client",                        /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__Client_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__Client_methods,   /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__Client_getset,    /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_Client,              /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) (binaryfunc) _wrap_Client___lshift__, /* nb_lshift */
+    (binaryfunc) (binaryfunc) _wrap_Client___rshift__, /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__Client_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__Client_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_PreludeLog)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__PreludeLog_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__PreludeLog_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__PreludeLog_methods[] = {
+  { "setLevel", (PyCFunction) _wrap_PreludeLog_setLevel, METH_STATIC|METH_O, "" },
+  { "setDebugLevel", (PyCFunction) _wrap_PreludeLog_setDebugLevel, METH_STATIC|METH_O, "" },
+  { "setFlags", (PyCFunction) _wrap_PreludeLog_setFlags, METH_STATIC|METH_O, "" },
+  { "getFlags", (PyCFunction) _wrap_PreludeLog_getFlags, METH_STATIC|METH_NOARGS, "" },
+  { "setLogfile", (PyCFunction) _wrap_PreludeLog_setLogfile, METH_STATIC|METH_O, "" },
+  { "setCallback", (PyCFunction) _wrap_PreludeLog_setCallback, METH_STATIC|METH_O, "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__PreludeLog_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.PreludeLog",                     /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_PreludeLog_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__PreludeLog_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__PreludeLog_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__PreludeLog_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__PreludeLog_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::PreludeLog",                    /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__PreludeLog_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__PreludeLog_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__PreludeLog_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_PreludeLog,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__PreludeLog_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__PreludeLog_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_PreludeError)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__PreludeError_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__PreludeError_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__PreludeError_methods[] = {
+  { "getCode", (PyCFunction) _wrap_PreludeError_getCode, METH_NOARGS, (char*) "" },
+  { "what", (PyCFunction) _wrap_PreludeError_what, METH_NOARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__PreludeError_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.PreludeError",                   /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_PreludeError_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__PreludeError_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__PreludeError_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__PreludeError_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) (reprfunc) _wrap_PreludeError_what_closure, /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__PreludeError_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::PreludeError",                  /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__PreludeError_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__PreludeError_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__PreludeError_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_PreludeError,        /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__PreludeError_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__PreludeError_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_ClientEasy)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__ClientEasy_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__ClientEasy_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__ClientEasy_methods[] = {
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__ClientEasy_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.ClientEasy",                     /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_ClientEasy_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__ClientEasy_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__ClientEasy_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__ClientEasy_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__ClientEasy_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::ClientEasy",                    /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__ClientEasy_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__ClientEasy_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__ClientEasy_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_ClientEasy,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__ClientEasy_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__ClientEasy_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFCriterion)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFCriterion_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFCriterion_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFCriterion_methods[] = {
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFCriterion_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFCriterion",                 /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFCriterion_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFCriterion_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFCriterion_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFCriterion_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFCriterion_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFCriterion",                /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFCriterion_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFCriterion_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFCriterion_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFCriterion,      /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFCriterion_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFCriterion_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFCriteria)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFCriteria_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFCriteria_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFCriteria_methods[] = {
+  { "match", (PyCFunction) _wrap_IDMEFCriteria_match, METH_O, (char*) "" },
+  { "clone", (PyCFunction) _wrap_IDMEFCriteria_clone, METH_NOARGS, (char*) "" },
+  { "andCriteria", (PyCFunction) _wrap_IDMEFCriteria_andCriteria, METH_O, (char*) "" },
+  { "orCriteria", (PyCFunction) _wrap_IDMEFCriteria_orCriteria, METH_O, (char*) "" },
+  { "toString", (PyCFunction) _wrap_IDMEFCriteria_toString, METH_NOARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFCriteria_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFCriteria",                  /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFCriteria_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) (reprfunc) _wrap_IDMEFCriteria_toString_closure, /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFCriteria_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFCriteria_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFCriteria_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFCriteria_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFCriteria",                 /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFCriteria_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFCriteria_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFCriteria_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFCriteria,       /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFCriteria_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFCriteria_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFValue)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFValue_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFValue_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  switch (op) {
+    case Py_EQ : result = _wrap_IDMEFValue___eq__(self, other); break;
+    case Py_LE : result = _wrap_IDMEFValue___le__(self, other); break;
+    case Py_GE : result = _wrap_IDMEFValue___ge__(self, other); break;
+    case Py_LT : result = _wrap_IDMEFValue___lt__(self, other); break;
+    case Py_NE : result = _wrap_IDMEFValue___ne__(self, other); break;
+    case Py_GT : result = _wrap_IDMEFValue___gt__(self, other); break;
+    default : break;
+  }
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFValue_methods[] = {
+  { "getType", (PyCFunction) _wrap_IDMEFValue_getType, METH_NOARGS, (char*) "" },
+  { "isNull", (PyCFunction) _wrap_IDMEFValue_isNull, METH_NOARGS, (char*) "" },
+  { "match", (PyCFunction) _wrap_IDMEFValue_match, METH_VARARGS, (char*) "" },
+  { "clone", (PyCFunction) _wrap_IDMEFValue_clone, METH_NOARGS, (char*) "" },
+  { "toString", (PyCFunction) _wrap_IDMEFValue_toString, METH_NOARGS, (char*) "" },
+  { "__eq__", (PyCFunction) _wrap_IDMEFValue___eq__, METH_VARARGS, (char*) "" },
+  { "__le__", (PyCFunction) _wrap_IDMEFValue___le__, METH_O, (char*) "" },
+  { "__ge__", (PyCFunction) _wrap_IDMEFValue___ge__, METH_O, (char*) "" },
+  { "__lt__", (PyCFunction) _wrap_IDMEFValue___lt__, METH_O, (char*) "" },
+  { "__gt__", (PyCFunction) _wrap_IDMEFValue___gt__, METH_O, (char*) "" },
+  { "__ne__", (PyCFunction) _wrap_IDMEFValue___ne__, METH_O, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFValue_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFValue",                     /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFValue_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) (reprfunc) _wrap_IDMEFValue_toString_closure, /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFValue_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFValue_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFValue_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) _wrap_IDMEFValue_getType,      /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFValue_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFValue",                    /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFValue_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFValue_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFValue_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFValue,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFValue_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFValue_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFPath)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFPath_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFPath_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFPath_methods[] = {
+  { "set", (PyCFunction) _wrap_IDMEFPath_set, METH_VARARGS, (char*) "" },
+  { "getClass", (PyCFunction) _wrap_IDMEFPath_getClass, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "getValueType", (PyCFunction) _wrap_IDMEFPath_getValueType, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "setIndex", (PyCFunction) _wrap_IDMEFPath_setIndex, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "undefineIndex", (PyCFunction) _wrap_IDMEFPath_undefineIndex, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "getIndex", (PyCFunction) _wrap_IDMEFPath_getIndex, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "makeChild", (PyCFunction) _wrap_IDMEFPath_makeChild, METH_VARARGS, (char*) "" },
+  { "makeParent", (PyCFunction) _wrap_IDMEFPath_makeParent, METH_NOARGS, (char*) "" },
+  { "compare", (PyCFunction) _wrap_IDMEFPath_compare, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "clone", (PyCFunction) _wrap_IDMEFPath_clone, METH_NOARGS, (char*) "" },
+  { "checkOperator", (PyCFunction) _wrap_IDMEFPath_checkOperator, METH_O, (char*) "" },
+  { "getApplicableOperators", (PyCFunction) _wrap_IDMEFPath_getApplicableOperators, METH_NOARGS, (char*) "" },
+  { "getName", (PyCFunction) _wrap_IDMEFPath_getName, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "isAmbiguous", (PyCFunction) _wrap_IDMEFPath_isAmbiguous, METH_NOARGS, (char*) "" },
+  { "hasLists", (PyCFunction) _wrap_IDMEFPath_hasLists, METH_NOARGS, (char*) "" },
+  { "isList", (PyCFunction) _wrap_IDMEFPath_isList, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "getDepth", (PyCFunction) _wrap_IDMEFPath_getDepth, METH_NOARGS, (char*) "" },
+  { "get", (PyCFunction) _wrap_IDMEFPath_get, METH_O, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFPath_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFPath",                      /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFPath_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFPath_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFPath_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFPath_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFPath_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFPath",                     /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFPath_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFPath_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFPath_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFPath,           /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) (binaryfunc) _wrap_IDMEFPath_get, /* mp_subscript */
+    (objobjargproc) (objobjargproc) _wrap_IDMEFPath_set_closure, /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFPath_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFPath_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFTime)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFTime_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFTime_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  switch (op) {
+    case Py_EQ : result = _wrap_IDMEFTime___eq__(self, other); break;
+    case Py_LE : result = _wrap_IDMEFTime___le__(self, other); break;
+    case Py_NE : result = _wrap_IDMEFTime___ne__(self, other); break;
+    case Py_GE : result = _wrap_IDMEFTime___ge__(self, other); break;
+    case Py_LT : result = _wrap_IDMEFTime___lt__(self, other); break;
+    case Py_GT : result = _wrap_IDMEFTime___gt__(self, other); break;
+    default : break;
+  }
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFTime_methods[] = {
+  { "set", (PyCFunction) _wrap_IDMEFTime_set, METH_VARARGS, (char*) "" },
+  { "setSec", (PyCFunction) _wrap_IDMEFTime_setSec, METH_O, (char*) "" },
+  { "setUSec", (PyCFunction) _wrap_IDMEFTime_setUSec, METH_O, (char*) "" },
+  { "setGmtOffset", (PyCFunction) _wrap_IDMEFTime_setGmtOffset, METH_O, (char*) "" },
+  { "getSec", (PyCFunction) _wrap_IDMEFTime_getSec, METH_NOARGS, (char*) "" },
+  { "getUSec", (PyCFunction) _wrap_IDMEFTime_getUSec, METH_NOARGS, (char*) "" },
+  { "getGmtOffset", (PyCFunction) _wrap_IDMEFTime_getGmtOffset, METH_NOARGS, (char*) "" },
+  { "getTime", (PyCFunction) _wrap_IDMEFTime_getTime, METH_NOARGS, (char*) "" },
+  { "clone", (PyCFunction) _wrap_IDMEFTime_clone, METH_NOARGS, (char*) "" },
+  { "toString", (PyCFunction) _wrap_IDMEFTime_toString, METH_NOARGS, (char*) "" },
+  { "__ne__", (PyCFunction) _wrap_IDMEFTime___ne__, METH_O, (char*) "" },
+  { "__ge__", (PyCFunction) _wrap_IDMEFTime___ge__, METH_O, (char*) "" },
+  { "__le__", (PyCFunction) _wrap_IDMEFTime___le__, METH_O, (char*) "" },
+  { "__eq__", (PyCFunction) _wrap_IDMEFTime___eq__, METH_O, (char*) "" },
+  { "__gt__", (PyCFunction) _wrap_IDMEFTime___gt__, METH_O, (char*) "" },
+  { "__lt__", (PyCFunction) _wrap_IDMEFTime___lt__, METH_O, (char*) "" },
+  { "_getSec2", (PyCFunction) _wrap_IDMEFTime__getSec2, METH_NOARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFTime_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFTime",                      /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFTime_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) (reprfunc) _wrap_IDMEFTime_toString_closure, /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFTime_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFTime_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFTime_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFTime_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFTime",                     /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFTime_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFTime_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFTime_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFTime,           /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) (unaryfunc) _wrap_IDMEFTime_getSec_closure, /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) (unaryfunc) _wrap_IDMEFTime__getSec2_closure, /* nb_long */
+#endif
+    (unaryfunc) (unaryfunc) _wrap_IDMEFTime_getTime_closure, /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) (objobjargproc) _wrap_IDMEFTime_set_closure, /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFTime_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFTime_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFClass)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEFClass_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEFClass_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFClass_methods[] = {
+  { "getDepth", (PyCFunction) _wrap_IDMEFClass_getDepth, METH_NOARGS, (char*) "" },
+  { "get", (PyCFunction) _wrap_IDMEFClass_get, METH_VARARGS, (char*) "" },
+  { "getChildCount", (PyCFunction) _wrap_IDMEFClass_getChildCount, METH_NOARGS, (char*) "" },
+  { "isList", (PyCFunction) _wrap_IDMEFClass_isList, METH_NOARGS, (char*) "" },
+  { "isKeyedList", (PyCFunction) _wrap_IDMEFClass_isKeyedList, METH_NOARGS, (char*) "" },
+  { "getName", (PyCFunction) _wrap_IDMEFClass_getName, METH_NOARGS, (char*) "" },
+  { "toString", (PyCFunction) _wrap_IDMEFClass_toString, METH_NOARGS, (char*) "" },
+  { "getValueType", (PyCFunction) _wrap_IDMEFClass_getValueType, METH_NOARGS, (char*) "" },
+  { "getPath", (PyCFunction) _wrap_IDMEFClass_getPath, METH_VARARGS|METH_KEYWORDS, (char*) "" },
+  { "getEnumValues", (PyCFunction) _wrap_IDMEFClass_getEnumValues, METH_NOARGS, (char*) "" },
+  { "getApplicableOperator", (PyCFunction) _wrap_IDMEFClass_getApplicableOperator, METH_NOARGS, (char*) "" },
+  { "_get2", (PyCFunction) _wrap_IDMEFClass__get2, METH_O, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEFClass_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEFClass",                     /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEFClass_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) (reprfunc) _wrap_IDMEFClass_toString_closure, /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEFClass_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEFClass_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEFClass_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) (reprfunc) _wrap_IDMEFClass_getName_closure, /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEFClass_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEFClass",                    /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEFClass_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEFClass_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEFClass_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEFClass,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) (lenfunc) _wrap_IDMEFClass_getChildCount_closure, /* mp_length */
+    (binaryfunc) (binaryfunc) _wrap_IDMEFClass_get_closure, /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) (ssizeargfunc) _wrap_IDMEFClass__get2_closure, /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEFClass_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFClass_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEF)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__Prelude__IDMEF_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__Prelude__IDMEF_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  switch (op) {
+    case Py_EQ : result = _wrap_IDMEF___eq__(self, other); break;
+    default : break;
+  }
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEF_methods[] = {
+  { "set", (PyCFunction) _wrap_IDMEF_set, METH_VARARGS, (char*) "" },
+  { "clone", (PyCFunction) _wrap_IDMEF_clone, METH_NOARGS, (char*) "" },
+  { "getId", (PyCFunction) _wrap_IDMEF_getId, METH_NOARGS, (char*) "" },
+  { "toString", (PyCFunction) _wrap_IDMEF_toString, METH_NOARGS, (char*) "" },
+  { "__eq__", (PyCFunction) _wrap_IDMEF___eq__, METH_O, (char*) "" },
+  { "__contains__", (PyCFunction) _wrap_IDMEF___contains__, METH_O, (char*) "" },
+  { "write", (PyCFunction) _wrap_IDMEF_write, METH_O, (char*) "" },
+  { "read", (PyCFunction) _wrap_IDMEF_read, METH_O, (char*) "" },
+  { "readExcept", (PyCFunction) _wrap_IDMEF_readExcept, METH_O, (char*) "" },
+  { "get", (PyCFunction) _wrap_IDMEF_get, METH_O, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__Prelude__IDMEF_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "prelude.IDMEF",                          /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_IDMEF_closure,  /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) (reprfunc) _wrap_IDMEF_toString_closure, /* tp_repr */
+    &SwigPyBuiltin__Prelude__IDMEF_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__Prelude__IDMEF_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__Prelude__IDMEF_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__Prelude__IDMEF_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "Prelude::IDMEF",                         /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__Prelude__IDMEF_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__Prelude__IDMEF_methods,    /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__Prelude__IDMEF_getset,     /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_IDMEF,               /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) _wrap_IDMEF_readExcept,      /* nb_lshift */
+    (binaryfunc) _wrap_IDMEF_write,           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) (binaryfunc) _wrap_IDMEF_get, /* mp_subscript */
+    (objobjargproc) (objobjargproc) _wrap_IDMEF_set_closure, /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) _wrap_IDMEF___contains___closure, /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__Prelude__IDMEF_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEF_type};
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
@@ -18798,20 +20301,21 @@ static void *_p_Prelude__PreludeErrorTo_p_std__exception(void *x, int *SWIGUNUSE
 static void *_p_Prelude__ClientEasyTo_p_Prelude__Client(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((Prelude::Client *)  ((Prelude::ClientEasy *) x));
 }
-static swig_type_info _swigt__p_Prelude__Client = {"_p_Prelude__Client", "Prelude::Client *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__ClientEasy = {"_p_Prelude__ClientEasy", "Prelude::ClientEasy *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__ClientProfile = {"_p_Prelude__ClientProfile", "Prelude::ClientProfile *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__Connection = {"_p_Prelude__Connection", "Prelude::Connection *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__ConnectionPool = {"_p_Prelude__ConnectionPool", "Prelude::ConnectionPool *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEF = {"_p_Prelude__IDMEF", "Prelude::IDMEF *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFClass = {"_p_Prelude__IDMEFClass", "Prelude::IDMEFClass *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFCriteria = {"_p_Prelude__IDMEFCriteria", "Prelude::IDMEFCriteria *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFCriterion = {"_p_Prelude__IDMEFCriterion", "Prelude::IDMEFCriterion *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFPath = {"_p_Prelude__IDMEFPath", "Prelude::IDMEFPath *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFTime = {"_p_Prelude__IDMEFTime", "Prelude::IDMEFTime *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__IDMEFValue = {"_p_Prelude__IDMEFValue", "Prelude::IDMEFValue *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__PreludeError = {"_p_Prelude__PreludeError", "Prelude::PreludeError *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Prelude__PreludeLog = {"_p_Prelude__PreludeLog", "Prelude::PreludeLog *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Prelude__Client = {"_p_Prelude__Client", "Prelude::Client *", 0, 0, (void*)&SwigPyBuiltin__Prelude__Client_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__ClientEasy = {"_p_Prelude__ClientEasy", "Prelude::ClientEasy *", 0, 0, (void*)&SwigPyBuiltin__Prelude__ClientEasy_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__ClientProfile = {"_p_Prelude__ClientProfile", "Prelude::ClientProfile *", 0, 0, (void*)&SwigPyBuiltin__Prelude__ClientProfile_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__Connection = {"_p_Prelude__Connection", "Prelude::Connection *", 0, 0, (void*)&SwigPyBuiltin__Prelude__Connection_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__ConnectionPool = {"_p_Prelude__ConnectionPool", "Prelude::ConnectionPool *", 0, 0, (void*)&SwigPyBuiltin__Prelude__ConnectionPool_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEF = {"_p_Prelude__IDMEF", "Prelude::IDMEF *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEF_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFClass = {"_p_Prelude__IDMEFClass", "Prelude::IDMEFClass *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFClass_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFCriteria = {"_p_Prelude__IDMEFCriteria", "Prelude::IDMEFCriteria *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFCriteria_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFCriterion = {"_p_Prelude__IDMEFCriterion", "Prelude::IDMEFCriterion *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFCriterion_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFPath = {"_p_Prelude__IDMEFPath", "Prelude::IDMEFPath *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFPath_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFTime = {"_p_Prelude__IDMEFTime", "Prelude::IDMEFTime *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFTime_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__IDMEFValue = {"_p_Prelude__IDMEFValue", "Prelude::IDMEFValue *", 0, 0, (void*)&SwigPyBuiltin__Prelude__IDMEFValue_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__PreludeError = {"_p_Prelude__PreludeError", "Prelude::PreludeError *", 0, 0, (void*)&SwigPyBuiltin__Prelude__PreludeError_clientdata, 0};
+static swig_type_info _swigt__p_Prelude__PreludeLog = {"_p_Prelude__PreludeLog", "Prelude::PreludeLog *", 0, 0, (void*)&SwigPyBuiltin__Prelude__PreludeLog_clientdata, 0};
+static swig_type_info _swigt__p_SwigPyObject = {"_p_SwigPyObject", "SwigPyObject *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *|int8_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
@@ -18832,7 +20336,7 @@ static swig_type_info _swigt__p_short = {"_p_short", "short *|int16_t *", 0, 0, 
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__exception = {"_p_std__exception", "std::exception *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator", "swig::SwigPyIterator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator", "swig::SwigPyIterator *", 0, 0, (void*)&SwigPyBuiltin__swig__SwigPyIterator_clientdata, 0};
 static swig_type_info _swigt__p_time_t = {"_p_time_t", "time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_timeval = {"_p_timeval", "timeval *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uint8_t *", 0, 0, (void*)0, 0};
@@ -18857,6 +20361,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Prelude__IDMEFValue,
   &_swigt__p_Prelude__PreludeError,
   &_swigt__p_Prelude__PreludeLog,
+  &_swigt__p_SwigPyObject,
   &_swigt__p_allocator_type,
   &_swigt__p_char,
   &_swigt__p_difference_type,
@@ -18902,6 +20407,7 @@ static swig_cast_info _swigc__p_Prelude__IDMEFTime[] = {  {&_swigt__p_Prelude__I
 static swig_cast_info _swigc__p_Prelude__IDMEFValue[] = {  {&_swigt__p_Prelude__IDMEFValue, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Prelude__PreludeError[] = {  {&_swigt__p_Prelude__PreludeError, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Prelude__PreludeLog[] = {  {&_swigt__p_Prelude__PreludeLog, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SwigPyObject[] = {  {&_swigt__p_SwigPyObject, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_allocator_type[] = {  {&_swigt__p_allocator_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -18947,6 +20453,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Prelude__IDMEFValue,
   _swigc__p_Prelude__PreludeError,
   _swigc__p_Prelude__PreludeLog,
+  _swigc__p_SwigPyObject,
   _swigc__p_allocator_type,
   _swigc__p_char,
   _swigc__p_difference_type,
@@ -18987,6 +20494,8 @@ static swig_const_info swig_const_table[] = {
 #ifdef __cplusplus
 }
 #endif
+static PyTypeObject *builtin_bases[3];
+
 /* -----------------------------------------------------------------------------
  * Type initialization:
  * This problem is tough by the requirement that no dynamic
@@ -19661,6 +21170,29 @@ SWIG_init(void) {
   SWIG_InstallConstants(d,swig_const_table);
   
   
+  /* type 'swig::SwigPyIterator' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__swig__SwigPyIterator_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'SwigPyIterator'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "SwigPyIterator", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "SwigPyIterator");
+  d = md;
+  
   int argc, ret, idx;
   char **argv = NULL;
   PyObject *sys = PyImport_ImportModule("sys");
@@ -19701,68 +21233,412 @@ SWIG_init(void) {
   Py_DECREF(pyargv);
   Py_DECREF(sys);
   
-  SWIG_Python_SetConstant(d, "Client_ASYNC_SEND",SWIG_From_int(static_cast< int >(Prelude::Client::ASYNC_SEND)));
-  SWIG_Python_SetConstant(d, "Client_FLAGS_ASYNC_SEND",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_ASYNC_SEND)));
-  SWIG_Python_SetConstant(d, "Client_ASYNC_TIMER",SWIG_From_int(static_cast< int >(Prelude::Client::ASYNC_TIMER)));
-  SWIG_Python_SetConstant(d, "Client_FLAGS_ASYNC_TIMER",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_ASYNC_TIMER)));
-  SWIG_Python_SetConstant(d, "Client_HEARTBEAT",SWIG_From_int(static_cast< int >(Prelude::Client::HEARTBEAT)));
-  SWIG_Python_SetConstant(d, "Client_FLAGS_HEARTBEAT",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_HEARTBEAT)));
-  SWIG_Python_SetConstant(d, "Client_CONNECT",SWIG_From_int(static_cast< int >(Prelude::Client::CONNECT)));
-  SWIG_Python_SetConstant(d, "Client_FLAGS_CONNECT",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_CONNECT)));
-  SWIG_Python_SetConstant(d, "Client_AUTOCONFIG",SWIG_From_int(static_cast< int >(Prelude::Client::AUTOCONFIG)));
-  SWIG_Python_SetConstant(d, "Client_FLAGS_AUTOCONFIG",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_AUTOCONFIG)));
-  SWIG_Python_SetConstant(d, "Client_IDMEF_READ",SWIG_From_int(static_cast< int >(Prelude::Client::IDMEF_READ)));
-  SWIG_Python_SetConstant(d, "Client_PERMISSION_IDMEF_READ",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_IDMEF_READ)));
-  SWIG_Python_SetConstant(d, "Client_ADMIN_READ",SWIG_From_int(static_cast< int >(Prelude::Client::ADMIN_READ)));
-  SWIG_Python_SetConstant(d, "Client_PERMISSION_ADMIN_READ",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_ADMIN_READ)));
-  SWIG_Python_SetConstant(d, "Client_IDMEF_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::IDMEF_WRITE)));
-  SWIG_Python_SetConstant(d, "Client_PERMISSION_IDMEF_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_IDMEF_WRITE)));
-  SWIG_Python_SetConstant(d, "Client_ADMIN_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::ADMIN_WRITE)));
-  SWIG_Python_SetConstant(d, "Client_PERMISSION_ADMIN_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_ADMIN_WRITE)));
-  SWIG_Python_SetConstant(d, "PreludeLog_DEBUG",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::DEBUG)));
-  SWIG_Python_SetConstant(d, "PreludeLog_INFO",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::INFO)));
-  SWIG_Python_SetConstant(d, "PreludeLog_WARNING",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::WARNING)));
-  SWIG_Python_SetConstant(d, "PreludeLog_ERROR",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::ERROR)));
-  SWIG_Python_SetConstant(d, "PreludeLog_CRITICAL",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::CRITICAL)));
-  SWIG_Python_SetConstant(d, "PreludeLog_QUIET",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::QUIET)));
-  SWIG_Python_SetConstant(d, "PreludeLog_SYSLOG",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::SYSLOG)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_EQUAL)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_EQUAL_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_EQUAL_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_EQUAL)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_EQUAL_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_EQUAL_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_LESSER",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_LESSER)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_LESSER_OR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_LESSER_OR_EQUAL)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_GREATER",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_GREATER)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_GREATER_OR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_GREATER_OR_EQUAL)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_SUBSTR",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_SUBSTR)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_SUBSTR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_SUBSTR_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_SUBSTR",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_SUBSTR)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_SUBSTR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_SUBSTR_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_REGEX",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_REGEX)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_REGEX_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_REGEX_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_REGEX",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_REGEX)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_REGEX_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_REGEX_NOCASE)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NULL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NULL)));
-  SWIG_Python_SetConstant(d, "IDMEFCriterion_OPERATOR_NOT_NULL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_NULL)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_UNKNOWN",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UNKNOWN)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_INT8",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT8)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_UINT8",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT8)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_INT16",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT16)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_UINT16",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT16)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_INT32",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT32)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_UINT32",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT32)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_INT64",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT64)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_UINT64",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT64)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_FLOAT",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_FLOAT)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_DOUBLE",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_DOUBLE)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_STRING",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_STRING)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_TIME",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_TIME)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_DATA",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_DATA)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_ENUM",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_ENUM)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_LIST",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_LIST)));
-  SWIG_Python_SetConstant(d, "IDMEFValue_TYPE_CLASS",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_CLASS)));
+  
+  /* type 'Prelude::ClientProfile' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__ClientProfile_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'ClientProfile'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "ClientProfile", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "ClientProfile");
+  d = md;
+  
+  /* type 'Prelude::Connection' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__Connection_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'Connection'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "Connection", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "Connection");
+  d = md;
+  
+  /* type 'Prelude::ConnectionPool' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__ConnectionPool_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'ConnectionPool'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "ConnectionPool", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "ConnectionPool");
+  d = md;
+  
+  /* type 'Prelude::Client' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__Client_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "ASYNC_SEND",SWIG_From_int(static_cast< int >(Prelude::Client::ASYNC_SEND)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "FLAGS_ASYNC_SEND",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_ASYNC_SEND)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "ASYNC_TIMER",SWIG_From_int(static_cast< int >(Prelude::Client::ASYNC_TIMER)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "FLAGS_ASYNC_TIMER",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_ASYNC_TIMER)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "HEARTBEAT",SWIG_From_int(static_cast< int >(Prelude::Client::HEARTBEAT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "FLAGS_HEARTBEAT",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_HEARTBEAT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "CONNECT",SWIG_From_int(static_cast< int >(Prelude::Client::CONNECT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "FLAGS_CONNECT",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_CONNECT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "AUTOCONFIG",SWIG_From_int(static_cast< int >(Prelude::Client::AUTOCONFIG)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "FLAGS_AUTOCONFIG",SWIG_From_int(static_cast< int >(Prelude::Client::FLAGS_AUTOCONFIG)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "IDMEF_READ",SWIG_From_int(static_cast< int >(Prelude::Client::IDMEF_READ)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "PERMISSION_IDMEF_READ",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_IDMEF_READ)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "ADMIN_READ",SWIG_From_int(static_cast< int >(Prelude::Client::ADMIN_READ)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "PERMISSION_ADMIN_READ",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_ADMIN_READ)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "IDMEF_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::IDMEF_WRITE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "PERMISSION_IDMEF_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_IDMEF_WRITE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "ADMIN_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::ADMIN_WRITE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "PERMISSION_ADMIN_WRITE",SWIG_From_int(static_cast< int >(Prelude::Client::PERMISSION_ADMIN_WRITE)));
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_basetype = SWIG_MangledTypeQuery("_p_Prelude__ClientProfile");
+  if (builtin_basetype && builtin_basetype->clientdata && ((SwigPyClientData*) builtin_basetype->clientdata)->pytype) {
+    builtin_bases[builtin_base_count++] = ((SwigPyClientData*) builtin_basetype->clientdata)->pytype;
+  } else {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'Client' as base 'Prelude::ClientProfile' has not been initialized.\n");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'Client'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "Client", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "Client");
+  d = md;
+  
+  /* type 'Prelude::PreludeLog' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__PreludeLog_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "DEBUG",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::DEBUG)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "INFO",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::INFO)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "WARNING",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::WARNING)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "ERROR",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::ERROR)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "CRITICAL",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::CRITICAL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "QUIET",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::QUIET)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "SYSLOG",SWIG_From_int(static_cast< int >(Prelude::PreludeLog::SYSLOG)));
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'PreludeLog'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "PreludeLog", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "PreludeLog");
+  d = md;
+  
+  /* type 'Prelude::PreludeError' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__PreludeError_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'PreludeError'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "PreludeError", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "PreludeError");
+  d = md;
+  
+  /* type 'Prelude::ClientEasy' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__ClientEasy_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_basetype = SWIG_MangledTypeQuery("_p_Prelude__Client");
+  if (builtin_basetype && builtin_basetype->clientdata && ((SwigPyClientData*) builtin_basetype->clientdata)->pytype) {
+    builtin_bases[builtin_base_count++] = ((SwigPyClientData*) builtin_basetype->clientdata)->pytype;
+  } else {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'ClientEasy' as base 'Prelude::Client' has not been initialized.\n");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'ClientEasy'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "ClientEasy", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "ClientEasy");
+  d = md;
+  
+  /* type 'Prelude::IDMEFCriterion' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFCriterion_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_EQUAL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_EQUAL_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_EQUAL_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_EQUAL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_EQUAL_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_EQUAL_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_LESSER",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_LESSER)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_LESSER_OR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_LESSER_OR_EQUAL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_GREATER",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_GREATER)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_GREATER_OR_EQUAL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_GREATER_OR_EQUAL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_SUBSTR",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_SUBSTR)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_SUBSTR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_SUBSTR_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_SUBSTR",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_SUBSTR)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_SUBSTR_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_SUBSTR_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_REGEX",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_REGEX)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_REGEX_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_REGEX_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_REGEX",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_REGEX)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_REGEX_NOCASE",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_REGEX_NOCASE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NULL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NULL)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT_NULL",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriterion::OPERATOR_NOT_NULL)));
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFCriterion'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFCriterion", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFCriterion");
+  d = md;
+  
+  /* type 'Prelude::IDMEFCriteria' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFCriteria_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFCriteria'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFCriteria", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFCriteria");
+  d = md;
+  
+  /* type 'Prelude::IDMEFValue' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFValue_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_UNKNOWN",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UNKNOWN)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_INT8",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT8)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_UINT8",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT8)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_INT16",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT16)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_UINT16",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT16)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_INT32",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT32)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_UINT32",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT32)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_INT64",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_INT64)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_UINT64",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_UINT64)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_FLOAT",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_FLOAT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_DOUBLE",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_DOUBLE)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_STRING",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_STRING)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_TIME",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_TIME)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_DATA",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_DATA)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_ENUM",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_ENUM)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_LIST",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_LIST)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "TYPE_CLASS",SWIG_From_int(static_cast< int >(Prelude::IDMEFValue::TYPE_CLASS)));
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFValue'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFValue", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFValue");
+  d = md;
+  
+  /* type 'Prelude::IDMEFPath' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFPath_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFPath'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFPath", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFPath");
+  d = md;
+  
+  /* type 'Prelude::IDMEFTime' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFTime_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFTime'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFTime", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFTime");
+  d = md;
+  
+  /* type 'Prelude::IDMEFClass' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFClass_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEFClass'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEFClass", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEFClass");
+  d = md;
+  
+  /* type 'Prelude::IDMEF' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEF_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'IDMEF'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "IDMEF", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "IDMEF");
+  d = md;
   
   /* Initialize threading */
   SWIG_PYTHON_INITIALIZE_THREADS;

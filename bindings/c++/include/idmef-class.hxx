@@ -50,15 +50,16 @@ namespace Prelude {
                 IDMEFClass(const std::string &path);
 
                 size_t getDepth(void);
-                IDMEFClass getChild(int child);
-                IDMEFClass getChild(const std::string &name);
-                IDMEFClass get(int child) { return getChild(child); };
-                IDMEFClass get(const std::string &name) { return getChild(name); };
+                IDMEFClass get(int child);
+                IDMEFClass get(const std::string &name);
+
+                size_t getChildCount() { return idmef_class_get_child_count(_id); };
 
                 /* main object operation */
                 bool isList(void);
                 bool isKeyedList(void);
                 std::string getName(void);
+                std::string toString(void);
                 Prelude::IDMEFValue::IDMEFValueTypeEnum getValueType(void);
                 std::string getPath(int rootidx=0, int depth=-1, const std::string &sep = ".", const std::string &listidx="");
                 std::vector<std::string> getEnumValues(void);

@@ -63,7 +63,7 @@ IDMEFClass::IDMEFClass(IDMEFClass &parent, int child_id, int depth)
         IDMEFClass::IDMEFClassElem elem;
 
         if ( depth > 16 )
-                throw PreludeError("Max depth reached");
+                throw PreludeError(prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH));
 
         _depth = depth;
         _pathelem = parent._pathelem;
@@ -72,6 +72,28 @@ IDMEFClass::IDMEFClass(IDMEFClass &parent, int child_id, int depth)
         elem.parent_id = parent._id;
         elem.idx = child_id;
         _pathelem.push_back(elem);
+}
+
+
+std::string IDMEFClass::toString(void)
+{
+        unsigned int i = 0;
+        std::string s  = "IDMEFClass(" + getName();
+
+        do {
+                if ( i > 0 )
+                        s += ", ";
+
+                try {
+                        s += get(i++).toString();
+                } catch(...) {
+                        break;
+                }
+        } while ( TRUE );
+
+        s += "\n)";
+
+        return s;
 }
 
 
@@ -144,18 +166,18 @@ std::string IDMEFClass::getPath(int rootidx, int depth, const std::string &sep, 
 
 
 
-IDMEFClass IDMEFClass::getChild(const std::string &name)
+IDMEFClass IDMEFClass::get(const std::string &name)
 {
         int i = idmef_class_find_child(_id, name.c_str());
 
         if ( i < 0 )
                 throw PreludeError(i);
 
-        return getChild(i);
+        return get(i);
 }
 
 
-IDMEFClass IDMEFClass::getChild(int i)
+IDMEFClass IDMEFClass::get(int i)
 {
         idmef_class_id_t cl;
         idmef_value_type_id_t vl;

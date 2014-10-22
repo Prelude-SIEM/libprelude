@@ -51,6 +51,7 @@ namespace Prelude {
                 uint32_t getSec() const;
                 uint32_t getUSec() const;
                 int32_t getGmtOffset() const;
+                double getTime() const { return (double) *this; };
 
                 IDMEFTime clone() const;
                 const std::string toString() const;

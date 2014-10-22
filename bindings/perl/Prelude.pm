@@ -675,6 +675,7 @@ sub DESTROY {
 *getSec = *Preludec::IDMEFTime_getSec;
 *getUSec = *Preludec::IDMEFTime_getUSec;
 *getGmtOffset = *Preludec::IDMEFTime_getGmtOffset;
+*getTime = *Preludec::IDMEFTime_getTime;
 *clone = *Preludec::IDMEFTime_clone;
 *toString = *Preludec::IDMEFTime_toString;
 *__ne__ = *Preludec::IDMEFTime___ne__;
@@ -710,11 +711,12 @@ sub new {
 }
 
 *getDepth = *Preludec::IDMEFClass_getDepth;
-*getChild = *Preludec::IDMEFClass_getChild;
 *get = *Preludec::IDMEFClass_get;
+*getChildCount = *Preludec::IDMEFClass_getChildCount;
 *isList = *Preludec::IDMEFClass_isList;
 *isKeyedList = *Preludec::IDMEFClass_isKeyedList;
 *getName = *Preludec::IDMEFClass_getName;
+*toString = *Preludec::IDMEFClass_toString;
 *getValueType = *Preludec::IDMEFClass_getValueType;
 *getPath = *Preludec::IDMEFClass_getPath;
 *getEnumValues = *Preludec::IDMEFClass_getEnumValues;

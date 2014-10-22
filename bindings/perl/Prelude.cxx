@@ -1617,6 +1617,8 @@ void SwigSvFromString(SV* sv, const std::string& s) {
 #include <algorithm>
 
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 #include <list>
 #include <sstream>
 
@@ -12699,6 +12701,41 @@ XS(_wrap_IDMEFTime_getGmtOffset) {
 }
 
 
+XS(_wrap_IDMEFTime_getTime) {
+  {
+    Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: IDMEFTime_getTime(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFTime, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime_getTime" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
+    {
+      try {
+        result = (double)((Prelude::IDMEFTime const *)arg1)->getTime();
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1(static_cast< double >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_IDMEFTime_clone) {
   {
     Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
@@ -13325,181 +13362,6 @@ XS(_wrap_IDMEFClass_getDepth) {
 }
 
 
-XS(_wrap_IDMEFClass_getChild__SWIG_0) {
-  {
-    Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFClass result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: IDMEFClass_getChild(self,child);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChild" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
-    }
-    arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = static_cast< int >(val2);
-    {
-      try {
-        result = (arg1)->getChild(arg2);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj((new Prelude::IDMEFClass(static_cast< const Prelude::IDMEFClass& >(result))), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_IDMEFClass_getChild__SWIG_1) {
-  {
-    Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-    std::string *arg2 = 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 = SWIG_OLDOBJ ;
-    int argvi = 0;
-    Prelude::IDMEFClass result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: IDMEFClass_getChild(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChild" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
-    }
-    arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
-    {
-      std::string *ptr = (std::string *)0;
-      res2 = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(1), &ptr);
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "std::string const &""'"); 
-      }
-      if (!ptr) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFClass_getChild" "', argument " "2"" of type '" "std::string const &""'"); 
-      }
-      arg2 = ptr;
-    }
-    {
-      try {
-        result = (arg1)->getChild((std::string const &)*arg2);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj((new Prelude::IDMEFClass(static_cast< const Prelude::IDMEFClass& >(result))), SWIGTYPE_p_Prelude__IDMEFClass, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
-    if (SWIG_IsNewObj(res2)) delete arg2;
-    XSRETURN(argvi);
-  fail:
-    
-    if (SWIG_IsNewObj(res2)) delete arg2;
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_IDMEFClass_getChild) {
-  dXSARGS;
-  
-  {
-    unsigned long _index = 0;
-    SWIG_TypeRank _rank = 0; 
-    if (items == 2) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_1;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        {
-          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_1;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 1;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_1:
-    
-    if (items == 2) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFClass, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(1), (std::string**)(0));
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 2;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_2:
-    
-  dispatch:
-    switch(_index) {
-    case 1:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFClass_getChild__SWIG_0); return;
-    case 2:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFClass_getChild__SWIG_1); return;
-    }
-  }
-  
-  croak("No matching function for overloaded 'IDMEFClass_getChild'");
-  XSRETURN(0);
-}
-
-
 XS(_wrap_IDMEFClass_get__SWIG_0) {
   {
     Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
@@ -13675,6 +13537,41 @@ XS(_wrap_IDMEFClass_get) {
 }
 
 
+XS(_wrap_IDMEFClass_getChildCount) {
+  {
+    Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    size_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: IDMEFClass_getChildCount(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_getChildCount" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
+    {
+      try {
+        result = (arg1)->getChildCount();
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1(static_cast< size_t >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_IDMEFClass_isList) {
   {
     Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
@@ -13765,6 +13662,41 @@ XS(_wrap_IDMEFClass_getName) {
     {
       try {
         result = (arg1)->getName();
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_From_std_string  SWIG_PERL_CALL_ARGS_1(static_cast< std::string >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_IDMEFClass_toString) {
+  {
+    Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    std::string result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: IDMEFClass_toString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFClass, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFClass_toString" "', argument " "1"" of type '" "Prelude::IDMEFClass *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEFClass * >(argp1);
+    {
+      try {
+        result = (arg1)->toString();
       } catch(Prelude::PreludeError &e) {
         SWIG_exception(SWIG_RuntimeError, e.what());
         SWIG_fail;
@@ -16133,6 +16065,7 @@ static swig_command_info swig_commands[] = {
 {"Preludec::IDMEFTime_getSec", _wrap_IDMEFTime_getSec},
 {"Preludec::IDMEFTime_getUSec", _wrap_IDMEFTime_getUSec},
 {"Preludec::IDMEFTime_getGmtOffset", _wrap_IDMEFTime_getGmtOffset},
+{"Preludec::IDMEFTime_getTime", _wrap_IDMEFTime_getTime},
 {"Preludec::IDMEFTime_clone", _wrap_IDMEFTime_clone},
 {"Preludec::IDMEFTime_toString", _wrap_IDMEFTime_toString},
 {"Preludec::IDMEFTime___ne__", _wrap_IDMEFTime___ne__},
@@ -16143,11 +16076,12 @@ static swig_command_info swig_commands[] = {
 {"Preludec::IDMEFTime___lt__", _wrap_IDMEFTime___lt__},
 {"Preludec::new_IDMEFClass", _wrap_new_IDMEFClass},
 {"Preludec::IDMEFClass_getDepth", _wrap_IDMEFClass_getDepth},
-{"Preludec::IDMEFClass_getChild", _wrap_IDMEFClass_getChild},
 {"Preludec::IDMEFClass_get", _wrap_IDMEFClass_get},
+{"Preludec::IDMEFClass_getChildCount", _wrap_IDMEFClass_getChildCount},
 {"Preludec::IDMEFClass_isList", _wrap_IDMEFClass_isList},
 {"Preludec::IDMEFClass_isKeyedList", _wrap_IDMEFClass_isKeyedList},
 {"Preludec::IDMEFClass_getName", _wrap_IDMEFClass_getName},
+{"Preludec::IDMEFClass_toString", _wrap_IDMEFClass_toString},
 {"Preludec::IDMEFClass_getValueType", _wrap_IDMEFClass_getValueType},
 {"Preludec::IDMEFClass_getPath", _wrap_IDMEFClass_getPath},
 {"Preludec::IDMEFClass_getEnumValues", _wrap_IDMEFClass_getEnumValues},

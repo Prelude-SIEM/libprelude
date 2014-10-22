@@ -41,7 +41,7 @@ endif
 
 _prelude.cxx prelude.py: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
 if HAVE_SWIG
-	$(SWIG) -c++ -DSWIG_COMPILE_LIBPRELUDE -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -python -threads -o $@ $(top_srcdir)/bindings/libpreludecpp.i
+	$(SWIG) -c++ -DSWIG_COMPILE_LIBPRELUDE -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -python -threads -builtin -O -o $@ $(top_srcdir)/bindings/libpreludecpp.i
 endif
 
 endif

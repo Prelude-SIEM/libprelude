@@ -27,6 +27,7 @@
 %module Prelude
 #endif
 
+%warnfilter(509);
 %feature("nothread", "1");
 
 %include "std_string.i"
@@ -34,6 +35,8 @@
 %include "exception.i"
 
 %{
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 #include <list>
 #include <sstream>
 
@@ -358,10 +361,3 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
 %include idmef.hxx
 #endif
 
-#ifdef SWIGPYTHON
-%pythoncode %{
-for i in (IDMEF, IDMEFCriteria, IDMEFCriterion, IDMEFValue, IDMEFPath, IDMEFTime,
-          Client, ClientEasy, ClientProfile, Connection, ConnectionPool, PreludeLog, PreludeError):
-    python2_unicode_patch(i)
-%}
-#endif

@@ -21,22 +21,51 @@
 *
 *****/
 
-%include std_list.i
-
-%warnfilter(511);
-
-%rename (__str__) *::operator const std::string() const;
-%rename (__str__) *::operator const char *() const;
-%rename (__int__) *::operator int() const;
-%rename (__long__) *::operator long() const;
-%rename (__float__) *::operator double() const;
-
-%ignore *::operator =;
-
 %begin %{
 #define TARGET_LANGUAGE_SELF PyObject *
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
 %}
+
+%include std_list.i
+
+%ignore *::operator int;
+%ignore *::operator long;
+%ignore *::operator double;
+%ignore *::operator const char *;
+%ignore *::operator const std::string;
+%ignore *::operator ();
+
+%feature("python:slot", "tp_str", functype="reprfunc") *::what;
+%feature("python:slot", "tp_repr", functype="reprfunc") *::toString;
+%feature("python:slot", "mp_subscript", functype="binaryfunc") *::get;
+%feature("python:slot", "mp_ass_subscript", functype="objobjargproc") *::set;
+%feature("python:slot", "tp_hash") Prelude::IDMEFValue::getType;
+
+/*
+ * IDMEFClass
+ */
+%feature("python:slot", "tp_str", functype="reprfunc") Prelude::IDMEFClass::getName;
+%feature("python:slot", "sq_item", functype="ssizeargfunc") Prelude::IDMEFClass::_get2;
+%feature("python:slot", "mp_subscript", functype="binaryfunc") Prelude::IDMEFClass::get;
+%feature("python:slot", "mp_length", functype="lenfunc") Prelude::IDMEFClass::getChildCount;
+
+/*
+ * IDMEFTime
+ */
+%feature("python:slot", "nb_int", functype="unaryfunc") Prelude::IDMEFTime::getSec;
+%feature("python:slot", "nb_long", functype="unaryfunc") Prelude::IDMEFTime::_getSec2;
+%feature("python:slot", "nb_float", functype="unaryfunc") Prelude::IDMEFTime::getTime;
+
+/*
+ *
+ */
+%feature("python:slot", "nb_lshift") Prelude::IDMEF::readExcept;
+%feature("python:slot", "nb_rshift") Prelude::IDMEF::write;
+%feature("python:sq_contains") Prelude::IDMEF "_wrap_IDMEF___contains___closure";
+
+
+%ignore *::operator =;
+
 
 %fragment("SWIG_FromBytePtrAndSize", "header", fragment="SWIG_FromCharPtrAndSize") %{
 #if PY_VERSION_HEX < 0x03000000
@@ -45,20 +74,6 @@
 # define SWIG_FromBytePtrAndSize(arg, len) PyBytes_FromStringAndSize(arg, len)
 #endif
 %}
-
-%insert("python") {
-import sys
-
-def python2_unicode_patch(cl):
-    if cl.__str__ is object.__str__:
-        return cl
-
-    if sys.version_info < (3, 0):
-         cl.__unicode__ = lambda self: self.__str__().decode('utf-8')
-
-    cl.__repr__ = lambda self: self.__class__.__name__ + "(" + repr(str(self)) + ")"
-    return cl
-}
 
 %{
 PyObject *__prelude_log_func = NULL;
@@ -169,7 +184,8 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 %}
 
 
-%exception {
+
+%exception readExcept(void *nocast_file_p) {
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
@@ -185,39 +201,39 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
-%exception read(void *nocast_p) {
+%exception read(void *nocast_file_p) {
         try {
                 $action
         } catch(Prelude::PreludeError &e) {
-                if ( e.getCode() == PRELUDE_ERROR_EOF )
+                if ( e.getCode() == PRELUDE_ERROR_EOF ) {
                         result = 0;
-                else
-                        SWIG_exception_fail(SWIG_RuntimeError, e.what());
+                } else {
+                        SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+                                                             SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+                                          "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+                        SWIG_fail;
+                }
+        }
+}
+
+
+%exception {
+        try {
+                $action
+        } catch(Prelude::PreludeError &e) {
+                SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+                                                     SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+                                  "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+                SWIG_fail;
         }
 }
 
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
-
-%extend Prelude::IDMEFValue {
-        long __hash__() {
-                return $self->getType();
-        }
-}
-
-
 %extend Prelude::IDMEF {
-        %insert("python") %{
-        def __setitem__(self, key, value):
-                return self.set(key, value)
-
-        def __getitem__(self, key):
-                try:
-                        return self.get(key)
-                except:
-                        raise IndexError
-
-        %}
+        int __contains__(const char *key) {
+                return self->get(key).isNull() ? FALSE : TRUE;
+        }
 
         void write(void *nocast_file_p) {
                 self->_genericWrite(_cb_python_write, nocast_file_p);
@@ -228,37 +244,37 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
                 return 1;
         }
 
-        Prelude::IDMEF &operator >> (void *nocast_file_p) {
-                self->_genericWrite(_cb_python_write, nocast_file_p);
-                return *self;
-        }
-
-        Prelude::IDMEF &operator << (void *nocast_file_p) {
+        int readExcept(void *nocast_file_p) {
                 self->_genericRead(_cb_python_read, nocast_file_p);
-                return *self;
+                return 1;
         }
 }
 
+/*
+ * Workaround SWIG %features bug, which prevent us from applying multiple
+ * features to the same method.
+ */
+%extend Prelude::IDMEFTime {
+        long _getSec2(void) {
+                return self->getSec();
+        }
+}
+
+%exception Prelude::IDMEFClass::_get2 {
+        try {
+                $action;
+        } catch(Prelude::PreludeError &e) {
+                if ( e.getCode() == PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD ||
+                     e.getCode() == PRELUDE_ERROR_IDMEF_PATH_DEPTH )
+                        SWIG_exception_fail(SWIG_IndexError, e.what());
+        }
+}
 
 %extend Prelude::IDMEFClass {
-    %insert("python") %{
-        def __getitem__(self, key):
-                if isinstance(key, slice):
-                        return itertools.islice(self, key.start, key.stop, key.step)
-
-                try:
-                        return self.get(key)
-                except Exception as e:
-                        raise IndexError
-
-        def __str__(self):
-                return self.getName()
-
-        def __repr__(self):
-                return "IDMEFClass(" + self.getName() + ", ".join([repr(i) for i in self]) + "\n)"
-    %}
+        Prelude::IDMEFClass _get2(int i) {
+                return self->get(i);
+        }
 }
-
 #endif
 
 %fragment("IDMEFValueList_to_SWIG", "header", fragment="IDMEFValue_to_SWIG") {
@@ -306,18 +322,13 @@ PyObject *IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEF
                 ret = IDMEFValue_to_SWIG(NULL, $1, NULL, &$result);
 #endif
                 if ( ret < 0 ) {
-                        std::stringstream s;
-                        s << "IDMEFValue typemap does not handle value of type '" << idmef_value_type_to_string((idmef_value_type_id_t) $1.getType()) << "'";
-                        SWIG_exception_fail(SWIG_ValueError, s.str().c_str());
+                        std::string s = "IDMEFValue typemap does not handle value of type '";
+                        s += idmef_value_type_to_string((idmef_value_type_id_t) $1.getType());
+                        s += "'";
+                        SWIG_exception_fail(SWIG_ValueError, s.c_str());
                 }
         }
 };
-
-
-%feature("shadow") clone() %{
-        def __deepcopy__(self, memo):
-                return $action(self.this)
-%}
 
 
 %init {
@@ -361,3 +372,23 @@ PyObject *IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEF
         Py_DECREF(pyargv);
         Py_DECREF(sys);
 }
+
+
+%{
+extern "C" {
+SWIGINTERN PyObject *_wrap_IDMEF___contains__(PyObject *self, PyObject *args);
+}
+
+#define MYPY_OBJOBJPROC_CLOSURE(wrapper)                        \
+SWIGINTERN int                                                  \
+wrapper##_closure(PyObject *a, PyObject *b) {                   \
+    PyObject *pyresult;                                         \
+    int result;                                                 \
+    pyresult = wrapper(a, b);                                   \
+    result = pyresult && PyObject_IsTrue(pyresult) ? 1 : 0;     \
+    Py_XDECREF(pyresult);                                       \
+    return result;                                              \
+}
+
+MYPY_OBJOBJPROC_CLOSURE(_wrap_IDMEF___contains__)
+%}

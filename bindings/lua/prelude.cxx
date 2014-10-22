@@ -2733,6 +2733,8 @@ SWIGINTERN int SWIG_lua_isnilstring(lua_State *L, int idx) {
 #include <stdexcept>
 
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 #include <list>
 #include <sstream>
 
@@ -10804,6 +10806,37 @@ fail:
 }
 
 
+static int _wrap_IDMEFTime_getTime(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
+  double result;
+  
+  SWIG_check_num_args("Prelude::IDMEFTime::getTime",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::getTime",1,"Prelude::IDMEFTime const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFTime,0))){
+    SWIG_fail_ptr("IDMEFTime_getTime",1,SWIGTYPE_p_Prelude__IDMEFTime);
+  }
+  
+  {
+    try {
+      result = (double)((Prelude::IDMEFTime const *)arg1)->getTime();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_IDMEFTime_clone(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFTime *arg1 = (Prelude::IDMEFTime *) 0 ;
@@ -11038,6 +11071,7 @@ static swig_lua_method swig_IDMEFTime_methods[]= {
     { "getSec", _wrap_IDMEFTime_getSec},
     { "getUSec", _wrap_IDMEFTime_getUSec},
     { "getGmtOffset", _wrap_IDMEFTime_getGmtOffset},
+    { "getTime", _wrap_IDMEFTime_getTime},
     { "clone", _wrap_IDMEFTime_clone},
     { "toString", _wrap_IDMEFTime_toString},
     { "__le", _wrap_IDMEFTime___le},
@@ -11273,135 +11307,6 @@ fail:
 }
 
 
-static int _wrap_IDMEFClass_getChild__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-  int arg2 ;
-  Prelude::IDMEFClass result;
-  
-  SWIG_check_num_args("Prelude::IDMEFClass::getChild",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFClass::getChild",1,"Prelude::IDMEFClass *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("Prelude::IDMEFClass::getChild",2,"int");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFClass,0))){
-    SWIG_fail_ptr("IDMEFClass_getChild",1,SWIGTYPE_p_Prelude__IDMEFClass);
-  }
-  
-  arg2 = (int)lua_tonumber(L, 2);
-  {
-    try {
-      result = (arg1)->getChild(arg2);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      SWIG_fail;
-    }
-  }
-  {
-    Prelude::IDMEFClass * resultptr = new Prelude::IDMEFClass((const Prelude::IDMEFClass &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_Prelude__IDMEFClass,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_IDMEFClass_getChild__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
-  std::string *arg2 = 0 ;
-  std::string temp2 ;
-  Prelude::IDMEFClass result;
-  
-  SWIG_check_num_args("Prelude::IDMEFClass::getChild",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFClass::getChild",1,"Prelude::IDMEFClass *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("Prelude::IDMEFClass::getChild",2,"std::string const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFClass,0))){
-    SWIG_fail_ptr("IDMEFClass_getChild",1,SWIGTYPE_p_Prelude__IDMEFClass);
-  }
-  
-  temp2.assign(lua_tostring(L,2),lua_rawlen(L,2)); arg2=&temp2;
-  {
-    try {
-      result = (arg1)->getChild((std::string const &)*arg2);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      SWIG_fail;
-    }
-  }
-  {
-    Prelude::IDMEFClass * resultptr = new Prelude::IDMEFClass((const Prelude::IDMEFClass &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_Prelude__IDMEFClass,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_IDMEFClass_getChild(lua_State* L) {
-  int argc;
-  int argv[3]={
-    1,2,3
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFClass, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        return _wrap_IDMEFClass_getChild__SWIG_0(L);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFClass, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isstring(L,argv[1]);
-      }
-      if (_v) {
-        return _wrap_IDMEFClass_getChild__SWIG_1(L);
-      }
-    }
-  }
-  
-  SWIG_Lua_pusherrstring(L,"Wrong arguments for overloaded function 'IDMEFClass_getChild'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEFClass::getChild(int)\n"
-    "    Prelude::IDMEFClass::getChild(std::string const &)\n");
-  lua_error(L);return 0;
-}
-
-
 static int _wrap_IDMEFClass_get__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
@@ -11531,6 +11436,37 @@ static int _wrap_IDMEFClass_get(lua_State* L) {
 }
 
 
+static int _wrap_IDMEFClass_getChildCount(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+  size_t result;
+  
+  SWIG_check_num_args("Prelude::IDMEFClass::getChildCount",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFClass::getChildCount",1,"Prelude::IDMEFClass *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFClass,0))){
+    SWIG_fail_ptr("IDMEFClass_getChildCount",1,SWIGTYPE_p_Prelude__IDMEFClass);
+  }
+  
+  {
+    try {
+      result = (arg1)->getChildCount();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_IDMEFClass_isList(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
@@ -11608,6 +11544,37 @@ static int _wrap_IDMEFClass_getName(lua_State* L) {
   {
     try {
       result = (arg1)->getName();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  lua_pushlstring(L,(&result)->data(),(&result)->size()); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_IDMEFClass_toString(lua_State* L) {
+  int SWIG_arg = 0;
+  Prelude::IDMEFClass *arg1 = (Prelude::IDMEFClass *) 0 ;
+  std::string result;
+  
+  SWIG_check_num_args("Prelude::IDMEFClass::toString",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFClass::toString",1,"Prelude::IDMEFClass *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFClass,0))){
+    SWIG_fail_ptr("IDMEFClass_toString",1,SWIGTYPE_p_Prelude__IDMEFClass);
+  }
+  
+  {
+    try {
+      result = (arg1)->toString();
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -11792,11 +11759,12 @@ static swig_lua_attribute swig_IDMEFClass_attributes[] = {
 };
 static swig_lua_method swig_IDMEFClass_methods[]= {
     { "getDepth", _wrap_IDMEFClass_getDepth},
-    { "getChild", _wrap_IDMEFClass_getChild},
     { "get", _wrap_IDMEFClass_get},
+    { "getChildCount", _wrap_IDMEFClass_getChildCount},
     { "isList", _wrap_IDMEFClass_isList},
     { "isKeyedList", _wrap_IDMEFClass_isKeyedList},
     { "getName", _wrap_IDMEFClass_getName},
+    { "toString", _wrap_IDMEFClass_toString},
     { "getValueType", _wrap_IDMEFClass_getValueType},
     { "getPath", _wrap_IDMEFClass_getPath},
     { "getEnumValues", _wrap_IDMEFClass_getEnumValues},

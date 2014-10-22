@@ -141,6 +141,17 @@ idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, i
 
 
 
+size_t idmef_class_get_child_count(idmef_class_id_t class)
+{
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+
+        return object_data[class].children_list_elem;
+}
+
 
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t class, idmef_class_child_id_t child)
 {
