@@ -45,7 +45,7 @@ Dependencies
 ============
 
    For Redhat based systems (CentOS, Fedora, etc.)
-       Minimal            :    gcc gcc-c++ gnutls-devel (Fedora += libgcrypt-devel)
+       Minimal            :    gcc gcc-c++ gnutls-devel libgcrypt-devel make
        Documentation      :    gtk-doc
        Binding Perl       :    perl perl-devel
        Binding Python     :    python python-devel
@@ -53,16 +53,16 @@ Dependencies
        Binding Ruby       :    ruby ruby-devel
 
    For Debian systems
-       Minimal            :    gcc g++ libcurl4-gnutls-dev
+       Minimal            :    gcc g++ libcurl4-gnutls-dev libglib2.0-dev make
        Documentation      :    gtk-doc-tools
        Binding Perl       :    perl
        Binding Python     :    python python-dev
        Binding Ruby       :    ruby ruby-dev
 
        For Debian 7
-              Binding LUA :    lua5.2 lua5.2-dev
+              Binding LUA :    lua5.2 liblua5.2-dev
        For Debian 6
-              Binding LUA :    lua5.1 lua5.1-dev
+              Binding LUA :    lua5.1 liblua5.1-dev
 
 
 
