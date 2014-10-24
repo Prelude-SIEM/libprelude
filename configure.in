@@ -7,9 +7,14 @@ m4_define([libprelude_serial_version], [3])
 m4_define([serial_string], ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_ALPHA, alpha,
                                   ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_BETA, beta,
                                   ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_RC, rc))))
+
+m4_define([version_error], ifelse(serial_string, [], ,
+                                  ifelse(libprelude_serial_version, 0, error)))
+ifelse(version_error, [], , [m4_fatal(Release level 'serial_string' and serial 'libprelude_serial_version' are incompatible)])
+
 m4_append([serial_string], ifelse(serial_string, [],
                                   ifelse(libprelude_serial_version, 0, , .libprelude_serial_version),
-                                  ifelse(libprelude_serial_version, 0, [m4_fatal(Release level 'serial_string' and serial 'libprelude_serial_version' are incompatible)], libprelude_serial_version)))
+                                  libprelude_serial_version))
 
 AC_INIT(libprelude, m4_join([.], [libprelude_major_version],
                                  [libprelude_minor_version],
