@@ -1,3 +1,15 @@
+* 2014-10-27, libprelude-1.2.6rc4:
+
+Author: Yoann Vandoorselaere
+
+- Add self argument to IDMEFValue_to_SWIG for future builtin compatibility
+
+- Correctly throw PreludeError exception in Python
+
+- Minor fixes
+
+
+
 * 2014-10-15, libprelude-1.2.6rc3:
 
 Author: Yoann Vandoorselaere

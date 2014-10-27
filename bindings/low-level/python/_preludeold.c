@@ -58412,7 +58412,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "IDMEF_LIST_PREPEND",SWIG_From_int((int)(IDMEF_LIST_PREPEND)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_TRUE",SWIG_From_int((int)(PRELUDE_BOOL_TRUE)));
   SWIG_Python_SetConstant(d, "PRELUDE_BOOL_FALSE",SWIG_From_int((int)(PRELUDE_BOOL_FALSE)));
-  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.6rc3"));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_VERSION",SWIG_FromCharPtr("1.2.6rc4"));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_ALPHA",SWIG_From_int((int)(0xa)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_BETA",SWIG_From_int((int)(0xb)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_RELEASE_LEVEL_RC",SWIG_From_int((int)(0xc)));
@@ -58421,8 +58421,8 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "LIBPRELUDE_MINOR_VERSION",SWIG_From_int((int)(2)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_MICRO_VERSION",SWIG_From_int((int)(6)));
   SWIG_Python_SetConstant(d, "LIBPRELUDE_LEVEL_VERSION",SWIG_From_int((int)(0xc)));
-  SWIG_Python_SetConstant(d, "LIBPRELUDE_SERIAL_VERSION",SWIG_From_int((int)(3)));
-  SWIG_Python_SetConstant(d, "LIBPRELUDE_HEXVERSION",SWIG_From_int((int)(((1 << 24)|(2 << 16)|(6 << 8)|(0xc << 4)|(3 << 0)))));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_SERIAL_VERSION",SWIG_From_int((int)(4)));
+  SWIG_Python_SetConstant(d, "LIBPRELUDE_HEXVERSION",SWIG_From_int((int)(((1 << 24)|(2 << 16)|(6 << 8)|(0xc << 4)|(4 << 0)))));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_EXIT_STATUS_SUCCESS",SWIG_From_int((int)(PRELUDE_CLIENT_EXIT_STATUS_SUCCESS)));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_EXIT_STATUS_FAILURE",SWIG_From_int((int)(PRELUDE_CLIENT_EXIT_STATUS_FAILURE)));
   SWIG_Python_SetConstant(d, "PRELUDE_CLIENT_FLAGS_ASYNC_SEND",SWIG_From_int((int)(PRELUDE_CLIENT_FLAGS_ASYNC_SEND)));
