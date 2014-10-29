@@ -4569,7 +4569,6 @@ VALUE IDMEFValueList_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValu
 
 int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &result, void *extra, TARGET_LANGUAGE_OUTPUT_TYPE ret)
 {
-        std::stringstream s;
         idmef_value_t *value = result;
         Prelude::IDMEFValue::IDMEFValueTypeEnum type = result.getType();
 
