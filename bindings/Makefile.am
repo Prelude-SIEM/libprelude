@@ -1,4 +1,4 @@
-SUBDIRS = c++ low-level lua python ruby
+SUBDIRS = c++ lua python ruby
 
 EXTRA_DIST = libpreludecpp.i perl/libpreludecpp-perl.i perl/Makefile.PL.in perl/Prelude.cxx perl/Prelude.pm
 

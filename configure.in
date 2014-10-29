@@ -827,10 +827,6 @@ docs/api/Makefile
 docs/manpages/Makefile
 
 bindings/Makefile
-bindings/low-level/Makefile
-bindings/low-level/python/Makefile
-bindings/low-level/python/setup.py
-
 bindings/c++/Makefile
 bindings/c++/include/Makefile
 bindings/lua/Makefile
