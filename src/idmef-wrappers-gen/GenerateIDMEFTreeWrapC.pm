@@ -110,6 +110,7 @@ sub     header
 
 #define REFCOUNT int refcount
 #define REQUIRED(type, name) type name
+#define IGNORED(type, name) type name
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
@@ -1356,7 +1357,16 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 \{
         prelude_return_if_fail(ptr);
         ptr->$field->{name} = $field_name;
-\}
+");
+
+        if ( $struct->{typename} eq "idmef_additional_data_t" and $name eq "type" ) {
+                $self->output("
+        ptr->_type_is_set = TRUE;
+
+");
+        }
+
+$self->output("\}
 ");
         }
     }
@@ -1439,6 +1449,10 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
         $self->output("
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 ");
+    }
+
+    if ( $field->{typename} eq "idmef_additional_data_type_t" and $field->{name} eq "type" ) {
+       $self->output("        ptr->_type_is_set = TRUE;");
     }
 
     $self->output("
@@ -1822,6 +1836,12 @@ sub footer
     my $self = shift;
 
     $self->output("
+
+int _idmef_additional_data_type_is_set(idmef_additional_data_t *ad)
+\{
+        return ad->_type_is_set;
+\}
+
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
 \{

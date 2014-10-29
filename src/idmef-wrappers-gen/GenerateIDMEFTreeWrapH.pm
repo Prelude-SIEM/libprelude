@@ -89,6 +89,8 @@ void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
 prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
 
+int _idmef_additional_data_type_is_set(idmef_additional_data_t *ad);
+
 #ifdef __cplusplus
   }
 #endif

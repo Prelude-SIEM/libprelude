@@ -178,7 +178,6 @@ sub	parse_struct
 
     while ( defined($line = $self->get_line) ) {
 	push(@{ $struct->{desc} }, $line);
-
 	if ( $line =~ /^\s*HIDE\(/ ) {
 	    next;
 
@@ -201,6 +200,9 @@ sub	parse_struct
 	    $self->debug("parse direct struct field metatype:normal name:$name typename:$typename ptr:", $ptr ? "yes" : "no", "\n");
 
 	} 
+
+        elsif ( ($typename, $ptr, $name) = $line =~ /^\s*IGNORED\((\w+)\s*,\s*(\**)(\w+)\)\;/ ) {
+	}
 
         elsif ( ($typename, $ptr, $name) = $line =~ /^\s*REQUIRED\((\w+)\s*,\s*(\**)(\w+)\)\;/ ) {
             my $metatype;

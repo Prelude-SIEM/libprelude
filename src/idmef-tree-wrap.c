@@ -78,6 +78,7 @@
 
 #define REFCOUNT int refcount
 #define REQUIRED(type, name) type name
+#define IGNORED(type, name) type name
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
@@ -333,6 +334,7 @@ struct idmef_additional_data {
  
          IS_KEY_LISTED(meaning);
          REFCOUNT;
+         IGNORED(prelude_bool_t, _type_is_set);
          idmef_additional_data_type_t type;
          REQUIRED(idmef_data_t, *data);
  
@@ -2177,6 +2179,9 @@ void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_addition
 {
         prelude_return_if_fail(ptr);
         ptr->type = type;
+
+        ptr->_type_is_set = TRUE;
+
 }
 
 /**
@@ -2192,7 +2197,7 @@ void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_addition
 int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret)
 {
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
+        ptr->_type_is_set = TRUE;
         *ret = &ptr->type;
         return 0;
 }
@@ -23153,6 +23158,12 @@ int idmef_message_compare(const idmef_message_t *obj1, const idmef_message_t *ob
         }
 
         return ret;
+}
+
+
+int _idmef_additional_data_type_is_set(idmef_additional_data_t *ad)
+{
+        return ad->_type_is_set;
 }
 
 

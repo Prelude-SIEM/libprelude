@@ -455,9 +455,44 @@ static int _idmef_path_set_undefined_not_last(const idmef_path_t *path, const id
 }
 
 
+
+static void ad_magic_set_datatype(idmef_additional_data_t *data, idmef_value_type_id_t vtype)
+{
+        idmef_additional_data_type_t type;
+
+        /*
+         * In case the user has already set the type member, do nothing.
+         */
+        if ( _idmef_additional_data_type_is_set(data) != 0 )
+                return;
+
+        if ( vtype >= IDMEF_VALUE_TYPE_INT8 && vtype <= IDMEF_VALUE_TYPE_UINT64 )
+                type = IDMEF_ADDITIONAL_DATA_TYPE_INTEGER;
+
+        else if ( vtype == IDMEF_VALUE_TYPE_FLOAT || vtype == IDMEF_VALUE_TYPE_DOUBLE )
+                type = IDMEF_ADDITIONAL_DATA_TYPE_REAL;
+
+        else if ( vtype == IDMEF_VALUE_TYPE_STRING )
+                type = IDMEF_ADDITIONAL_DATA_TYPE_STRING;
+
+        else if ( vtype == IDMEF_VALUE_TYPE_DATA )
+                type = IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING;
+
+       else if ( vtype == IDMEF_VALUE_TYPE_TIME )
+                type = IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME;
+
+        else
+                return;
+
+        idmef_additional_data_set_type(data, type);
+}
+
+
+
 static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, size_t i,
                            int index_override, void *ptr, idmef_value_t *value)
 {
+        void *prevptr = NULL;
         int ret, index, j;
         prelude_bool_t is_last_element;
         idmef_value_type_id_t tid;
@@ -504,6 +539,8 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, siz
                 parent_class = class;
 
                 if ( value || ! is_last_element ) {
+                        prevptr = ptr;
+
                         ret = idmef_class_new_child(ptr, class, elem->position, index, &ptr);
                         if ( ret < 0 )
                                 return ret;
@@ -518,6 +555,9 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, siz
                 return idmef_class_destroy_child(ptr, parent_class, elem->position, elem->index);
 
         tid = idmef_class_get_child_value_type(parent_class, elem->position);
+        if ( parent_class == IDMEF_CLASS_ID_ADDITIONAL_DATA && tid == IDMEF_VALUE_TYPE_DATA && prevptr )
+                ad_magic_set_datatype(prevptr, idmef_value_get_type(value));
+
         return _idmef_value_copy_internal(value, tid, class, ptr);
 }
 

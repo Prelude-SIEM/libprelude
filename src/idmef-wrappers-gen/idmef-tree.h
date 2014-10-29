@@ -138,6 +138,7 @@ ENUM() {
 struct {
         IS_KEY_LISTED(meaning);
         REFCOUNT;
+        IGNORED(prelude_bool_t, _type_is_set);
         idmef_additional_data_type_t type;
         REQUIRED(idmef_data_t, *data);
 } TYPE_ID(idmef_additional_data_t, 4);

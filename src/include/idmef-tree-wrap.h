@@ -72,6 +72,7 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
  * struct {
  *         IS_KEY_LISTED(meaning);
  *         REFCOUNT;
+ *         IGNORED(prelude_bool_t, _type_is_set);
  *         idmef_additional_data_type_t type;
  *         REQUIRED(idmef_data_t, *data);
  * } TYPE_ID(idmef_additional_data_t, 4);
@@ -1960,6 +1961,8 @@ int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret);
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
 prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
+
+int _idmef_additional_data_type_is_set(idmef_additional_data_t *ad);
 
 #ifdef __cplusplus
   }
