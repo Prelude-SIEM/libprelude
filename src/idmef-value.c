@@ -977,7 +977,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_INT8 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_int8(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_int8(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -985,7 +985,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_UINT8 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_uint8(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_uint8(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -993,7 +993,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_INT16 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_int16(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_int16(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1001,7 +1001,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_UINT16 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_uint16(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_uint16(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1009,7 +1009,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_INT32 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_int32(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_int32(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1017,7 +1017,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_UINT32 ) {
-                ret = idmef_data_new_uint32(&data, idmef_value_get_uint32(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_uint32(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1025,7 +1025,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_INT64 ) {
-                ret = idmef_data_new_uint64(&data, idmef_value_get_int64(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_int64(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1033,7 +1033,7 @@ static int cast_to_data(idmef_value_t *input)
         }
 
         else if ( vtype == IDMEF_VALUE_TYPE_UINT64 ) {
-                ret = idmef_data_new_uint64(&data, idmef_value_get_uint64(input));
+                ret = idmef_data_new_int(&data, idmef_value_get_uint64(input));
                 if ( ret < 0 )
                         return ret;
 
@@ -1044,7 +1044,7 @@ static int cast_to_data(idmef_value_t *input)
                 int64_t v = idmef_value_get_float(input);
 
                 if ( v == idmef_value_get_float(input) )
-                        ret = idmef_data_new_uint64(&data, v);
+                        ret = idmef_data_new_int(&data, v);
                 else
                         ret = idmef_data_new_float(&data, idmef_value_get_float(input));
 
@@ -1058,7 +1058,7 @@ static int cast_to_data(idmef_value_t *input)
                 int64_t v = idmef_value_get_double(input);
 
                 if ( v == idmef_value_get_double(input) )
-                        ret = idmef_data_new_uint64(&data, v);
+                        ret = idmef_data_new_int(&data, v);
                 else
                         ret = idmef_data_new_float(&data, idmef_value_get_double(input));
 

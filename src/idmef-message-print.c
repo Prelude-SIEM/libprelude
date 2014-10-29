@@ -251,7 +251,7 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
                                 if ( ret < 0 )
                                         return;
 
-                                i = idmef_data_get_uint64(field);
+                                i = idmef_data_get_int(field);
                                 ret = prelude_string_sprintf(out, "0x%" PRELUDE_PRIx32 ".0x%" PRELUDE_PRIx32 "", (uint32_t) (i >> 32), (uint32_t) i);
                                 if ( ret < 0 ) {
                                         prelude_string_destroy(out);

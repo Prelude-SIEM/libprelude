@@ -157,18 +157,18 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 		if ( ret < 0 )
 			return ret;
 
-		ret = idmef_data_new_uint32(out, tmp);
+		ret = idmef_data_new_int(out, tmp);
 		break;
 	\}
 
-	case IDMEF_DATA_TYPE_UINT64: \{
+	case IDMEF_DATA_TYPE_INT: \{
 		uint64_t tmp = 0;
 
                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                 if ( ret < 0 )
 			return ret;
 
-		ret = idmef_data_new_uint64(out, tmp);
+		ret = idmef_data_new_int(out, tmp);
 		break;
 	\}
 

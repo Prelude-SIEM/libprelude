@@ -36,6 +36,7 @@ typedef enum {
         IDMEF_DATA_TYPE_BYTE         = 2,
         IDMEF_DATA_TYPE_UINT32       = 3,
         IDMEF_DATA_TYPE_UINT64       = 4,
+        IDMEF_DATA_TYPE_INT          = 4,
         IDMEF_DATA_TYPE_FLOAT        = 5,
         IDMEF_DATA_TYPE_CHAR_STRING  = 6,
         IDMEF_DATA_TYPE_BYTE_STRING  = 7
@@ -52,8 +53,7 @@ typedef struct {
         union {
                 char char_data;
                 uint8_t byte_data;
-                uint32_t uint32_data;
-                uint64_t uint64_data;
+                int64_t int_data;
                 float float_data;
                 void *rw_data;
                 const void *ro_data;
@@ -71,15 +71,17 @@ idmef_data_t *idmef_data_ref(idmef_data_t *data);
 
 int idmef_data_new_char(idmef_data_t **data, char c);
 int idmef_data_new_byte(idmef_data_t **data, uint8_t i);
-int idmef_data_new_uint32(idmef_data_t **data, uint32_t i);
-int idmef_data_new_uint64(idmef_data_t **data, uint64_t i);
+int idmef_data_new_uint32(idmef_data_t **data, uint32_t i) PRELUDE_DEPRECATED;
+int idmef_data_new_uint64(idmef_data_t **data, uint64_t i) PRELUDE_DEPRECATED;
+int idmef_data_new_int(idmef_data_t **data, int64_t i);
 int idmef_data_new_float(idmef_data_t **data, float f);
 
 
 void idmef_data_set_char(idmef_data_t *data, char c);
 void idmef_data_set_byte(idmef_data_t *data, uint8_t i);
-void idmef_data_set_uint32(idmef_data_t *data, uint32_t i);
-void idmef_data_set_uint64(idmef_data_t *data, uint64_t i);
+void idmef_data_set_uint32(idmef_data_t *data, uint32_t i) PRELUDE_DEPRECATED;
+void idmef_data_set_uint64(idmef_data_t *data, uint64_t i) PRELUDE_DEPRECATED;
+void idmef_data_set_int(idmef_data_t *data, int64_t i);
 void idmef_data_set_float(idmef_data_t *data, float f);
 
 int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len);
@@ -145,9 +147,11 @@ char idmef_data_get_char(const idmef_data_t *data);
 
 uint8_t idmef_data_get_byte(const idmef_data_t *data);
 
-uint32_t idmef_data_get_uint32(const idmef_data_t *data);
+uint32_t idmef_data_get_uint32(const idmef_data_t *data) PRELUDE_DEPRECATED;
 
-uint64_t idmef_data_get_uint64(const idmef_data_t *data);
+uint64_t idmef_data_get_uint64(const idmef_data_t *data) PRELUDE_DEPRECATED;
+
+int64_t idmef_data_get_int(const idmef_data_t *data);
 
 float idmef_data_get_float(const idmef_data_t *data);
 

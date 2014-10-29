@@ -46,7 +46,7 @@
 #define IDMEF_DATA_OWN_DATA       0x2
 
 
-#define IDMEF_DATA_DECL(idmef_data_type, c_type, name)                \
+#define IDMEF_DATA_DECL(idmef_data_type, c_type, name, fname)         \
 int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)            \
 {                                                                     \
         int ret;                                                      \
@@ -55,7 +55,7 @@ int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)            \
         if ( ret < 0 )                                                \
                 return ret;                                           \
                                                                       \
-        idmef_data_set_ ## name(*nd, val);                            \
+        idmef_data_set_ ## fname(*nd, val);                           \
                                                                       \
         return ret;                                                   \
 }                                                                     \
@@ -66,20 +66,21 @@ void idmef_data_set_ ## name(idmef_data_t *ptr, c_type val)           \
         idmef_data_destroy_internal(ptr);                             \
         ptr->type = idmef_data_type;                                  \
         ptr->len = sizeof(val);                                       \
-        ptr->data.name ## _data = val;                                \
+        ptr->data.fname ## _data = val;                               \
 }                                                                     \
                                                                       \
 c_type idmef_data_get_ ## name(const idmef_data_t *ptr)               \
 {                                                                     \
-        return ptr->data.name ## _data;                               \
+        return ptr->data.fname ## _data;                              \
 }
 
 
-IDMEF_DATA_DECL(IDMEF_DATA_TYPE_CHAR, char, char)
-IDMEF_DATA_DECL(IDMEF_DATA_TYPE_BYTE, uint8_t, byte)
-IDMEF_DATA_DECL(IDMEF_DATA_TYPE_UINT32, uint32_t, uint32)
-IDMEF_DATA_DECL(IDMEF_DATA_TYPE_UINT64, uint64_t, uint64)
-IDMEF_DATA_DECL(IDMEF_DATA_TYPE_FLOAT, float, float)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_CHAR, char, char, char)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_BYTE, uint8_t, byte, byte)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_INT, uint32_t, uint32, int)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_INT, uint64_t, uint64, int)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_INT, int64_t, int, int)
+IDMEF_DATA_DECL(IDMEF_DATA_TYPE_FLOAT, float, float, float)
 
 
 int idmef_data_new(idmef_data_t **data)
@@ -455,11 +456,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
                 break;
 
         case IDMEF_DATA_TYPE_UINT32:
-                ret = prelude_string_sprintf(out, "%u", data->data.uint32_data);
-                break;
-
-        case IDMEF_DATA_TYPE_UINT64:
-                ret = prelude_string_sprintf(out, "%" PRELUDE_PRIu64, data->data.uint64_data);
+        case IDMEF_DATA_TYPE_INT:
+                ret = prelude_string_sprintf(out, "%" PRELUDE_PRId64, data->data.int_data);
                 break;
 
         case IDMEF_DATA_TYPE_FLOAT:

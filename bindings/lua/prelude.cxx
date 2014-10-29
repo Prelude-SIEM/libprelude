@@ -2971,11 +2971,8 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
                 else if ( t == IDMEF_DATA_TYPE_FLOAT )
                         *ret = integer2lua((lua_State *) extra, idmef_data_get_float(d));
 
-                else if ( t == IDMEF_DATA_TYPE_UINT32 )
-                        *ret = integer2lua((lua_State *) extra, idmef_data_get_uint32(d));
-
-                else if ( t == IDMEF_DATA_TYPE_UINT64 )
-                        *ret = integer2lua((lua_State *) extra, idmef_data_get_uint64(d));
+                else if ( t == IDMEF_DATA_TYPE_UINT32 || IDMEF_DATA_TYPE_INT )
+                        *ret = integer2lua((lua_State *) extra, idmef_data_get_int(d));
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_CLASS ) {

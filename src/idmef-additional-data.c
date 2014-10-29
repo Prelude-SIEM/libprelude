@@ -167,8 +167,8 @@ static const struct {
         { IDMEF_ADDITIONAL_DATA_TYPE_BYTE, IDMEF_DATA_TYPE_BYTE, sizeof(uint8_t) },
         { IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, IDMEF_DATA_TYPE_CHAR, sizeof(char) },
         { IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, IDMEF_DATA_TYPE_CHAR_STRING, 0 },
-        { IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, IDMEF_DATA_TYPE_UINT32, sizeof(uint32_t) },
-        { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, IDMEF_DATA_TYPE_UINT64, sizeof(uint64_t) },
+        { IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, IDMEF_DATA_TYPE_INT, sizeof(uint64_t) },
+        { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, IDMEF_DATA_TYPE_INT, sizeof(uint64_t) },
         { IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, IDMEF_DATA_TYPE_CHAR_STRING, 0 },
         { IDMEF_ADDITIONAL_DATA_TYPE_REAL, IDMEF_DATA_TYPE_FLOAT, sizeof(float) },
         { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, IDMEF_DATA_TYPE_BYTE, sizeof(prelude_bool_t) },
@@ -184,8 +184,8 @@ static int check_type(idmef_additional_data_type_t type, const unsigned char *bu
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Invalid IDMEFAdditionalData type specified");
 
         if ( idmef_additional_data_type_table[type].len != 0 &&
-             len != idmef_additional_data_type_table[type].len )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Provided value length does not match specied type length");
+             len > idmef_additional_data_type_table[type].len )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Provided value length does not match specified type length");
 
         if ( idmef_additional_data_type_table[type].len == 0 && len < 1 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Invalid value length for this type");
@@ -354,7 +354,7 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
  * Declare stuff
  */
 IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_FLOAT, float, IDMEF_ADDITIONAL_DATA_TYPE_REAL, float, real)
-IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_UINT32, uint32, IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, uint32_t, integer)
+IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_INT, int, IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, uint32_t, integer)
 IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_BYTE, byte, IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, prelude_bool_t, boolean)
 IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_BYTE, byte, IDMEF_ADDITIONAL_DATA_TYPE_BYTE, uint8_t, byte)
 IDMEF_ADDITIONAL_DATA_SIMPLE(IDMEF_DATA_TYPE_CHAR, char, IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, char, character)
@@ -430,7 +430,7 @@ int idmef_additional_data_data_to_string(idmef_additional_data_t *ad, prelude_st
         switch ( idmef_additional_data_get_type(ad) ) {
 
         case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
-                i = idmef_data_get_uint64(data);
+                i = idmef_data_get_int(data);
                 ret = prelude_string_sprintf(out, "0x%" PRELUDE_PRIx32 ".0x%" PRELUDE_PRIx32, (uint32_t) (i >> 32), (uint32_t) i);
                 break;
 

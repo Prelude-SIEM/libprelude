@@ -4636,11 +4636,8 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
                 else if ( t == IDMEF_DATA_TYPE_FLOAT )
                         *ret = SWIG_From_float(idmef_data_get_float(d));
 
-                else if ( t == IDMEF_DATA_TYPE_UINT32 )
-                        *ret = SWIG_From_unsigned_SS_int(idmef_data_get_uint32(d));
-
-                else if ( t == IDMEF_DATA_TYPE_UINT64 )
-                        *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_uint64(d));
+                else if ( t == IDMEF_DATA_TYPE_UINT32 || IDMEF_DATA_TYPE_INT )
+                        *ret = SWIG_From_unsigned_SS_long_SS_long(idmef_data_get_int(d));
         }
 
         else if ( type == Prelude::IDMEFValue::TYPE_CLASS ) {

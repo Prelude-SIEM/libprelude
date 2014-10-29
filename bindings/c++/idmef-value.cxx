@@ -463,13 +463,8 @@ std::string IDMEFValue::convert_string() const
                         return s.str();
                 }
 
-                else if ( t == IDMEF_DATA_TYPE_UINT32 ) {
-                        s << idmef_data_get_uint32(d);
-                        return s.str();
-                }
-
-                else if ( t == IDMEF_DATA_TYPE_UINT64 ) {
-                        s << idmef_data_get_uint64(d);
+                else if ( t == IDMEF_DATA_TYPE_INT ) {
+                        s << idmef_data_get_int(d);
                         return s.str();
                 }
 

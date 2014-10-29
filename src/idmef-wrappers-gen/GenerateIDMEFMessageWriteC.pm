@@ -189,11 +189,11 @@ static inline int idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, ui
                 break;
 
         case IDMEF_DATA_TYPE_UINT32:
-                ret = uint32_write(idmef_data_get_uint32(data), msg, tag);
+                ret = uint32_write(idmef_data_get_int(data), msg, tag);
                 break;
 
-        case IDMEF_DATA_TYPE_UINT64:
-                ret = uint64_write(idmef_data_get_uint64(data), msg, tag);
+        case IDMEF_DATA_TYPE_INT:
+                ret = uint64_write(idmef_data_get_int(data), msg, tag);
                 break;
 
         case IDMEF_DATA_TYPE_FLOAT:
