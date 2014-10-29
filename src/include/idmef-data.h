@@ -31,14 +31,14 @@
 #endif
 
 typedef enum {
-	IDMEF_DATA_TYPE_UNKNOWN      = 0,
-	IDMEF_DATA_TYPE_CHAR         = 1,
-	IDMEF_DATA_TYPE_BYTE         = 2,
-	IDMEF_DATA_TYPE_UINT32       = 3,
-	IDMEF_DATA_TYPE_UINT64       = 4,
-	IDMEF_DATA_TYPE_FLOAT        = 5,
-	IDMEF_DATA_TYPE_CHAR_STRING  = 6,
-	IDMEF_DATA_TYPE_BYTE_STRING  = 7
+        IDMEF_DATA_TYPE_UNKNOWN      = 0,
+        IDMEF_DATA_TYPE_CHAR         = 1,
+        IDMEF_DATA_TYPE_BYTE         = 2,
+        IDMEF_DATA_TYPE_UINT32       = 3,
+        IDMEF_DATA_TYPE_UINT64       = 4,
+        IDMEF_DATA_TYPE_FLOAT        = 5,
+        IDMEF_DATA_TYPE_CHAR_STRING  = 6,
+        IDMEF_DATA_TYPE_BYTE_STRING  = 7
 } idmef_data_type_t;
 
 
@@ -50,15 +50,15 @@ typedef struct {
         size_t len;
 
         union {
-		char char_data;
-		uint8_t byte_data;
-		uint32_t uint32_data;
-		uint64_t uint64_data;
-		float float_data;
-		void *rw_data;
-		const void *ro_data;
+                char char_data;
+                uint8_t byte_data;
+                uint32_t uint32_data;
+                uint64_t uint64_data;
+                float float_data;
+                void *rw_data;
+                const void *ro_data;
         } data;
-        
+
         prelude_list_t list;
 } idmef_data_t;
 
@@ -86,16 +86,16 @@ int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, cons
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len);
 int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len);
 
-int idmef_data_new_ptr_dup_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len);         
+int idmef_data_new_ptr_dup_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len);
 int idmef_data_new_ptr_ref_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len);
 int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, void *ptr, size_t len);
 
-         
+
 /*
  * String functions
  */
 int idmef_data_set_char_string_dup_fast(idmef_data_t *data, const char *str, size_t len);
-int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, size_t len);         
+int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, size_t len);
 int idmef_data_new_char_string_ref_fast(idmef_data_t **data, const char *ptr, size_t len);
 int idmef_data_new_char_string_nodup_fast(idmef_data_t **data, char *ptr, size_t len);
 int idmef_data_set_char_string_ref_fast(idmef_data_t *data, const char *ptr, size_t len);
@@ -107,10 +107,10 @@ int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr);
 int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr);
 int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr);
 
-#define idmef_data_set_char_string_constant(string, str)		\
-	idmef_data_set_char_string_ref_fast((string), (str), sizeof((str)) - 1)
+#define idmef_data_set_char_string_constant(string, str)                \
+        idmef_data_set_char_string_ref_fast((string), (str), sizeof((str)) - 1)
 
-         
+
 /*
  * Byte functions
  */
@@ -126,7 +126,7 @@ int idmef_data_set_byte_string_nodup(idmef_data_t *data, unsigned char *ptr, siz
 /*
  *
  */
-         
+
 void idmef_data_destroy(idmef_data_t *data);
 
 int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst);
@@ -162,9 +162,9 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out);
 void idmef_data_destroy_internal(idmef_data_t *data);
 
 int idmef_data_compare(const idmef_data_t *data1, const idmef_data_t *data2);
-         
+
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */
