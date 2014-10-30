@@ -1040,6 +1040,14 @@ static int cast_to_data(idmef_value_t *input)
                 return idmef_value_set_data(input, data);
         }
 
+        else if ( vtype == IDMEF_VALUE_TYPE_TIME ) {
+                ret = idmef_data_new_time(&data, idmef_time_ref(idmef_value_get_time(input)));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
         else if ( vtype == IDMEF_VALUE_TYPE_FLOAT ) {
                 int64_t v = idmef_value_get_float(input);
 

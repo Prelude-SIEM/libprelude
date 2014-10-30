@@ -113,7 +113,7 @@ static inline int float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
 }
 
 
-static inline int idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int idmef_time_write(const idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag)
 {
         uint32_t tmp;
         unsigned char buf[12];
@@ -169,8 +169,13 @@ static inline int idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, ui
                 ret = float_write(idmef_data_get_float(data), msg, tag);
                 break;
 
-        case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
+        case IDMEF_DATA_TYPE_CHAR_STRING:
+        case IDMEF_DATA_TYPE_BYTE_STRING:
                 ret = prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
+                break;
+
+        case IDMEF_DATA_TYPE_TIME:
+                ret = idmef_time_write(idmef_data_get_data(data), msg, tag);
                 break;
 
         case IDMEF_DATA_TYPE_UNKNOWN:

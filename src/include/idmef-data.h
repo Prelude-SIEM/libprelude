@@ -39,7 +39,8 @@ typedef enum {
         IDMEF_DATA_TYPE_INT          = 4,
         IDMEF_DATA_TYPE_FLOAT        = 5,
         IDMEF_DATA_TYPE_CHAR_STRING  = 6,
-        IDMEF_DATA_TYPE_BYTE_STRING  = 7
+        IDMEF_DATA_TYPE_BYTE_STRING  = 7,
+        IDMEF_DATA_TYPE_TIME         = 8
 } idmef_data_type_t;
 
 
@@ -75,7 +76,7 @@ int idmef_data_new_uint32(idmef_data_t **data, uint32_t i) PRELUDE_DEPRECATED;
 int idmef_data_new_uint64(idmef_data_t **data, uint64_t i) PRELUDE_DEPRECATED;
 int idmef_data_new_int(idmef_data_t **data, int64_t i);
 int idmef_data_new_float(idmef_data_t **data, float f);
-
+int idmef_data_new_time(idmef_data_t **data, idmef_time_t *time);
 
 void idmef_data_set_char(idmef_data_t *data, char c);
 void idmef_data_set_byte(idmef_data_t *data, uint8_t i);
@@ -83,6 +84,7 @@ void idmef_data_set_uint32(idmef_data_t *data, uint32_t i) PRELUDE_DEPRECATED;
 void idmef_data_set_uint64(idmef_data_t *data, uint64_t i) PRELUDE_DEPRECATED;
 void idmef_data_set_int(idmef_data_t *data, int64_t i);
 void idmef_data_set_float(idmef_data_t *data, float f);
+void idmef_data_set_time(idmef_data_t *data, idmef_time_t *time);
 
 int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len);
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len);

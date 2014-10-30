@@ -168,6 +168,17 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
                 break;
         }
 
+        case IDMEF_DATA_TYPE_TIME: {
+                idmef_time_t *time;
+
+                ret = prelude_extract_time_safe(&time, buf, len, msg);
+                if ( ret < 0 )
+                        return ret;
+
+                ret = idmef_data_new_time(out, time);
+                break;
+        }
+
         case IDMEF_DATA_TYPE_UNKNOWN:
                 /* nop */;
         }
