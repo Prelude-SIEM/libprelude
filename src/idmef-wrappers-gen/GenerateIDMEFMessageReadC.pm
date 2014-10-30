@@ -25,9 +25,9 @@ use Generate;
 use strict;
 use IDMEFTree;
 
-sub	header
+sub     header
 {
-     my	$self = shift;
+     my $self = shift;
 
      $self->output("
 /*****
@@ -77,14 +77,14 @@ sub	header
 static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 \{
         int ret;
-        
+
         /*
          * we use len - 1 since len is supposed to include \\0 to avoid making a dup.
          */
         ret = prelude_string_new_ref_fast(out, buf, len - 1);
         if ( ret < 0 )
                 ret = prelude_error_verbose(prelude_error_get_code(ret), \"%s:%d could not extract IDMEF string: %s\", f, line, prelude_strerror(ret));
-        
+
         return ret;
 \}
 
@@ -114,118 +114,118 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
 static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint32_t len, prelude_msg_t *msg)
 \{
         int ret;
-	uint8_t tag;
-	idmef_data_type_t type = 0;
+        uint8_t tag;
+        idmef_data_type_t type = 0;
 
         ret = prelude_extract_uint32_safe(&type, buf, len);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
         ret = prelude_msg_get(msg, &tag, &len, &buf);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
-	*out = NULL;
+        *out = NULL;
 
-	switch ( type ) \{
-	case IDMEF_DATA_TYPE_CHAR: \{
-		uint8_t tmp = 0;
-  
-                ret = prelude_extract_uint8_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
-
-		ret = idmef_data_new_char(out, (char) tmp);
-		break;
-	\}
-
-	case IDMEF_DATA_TYPE_BYTE: \{
-		uint8_t tmp = 0;
+        switch ( type ) \{
+        case IDMEF_DATA_TYPE_CHAR: \{
+                uint8_t tmp = 0;
 
                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_byte(out, tmp);
-		break;
-	\}
+                ret = idmef_data_new_char(out, (char) tmp);
+                break;
+        \}
 
-	case IDMEF_DATA_TYPE_UINT32: \{
-		uint32_t tmp = 0;
+        case IDMEF_DATA_TYPE_BYTE: \{
+                uint8_t tmp = 0;
+
+                ret = prelude_extract_uint8_safe(&tmp, buf, len);
+                if ( ret < 0 )
+                        return ret;
+
+                ret = idmef_data_new_byte(out, tmp);
+                break;
+        \}
+
+        case IDMEF_DATA_TYPE_UINT32: \{
+                uint32_t tmp = 0;
 
                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_int(out, tmp);
-		break;
-	\}
+                ret = idmef_data_new_int(out, tmp);
+                break;
+        \}
 
-	case IDMEF_DATA_TYPE_INT: \{
-		uint64_t tmp = 0;
+        case IDMEF_DATA_TYPE_INT: \{
+                uint64_t tmp = 0;
 
                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                 if ( ret < 0 )
-			return ret;
+                        return ret;
 
-		ret = idmef_data_new_int(out, tmp);
-		break;
-	\}
+                ret = idmef_data_new_int(out, tmp);
+                break;
+        \}
 
-	case IDMEF_DATA_TYPE_FLOAT: \{
-		float tmp = 0;
+        case IDMEF_DATA_TYPE_FLOAT: \{
+                float tmp = 0;
 
                 ret = prelude_extract_float_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_float(out, tmp);
-		break;
-	\}
+                ret = idmef_data_new_float(out, tmp);
+                break;
+        \}
 
         case IDMEF_DATA_TYPE_BYTE_STRING: \{
                 ret = idmef_data_new_ptr_ref_fast(out, type, buf, len);
                 break;
         \}
 
-	case IDMEF_DATA_TYPE_CHAR_STRING: \{
-		const char *tmp = NULL;
+        case IDMEF_DATA_TYPE_CHAR_STRING: \{
+                const char *tmp = NULL;
 
                 ret = prelude_extract_characters_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_ptr_ref_fast(out, type, tmp, len);
-		break;		
-	\}
+                ret = idmef_data_new_ptr_ref_fast(out, type, tmp, len);
+                break;
+        \}
 
-	case IDMEF_DATA_TYPE_UNKNOWN:
-		/* nop */;
-	\}
+        case IDMEF_DATA_TYPE_UNKNOWN:
+                /* nop */;
+        \}
 
-	return ret;
+        return ret;
 \}
 
 
 ");
 }
 
-sub	struct_field_normal
+sub     struct_field_normal
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
-    my	$ptr = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "*" : "";
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
+    my  $ptr = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "*" : "";
     my  $init = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "NULL" : "0";
-    my	$type = shift || $field->{value_type};
-    my	$var_type = shift || "$field->{typename}";
-    my	$extra_msg = "";
+    my  $type = shift || $field->{value_type};
+    my  $var_type = shift || "$field->{typename}";
+    my  $extra_msg = "";
 
     $extra_msg = ", msg" if ( $field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST) );
 
     $self->output("
-			case IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
+                        case IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
                                 ${var_type} ${ptr}tmp = ${init};
 
                                 ret = prelude_extract_${type}_safe(&tmp, buf, len${extra_msg});
@@ -235,42 +235,42 @@ sub	struct_field_normal
 
     if ( $field->{metatype} & &METATYPE_LIST ) {
            $self->output("
-				idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp, -1);
-				break;
-			\}
+                                idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp, -1);
+                                break;
+                        \}
 "); } else {
            $self->output("
-				idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp);
-				break;
-			\}
+                                idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp);
+                                break;
+                        \}
 "); }
 }
 
-sub	struct_field_struct
+sub     struct_field_struct
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
-    my	$name = shift || $field->{name};
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
+    my  $name = shift || $field->{name};
 
     $self->output("
-			case IDMEF_MSG_",  uc($field->{short_typename}), "_TAG", ": \{
+                        case IDMEF_MSG_",  uc($field->{short_typename}), "_TAG", ": \{
                                 int ret;
-				$field->{typename} *tmp = NULL;
+                                $field->{typename} *tmp = NULL;
 ");
 
     if ( $field->{metatype} & &METATYPE_LIST ) {
            $self->output("
-				ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 ");
     } else {
            $self->output("
-				ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 ");
     }
 
@@ -278,31 +278,31 @@ sub	struct_field_struct
 
 
                                 ret = idmef_$field->{short_typename}_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			\}
+                                break;
+                        \}
 ");
 }
 
-sub	struct_field_union
+sub     struct_field_union
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
 
     foreach my $member ( @{$field->{member_list}} ) {
-	$self->struct_field_struct($tree, $struct, $member);
+        $self->struct_field_struct($tree, $struct, $member);
     }
 }
 
-sub	struct
+sub     struct
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->output("
 /**
@@ -310,7 +310,7 @@ sub	struct
  * \@$struct->{short_typename}: Pointer to a #$struct->{typename} object.
  * \@msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_$struct->{short_typename} from the \@msg message, and 
+ * Read an idmef_$struct->{short_typename} from the \@msg message, and
  * store it into \@$struct->{short_typename}.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -318,56 +318,56 @@ sub	struct
 int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg)
 \{
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) \{
+        while ( 1 ) \{
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) \{
+                switch ( tag ) \{
 ");
 
     foreach my $field ( @{$struct->{field_list}} ) {
 
-	if ( $field->{metatype} & &METATYPE_NORMAL ) {
+        if ( $field->{metatype} & &METATYPE_NORMAL ) {
 
-	    if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		$self->struct_field_normal($tree, $struct, $field);
+            if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
+                $self->struct_field_normal($tree, $struct, $field);
 
-	    } elsif ( $field->{metatype} & &METATYPE_ENUM ) {
-		$self->struct_field_normal($tree, $struct, $field, "int32", "int32_t");
+            } elsif ( $field->{metatype} & &METATYPE_ENUM ) {
+                $self->struct_field_normal($tree, $struct, $field, "int32", "int32_t");
 
-	    } else {
-		$self->struct_field_struct($tree, $struct, $field);
-	    }
+            } else {
+                $self->struct_field_struct($tree, $struct, $field);
+            }
 
-	} elsif ( $field->{metatype} & &METATYPE_LIST ) {
-	    if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		$self->struct_field_normal($tree, $struct, $field);
+        } elsif ( $field->{metatype} & &METATYPE_LIST ) {
+            if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
+                $self->struct_field_normal($tree, $struct, $field);
 
-	    } else {
-		$self->struct_field_struct($tree, $struct, $field, $field->{short_name});
-	    }
+            } else {
+                $self->struct_field_struct($tree, $struct, $field, $field->{short_name});
+            }
 
-	} elsif ( $field->{metatype} & &METATYPE_UNION ) {
-	    $self->struct_field_union($tree, $struct, $field);
-	}
+        } elsif ( $field->{metatype} & &METATYPE_UNION ) {
+            $self->struct_field_union($tree, $struct, $field);
+        }
     }
 
     $self->output("
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, \"Unknown tag while reading " . $struct->{typename} . ": '%u'\", tag);
-		\}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, \"Unknown tag while reading " . $struct->{typename} . ": '%u'\", tag);
+                \}
 
-	\}
+        \}
 
-	return 0;
+        return 0;
 \}
 ");
 }

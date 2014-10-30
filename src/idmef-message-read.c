@@ -46,14 +46,14 @@
 static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 {
         int ret;
-        
+
         /*
          * we use len - 1 since len is supposed to include \0 to avoid making a dup.
          */
         ret = prelude_string_new_ref_fast(out, buf, len - 1);
         if ( ret < 0 )
                 ret = prelude_error_verbose(prelude_error_get_code(ret), "%s:%d could not extract IDMEF string: %s", f, line, prelude_strerror(ret));
-        
+
         return ret;
 }
 
@@ -83,96 +83,96 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
 static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint32_t len, prelude_msg_t *msg)
 {
         int ret;
-	uint8_t tag;
-	idmef_data_type_t type = 0;
+        uint8_t tag;
+        idmef_data_type_t type = 0;
 
         ret = prelude_extract_uint32_safe(&type, buf, len);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
         ret = prelude_msg_get(msg, &tag, &len, &buf);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
-	*out = NULL;
+        *out = NULL;
 
-	switch ( type ) {
-	case IDMEF_DATA_TYPE_CHAR: {
-		uint8_t tmp = 0;
-  
-                ret = prelude_extract_uint8_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
-
-		ret = idmef_data_new_char(out, (char) tmp);
-		break;
-	}
-
-	case IDMEF_DATA_TYPE_BYTE: {
-		uint8_t tmp = 0;
+        switch ( type ) {
+        case IDMEF_DATA_TYPE_CHAR: {
+                uint8_t tmp = 0;
 
                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_byte(out, tmp);
-		break;
-	}
+                ret = idmef_data_new_char(out, (char) tmp);
+                break;
+        }
 
-	case IDMEF_DATA_TYPE_UINT32: {
-		uint32_t tmp = 0;
+        case IDMEF_DATA_TYPE_BYTE: {
+                uint8_t tmp = 0;
+
+                ret = prelude_extract_uint8_safe(&tmp, buf, len);
+                if ( ret < 0 )
+                        return ret;
+
+                ret = idmef_data_new_byte(out, tmp);
+                break;
+        }
+
+        case IDMEF_DATA_TYPE_UINT32: {
+                uint32_t tmp = 0;
 
                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_int(out, tmp);
-		break;
-	}
+                ret = idmef_data_new_int(out, tmp);
+                break;
+        }
 
-	case IDMEF_DATA_TYPE_INT: {
-		uint64_t tmp = 0;
+        case IDMEF_DATA_TYPE_INT: {
+                uint64_t tmp = 0;
 
                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                 if ( ret < 0 )
-			return ret;
+                        return ret;
 
-		ret = idmef_data_new_int(out, tmp);
-		break;
-	}
+                ret = idmef_data_new_int(out, tmp);
+                break;
+        }
 
-	case IDMEF_DATA_TYPE_FLOAT: {
-		float tmp = 0;
+        case IDMEF_DATA_TYPE_FLOAT: {
+                float tmp = 0;
 
                 ret = prelude_extract_float_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_float(out, tmp);
-		break;
-	}
+                ret = idmef_data_new_float(out, tmp);
+                break;
+        }
 
         case IDMEF_DATA_TYPE_BYTE_STRING: {
                 ret = idmef_data_new_ptr_ref_fast(out, type, buf, len);
                 break;
         }
 
-	case IDMEF_DATA_TYPE_CHAR_STRING: {
-		const char *tmp = NULL;
+        case IDMEF_DATA_TYPE_CHAR_STRING: {
+                const char *tmp = NULL;
 
                 ret = prelude_extract_characters_safe(&tmp, buf, len);
-		if ( ret < 0 )
-			return ret;
+                if ( ret < 0 )
+                        return ret;
 
-		ret = idmef_data_new_ptr_ref_fast(out, type, tmp, len);
-		break;		
-	}
+                ret = idmef_data_new_ptr_ref_fast(out, type, tmp, len);
+                break;
+        }
 
-	case IDMEF_DATA_TYPE_UNKNOWN:
-		/* nop */;
-	}
+        case IDMEF_DATA_TYPE_UNKNOWN:
+                /* nop */;
+        }
 
-	return ret;
+        return ret;
 }
 
 
@@ -182,7 +182,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
  * @additional_data: Pointer to a #idmef_additional_data_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_additional_data from the @msg message, and 
+ * Read an idmef_additional_data from the @msg message, and
  * store it into @additional_data.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -190,60 +190,60 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ADDITIONAL_DATA_MEANING: {
+                        case IDMEF_MSG_ADDITIONAL_DATA_MEANING: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_additional_data_set_meaning(additional_data, tmp);
-				break;
-			}
+                                idmef_additional_data_set_meaning(additional_data, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDITIONAL_DATA_TYPE: {
+                        case IDMEF_MSG_ADDITIONAL_DATA_TYPE: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_additional_data_set_type(additional_data, tmp);
-				break;
-			}
+                                idmef_additional_data_set_type(additional_data, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDITIONAL_DATA_DATA: {
+                        case IDMEF_MSG_ADDITIONAL_DATA_DATA: {
                                 idmef_data_t *tmp = NULL;
 
                                 ret = prelude_extract_data_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_additional_data_set_data(additional_data, tmp);
-				break;
-			}
+                                idmef_additional_data_set_data(additional_data, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_additional_data_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_additional_data_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -251,7 +251,7 @@ int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude
  * @reference: Pointer to a #idmef_reference_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_reference from the @msg message, and 
+ * Read an idmef_reference from the @msg message, and
  * store it into @reference.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -259,71 +259,71 @@ int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude
 int idmef_reference_read(idmef_reference_t *reference, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_REFERENCE_ORIGIN: {
+                        case IDMEF_MSG_REFERENCE_ORIGIN: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_reference_set_origin(reference, tmp);
-				break;
-			}
+                                idmef_reference_set_origin(reference, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_REFERENCE_NAME: {
+                        case IDMEF_MSG_REFERENCE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_reference_set_name(reference, tmp);
-				break;
-			}
+                                idmef_reference_set_name(reference, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_REFERENCE_URL: {
+                        case IDMEF_MSG_REFERENCE_URL: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_reference_set_url(reference, tmp);
-				break;
-			}
+                                idmef_reference_set_url(reference, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_REFERENCE_MEANING: {
+                        case IDMEF_MSG_REFERENCE_MEANING: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_reference_set_meaning(reference, tmp);
-				break;
-			}
+                                idmef_reference_set_meaning(reference, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_reference_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_reference_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -331,7 +331,7 @@ int idmef_reference_read(idmef_reference_t *reference, prelude_msg_t *msg)
  * @classification: Pointer to a #idmef_classification_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_classification from the @msg message, and 
+ * Read an idmef_classification from the @msg message, and
  * store it into @classification.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -339,66 +339,66 @@ int idmef_reference_read(idmef_reference_t *reference, prelude_msg_t *msg)
 int idmef_classification_read(idmef_classification_t *classification, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_CLASSIFICATION_IDENT: {
+                        case IDMEF_MSG_CLASSIFICATION_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_classification_set_ident(classification, tmp);
-				break;
-			}
+                                idmef_classification_set_ident(classification, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_CLASSIFICATION_TEXT: {
+                        case IDMEF_MSG_CLASSIFICATION_TEXT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_classification_set_text(classification, tmp);
-				break;
-			}
+                                idmef_classification_set_text(classification, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_REFERENCE_TAG: {
+                        case IDMEF_MSG_REFERENCE_TAG: {
                                 int ret;
-				idmef_reference_t *tmp = NULL;
+                                idmef_reference_t *tmp = NULL;
 
-				ret = idmef_classification_new_reference(classification, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_classification_new_reference(classification, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_reference_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_classification_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_classification_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -406,7 +406,7 @@ int idmef_classification_read(idmef_classification_t *classification, prelude_ms
  * @user_id: Pointer to a #idmef_user_id_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_user_id from the @msg message, and 
+ * Read an idmef_user_id from the @msg message, and
  * store it into @user_id.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -414,82 +414,82 @@ int idmef_classification_read(idmef_classification_t *classification, prelude_ms
 int idmef_user_id_read(idmef_user_id_t *user_id, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_USER_ID_IDENT: {
+                        case IDMEF_MSG_USER_ID_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_id_set_ident(user_id, tmp);
-				break;
-			}
+                                idmef_user_id_set_ident(user_id, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_ID_TYPE: {
+                        case IDMEF_MSG_USER_ID_TYPE: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_id_set_type(user_id, tmp);
-				break;
-			}
+                                idmef_user_id_set_type(user_id, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_ID_TTY: {
+                        case IDMEF_MSG_USER_ID_TTY: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_id_set_tty(user_id, tmp);
-				break;
-			}
+                                idmef_user_id_set_tty(user_id, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_ID_NAME: {
+                        case IDMEF_MSG_USER_ID_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_id_set_name(user_id, tmp);
-				break;
-			}
+                                idmef_user_id_set_name(user_id, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_ID_NUMBER: {
+                        case IDMEF_MSG_USER_ID_NUMBER: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_id_set_number(user_id, tmp);
-				break;
-			}
+                                idmef_user_id_set_number(user_id, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_user_id_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_user_id_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -497,7 +497,7 @@ int idmef_user_id_read(idmef_user_id_t *user_id, prelude_msg_t *msg)
  * @user: Pointer to a #idmef_user_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_user from the @msg message, and 
+ * Read an idmef_user from the @msg message, and
  * store it into @user.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -505,66 +505,66 @@ int idmef_user_id_read(idmef_user_id_t *user_id, prelude_msg_t *msg)
 int idmef_user_read(idmef_user_t *user, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_USER_IDENT: {
+                        case IDMEF_MSG_USER_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_set_ident(user, tmp);
-				break;
-			}
+                                idmef_user_set_ident(user, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_CATEGORY: {
+                        case IDMEF_MSG_USER_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_user_set_category(user, tmp);
-				break;
-			}
+                                idmef_user_set_category(user, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_ID_TAG: {
+                        case IDMEF_MSG_USER_ID_TAG: {
                                 int ret;
-				idmef_user_id_t *tmp = NULL;
+                                idmef_user_id_t *tmp = NULL;
 
-				ret = idmef_user_new_user_id(user, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_user_new_user_id(user, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_user_id_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_user_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_user_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -572,7 +572,7 @@ int idmef_user_read(idmef_user_t *user, prelude_msg_t *msg)
  * @address: Pointer to a #idmef_address_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_address from the @msg message, and 
+ * Read an idmef_address from the @msg message, and
  * store it into @address.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -580,93 +580,93 @@ int idmef_user_read(idmef_user_t *user, prelude_msg_t *msg)
 int idmef_address_read(idmef_address_t *address, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ADDRESS_IDENT: {
+                        case IDMEF_MSG_ADDRESS_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_ident(address, tmp);
-				break;
-			}
+                                idmef_address_set_ident(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_CATEGORY: {
+                        case IDMEF_MSG_ADDRESS_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_category(address, tmp);
-				break;
-			}
+                                idmef_address_set_category(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_VLAN_NAME: {
+                        case IDMEF_MSG_ADDRESS_VLAN_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_vlan_name(address, tmp);
-				break;
-			}
+                                idmef_address_set_vlan_name(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_VLAN_NUM: {
+                        case IDMEF_MSG_ADDRESS_VLAN_NUM: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_vlan_num(address, tmp);
-				break;
-			}
+                                idmef_address_set_vlan_num(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_ADDRESS: {
+                        case IDMEF_MSG_ADDRESS_ADDRESS: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_address(address, tmp);
-				break;
-			}
+                                idmef_address_set_address(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_NETMASK: {
+                        case IDMEF_MSG_ADDRESS_NETMASK: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_address_set_netmask(address, tmp);
-				break;
-			}
+                                idmef_address_set_netmask(address, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_address_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_address_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -674,7 +674,7 @@ int idmef_address_read(idmef_address_t *address, prelude_msg_t *msg)
  * @process: Pointer to a #idmef_process_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_process from the @msg message, and 
+ * Read an idmef_process from the @msg message, and
  * store it into @process.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -682,93 +682,93 @@ int idmef_address_read(idmef_address_t *address, prelude_msg_t *msg)
 int idmef_process_read(idmef_process_t *process, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_PROCESS_IDENT: {
+                        case IDMEF_MSG_PROCESS_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_ident(process, tmp);
-				break;
-			}
+                                idmef_process_set_ident(process, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_NAME: {
+                        case IDMEF_MSG_PROCESS_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_name(process, tmp);
-				break;
-			}
+                                idmef_process_set_name(process, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_PID: {
+                        case IDMEF_MSG_PROCESS_PID: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_pid(process, tmp);
-				break;
-			}
+                                idmef_process_set_pid(process, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_PATH: {
+                        case IDMEF_MSG_PROCESS_PATH: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_path(process, tmp);
-				break;
-			}
+                                idmef_process_set_path(process, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_ARG: {
+                        case IDMEF_MSG_PROCESS_ARG: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_arg(process, tmp, -1);
-				break;
-			}
+                                idmef_process_set_arg(process, tmp, -1);
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_ENV: {
+                        case IDMEF_MSG_PROCESS_ENV: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_process_set_env(process, tmp, -1);
-				break;
-			}
+                                idmef_process_set_env(process, tmp, -1);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_process_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_process_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -776,7 +776,7 @@ int idmef_process_read(idmef_process_t *process, prelude_msg_t *msg)
  * @web_service: Pointer to a #idmef_web_service_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_web_service from the @msg message, and 
+ * Read an idmef_web_service from the @msg message, and
  * store it into @web_service.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -784,71 +784,71 @@ int idmef_process_read(idmef_process_t *process, prelude_msg_t *msg)
 int idmef_web_service_read(idmef_web_service_t *web_service, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_WEB_SERVICE_URL: {
+                        case IDMEF_MSG_WEB_SERVICE_URL: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_web_service_set_url(web_service, tmp);
-				break;
-			}
+                                idmef_web_service_set_url(web_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_WEB_SERVICE_CGI: {
+                        case IDMEF_MSG_WEB_SERVICE_CGI: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_web_service_set_cgi(web_service, tmp);
-				break;
-			}
+                                idmef_web_service_set_cgi(web_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_WEB_SERVICE_HTTP_METHOD: {
+                        case IDMEF_MSG_WEB_SERVICE_HTTP_METHOD: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_web_service_set_http_method(web_service, tmp);
-				break;
-			}
+                                idmef_web_service_set_http_method(web_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_WEB_SERVICE_ARG: {
+                        case IDMEF_MSG_WEB_SERVICE_ARG: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_web_service_set_arg(web_service, tmp, -1);
-				break;
-			}
+                                idmef_web_service_set_arg(web_service, tmp, -1);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_web_service_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_web_service_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -856,7 +856,7 @@ int idmef_web_service_read(idmef_web_service_t *web_service, prelude_msg_t *msg)
  * @snmp_service: Pointer to a #idmef_snmp_service_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_snmp_service from the @msg message, and 
+ * Read an idmef_snmp_service from the @msg message, and
  * store it into @snmp_service.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -864,126 +864,126 @@ int idmef_web_service_read(idmef_web_service_t *web_service, prelude_msg_t *msg)
 int idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_SNMP_SERVICE_OID: {
+                        case IDMEF_MSG_SNMP_SERVICE_OID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_oid(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_oid(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_MESSAGE_PROCESSING_MODEL: {
+                        case IDMEF_MSG_SNMP_SERVICE_MESSAGE_PROCESSING_MODEL: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_message_processing_model(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_message_processing_model(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_SECURITY_MODEL: {
+                        case IDMEF_MSG_SNMP_SERVICE_SECURITY_MODEL: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_security_model(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_security_model(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_SECURITY_NAME: {
+                        case IDMEF_MSG_SNMP_SERVICE_SECURITY_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_security_name(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_security_name(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_SECURITY_LEVEL: {
+                        case IDMEF_MSG_SNMP_SERVICE_SECURITY_LEVEL: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_security_level(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_security_level(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_CONTEXT_NAME: {
+                        case IDMEF_MSG_SNMP_SERVICE_CONTEXT_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_context_name(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_context_name(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_CONTEXT_ENGINE_ID: {
+                        case IDMEF_MSG_SNMP_SERVICE_CONTEXT_ENGINE_ID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_context_engine_id(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_context_engine_id(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_COMMAND: {
+                        case IDMEF_MSG_SNMP_SERVICE_COMMAND: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_command(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_command(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_COMMUNITY: {
+                        case IDMEF_MSG_SNMP_SERVICE_COMMUNITY: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_snmp_service_set_community(snmp_service, tmp);
-				break;
-			}
+                                idmef_snmp_service_set_community(snmp_service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_snmp_service_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_snmp_service_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -991,7 +991,7 @@ int idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *m
  * @service: Pointer to a #idmef_service_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_service from the @msg message, and 
+ * Read an idmef_service from the @msg message, and
  * store it into @service.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -999,149 +999,149 @@ int idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *m
 int idmef_service_read(idmef_service_t *service, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_SERVICE_IDENT: {
+                        case IDMEF_MSG_SERVICE_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_ident(service, tmp);
-				break;
-			}
+                                idmef_service_set_ident(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_IP_VERSION: {
+                        case IDMEF_MSG_SERVICE_IP_VERSION: {
                                 uint8_t tmp = 0;
 
                                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_ip_version(service, tmp);
-				break;
-			}
+                                idmef_service_set_ip_version(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_IANA_PROTOCOL_NUMBER: {
+                        case IDMEF_MSG_SERVICE_IANA_PROTOCOL_NUMBER: {
                                 uint8_t tmp = 0;
 
                                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_iana_protocol_number(service, tmp);
-				break;
-			}
+                                idmef_service_set_iana_protocol_number(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_IANA_PROTOCOL_NAME: {
+                        case IDMEF_MSG_SERVICE_IANA_PROTOCOL_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_iana_protocol_name(service, tmp);
-				break;
-			}
+                                idmef_service_set_iana_protocol_name(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_NAME: {
+                        case IDMEF_MSG_SERVICE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_name(service, tmp);
-				break;
-			}
+                                idmef_service_set_name(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_PORT: {
+                        case IDMEF_MSG_SERVICE_PORT: {
                                 uint16_t tmp = 0;
 
                                 ret = prelude_extract_uint16_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_port(service, tmp);
-				break;
-			}
+                                idmef_service_set_port(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_PORTLIST: {
+                        case IDMEF_MSG_SERVICE_PORTLIST: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_portlist(service, tmp);
-				break;
-			}
+                                idmef_service_set_portlist(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_PROTOCOL: {
+                        case IDMEF_MSG_SERVICE_PROTOCOL: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_service_set_protocol(service, tmp);
-				break;
-			}
+                                idmef_service_set_protocol(service, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_WEB_SERVICE_TAG: {
+                        case IDMEF_MSG_WEB_SERVICE_TAG: {
                                 int ret;
-				idmef_web_service_t *tmp = NULL;
+                                idmef_web_service_t *tmp = NULL;
 
-				ret = idmef_service_new_web_service(service, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_service_new_web_service(service, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_web_service_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_SNMP_SERVICE_TAG: {
+                        case IDMEF_MSG_SNMP_SERVICE_TAG: {
                                 int ret;
-				idmef_snmp_service_t *tmp = NULL;
+                                idmef_snmp_service_t *tmp = NULL;
 
-				ret = idmef_service_new_snmp_service(service, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_service_new_snmp_service(service, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_snmp_service_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_service_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_service_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1149,7 +1149,7 @@ int idmef_service_read(idmef_service_t *service, prelude_msg_t *msg)
  * @node: Pointer to a #idmef_node_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_node from the @msg message, and 
+ * Read an idmef_node from the @msg message, and
  * store it into @node.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1157,88 +1157,88 @@ int idmef_service_read(idmef_service_t *service, prelude_msg_t *msg)
 int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_NODE_IDENT: {
+                        case IDMEF_MSG_NODE_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_node_set_ident(node, tmp);
-				break;
-			}
+                                idmef_node_set_ident(node, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_CATEGORY: {
+                        case IDMEF_MSG_NODE_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_node_set_category(node, tmp);
-				break;
-			}
+                                idmef_node_set_category(node, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_LOCATION: {
+                        case IDMEF_MSG_NODE_LOCATION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_node_set_location(node, tmp);
-				break;
-			}
+                                idmef_node_set_location(node, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_NAME: {
+                        case IDMEF_MSG_NODE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_node_set_name(node, tmp);
-				break;
-			}
+                                idmef_node_set_name(node, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDRESS_TAG: {
+                        case IDMEF_MSG_ADDRESS_TAG: {
                                 int ret;
-				idmef_address_t *tmp = NULL;
+                                idmef_address_t *tmp = NULL;
 
-				ret = idmef_node_new_address(node, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_node_new_address(node, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_address_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_node_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_node_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1246,7 +1246,7 @@ int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg)
  * @source: Pointer to a #idmef_source_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_source from the @msg message, and 
+ * Read an idmef_source from the @msg message, and
  * store it into @source.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1254,128 +1254,128 @@ int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg)
 int idmef_source_read(idmef_source_t *source, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_SOURCE_IDENT: {
+                        case IDMEF_MSG_SOURCE_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_source_set_ident(source, tmp);
-				break;
-			}
+                                idmef_source_set_ident(source, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SOURCE_SPOOFED: {
+                        case IDMEF_MSG_SOURCE_SPOOFED: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_source_set_spoofed(source, tmp);
-				break;
-			}
+                                idmef_source_set_spoofed(source, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SOURCE_INTERFACE: {
+                        case IDMEF_MSG_SOURCE_INTERFACE: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_source_set_interface(source, tmp);
-				break;
-			}
+                                idmef_source_set_interface(source, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_TAG: {
+                        case IDMEF_MSG_NODE_TAG: {
                                 int ret;
-				idmef_node_t *tmp = NULL;
+                                idmef_node_t *tmp = NULL;
 
-				ret = idmef_source_new_node(source, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_source_new_node(source, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_node_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_TAG: {
+                        case IDMEF_MSG_USER_TAG: {
                                 int ret;
-				idmef_user_t *tmp = NULL;
+                                idmef_user_t *tmp = NULL;
 
-				ret = idmef_source_new_user(source, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_source_new_user(source, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_user_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_TAG: {
+                        case IDMEF_MSG_PROCESS_TAG: {
                                 int ret;
-				idmef_process_t *tmp = NULL;
+                                idmef_process_t *tmp = NULL;
 
-				ret = idmef_source_new_process(source, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_source_new_process(source, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_process_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_TAG: {
+                        case IDMEF_MSG_SERVICE_TAG: {
                                 int ret;
-				idmef_service_t *tmp = NULL;
+                                idmef_service_t *tmp = NULL;
 
-				ret = idmef_source_new_service(source, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_source_new_service(source, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_service_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_source_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_source_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1383,7 +1383,7 @@ int idmef_source_read(idmef_source_t *source, prelude_msg_t *msg)
  * @file_access: Pointer to a #idmef_file_access_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_file_access from the @msg message, and 
+ * Read an idmef_file_access from the @msg message, and
  * store it into @file_access.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1391,55 +1391,55 @@ int idmef_source_read(idmef_source_t *source, prelude_msg_t *msg)
 int idmef_file_access_read(idmef_file_access_t *file_access, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_USER_ID_TAG: {
+                        case IDMEF_MSG_USER_ID_TAG: {
                                 int ret;
-				idmef_user_id_t *tmp = NULL;
+                                idmef_user_id_t *tmp = NULL;
 
-				ret = idmef_file_access_new_user_id(file_access, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_file_access_new_user_id(file_access, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_user_id_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_ACCESS_PERMISSION: {
+                        case IDMEF_MSG_FILE_ACCESS_PERMISSION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_access_set_permission(file_access, tmp, -1);
-				break;
-			}
+                                idmef_file_access_set_permission(file_access, tmp, -1);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_file_access_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_file_access_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1447,7 +1447,7 @@ int idmef_file_access_read(idmef_file_access_t *file_access, prelude_msg_t *msg)
  * @inode: Pointer to a #idmef_inode_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_inode from the @msg message, and 
+ * Read an idmef_inode from the @msg message, and
  * store it into @inode.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1455,93 +1455,93 @@ int idmef_file_access_read(idmef_file_access_t *file_access, prelude_msg_t *msg)
 int idmef_inode_read(idmef_inode_t *inode, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_INODE_CHANGE_TIME: {
+                        case IDMEF_MSG_INODE_CHANGE_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_change_time(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_change_time(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_NUMBER: {
+                        case IDMEF_MSG_INODE_NUMBER: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_number(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_number(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_MAJOR_DEVICE: {
+                        case IDMEF_MSG_INODE_MAJOR_DEVICE: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_major_device(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_major_device(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_MINOR_DEVICE: {
+                        case IDMEF_MSG_INODE_MINOR_DEVICE: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_minor_device(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_minor_device(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_C_MAJOR_DEVICE: {
+                        case IDMEF_MSG_INODE_C_MAJOR_DEVICE: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_c_major_device(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_c_major_device(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_C_MINOR_DEVICE: {
+                        case IDMEF_MSG_INODE_C_MINOR_DEVICE: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_inode_set_c_minor_device(inode, tmp);
-				break;
-			}
+                                idmef_inode_set_c_minor_device(inode, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_inode_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_inode_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1549,7 +1549,7 @@ int idmef_inode_read(idmef_inode_t *inode, prelude_msg_t *msg)
  * @checksum: Pointer to a #idmef_checksum_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_checksum from the @msg message, and 
+ * Read an idmef_checksum from the @msg message, and
  * store it into @checksum.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1557,60 +1557,60 @@ int idmef_inode_read(idmef_inode_t *inode, prelude_msg_t *msg)
 int idmef_checksum_read(idmef_checksum_t *checksum, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_CHECKSUM_VALUE: {
+                        case IDMEF_MSG_CHECKSUM_VALUE: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_checksum_set_value(checksum, tmp);
-				break;
-			}
+                                idmef_checksum_set_value(checksum, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_CHECKSUM_KEY: {
+                        case IDMEF_MSG_CHECKSUM_KEY: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_checksum_set_key(checksum, tmp);
-				break;
-			}
+                                idmef_checksum_set_key(checksum, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_CHECKSUM_ALGORITHM: {
+                        case IDMEF_MSG_CHECKSUM_ALGORITHM: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_checksum_set_algorithm(checksum, tmp);
-				break;
-			}
+                                idmef_checksum_set_algorithm(checksum, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_checksum_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_checksum_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1618,7 +1618,7 @@ int idmef_checksum_read(idmef_checksum_t *checksum, prelude_msg_t *msg)
  * @file: Pointer to a #idmef_file_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_file from the @msg message, and 
+ * Read an idmef_file from the @msg message, and
  * store it into @file.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1626,216 +1626,216 @@ int idmef_checksum_read(idmef_checksum_t *checksum, prelude_msg_t *msg)
 int idmef_file_read(idmef_file_t *file, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_FILE_IDENT: {
+                        case IDMEF_MSG_FILE_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_ident(file, tmp);
-				break;
-			}
+                                idmef_file_set_ident(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_NAME: {
+                        case IDMEF_MSG_FILE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_name(file, tmp);
-				break;
-			}
+                                idmef_file_set_name(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_PATH: {
+                        case IDMEF_MSG_FILE_PATH: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_path(file, tmp);
-				break;
-			}
+                                idmef_file_set_path(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_CREATE_TIME: {
+                        case IDMEF_MSG_FILE_CREATE_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_create_time(file, tmp);
-				break;
-			}
+                                idmef_file_set_create_time(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_MODIFY_TIME: {
+                        case IDMEF_MSG_FILE_MODIFY_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_modify_time(file, tmp);
-				break;
-			}
+                                idmef_file_set_modify_time(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_ACCESS_TIME: {
+                        case IDMEF_MSG_FILE_ACCESS_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_access_time(file, tmp);
-				break;
-			}
+                                idmef_file_set_access_time(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_DATA_SIZE: {
+                        case IDMEF_MSG_FILE_DATA_SIZE: {
                                 uint64_t tmp = 0;
 
                                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_data_size(file, tmp);
-				break;
-			}
+                                idmef_file_set_data_size(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_DISK_SIZE: {
+                        case IDMEF_MSG_FILE_DISK_SIZE: {
                                 uint64_t tmp = 0;
 
                                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_disk_size(file, tmp);
-				break;
-			}
+                                idmef_file_set_disk_size(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_ACCESS_TAG: {
+                        case IDMEF_MSG_FILE_ACCESS_TAG: {
                                 int ret;
-				idmef_file_access_t *tmp = NULL;
+                                idmef_file_access_t *tmp = NULL;
 
-				ret = idmef_file_new_file_access(file, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_file_new_file_access(file, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_file_access_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_LINKAGE_TAG: {
+                        case IDMEF_MSG_LINKAGE_TAG: {
                                 int ret;
-				idmef_linkage_t *tmp = NULL;
+                                idmef_linkage_t *tmp = NULL;
 
-				ret = idmef_file_new_linkage(file, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_file_new_linkage(file, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_linkage_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_INODE_TAG: {
+                        case IDMEF_MSG_INODE_TAG: {
                                 int ret;
-				idmef_inode_t *tmp = NULL;
+                                idmef_inode_t *tmp = NULL;
 
-				ret = idmef_file_new_inode(file, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_file_new_inode(file, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_inode_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_CHECKSUM_TAG: {
+                        case IDMEF_MSG_CHECKSUM_TAG: {
                                 int ret;
-				idmef_checksum_t *tmp = NULL;
+                                idmef_checksum_t *tmp = NULL;
 
-				ret = idmef_file_new_checksum(file, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_file_new_checksum(file, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_checksum_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_CATEGORY: {
+                        case IDMEF_MSG_FILE_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_category(file, tmp);
-				break;
-			}
+                                idmef_file_set_category(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_FSTYPE: {
+                        case IDMEF_MSG_FILE_FSTYPE: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_fstype(file, tmp);
-				break;
-			}
+                                idmef_file_set_fstype(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_FILE_TYPE: {
+                        case IDMEF_MSG_FILE_FILE_TYPE: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_file_set_file_type(file, tmp);
-				break;
-			}
+                                idmef_file_set_file_type(file, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_file_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_file_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1843,7 +1843,7 @@ int idmef_file_read(idmef_file_t *file, prelude_msg_t *msg)
  * @linkage: Pointer to a #idmef_linkage_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_linkage from the @msg message, and 
+ * Read an idmef_linkage from the @msg message, and
  * store it into @linkage.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1851,77 +1851,77 @@ int idmef_file_read(idmef_file_t *file, prelude_msg_t *msg)
 int idmef_linkage_read(idmef_linkage_t *linkage, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_LINKAGE_CATEGORY: {
+                        case IDMEF_MSG_LINKAGE_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_linkage_set_category(linkage, tmp);
-				break;
-			}
+                                idmef_linkage_set_category(linkage, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_LINKAGE_NAME: {
+                        case IDMEF_MSG_LINKAGE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_linkage_set_name(linkage, tmp);
-				break;
-			}
+                                idmef_linkage_set_name(linkage, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_LINKAGE_PATH: {
+                        case IDMEF_MSG_LINKAGE_PATH: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_linkage_set_path(linkage, tmp);
-				break;
-			}
+                                idmef_linkage_set_path(linkage, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_TAG: {
+                        case IDMEF_MSG_FILE_TAG: {
                                 int ret;
-				idmef_file_t *tmp = NULL;
+                                idmef_file_t *tmp = NULL;
 
-				ret = idmef_linkage_new_file(linkage, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_linkage_new_file(linkage, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_file_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_linkage_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_linkage_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -1929,7 +1929,7 @@ int idmef_linkage_read(idmef_linkage_t *linkage, prelude_msg_t *msg)
  * @target: Pointer to a #idmef_target_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_target from the @msg message, and 
+ * Read an idmef_target from the @msg message, and
  * store it into @target.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1937,145 +1937,145 @@ int idmef_linkage_read(idmef_linkage_t *linkage, prelude_msg_t *msg)
 int idmef_target_read(idmef_target_t *target, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_TARGET_IDENT: {
+                        case IDMEF_MSG_TARGET_IDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_target_set_ident(target, tmp);
-				break;
-			}
+                                idmef_target_set_ident(target, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_TARGET_DECOY: {
+                        case IDMEF_MSG_TARGET_DECOY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_target_set_decoy(target, tmp);
-				break;
-			}
+                                idmef_target_set_decoy(target, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_TARGET_INTERFACE: {
+                        case IDMEF_MSG_TARGET_INTERFACE: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_target_set_interface(target, tmp);
-				break;
-			}
+                                idmef_target_set_interface(target, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_TAG: {
+                        case IDMEF_MSG_NODE_TAG: {
                                 int ret;
-				idmef_node_t *tmp = NULL;
+                                idmef_node_t *tmp = NULL;
 
-				ret = idmef_target_new_node(target, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_target_new_node(target, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_node_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_USER_TAG: {
+                        case IDMEF_MSG_USER_TAG: {
                                 int ret;
-				idmef_user_t *tmp = NULL;
+                                idmef_user_t *tmp = NULL;
 
-				ret = idmef_target_new_user(target, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_target_new_user(target, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_user_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_TAG: {
+                        case IDMEF_MSG_PROCESS_TAG: {
                                 int ret;
-				idmef_process_t *tmp = NULL;
+                                idmef_process_t *tmp = NULL;
 
-				ret = idmef_target_new_process(target, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_target_new_process(target, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_process_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_SERVICE_TAG: {
+                        case IDMEF_MSG_SERVICE_TAG: {
                                 int ret;
-				idmef_service_t *tmp = NULL;
+                                idmef_service_t *tmp = NULL;
 
-				ret = idmef_target_new_service(target, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_target_new_service(target, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_service_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_FILE_TAG: {
+                        case IDMEF_MSG_FILE_TAG: {
                                 int ret;
-				idmef_file_t *tmp = NULL;
+                                idmef_file_t *tmp = NULL;
 
-				ret = idmef_target_new_file(target, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_target_new_file(target, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_file_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_target_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_target_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2083,7 +2083,7 @@ int idmef_target_read(idmef_target_t *target, prelude_msg_t *msg)
  * @analyzer: Pointer to a #idmef_analyzer_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_analyzer from the @msg message, and 
+ * Read an idmef_analyzer from the @msg message, and
  * store it into @analyzer.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2091,149 +2091,149 @@ int idmef_target_read(idmef_target_t *target, prelude_msg_t *msg)
 int idmef_analyzer_read(idmef_analyzer_t *analyzer, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ANALYZER_ANALYZERID: {
+                        case IDMEF_MSG_ANALYZER_ANALYZERID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_analyzerid(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_analyzerid(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_NAME: {
+                        case IDMEF_MSG_ANALYZER_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_name(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_name(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_MANUFACTURER: {
+                        case IDMEF_MSG_ANALYZER_MANUFACTURER: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_manufacturer(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_manufacturer(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_MODEL: {
+                        case IDMEF_MSG_ANALYZER_MODEL: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_model(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_model(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_VERSION: {
+                        case IDMEF_MSG_ANALYZER_VERSION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_version(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_version(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_CLASS: {
+                        case IDMEF_MSG_ANALYZER_CLASS: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_class(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_class(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_OSTYPE: {
+                        case IDMEF_MSG_ANALYZER_OSTYPE: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_ostype(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_ostype(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_OSVERSION: {
+                        case IDMEF_MSG_ANALYZER_OSVERSION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_analyzer_set_osversion(analyzer, tmp);
-				break;
-			}
+                                idmef_analyzer_set_osversion(analyzer, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_NODE_TAG: {
+                        case IDMEF_MSG_NODE_TAG: {
                                 int ret;
-				idmef_node_t *tmp = NULL;
+                                idmef_node_t *tmp = NULL;
 
-				ret = idmef_analyzer_new_node(analyzer, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_analyzer_new_node(analyzer, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_node_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_PROCESS_TAG: {
+                        case IDMEF_MSG_PROCESS_TAG: {
                                 int ret;
-				idmef_process_t *tmp = NULL;
+                                idmef_process_t *tmp = NULL;
 
-				ret = idmef_analyzer_new_process(analyzer, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_analyzer_new_process(analyzer, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_process_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_analyzer_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_analyzer_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2241,7 +2241,7 @@ int idmef_analyzer_read(idmef_analyzer_t *analyzer, prelude_msg_t *msg)
  * @alertident: Pointer to a #idmef_alertident_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_alertident from the @msg message, and 
+ * Read an idmef_alertident from the @msg message, and
  * store it into @alertident.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2249,49 +2249,49 @@ int idmef_analyzer_read(idmef_analyzer_t *analyzer, prelude_msg_t *msg)
 int idmef_alertident_read(idmef_alertident_t *alertident, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ALERTIDENT_ALERTIDENT: {
+                        case IDMEF_MSG_ALERTIDENT_ALERTIDENT: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alertident_set_alertident(alertident, tmp);
-				break;
-			}
+                                idmef_alertident_set_alertident(alertident, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERTIDENT_ANALYZERID: {
+                        case IDMEF_MSG_ALERTIDENT_ANALYZERID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alertident_set_analyzerid(alertident, tmp);
-				break;
-			}
+                                idmef_alertident_set_analyzerid(alertident, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_alertident_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_alertident_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2299,7 +2299,7 @@ int idmef_alertident_read(idmef_alertident_t *alertident, prelude_msg_t *msg)
  * @impact: Pointer to a #idmef_impact_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_impact from the @msg message, and 
+ * Read an idmef_impact from the @msg message, and
  * store it into @impact.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2307,71 +2307,71 @@ int idmef_alertident_read(idmef_alertident_t *alertident, prelude_msg_t *msg)
 int idmef_impact_read(idmef_impact_t *impact, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_IMPACT_SEVERITY: {
+                        case IDMEF_MSG_IMPACT_SEVERITY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_impact_set_severity(impact, tmp);
-				break;
-			}
+                                idmef_impact_set_severity(impact, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_IMPACT_COMPLETION: {
+                        case IDMEF_MSG_IMPACT_COMPLETION: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_impact_set_completion(impact, tmp);
-				break;
-			}
+                                idmef_impact_set_completion(impact, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_IMPACT_TYPE: {
+                        case IDMEF_MSG_IMPACT_TYPE: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_impact_set_type(impact, tmp);
-				break;
-			}
+                                idmef_impact_set_type(impact, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_IMPACT_DESCRIPTION: {
+                        case IDMEF_MSG_IMPACT_DESCRIPTION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_impact_set_description(impact, tmp);
-				break;
-			}
+                                idmef_impact_set_description(impact, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_impact_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_impact_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2379,7 +2379,7 @@ int idmef_impact_read(idmef_impact_t *impact, prelude_msg_t *msg)
  * @action: Pointer to a #idmef_action_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_action from the @msg message, and 
+ * Read an idmef_action from the @msg message, and
  * store it into @action.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2387,49 +2387,49 @@ int idmef_impact_read(idmef_impact_t *impact, prelude_msg_t *msg)
 int idmef_action_read(idmef_action_t *action, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ACTION_CATEGORY: {
+                        case IDMEF_MSG_ACTION_CATEGORY: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_action_set_category(action, tmp);
-				break;
-			}
+                                idmef_action_set_category(action, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ACTION_DESCRIPTION: {
+                        case IDMEF_MSG_ACTION_DESCRIPTION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_action_set_description(action, tmp);
-				break;
-			}
+                                idmef_action_set_description(action, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_action_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_action_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2437,7 +2437,7 @@ int idmef_action_read(idmef_action_t *action, prelude_msg_t *msg)
  * @confidence: Pointer to a #idmef_confidence_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_confidence from the @msg message, and 
+ * Read an idmef_confidence from the @msg message, and
  * store it into @confidence.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2445,49 +2445,49 @@ int idmef_action_read(idmef_action_t *action, prelude_msg_t *msg)
 int idmef_confidence_read(idmef_confidence_t *confidence, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_CONFIDENCE_RATING: {
+                        case IDMEF_MSG_CONFIDENCE_RATING: {
                                 int32_t tmp = 0;
 
                                 ret = prelude_extract_int32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_confidence_set_rating(confidence, tmp);
-				break;
-			}
+                                idmef_confidence_set_rating(confidence, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_CONFIDENCE_CONFIDENCE: {
+                        case IDMEF_MSG_CONFIDENCE_CONFIDENCE: {
                                 float tmp = 0;
 
                                 ret = prelude_extract_float_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_confidence_set_confidence(confidence, tmp);
-				break;
-			}
+                                idmef_confidence_set_confidence(confidence, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_confidence_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_confidence_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2495,7 +2495,7 @@ int idmef_confidence_read(idmef_confidence_t *confidence, prelude_msg_t *msg)
  * @assessment: Pointer to a #idmef_assessment_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_assessment from the @msg message, and 
+ * Read an idmef_assessment from the @msg message, and
  * store it into @assessment.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2503,78 +2503,78 @@ int idmef_confidence_read(idmef_confidence_t *confidence, prelude_msg_t *msg)
 int idmef_assessment_read(idmef_assessment_t *assessment, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_IMPACT_TAG: {
+                        case IDMEF_MSG_IMPACT_TAG: {
                                 int ret;
-				idmef_impact_t *tmp = NULL;
+                                idmef_impact_t *tmp = NULL;
 
-				ret = idmef_assessment_new_impact(assessment, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_assessment_new_impact(assessment, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_impact_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_ACTION_TAG: {
+                        case IDMEF_MSG_ACTION_TAG: {
                                 int ret;
-				idmef_action_t *tmp = NULL;
+                                idmef_action_t *tmp = NULL;
 
-				ret = idmef_assessment_new_action(assessment, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_assessment_new_action(assessment, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_action_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_CONFIDENCE_TAG: {
+                        case IDMEF_MSG_CONFIDENCE_TAG: {
                                 int ret;
-				idmef_confidence_t *tmp = NULL;
+                                idmef_confidence_t *tmp = NULL;
 
-				ret = idmef_assessment_new_confidence(assessment, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_assessment_new_confidence(assessment, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_confidence_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_assessment_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_assessment_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2582,7 +2582,7 @@ int idmef_assessment_read(idmef_assessment_t *assessment, prelude_msg_t *msg)
  * @tool_alert: Pointer to a #idmef_tool_alert_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_tool_alert from the @msg message, and 
+ * Read an idmef_tool_alert from the @msg message, and
  * store it into @tool_alert.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2590,66 +2590,66 @@ int idmef_assessment_read(idmef_assessment_t *assessment, prelude_msg_t *msg)
 int idmef_tool_alert_read(idmef_tool_alert_t *tool_alert, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_TOOL_ALERT_NAME: {
+                        case IDMEF_MSG_TOOL_ALERT_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_tool_alert_set_name(tool_alert, tmp);
-				break;
-			}
+                                idmef_tool_alert_set_name(tool_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_TOOL_ALERT_COMMAND: {
+                        case IDMEF_MSG_TOOL_ALERT_COMMAND: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_tool_alert_set_command(tool_alert, tmp);
-				break;
-			}
+                                idmef_tool_alert_set_command(tool_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERTIDENT_TAG: {
+                        case IDMEF_MSG_ALERTIDENT_TAG: {
                                 int ret;
-				idmef_alertident_t *tmp = NULL;
+                                idmef_alertident_t *tmp = NULL;
 
-				ret = idmef_tool_alert_new_alertident(tool_alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_tool_alert_new_alertident(tool_alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_alertident_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_tool_alert_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_tool_alert_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2657,7 +2657,7 @@ int idmef_tool_alert_read(idmef_tool_alert_t *tool_alert, prelude_msg_t *msg)
  * @correlation_alert: Pointer to a #idmef_correlation_alert_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_correlation_alert from the @msg message, and 
+ * Read an idmef_correlation_alert from the @msg message, and
  * store it into @correlation_alert.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2665,55 +2665,55 @@ int idmef_tool_alert_read(idmef_tool_alert_t *tool_alert, prelude_msg_t *msg)
 int idmef_correlation_alert_read(idmef_correlation_alert_t *correlation_alert, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_CORRELATION_ALERT_NAME: {
+                        case IDMEF_MSG_CORRELATION_ALERT_NAME: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_correlation_alert_set_name(correlation_alert, tmp);
-				break;
-			}
+                                idmef_correlation_alert_set_name(correlation_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERTIDENT_TAG: {
+                        case IDMEF_MSG_ALERTIDENT_TAG: {
                                 int ret;
-				idmef_alertident_t *tmp = NULL;
+                                idmef_alertident_t *tmp = NULL;
 
-				ret = idmef_correlation_alert_new_alertident(correlation_alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_correlation_alert_new_alertident(correlation_alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_alertident_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_correlation_alert_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_correlation_alert_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2721,7 +2721,7 @@ int idmef_correlation_alert_read(idmef_correlation_alert_t *correlation_alert, p
  * @overflow_alert: Pointer to a #idmef_overflow_alert_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_overflow_alert from the @msg message, and 
+ * Read an idmef_overflow_alert from the @msg message, and
  * store it into @overflow_alert.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2729,60 +2729,60 @@ int idmef_correlation_alert_read(idmef_correlation_alert_t *correlation_alert, p
 int idmef_overflow_alert_read(idmef_overflow_alert_t *overflow_alert, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_OVERFLOW_ALERT_PROGRAM: {
+                        case IDMEF_MSG_OVERFLOW_ALERT_PROGRAM: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_overflow_alert_set_program(overflow_alert, tmp);
-				break;
-			}
+                                idmef_overflow_alert_set_program(overflow_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_OVERFLOW_ALERT_SIZE: {
+                        case IDMEF_MSG_OVERFLOW_ALERT_SIZE: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_overflow_alert_set_size(overflow_alert, tmp);
-				break;
-			}
+                                idmef_overflow_alert_set_size(overflow_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_OVERFLOW_ALERT_BUFFER: {
+                        case IDMEF_MSG_OVERFLOW_ALERT_BUFFER: {
                                 idmef_data_t *tmp = NULL;
 
                                 ret = prelude_extract_data_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_overflow_alert_set_buffer(overflow_alert, tmp);
-				break;
-			}
+                                idmef_overflow_alert_set_buffer(overflow_alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_overflow_alert_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_overflow_alert_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2790,7 +2790,7 @@ int idmef_overflow_alert_read(idmef_overflow_alert_t *overflow_alert, prelude_ms
  * @alert: Pointer to a #idmef_alert_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_alert from the @msg message, and 
+ * Read an idmef_alert from the @msg message, and
  * store it into @alert.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -2798,224 +2798,224 @@ int idmef_overflow_alert_read(idmef_overflow_alert_t *overflow_alert, prelude_ms
 int idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_ALERT_MESSAGEID: {
+                        case IDMEF_MSG_ALERT_MESSAGEID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alert_set_messageid(alert, tmp);
-				break;
-			}
+                                idmef_alert_set_messageid(alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_TAG: {
+                        case IDMEF_MSG_ANALYZER_TAG: {
                                 int ret;
-				idmef_analyzer_t *tmp = NULL;
+                                idmef_analyzer_t *tmp = NULL;
 
-				ret = idmef_alert_new_analyzer(alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_analyzer(alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_analyzer_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERT_CREATE_TIME: {
+                        case IDMEF_MSG_ALERT_CREATE_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alert_set_create_time(alert, tmp);
-				break;
-			}
+                                idmef_alert_set_create_time(alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_CLASSIFICATION_TAG: {
+                        case IDMEF_MSG_CLASSIFICATION_TAG: {
                                 int ret;
-				idmef_classification_t *tmp = NULL;
+                                idmef_classification_t *tmp = NULL;
 
-				ret = idmef_alert_new_classification(alert, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_classification(alert, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_classification_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERT_DETECT_TIME: {
+                        case IDMEF_MSG_ALERT_DETECT_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alert_set_detect_time(alert, tmp);
-				break;
-			}
+                                idmef_alert_set_detect_time(alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERT_ANALYZER_TIME: {
+                        case IDMEF_MSG_ALERT_ANALYZER_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_alert_set_analyzer_time(alert, tmp);
-				break;
-			}
+                                idmef_alert_set_analyzer_time(alert, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_SOURCE_TAG: {
+                        case IDMEF_MSG_SOURCE_TAG: {
                                 int ret;
-				idmef_source_t *tmp = NULL;
+                                idmef_source_t *tmp = NULL;
 
-				ret = idmef_alert_new_source(alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_source(alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_source_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_TARGET_TAG: {
+                        case IDMEF_MSG_TARGET_TAG: {
                                 int ret;
-				idmef_target_t *tmp = NULL;
+                                idmef_target_t *tmp = NULL;
 
-				ret = idmef_alert_new_target(alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_target(alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_target_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_ASSESSMENT_TAG: {
+                        case IDMEF_MSG_ASSESSMENT_TAG: {
                                 int ret;
-				idmef_assessment_t *tmp = NULL;
+                                idmef_assessment_t *tmp = NULL;
 
-				ret = idmef_alert_new_assessment(alert, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_assessment(alert, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_assessment_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDITIONAL_DATA_TAG: {
+                        case IDMEF_MSG_ADDITIONAL_DATA_TAG: {
                                 int ret;
-				idmef_additional_data_t *tmp = NULL;
+                                idmef_additional_data_t *tmp = NULL;
 
-				ret = idmef_alert_new_additional_data(alert, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_additional_data(alert, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_additional_data_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_TOOL_ALERT_TAG: {
+                        case IDMEF_MSG_TOOL_ALERT_TAG: {
                                 int ret;
-				idmef_tool_alert_t *tmp = NULL;
+                                idmef_tool_alert_t *tmp = NULL;
 
-				ret = idmef_alert_new_tool_alert(alert, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_tool_alert(alert, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_tool_alert_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_CORRELATION_ALERT_TAG: {
+                        case IDMEF_MSG_CORRELATION_ALERT_TAG: {
                                 int ret;
-				idmef_correlation_alert_t *tmp = NULL;
+                                idmef_correlation_alert_t *tmp = NULL;
 
-				ret = idmef_alert_new_correlation_alert(alert, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_correlation_alert(alert, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_correlation_alert_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_OVERFLOW_ALERT_TAG: {
+                        case IDMEF_MSG_OVERFLOW_ALERT_TAG: {
                                 int ret;
-				idmef_overflow_alert_t *tmp = NULL;
+                                idmef_overflow_alert_t *tmp = NULL;
 
-				ret = idmef_alert_new_overflow_alert(alert, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_alert_new_overflow_alert(alert, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_overflow_alert_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_alert_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_alert_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -3023,7 +3023,7 @@ int idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg)
  * @heartbeat: Pointer to a #idmef_heartbeat_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_heartbeat from the @msg message, and 
+ * Read an idmef_heartbeat from the @msg message, and
  * store it into @heartbeat.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -3031,105 +3031,105 @@ int idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg)
 int idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_HEARTBEAT_MESSAGEID: {
+                        case IDMEF_MSG_HEARTBEAT_MESSAGEID: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_heartbeat_set_messageid(heartbeat, tmp);
-				break;
-			}
+                                idmef_heartbeat_set_messageid(heartbeat, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ANALYZER_TAG: {
+                        case IDMEF_MSG_ANALYZER_TAG: {
                                 int ret;
-				idmef_analyzer_t *tmp = NULL;
+                                idmef_analyzer_t *tmp = NULL;
 
-				ret = idmef_heartbeat_new_analyzer(heartbeat, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_heartbeat_new_analyzer(heartbeat, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_analyzer_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_HEARTBEAT_CREATE_TIME: {
+                        case IDMEF_MSG_HEARTBEAT_CREATE_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_heartbeat_set_create_time(heartbeat, tmp);
-				break;
-			}
+                                idmef_heartbeat_set_create_time(heartbeat, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_HEARTBEAT_ANALYZER_TIME: {
+                        case IDMEF_MSG_HEARTBEAT_ANALYZER_TIME: {
                                 idmef_time_t *tmp = NULL;
 
                                 ret = prelude_extract_time_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_heartbeat_set_analyzer_time(heartbeat, tmp);
-				break;
-			}
+                                idmef_heartbeat_set_analyzer_time(heartbeat, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_HEARTBEAT_HEARTBEAT_INTERVAL: {
+                        case IDMEF_MSG_HEARTBEAT_HEARTBEAT_INTERVAL: {
                                 uint32_t tmp = 0;
 
                                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_heartbeat_set_heartbeat_interval(heartbeat, tmp);
-				break;
-			}
+                                idmef_heartbeat_set_heartbeat_interval(heartbeat, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ADDITIONAL_DATA_TAG: {
+                        case IDMEF_MSG_ADDITIONAL_DATA_TAG: {
                                 int ret;
-				idmef_additional_data_t *tmp = NULL;
+                                idmef_additional_data_t *tmp = NULL;
 
-				ret = idmef_heartbeat_new_additional_data(heartbeat, &tmp, -1);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_heartbeat_new_additional_data(heartbeat, &tmp, -1);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_additional_data_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_heartbeat_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_heartbeat_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -3137,7 +3137,7 @@ int idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg)
  * @message: Pointer to a #idmef_message_t object.
  * @msg: Pointer to a #prelude_msg_t object, containing a message.
  *
- * Read an idmef_message from the @msg message, and 
+ * Read an idmef_message from the @msg message, and
  * store it into @message.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -3145,70 +3145,70 @@ int idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg)
 int idmef_message_read(idmef_message_t *message, prelude_msg_t *msg)
 {
         int ret;
-	void *buf;
-	uint8_t tag;
-	uint32_t len;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
 
-	while ( 1 ) {
+        while ( 1 ) {
                 ret = prelude_msg_get(msg, &tag, &len, &buf);
                 if ( ret < 0 )
-		        return ret;
+                        return ret;
 
-		switch ( tag ) {
+                switch ( tag ) {
 
-			case IDMEF_MSG_MESSAGE_VERSION: {
+                        case IDMEF_MSG_MESSAGE_VERSION: {
                                 prelude_string_t *tmp = NULL;
 
                                 ret = prelude_extract_string_safe(&tmp, buf, len, msg);
                                 if ( ret < 0 )
                                         return ret;
 
-				idmef_message_set_version(message, tmp);
-				break;
-			}
+                                idmef_message_set_version(message, tmp);
+                                break;
+                        }
 
-			case IDMEF_MSG_ALERT_TAG: {
+                        case IDMEF_MSG_ALERT_TAG: {
                                 int ret;
-				idmef_alert_t *tmp = NULL;
+                                idmef_alert_t *tmp = NULL;
 
-				ret = idmef_message_new_alert(message, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_message_new_alert(message, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_alert_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_HEARTBEAT_TAG: {
+                        case IDMEF_MSG_HEARTBEAT_TAG: {
                                 int ret;
-				idmef_heartbeat_t *tmp = NULL;
+                                idmef_heartbeat_t *tmp = NULL;
 
-				ret = idmef_message_new_heartbeat(message, &tmp);
-				if ( ret < 0 )
-					return ret;
+                                ret = idmef_message_new_heartbeat(message, &tmp);
+                                if ( ret < 0 )
+                                        return ret;
 
 
 
                                 ret = idmef_heartbeat_read(tmp, msg);
-				if ( ret < 0 )
-					return ret;
+                                if ( ret < 0 )
+                                        return ret;
 
-				break;
-			}
+                                break;
+                        }
 
-			case IDMEF_MSG_END_OF_TAG:
-				return 0;
+                        case IDMEF_MSG_END_OF_TAG:
+                                return 0;
 
-			default:
-				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_message_t: '%u'", tag);
-		}
+                        default:
+                                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, "Unknown tag while reading idmef_message_t: '%u'", tag);
+                }
 
-	}
+        }
 
-	return 0;
+        return 0;
 }
