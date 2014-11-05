@@ -61,12 +61,7 @@ namespace Prelude {
                 void set(const char *path, Prelude::IDMEFValue &value);
                 void set(const char *path, Prelude::IDMEFTime &value);
                 void set(const char *path, const char *value);
-                void set(const char *path, int8_t value);
-                void set(const char *path, uint8_t value);
-                void set(const char *path, int16_t value);
-                void set(const char *path, uint16_t value);
                 void set(const char *path, int32_t value);
-                void set(const char *path, uint32_t value);
                 void set(const char *path, int64_t value);
                 void set(const char *path, uint64_t value);
                 void set(const char *path, float value);

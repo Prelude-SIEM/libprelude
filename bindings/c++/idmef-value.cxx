@@ -97,49 +97,9 @@ IDMEFValue::IDMEFValue(const std::string &value)
 }
 
 
-IDMEFValue::IDMEFValue(int8_t value)
-{
-        int ret = idmef_value_new_int8(&_value, value);
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-IDMEFValue::IDMEFValue(uint8_t value)
-{
-        int ret = idmef_value_new_uint8(&_value, value);
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-IDMEFValue::IDMEFValue(int16_t value)
-{
-        int ret = idmef_value_new_int16(&_value, value);
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-IDMEFValue::IDMEFValue(uint16_t value)
-{
-        int ret = idmef_value_new_uint16(&_value, value);
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
 IDMEFValue::IDMEFValue(int32_t value)
 {
         int ret = idmef_value_new_int32(&_value, value);
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-IDMEFValue::IDMEFValue(uint32_t value)
-{
-        int ret = idmef_value_new_uint32(&_value, value);
         if ( ret < 0 )
                 throw PreludeError(ret);
 }

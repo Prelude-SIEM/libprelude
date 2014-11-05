@@ -8828,47 +8828,6 @@ static int _wrap_IDMEFPath_set__SWIG_7(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  uint32_t arg3 ;
-  
-  SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFPath::set",1,"Prelude::IDMEFPath const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("Prelude::IDMEFPath::set",2,"Prelude::IDMEF &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEFPath::set",3,"uint32_t");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEFPath,0))){
-    SWIG_fail_ptr("IDMEFPath_set",1,SWIGTYPE_p_Prelude__IDMEFPath);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEF,0))){
-    SWIG_fail_ptr("IDMEFPath_set",2,SWIGTYPE_p_Prelude__IDMEF);
-  }
-  
-  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-  arg3 = (uint32_t)lua_tonumber(L, 3);
-  {
-    try {
-      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      SWIG_fail;
-    }
-  }
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_IDMEFPath_set__SWIG_8(lua_State* L) {
-  int SWIG_arg = 0;
-  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
-  Prelude::IDMEF *arg2 = 0 ;
   int64_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEFPath::set",3,3)
@@ -8905,7 +8864,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_set__SWIG_9(lua_State* L) {
+static int _wrap_IDMEFPath_set__SWIG_8(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -8945,7 +8904,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_set__SWIG_10(lua_State* L) {
+static int _wrap_IDMEFPath_set__SWIG_9(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -8985,7 +8944,7 @@ fail:
 }
 
 
-static int _wrap_IDMEFPath_set__SWIG_11(lua_State* L) {
+static int _wrap_IDMEFPath_set__SWIG_10(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -9368,35 +9327,6 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
       }
       if (_v) {
         {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_IDMEFPath_set__SWIG_11(L);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
           _v = lua_isstring(L,argv[2]);
         }
         if (_v) {
@@ -9415,7 +9345,6 @@ static int _wrap_IDMEFPath_set(lua_State* L) {
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFTime &) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::string const &) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int32_t) const\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint32_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int64_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint64_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,float) const\n"
@@ -12211,43 +12140,6 @@ static int _wrap_IDMEF_set__SWIG_7(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
-  uint32_t arg3 ;
-  
-  SWIG_check_num_args("Prelude::IDMEF::set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEF::set",1,"Prelude::IDMEF *");
-  if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("Prelude::IDMEF::set",2,"char const *");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("Prelude::IDMEF::set",3,"uint32_t");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_Prelude__IDMEF,0))){
-    SWIG_fail_ptr("IDMEF_set",1,SWIGTYPE_p_Prelude__IDMEF);
-  }
-  
-  arg2 = (char *)lua_tostring(L, 2);
-  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-  arg3 = (uint32_t)lua_tonumber(L, 3);
-  {
-    try {
-      (arg1)->set((char const *)arg2,arg3);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_exception(SWIG_RuntimeError, e.what());
-      SWIG_fail;
-    }
-  }
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_IDMEF_set__SWIG_8(lua_State* L) {
-  int SWIG_arg = 0;
-  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
-  char *arg2 = (char *) 0 ;
   int64_t arg3 ;
   
   SWIG_check_num_args("Prelude::IDMEF::set",3,3)
@@ -12280,7 +12172,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_set__SWIG_9(lua_State* L) {
+static int _wrap_IDMEF_set__SWIG_8(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -12316,7 +12208,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_set__SWIG_10(lua_State* L) {
+static int _wrap_IDMEF_set__SWIG_9(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -12352,7 +12244,7 @@ fail:
 }
 
 
-static int _wrap_IDMEF_set__SWIG_11(lua_State* L) {
+static int _wrap_IDMEF_set__SWIG_10(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -12676,30 +12568,6 @@ static int _wrap_IDMEF_set(lua_State* L) {
       }
       if (_v) {
         {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_IDMEF_set__SWIG_11(L);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEF, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = SWIG_lua_isnilstring(L,argv[1]);
-      }
-      if (_v) {
-        {
           _v = lua_isstring(L,argv[2]);
         }
         if (_v) {
@@ -12718,7 +12586,6 @@ static int _wrap_IDMEF_set(lua_State* L) {
     "    Prelude::IDMEF::set(char const *,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEF::set(char const *,Prelude::IDMEFTime &)\n"
     "    Prelude::IDMEF::set(char const *,int32_t)\n"
-    "    Prelude::IDMEF::set(char const *,uint32_t)\n"
     "    Prelude::IDMEF::set(char const *,int64_t)\n"
     "    Prelude::IDMEF::set(char const *,uint64_t)\n"
     "    Prelude::IDMEF::set(char const *,float)\n"

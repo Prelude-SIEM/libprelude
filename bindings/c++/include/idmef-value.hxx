@@ -75,12 +75,7 @@ namespace Prelude {
                 IDMEFValue(idmef_value_t *value);
                 IDMEFValue(const std::string &value);
                 IDMEFValue(const char *value);
-                IDMEFValue(int8_t value);
-                IDMEFValue(uint8_t value);
-                IDMEFValue(int16_t value);
-                IDMEFValue(uint16_t value);
                 IDMEFValue(int32_t value);
-                IDMEFValue(uint32_t value);
                 IDMEFValue(int64_t value);
                 IDMEFValue(uint64_t value);
                 IDMEFValue(float value);

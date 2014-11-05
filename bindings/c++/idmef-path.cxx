@@ -201,45 +201,6 @@ void IDMEFPath::set(IDMEF &message, const char *value) const
 
 
 
-void IDMEFPath::set(IDMEF &message, int8_t value) const
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-void IDMEFPath::set(IDMEF &message, uint8_t value) const
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-void IDMEFPath::set(IDMEF &message, int16_t value) const
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
-
-void IDMEFPath::set(IDMEF &message, uint16_t value) const
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
-
 void IDMEFPath::set(IDMEF &message, int32_t value) const
 {
         int ret;
@@ -250,14 +211,6 @@ void IDMEFPath::set(IDMEF &message, int32_t value) const
 }
 
 
-void IDMEFPath::set(IDMEF &message, uint32_t value) const
-{
-        int ret;
-
-        ret = idmef_path_set(_path, message, IDMEFValue(value));
-        if ( ret < 0 )
-                throw PreludeError(ret);
-}
 
 void IDMEFPath::set(IDMEF &message, int64_t value) const
 {

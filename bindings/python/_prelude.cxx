@@ -5537,114 +5537,6 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
     
 
 SWIGINTERN int
-SWIG_AsCharArray(PyObject * obj, char *val, size_t size)
-{ 
-  char* cptr = 0; size_t csize = 0; int alloc = SWIG_OLDOBJ;
-  int res = SWIG_AsCharPtrAndSize(obj, &cptr, &csize, &alloc);
-  if (SWIG_IsOK(res)) {
-    /* special case of single char conversion when we don't need space for NUL */
-    if (size == 1 && csize == 2 && cptr && !cptr[1]) --csize;
-    if (csize <= size) {
-      if (val) {
-	if (csize) memcpy(val, cptr, csize*sizeof(char));
-	if (csize < size) memset(val + csize, 0, (size - csize)*sizeof(char));
-      }
-      if (alloc == SWIG_NEWOBJ) {
-	delete[] cptr;
-	res = SWIG_DelNewMask(res);
-      }      
-      return res;
-    }
-    if (alloc == SWIG_NEWOBJ) delete[] cptr;
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_char (PyObject * obj, char *val)
-{    
-  int res = SWIG_AsCharArray(obj, val, 1);
-  if (!SWIG_IsOK(res)) {
-    long v;
-    res = SWIG_AddCast(SWIG_AsVal_long (obj, &v));
-    if (SWIG_IsOK(res)) {
-      if ((CHAR_MIN <= v) && (v <= CHAR_MAX)) {
-	if (val) *val = static_cast< char >(v);
-      } else {
-	res = SWIG_OverflowError;
-      }
-    }
-  }
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_char (PyObject * obj, unsigned char *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UCHAR_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned char >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_short (PyObject * obj, short *val)
-{
-  long v;
-  int res = SWIG_AsVal_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < SHRT_MIN || v > SHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< short >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_short (PyObject * obj, unsigned short *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > USHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned short >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UINT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned int >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
 SWIG_AsVal_long_SS_long (PyObject *obj, long long *val)
 {
   int res = SWIG_TypeError;
@@ -5847,6 +5739,22 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
         else return -1;
 
         return 1;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > UINT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< unsigned int >(v);
+    }
+  }  
+  return res;
 }
 
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
@@ -11443,126 +11351,6 @@ fail:
 
 SWIGINTERN int _wrap_new_IDMEFValue__SWIG_7(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  int8_t arg1 ;
-  char val1 ;
-  int ecode1 = 0 ;
-  Prelude::IDMEFValue *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_char(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int8_t""'");
-  } 
-  arg1 = static_cast< int8_t >(val1);
-  {
-    try {
-      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
-  return resultobj == Py_None ? -1 : 0;
-fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  uint8_t arg1 ;
-  unsigned char val1 ;
-  int ecode1 = 0 ;
-  Prelude::IDMEFValue *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_char(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint8_t""'");
-  } 
-  arg1 = static_cast< uint8_t >(val1);
-  {
-    try {
-      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
-  return resultobj == Py_None ? -1 : 0;
-fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  int16_t arg1 ;
-  short val1 ;
-  int ecode1 = 0 ;
-  Prelude::IDMEFValue *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_short(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int16_t""'");
-  } 
-  arg1 = static_cast< int16_t >(val1);
-  {
-    try {
-      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
-  return resultobj == Py_None ? -1 : 0;
-fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  uint16_t arg1 ;
-  unsigned short val1 ;
-  int ecode1 = 0 ;
-  Prelude::IDMEFValue *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_short(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint16_t""'");
-  } 
-  arg1 = static_cast< uint16_t >(val1);
-  {
-    try {
-      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
-  return resultobj == Py_None ? -1 : 0;
-fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
   int32_t arg1 ;
   int val1 ;
   int ecode1 = 0 ;
@@ -11591,37 +11379,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_12(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  uint32_t arg1 ;
-  unsigned int val1 ;
-  int ecode1 = 0 ;
-  Prelude::IDMEFValue *result = 0 ;
-  
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
-  ecode1 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint32_t""'");
-  } 
-  arg1 = static_cast< uint32_t >(val1);
-  {
-    try {
-      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_BUILTIN_INIT |  0 );
-  return resultobj == Py_None ? -1 : 0;
-fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_13(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   int64_t arg1 ;
   long long val1 ;
@@ -11651,7 +11409,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_14(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   uint64_t arg1 ;
   unsigned long long val1 ;
@@ -11681,7 +11439,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_15(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   float arg1 ;
   float val1 ;
@@ -11711,7 +11469,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_16(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double val1 ;
@@ -11741,7 +11499,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEFValue__SWIG_17(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEFValue__SWIG_12(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   void *argp1 = 0 ;
@@ -11826,7 +11584,7 @@ check_4:
       _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_5;
-    return _wrap_new_IDMEFValue__SWIG_17(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_12(self, argc, argv);
   }
 check_5:
   
@@ -11834,12 +11592,12 @@ check_5:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_unsigned_SS_char(argv[0], NULL);
+        int res = SWIG_AsVal_int(argv[0], NULL);
         _v = SWIG_CheckState(res);
       }
     }
     if (!_v) goto check_6;
-    return _wrap_new_IDMEFValue__SWIG_8(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_7(self, argc, argv);
   }
 check_6:
   
@@ -11847,12 +11605,12 @@ check_6:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_unsigned_SS_short(argv[0], NULL);
+        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], NULL);
         _v = SWIG_CheckState(res);
       }
     }
     if (!_v) goto check_7;
-    return _wrap_new_IDMEFValue__SWIG_10(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_9(self, argc, argv);
   }
 check_7:
   
@@ -11860,12 +11618,12 @@ check_7:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_short(argv[0], NULL);
+        int res = SWIG_AsVal_long_SS_long(argv[0], NULL);
         _v = SWIG_CheckState(res);
       }
     }
     if (!_v) goto check_8;
-    return _wrap_new_IDMEFValue__SWIG_9(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_8(self, argc, argv);
   }
 check_8:
   
@@ -11873,12 +11631,12 @@ check_8:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_unsigned_SS_int(argv[0], NULL);
+        int res = SWIG_AsVal_float(argv[0], NULL);
         _v = SWIG_CheckState(res);
       }
     }
     if (!_v) goto check_9;
-    return _wrap_new_IDMEFValue__SWIG_12(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_10(self, argc, argv);
   }
 check_9:
   
@@ -11886,7 +11644,7 @@ check_9:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_int(argv[0], NULL);
+        int res = SWIG_AsVal_double(argv[0], NULL);
         _v = SWIG_CheckState(res);
       }
     }
@@ -11898,92 +11656,27 @@ check_10:
   if (argc == 1) {
     int _v = 0;
     {
-      {
-        int res = SWIG_AsVal_unsigned_SS_long_SS_long(argv[0], NULL);
-        _v = SWIG_CheckState(res);
-      }
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
+      _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_11;
-    return _wrap_new_IDMEFValue__SWIG_14(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_6(self, argc, argv);
   }
 check_11:
   
   if (argc == 1) {
     int _v = 0;
     {
-      {
-        int res = SWIG_AsVal_long_SS_long(argv[0], NULL);
-        _v = SWIG_CheckState(res);
-      }
+      int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
+      _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_12;
-    return _wrap_new_IDMEFValue__SWIG_13(self, argc, argv);
+    return _wrap_new_IDMEFValue__SWIG_2(self, argc, argv);
   }
 check_12:
   
   if (argc == 1) {
-    int _v = 0;
-    {
-      {
-        int res = SWIG_AsVal_float(argv[0], NULL);
-        _v = SWIG_CheckState(res);
-      }
-    }
-    if (!_v) goto check_13;
-    return _wrap_new_IDMEFValue__SWIG_15(self, argc, argv);
-  }
-check_13:
-  
-  if (argc == 1) {
-    int _v = 0;
-    {
-      {
-        int res = SWIG_AsVal_double(argv[0], NULL);
-        _v = SWIG_CheckState(res);
-      }
-    }
-    if (!_v) goto check_14;
-    return _wrap_new_IDMEFValue__SWIG_16(self, argc, argv);
-  }
-check_14:
-  
-  if (argc == 1) {
-    int _v = 0;
-    {
-      {
-        int res = SWIG_AsVal_char(argv[0], NULL);
-        _v = SWIG_CheckState(res);
-      }
-    }
-    if (!_v) goto check_15;
-    return _wrap_new_IDMEFValue__SWIG_7(self, argc, argv);
-  }
-check_15:
-  
-  if (argc == 1) {
-    int _v = 0;
-    {
-      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
-      _v = SWIG_CheckState(res);
-    }
-    if (!_v) goto check_16;
-    return _wrap_new_IDMEFValue__SWIG_6(self, argc, argv);
-  }
-check_16:
-  
-  if (argc == 1) {
-    int _v = 0;
-    {
-      int res = swig::asptr(argv[0], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
-      _v = SWIG_CheckState(res);
-    }
-    if (!_v) goto check_17;
     return _wrap_new_IDMEFValue__SWIG_4(self, argc, argv);
-  }
-check_17:
-  
-  if (argc == 1) {
-    return _wrap_new_IDMEFValue__SWIG_2(self, argc, argv);
   }
   
 fail:
@@ -11996,12 +11689,7 @@ fail:
     "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > > const &)\n"
     "    Prelude::IDMEFValue::IDMEFValue(idmef_value_t *)\n"
     "    Prelude::IDMEFValue::IDMEFValue(std::string const &)\n"
-    "    Prelude::IDMEFValue::IDMEFValue(int8_t)\n"
-    "    Prelude::IDMEFValue::IDMEFValue(uint8_t)\n"
-    "    Prelude::IDMEFValue::IDMEFValue(int16_t)\n"
-    "    Prelude::IDMEFValue::IDMEFValue(uint16_t)\n"
     "    Prelude::IDMEFValue::IDMEFValue(int32_t)\n"
-    "    Prelude::IDMEFValue::IDMEFValue(uint32_t)\n"
     "    Prelude::IDMEFValue::IDMEFValue(int64_t)\n"
     "    Prelude::IDMEFValue::IDMEFValue(uint64_t)\n"
     "    Prelude::IDMEFValue::IDMEFValue(float)\n"
@@ -13052,54 +12740,6 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_7(PyObject *self, int nobjs, PyOb
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
-  uint32_t arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  unsigned int val3 ;
-  int ecode3 = 0 ;
-  
-  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(swig_obj[2], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint32_t""'");
-  } 
-  arg3 = static_cast< uint32_t >(val3);
-  {
-    try {
-      ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
-  Prelude::IDMEF *arg2 = 0 ;
   int64_t arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -13144,7 +12784,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13192,7 +12832,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13240,7 +12880,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEFPath_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
   Prelude::IDMEF *arg2 = 0 ;
@@ -13334,27 +12974,14 @@ check_3:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
-        _v = SWIG_CheckState(res);
-      }
-    }
-    if (!_v) goto check_4;
-    return _wrap_IDMEFPath_set__SWIG_7(self, argc, argv);
-  }
-check_4:
-  
-  if (argc == 3) {
-    int _v = 0;
-    {
-      {
         int res = SWIG_AsVal_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
       }
     }
-    if (!_v) goto check_5;
+    if (!_v) goto check_4;
     return _wrap_IDMEFPath_set__SWIG_6(self, argc, argv);
   }
-check_5:
+check_4:
   
   if (argc == 3) {
     int _v = 0;
@@ -13364,10 +12991,10 @@ check_5:
         _v = SWIG_CheckState(res);
       }
     }
-    if (!_v) goto check_6;
-    return _wrap_IDMEFPath_set__SWIG_9(self, argc, argv);
+    if (!_v) goto check_5;
+    return _wrap_IDMEFPath_set__SWIG_8(self, argc, argv);
   }
-check_6:
+check_5:
   
   if (argc == 3) {
     int _v = 0;
@@ -13377,8 +13004,21 @@ check_6:
         _v = SWIG_CheckState(res);
       }
     }
+    if (!_v) goto check_6;
+    return _wrap_IDMEFPath_set__SWIG_7(self, argc, argv);
+  }
+check_6:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_float(argv[2], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
     if (!_v) goto check_7;
-    return _wrap_IDMEFPath_set__SWIG_8(self, argc, argv);
+    return _wrap_IDMEFPath_set__SWIG_9(self, argc, argv);
   }
 check_7:
   
@@ -13386,7 +13026,7 @@ check_7:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_float(argv[2], NULL);
+        int res = SWIG_AsVal_double(argv[2], NULL);
         _v = SWIG_CheckState(res);
       }
     }
@@ -13398,40 +13038,27 @@ check_8:
   if (argc == 3) {
     int _v = 0;
     {
-      {
-        int res = SWIG_AsVal_double(argv[2], NULL);
-        _v = SWIG_CheckState(res);
-      }
+      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_9;
-    return _wrap_IDMEFPath_set__SWIG_11(self, argc, argv);
+    return _wrap_IDMEFPath_set__SWIG_5(self, argc, argv);
   }
 check_9:
   
   if (argc == 3) {
     int _v = 0;
     {
-      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
       _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_10;
-    return _wrap_IDMEFPath_set__SWIG_5(self, argc, argv);
+    return _wrap_IDMEFPath_set__SWIG_0(self, argc, argv);
   }
 check_10:
   
   if (argc == 3) {
-    int _v = 0;
-    {
-      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
-      _v = SWIG_CheckState(res);
-    }
-    if (!_v) goto check_11;
     return _wrap_IDMEFPath_set__SWIG_2(self, argc, argv);
-  }
-check_11:
-  
-  if (argc == 3) {
-    return _wrap_IDMEFPath_set__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -13444,7 +13071,6 @@ fail:
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,Prelude::IDMEFTime &) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,std::string const &) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int32_t) const\n"
-    "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint32_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,int64_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,uint64_t) const\n"
     "    Prelude::IDMEFPath::set(Prelude::IDMEF &,float) const\n"
@@ -16493,54 +16119,6 @@ SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_7(PyObject *self, int nobjs, PyObject
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
-  uint32_t arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int res2 ;
-  char *buf2 = 0 ;
-  int alloc2 = 0 ;
-  unsigned int val3 ;
-  int ecode3 = 0 ;
-  
-  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
-  }
-  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, NULL, &alloc2);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
-  }
-  arg2 = reinterpret_cast< char * >(buf2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(swig_obj[2], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "uint32_t""'");
-  } 
-  arg3 = static_cast< uint32_t >(val3);
-  {
-    try {
-      (arg1)->set((char const *)arg2,arg3);
-    } catch(Prelude::PreludeError &e) {
-      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
-          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
-        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
-      SWIG_fail;
-    }
-  }
-  resultobj = SWIG_Py_Void();
-  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-  return resultobj;
-fail:
-  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
-  char *arg2 = (char *) 0 ;
   int64_t arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -16585,7 +16163,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_8(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -16633,7 +16211,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_9(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -16681,7 +16259,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_11(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_IDMEF_set__SWIG_10(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -16775,27 +16353,14 @@ check_3:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_unsigned_SS_int(argv[2], NULL);
-        _v = SWIG_CheckState(res);
-      }
-    }
-    if (!_v) goto check_4;
-    return _wrap_IDMEF_set__SWIG_7(self, argc, argv);
-  }
-check_4:
-  
-  if (argc == 3) {
-    int _v = 0;
-    {
-      {
         int res = SWIG_AsVal_int(argv[2], NULL);
         _v = SWIG_CheckState(res);
       }
     }
-    if (!_v) goto check_5;
+    if (!_v) goto check_4;
     return _wrap_IDMEF_set__SWIG_6(self, argc, argv);
   }
-check_5:
+check_4:
   
   if (argc == 3) {
     int _v = 0;
@@ -16805,10 +16370,10 @@ check_5:
         _v = SWIG_CheckState(res);
       }
     }
-    if (!_v) goto check_6;
-    return _wrap_IDMEF_set__SWIG_9(self, argc, argv);
+    if (!_v) goto check_5;
+    return _wrap_IDMEF_set__SWIG_8(self, argc, argv);
   }
-check_6:
+check_5:
   
   if (argc == 3) {
     int _v = 0;
@@ -16818,8 +16383,21 @@ check_6:
         _v = SWIG_CheckState(res);
       }
     }
+    if (!_v) goto check_6;
+    return _wrap_IDMEF_set__SWIG_7(self, argc, argv);
+  }
+check_6:
+  
+  if (argc == 3) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_float(argv[2], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
     if (!_v) goto check_7;
-    return _wrap_IDMEF_set__SWIG_8(self, argc, argv);
+    return _wrap_IDMEF_set__SWIG_9(self, argc, argv);
   }
 check_7:
   
@@ -16827,7 +16405,7 @@ check_7:
     int _v = 0;
     {
       {
-        int res = SWIG_AsVal_float(argv[2], NULL);
+        int res = SWIG_AsVal_double(argv[2], NULL);
         _v = SWIG_CheckState(res);
       }
     }
@@ -16839,40 +16417,27 @@ check_8:
   if (argc == 3) {
     int _v = 0;
     {
-      {
-        int res = SWIG_AsVal_double(argv[2], NULL);
-        _v = SWIG_CheckState(res);
-      }
+      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_9;
-    return _wrap_IDMEF_set__SWIG_11(self, argc, argv);
+    return _wrap_IDMEF_set__SWIG_3(self, argc, argv);
   }
 check_9:
   
   if (argc == 3) {
     int _v = 0;
     {
-      int res = SWIG_AsPtr_std_string(argv[2], (std::string**)(0));
+      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEF,std::allocator< Prelude::IDMEF > >**)(0));
       _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_10;
-    return _wrap_IDMEF_set__SWIG_3(self, argc, argv);
+    return _wrap_IDMEF_set__SWIG_0(self, argc, argv);
   }
 check_10:
   
   if (argc == 3) {
-    int _v = 0;
-    {
-      int res = swig::asptr(argv[2], (std::vector<Prelude::IDMEFValue,std::allocator< Prelude::IDMEFValue > >**)(0));
-      _v = SWIG_CheckState(res);
-    }
-    if (!_v) goto check_11;
     return _wrap_IDMEF_set__SWIG_2(self, argc, argv);
-  }
-check_11:
-  
-  if (argc == 3) {
-    return _wrap_IDMEF_set__SWIG_0(self, argc, argv);
   }
   
 fail:
@@ -16885,7 +16450,6 @@ fail:
     "    Prelude::IDMEF::set(char const *,Prelude::IDMEFValue *)\n"
     "    Prelude::IDMEF::set(char const *,Prelude::IDMEFTime &)\n"
     "    Prelude::IDMEF::set(char const *,int32_t)\n"
-    "    Prelude::IDMEF::set(char const *,uint32_t)\n"
     "    Prelude::IDMEF::set(char const *,int64_t)\n"
     "    Prelude::IDMEF::set(char const *,uint64_t)\n"
     "    Prelude::IDMEF::set(char const *,float)\n"

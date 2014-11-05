@@ -2112,162 +2112,6 @@ SWIG_AsPtr_std_string SWIG_PERL_DECL_ARGS_2(SV * obj, std::string **val)
 }
 
 
-SWIGINTERN int
-SWIG_AsCharArray(SV * obj, char *val, size_t size)
-{ 
-  char* cptr = 0; size_t csize = 0; int alloc = SWIG_OLDOBJ;
-  int res = SWIG_AsCharPtrAndSize(obj, &cptr, &csize, &alloc);
-  if (SWIG_IsOK(res)) {
-    /* special case of single char conversion when we don't need space for NUL */
-    if (size == 1 && csize == 2 && cptr && !cptr[1]) --csize;
-    if (csize <= size) {
-      if (val) {
-	if (csize) memcpy(val, cptr, csize*sizeof(char));
-	if (csize < size) memset(val + csize, 0, (size - csize)*sizeof(char));
-      }
-      if (alloc == SWIG_NEWOBJ) {
-	delete[] cptr;
-	res = SWIG_DelNewMask(res);
-      }      
-      return res;
-    }
-    if (alloc == SWIG_NEWOBJ) delete[] cptr;
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_char SWIG_PERL_DECL_ARGS_2(SV * obj, char *val)
-{    
-  int res = SWIG_AsCharArray(obj, val, 1);
-  if (!SWIG_IsOK(res)) {
-    long v;
-    res = SWIG_AddCast(SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v));
-    if (SWIG_IsOK(res)) {
-      if ((CHAR_MIN <= v) && (v <= CHAR_MAX)) {
-	if (val) *val = static_cast< char >(v);
-      } else {
-	res = SWIG_OverflowError;
-      }
-    }
-  }
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_long SWIG_PERL_DECL_ARGS_2(SV *obj, unsigned long *val) 
-{
-  if (SvUOK(obj)) {
-    UV v = SvUV(obj);
-    if (v <= ULONG_MAX) {
-      if (val) *val = v;
-      return SWIG_OK;
-    }
-    return SWIG_OverflowError;
-  } else if (SvIOK(obj)) {
-    IV v = SvIV(obj);
-    if (v >= 0 && v <= ULONG_MAX) {
-      if (val) *val = v;
-      return SWIG_OK;
-    }
-    return SWIG_OverflowError;
-  } else {
-    int dispatch = 0;
-    const char *nptr = SvPV_nolen(obj);
-    if (nptr) {
-      char *endptr;
-      unsigned long v;
-      errno = 0;
-      v = strtoul(nptr, &endptr,0);
-      if (errno == ERANGE) {
-	errno = 0;
-	return SWIG_OverflowError;
-      } else {
-	if (*endptr == '\0') {
-	  if (val) *val = v;
-	  return SWIG_Str2NumCast(SWIG_OK);
-	}
-      }
-    }
-    if (!dispatch) {
-      double d;
-      int res = SWIG_AddCast(SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(obj,&d));
-      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
-	if (val) *val = (unsigned long)(d);
-	return res;
-      }
-    }
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_char SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned char *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UCHAR_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned char >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_short SWIG_PERL_DECL_ARGS_2(SV * obj, short *val)
-{
-  long v;
-  int res = SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < SHRT_MIN || v > SHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< short >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_short SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned short *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > USHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned short >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UINT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned int >(v);
-    }
-  }  
-  return res;
-}
-
-
 
 SWIGINTERN int
 SWIG_AsVal_long_SS_long SWIG_PERL_DECL_ARGS_2(SV *obj, long long *val)
@@ -2489,6 +2333,70 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
         else return -1;
 
         return 1;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_long SWIG_PERL_DECL_ARGS_2(SV *obj, unsigned long *val) 
+{
+  if (SvUOK(obj)) {
+    UV v = SvUV(obj);
+    if (v <= ULONG_MAX) {
+      if (val) *val = v;
+      return SWIG_OK;
+    }
+    return SWIG_OverflowError;
+  } else if (SvIOK(obj)) {
+    IV v = SvIV(obj);
+    if (v >= 0 && v <= ULONG_MAX) {
+      if (val) *val = v;
+      return SWIG_OK;
+    }
+    return SWIG_OverflowError;
+  } else {
+    int dispatch = 0;
+    const char *nptr = SvPV_nolen(obj);
+    if (nptr) {
+      char *endptr;
+      unsigned long v;
+      errno = 0;
+      v = strtoul(nptr, &endptr,0);
+      if (errno == ERANGE) {
+	errno = 0;
+	return SWIG_OverflowError;
+      } else {
+	if (*endptr == '\0') {
+	  if (val) *val = v;
+	  return SWIG_Str2NumCast(SWIG_OK);
+	}
+      }
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
+	if (val) *val = (unsigned long)(d);
+	return res;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > UINT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< unsigned int >(v);
+    }
+  }  
+  return res;
 }
 
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
@@ -7909,146 +7817,6 @@ XS(_wrap_new_IDMEFValue__SWIG_6) {
 
 XS(_wrap_new_IDMEFValue__SWIG_7) {
   {
-    int8_t arg1 ;
-    char val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFValue *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_IDMEFValue(value);");
-    }
-    ecode1 = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int8_t""'");
-    } 
-    arg1 = static_cast< int8_t >(val1);
-    {
-      try {
-        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_IDMEFValue__SWIG_8) {
-  {
-    uint8_t arg1 ;
-    unsigned char val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFValue *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_IDMEFValue(value);");
-    }
-    ecode1 = SWIG_AsVal_unsigned_SS_char SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint8_t""'");
-    } 
-    arg1 = static_cast< uint8_t >(val1);
-    {
-      try {
-        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_IDMEFValue__SWIG_9) {
-  {
-    int16_t arg1 ;
-    short val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFValue *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_IDMEFValue(value);");
-    }
-    ecode1 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "int16_t""'");
-    } 
-    arg1 = static_cast< int16_t >(val1);
-    {
-      try {
-        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_IDMEFValue__SWIG_10) {
-  {
-    uint16_t arg1 ;
-    unsigned short val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFValue *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_IDMEFValue(value);");
-    }
-    ecode1 = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint16_t""'");
-    } 
-    arg1 = static_cast< uint16_t >(val1);
-    {
-      try {
-        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_IDMEFValue__SWIG_11) {
-  {
     int32_t arg1 ;
     int val1 ;
     int ecode1 = 0 ;
@@ -8082,42 +7850,7 @@ XS(_wrap_new_IDMEFValue__SWIG_11) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_12) {
-  {
-    uint32_t arg1 ;
-    unsigned int val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    Prelude::IDMEFValue *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_IDMEFValue(value);");
-    }
-    ecode1 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "uint32_t""'");
-    } 
-    arg1 = static_cast< uint32_t >(val1);
-    {
-      try {
-        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue(arg1);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_IDMEFValue__SWIG_13) {
+XS(_wrap_new_IDMEFValue__SWIG_8) {
   {
     int64_t arg1 ;
     long long val1 ;
@@ -8152,7 +7885,7 @@ XS(_wrap_new_IDMEFValue__SWIG_13) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_14) {
+XS(_wrap_new_IDMEFValue__SWIG_9) {
   {
     uint64_t arg1 ;
     unsigned long long val1 ;
@@ -8187,7 +7920,7 @@ XS(_wrap_new_IDMEFValue__SWIG_14) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_15) {
+XS(_wrap_new_IDMEFValue__SWIG_10) {
   {
     float arg1 ;
     float val1 ;
@@ -8222,7 +7955,7 @@ XS(_wrap_new_IDMEFValue__SWIG_15) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_16) {
+XS(_wrap_new_IDMEFValue__SWIG_11) {
   {
     double arg1 ;
     double val1 ;
@@ -8257,7 +7990,7 @@ XS(_wrap_new_IDMEFValue__SWIG_16) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_17) {
+XS(_wrap_new_IDMEFValue__SWIG_12) {
   {
     Prelude::IDMEFTime *arg1 = 0 ;
     void *argp1 = 0 ;
@@ -8400,7 +8133,7 @@ XS(_wrap_new_IDMEFValue) {
       int _v = 0;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_char SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -8422,7 +8155,7 @@ XS(_wrap_new_IDMEFValue) {
       int _v = 0;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_short SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -8444,7 +8177,7 @@ XS(_wrap_new_IDMEFValue) {
       int _v = 0;
       {
         {
-          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -8466,7 +8199,7 @@ XS(_wrap_new_IDMEFValue) {
       int _v = 0;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -8488,7 +8221,7 @@ XS(_wrap_new_IDMEFValue) {
       int _v = 0;
       {
         {
-          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -8509,10 +8242,8 @@ XS(_wrap_new_IDMEFValue) {
       SWIG_TypeRank _pi = 1;
       int _v = 0;
       {
-        {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
-          _v = SWIG_CheckState(res);
-        }
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), (std::string**)(0));
+        _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_11;
       _ranki += _v*_pi;
@@ -8524,163 +8255,6 @@ XS(_wrap_new_IDMEFValue) {
       }
     }
   check_11:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 12;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_12:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_13;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 13;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_13:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_14;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 14;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_14:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          int res = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_15;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 15;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_15:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), (std::string**)(0));
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_16;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 16;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_16:
-    
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          {
-            /* wrapped vector? */
-            std::vector<Prelude::IDMEFValue >* v;
-            if (SWIG_ConvertPtr(ST(0),(void **) &v, 
-                SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t,0) != -1) {
-              _v = 1;
-            } else if (SvROK(ST(0))) {
-              /* native sequence? */
-              AV *av = (AV *)SvRV(ST(0));
-              if (SvTYPE(av) == SVt_PVAV) {
-                I32 len = av_len(av) + 1;
-                if (len == 0) {
-                  /* an empty sequence can be of any type */
-                  _v = 1;
-                } else {
-                  /* check the first element only */
-                  Prelude::IDMEFValue* obj;
-                  SV **tv = av_fetch(av, 0, 0);
-                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
-                      SWIGTYPE_p_Prelude__IDMEFValue,0) != -1)
-                  _v = 1;
-                  else
-                  _v = 0;
-                }
-              }
-            } else {
-              _v = 0;
-            }
-          }
-        }
-      }
-      if (!_v) goto check_17;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 17;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_17:
     
     if (items == 1) {
       SWIG_TypeRank _ranki = 0;
@@ -8720,16 +8294,65 @@ XS(_wrap_new_IDMEFValue) {
           }
         }
       }
-      if (!_v) goto check_18;
+      if (!_v) goto check_12;
       _ranki += _v*_pi;
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 18;
+        _rank = _ranki; _index = 12;
         if (_rank == _rankm) goto dispatch;
       }
     }
-  check_18:
+  check_12:
+    
+    if (items == 1) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          {
+            /* wrapped vector? */
+            std::vector<Prelude::IDMEFValue >* v;
+            if (SWIG_ConvertPtr(ST(0),(void **) &v, 
+                SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t,0) != -1) {
+              _v = 1;
+            } else if (SvROK(ST(0))) {
+              /* native sequence? */
+              AV *av = (AV *)SvRV(ST(0));
+              if (SvTYPE(av) == SVt_PVAV) {
+                I32 len = av_len(av) + 1;
+                if (len == 0) {
+                  /* an empty sequence can be of any type */
+                  _v = 1;
+                } else {
+                  /* check the first element only */
+                  Prelude::IDMEFValue* obj;
+                  SV **tv = av_fetch(av, 0, 0);
+                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
+                      SWIGTYPE_p_Prelude__IDMEFValue,0) != -1)
+                  _v = 1;
+                  else
+                  _v = 0;
+                }
+              }
+            } else {
+              _v = 0;
+            }
+          }
+        }
+      }
+      if (!_v) goto check_13;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 13;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_13:
     
   dispatch:
     switch(_index) {
@@ -8742,33 +8365,23 @@ XS(_wrap_new_IDMEFValue) {
     case 4:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_5); return;
     case 5:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_17); return;
-    case 6:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_8); return;
-    case 7:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_10); return;
-    case 8:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_9); return;
-    case 9:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_12); return;
+    case 6:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_7); return;
+    case 7:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_9); return;
+    case 8:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_8); return;
+    case 9:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_10); return;
     case 10:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_11); return;
     case 11:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_14); return;
-    case 12:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_13); return;
-    case 13:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_15); return;
-    case 14:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_16); return;
-    case 15:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_7); return;
-    case 16:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_6); return;
-    case 17:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_4); return;
-    case 18:
+    case 12:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_2); return;
+    case 13:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_4); return;
     }
   }
   
@@ -10156,63 +9769,6 @@ XS(_wrap_IDMEFPath_set__SWIG_7) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
-    uint32_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    unsigned int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: IDMEFPath_set(self,message,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath_set" "', argument " "1"" of type '" "Prelude::IDMEFPath const *""'"); 
-    }
-    arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_Prelude__IDMEF,  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-    }
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFPath_set" "', argument " "2"" of type '" "Prelude::IDMEF &""'"); 
-    }
-    arg2 = reinterpret_cast< Prelude::IDMEF * >(argp2);
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEFPath_set" "', argument " "3"" of type '" "uint32_t""'");
-    } 
-    arg3 = static_cast< uint32_t >(val3);
-    {
-      try {
-        ((Prelude::IDMEFPath const *)arg1)->set(*arg2,arg3);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_IDMEFPath_set__SWIG_8) {
-  {
-    Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
-    Prelude::IDMEF *arg2 = 0 ;
     int64_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -10266,7 +9822,7 @@ XS(_wrap_IDMEFPath_set__SWIG_8) {
 }
 
 
-XS(_wrap_IDMEFPath_set__SWIG_9) {
+XS(_wrap_IDMEFPath_set__SWIG_8) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
@@ -10323,7 +9879,7 @@ XS(_wrap_IDMEFPath_set__SWIG_9) {
 }
 
 
-XS(_wrap_IDMEFPath_set__SWIG_10) {
+XS(_wrap_IDMEFPath_set__SWIG_9) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
@@ -10380,7 +9936,7 @@ XS(_wrap_IDMEFPath_set__SWIG_10) {
 }
 
 
-XS(_wrap_IDMEFPath_set__SWIG_11) {
+XS(_wrap_IDMEFPath_set__SWIG_10) {
   {
     Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
     Prelude::IDMEF *arg2 = 0 ;
@@ -10585,7 +10141,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -10625,7 +10181,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -10665,7 +10221,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -10705,7 +10261,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -10745,7 +10301,7 @@ XS(_wrap_IDMEFPath_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -10784,10 +10340,8 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        {
-          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
-          _v = SWIG_CheckState(res);
-        }
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
+        _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_9;
       _ranki += _v*_pi;
@@ -10824,8 +10378,37 @@ XS(_wrap_IDMEFPath_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
-        _v = SWIG_CheckState(res);
+        {
+          {
+            /* wrapped vector? */
+            std::vector<Prelude::IDMEF >* v;
+            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
+                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
+              _v = 1;
+            } else if (SvROK(ST(2))) {
+              /* native sequence? */
+              AV *av = (AV *)SvRV(ST(2));
+              if (SvTYPE(av) == SVt_PVAV) {
+                I32 len = av_len(av) + 1;
+                if (len == 0) {
+                  /* an empty sequence can be of any type */
+                  _v = 1;
+                } else {
+                  /* check the first element only */
+                  Prelude::IDMEF* obj;
+                  SV **tv = av_fetch(av, 0, 0);
+                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
+                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
+                  _v = 1;
+                  else
+                  _v = 0;
+                }
+              }
+            } else {
+              _v = 0;
+            }
+          }
+        }
       }
       if (!_v) goto check_10;
       _ranki += _v*_pi;
@@ -10905,73 +10488,6 @@ XS(_wrap_IDMEFPath_set) {
     }
   check_11:
     
-    if (items == 3) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        {
-          {
-            /* wrapped vector? */
-            std::vector<Prelude::IDMEF >* v;
-            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
-                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
-              _v = 1;
-            } else if (SvROK(ST(2))) {
-              /* native sequence? */
-              AV *av = (AV *)SvRV(ST(2));
-              if (SvTYPE(av) == SVt_PVAV) {
-                I32 len = av_len(av) + 1;
-                if (len == 0) {
-                  /* an empty sequence can be of any type */
-                  _v = 1;
-                } else {
-                  /* check the first element only */
-                  Prelude::IDMEF* obj;
-                  SV **tv = av_fetch(av, 0, 0);
-                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
-                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
-                  _v = 1;
-                  else
-                  _v = 0;
-                }
-              }
-            } else {
-              _v = 0;
-            }
-          }
-        }
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 12;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_12:
-    
   dispatch:
     switch(_index) {
     case 1:
@@ -10981,23 +10497,21 @@ XS(_wrap_IDMEFPath_set) {
     case 3:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_4); return;
     case 4:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_7); return;
-    case 5:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_6); return;
-    case 6:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_9); return;
-    case 7:
+    case 5:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_8); return;
+    case 6:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_7); return;
+    case 7:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_9); return;
     case 8:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_10); return;
     case 9:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_11); return;
-    case 10:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_5); return;
+    case 10:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_0); return;
     case 11:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_2); return;
-    case 12:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEFPath_set__SWIG_0); return;
     }
   }
   
@@ -14607,61 +14121,6 @@ XS(_wrap_IDMEF_set__SWIG_7) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
     char *arg2 = (char *) 0 ;
-    uint32_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    unsigned int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: IDMEF_set(self,path,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_set" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
-    }
-    arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEF_set" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = reinterpret_cast< char * >(buf2);
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "IDMEF_set" "', argument " "3"" of type '" "uint32_t""'");
-    } 
-    arg3 = static_cast< uint32_t >(val3);
-    {
-      try {
-        (arg1)->set((char const *)arg2,arg3);
-      } catch(Prelude::PreludeError &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-        SWIG_fail;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_IDMEF_set__SWIG_8) {
-  {
-    Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
-    char *arg2 = (char *) 0 ;
     int64_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -14713,7 +14172,7 @@ XS(_wrap_IDMEF_set__SWIG_8) {
 }
 
 
-XS(_wrap_IDMEF_set__SWIG_9) {
+XS(_wrap_IDMEF_set__SWIG_8) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -14768,7 +14227,7 @@ XS(_wrap_IDMEF_set__SWIG_9) {
 }
 
 
-XS(_wrap_IDMEF_set__SWIG_10) {
+XS(_wrap_IDMEF_set__SWIG_9) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -14823,7 +14282,7 @@ XS(_wrap_IDMEF_set__SWIG_10) {
 }
 
 
-XS(_wrap_IDMEF_set__SWIG_11) {
+XS(_wrap_IDMEF_set__SWIG_10) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -15022,7 +14481,7 @@ XS(_wrap_IDMEF_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -15061,7 +14520,7 @@ XS(_wrap_IDMEF_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -15100,7 +14559,7 @@ XS(_wrap_IDMEF_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -15139,7 +14598,7 @@ XS(_wrap_IDMEF_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -15178,7 +14637,7 @@ XS(_wrap_IDMEF_set) {
       _pi *= SWIG_MAXCASTRANK;
       {
         {
-          int res = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
           _v = SWIG_CheckState(res);
         }
       }
@@ -15216,10 +14675,8 @@ XS(_wrap_IDMEF_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        {
-          int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
-          _v = SWIG_CheckState(res);
-        }
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
+        _v = SWIG_CheckState(res);
       }
       if (!_v) goto check_9;
       _ranki += _v*_pi;
@@ -15255,8 +14712,37 @@ XS(_wrap_IDMEF_set) {
       _rankm += _pi;
       _pi *= SWIG_MAXCASTRANK;
       {
-        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(2), (std::string**)(0));
-        _v = SWIG_CheckState(res);
+        {
+          {
+            /* wrapped vector? */
+            std::vector<Prelude::IDMEF >* v;
+            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
+                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
+              _v = 1;
+            } else if (SvROK(ST(2))) {
+              /* native sequence? */
+              AV *av = (AV *)SvRV(ST(2));
+              if (SvTYPE(av) == SVt_PVAV) {
+                I32 len = av_len(av) + 1;
+                if (len == 0) {
+                  /* an empty sequence can be of any type */
+                  _v = 1;
+                } else {
+                  /* check the first element only */
+                  Prelude::IDMEF* obj;
+                  SV **tv = av_fetch(av, 0, 0);
+                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
+                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
+                  _v = 1;
+                  else
+                  _v = 0;
+                }
+              }
+            } else {
+              _v = 0;
+            }
+          }
+        }
       }
       if (!_v) goto check_10;
       _ranki += _v*_pi;
@@ -15335,72 +14821,6 @@ XS(_wrap_IDMEF_set) {
     }
   check_11:
     
-    if (items == 3) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        int res = SWIG_AsCharPtrAndSize(ST(1), 0, NULL, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        {
-          {
-            /* wrapped vector? */
-            std::vector<Prelude::IDMEF >* v;
-            if (SWIG_ConvertPtr(ST(2),(void **) &v, 
-                SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t,0) != -1) {
-              _v = 1;
-            } else if (SvROK(ST(2))) {
-              /* native sequence? */
-              AV *av = (AV *)SvRV(ST(2));
-              if (SvTYPE(av) == SVt_PVAV) {
-                I32 len = av_len(av) + 1;
-                if (len == 0) {
-                  /* an empty sequence can be of any type */
-                  _v = 1;
-                } else {
-                  /* check the first element only */
-                  Prelude::IDMEF* obj;
-                  SV **tv = av_fetch(av, 0, 0);
-                  if (SWIG_ConvertPtr(*tv, (void **)&obj, 
-                      SWIGTYPE_p_Prelude__IDMEF,0) != -1)
-                  _v = 1;
-                  else
-                  _v = 0;
-                }
-              }
-            } else {
-              _v = 0;
-            }
-          }
-        }
-      }
-      if (!_v) goto check_12;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 12;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_12:
-    
   dispatch:
     switch(_index) {
     case 1:
@@ -15410,23 +14830,21 @@ XS(_wrap_IDMEF_set) {
     case 3:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_5); return;
     case 4:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_7); return;
-    case 5:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_6); return;
-    case 6:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_9); return;
-    case 7:
+    case 5:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_8); return;
+    case 6:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_7); return;
+    case 7:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_9); return;
     case 8:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_10); return;
     case 9:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_11); return;
-    case 10:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_3); return;
+    case 10:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_0); return;
     case 11:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_2); return;
-    case 12:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_IDMEF_set__SWIG_0); return;
     }
   }
   

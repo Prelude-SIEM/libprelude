@@ -106,37 +106,7 @@ void IDMEF::set(const char *path, const char *value)
 }
 
 
-void IDMEF::set(const char *path, int8_t value)
-{
-        IDMEFPath(*this, path).set(*this, value);
-}
-
-
-void IDMEF::set(const char *path, uint8_t value)
-{
-        IDMEFPath(*this, path).set(*this, value);
-}
-
-
-void IDMEF::set(const char *path, int16_t value)
-{
-        IDMEFPath(*this, path).set(*this, value);
-}
-
-
-void IDMEF::set(const char *path, uint16_t value)
-{
-        IDMEFPath(*this, path).set(*this, value);
-}
-
-
 void IDMEF::set(const char *path, int32_t value)
-{
-        IDMEFPath(*this, path).set(*this, value);
-}
-
-
-void IDMEF::set(const char *path, uint32_t value)
 {
         IDMEFPath(*this, path).set(*this, value);
 }

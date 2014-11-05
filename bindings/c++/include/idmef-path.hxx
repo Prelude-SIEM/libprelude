@@ -56,12 +56,7 @@ namespace Prelude {
                 void set(Prelude::IDMEF &message, Prelude::IDMEFTime &time) const;
                 void set(Prelude::IDMEF &message, const std::string &value) const;
                 void set(Prelude::IDMEF &message, const char *value) const;
-                void set(Prelude::IDMEF &message, int8_t value) const;
-                void set(Prelude::IDMEF &message, uint8_t value) const;
-                void set(Prelude::IDMEF &message, int16_t value) const;
-                void set(Prelude::IDMEF &message, uint16_t value) const;
                 void set(Prelude::IDMEF &message, int32_t value) const;
-                void set(Prelude::IDMEF &message, uint32_t value) const;
                 void set(Prelude::IDMEF &message, int64_t value) const;
                 void set(Prelude::IDMEF &message, uint64_t value) const;
                 void set(Prelude::IDMEF &message, float value) const;
