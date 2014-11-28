@@ -76,6 +76,8 @@ typedef signed int prelude_error_t;
 %ignore idmef_class_id_t;
 typedef int idmef_class_id_t;
 
+typedef long long time_t;
+
 
 %exception {
         try {

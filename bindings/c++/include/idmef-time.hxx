@@ -34,7 +34,7 @@ namespace Prelude {
             public:
                 IDMEFTime();
                 IDMEFTime(idmef_time_t *time);
-                IDMEFTime(const time_t *time);
+                IDMEFTime(const time_t time);
                 IDMEFTime(const char *string);
                 IDMEFTime(const struct timeval *tv);
                 IDMEFTime(const IDMEFTime &value);

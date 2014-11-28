@@ -57,11 +57,11 @@ IDMEFTime::IDMEFTime(idmef_time_t *time)
 }
 
 
-IDMEFTime::IDMEFTime(const time_t *time)
+IDMEFTime::IDMEFTime(time_t time)
 {
         int ret;
 
-        ret = idmef_time_new_from_time(&_time, time);
+        ret = idmef_time_new_from_time(&_time, &time);
         if ( ret < 0 )
                 throw PreludeError(ret);
 }

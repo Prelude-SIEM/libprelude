@@ -2684,15 +2684,14 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p_std__vectorT_Prelude__IDMEFValue_t swig_types[32]
 #define SWIGTYPE_p_std__vectorT_Prelude__IDMEF_t swig_types[33]
 #define SWIGTYPE_p_std__vectorT_std__string_t swig_types[34]
-#define SWIGTYPE_p_time_t swig_types[35]
-#define SWIGTYPE_p_timeval swig_types[36]
-#define SWIGTYPE_p_unsigned_char swig_types[37]
-#define SWIGTYPE_p_unsigned_int swig_types[38]
-#define SWIGTYPE_p_unsigned_long_long swig_types[39]
-#define SWIGTYPE_p_unsigned_short swig_types[40]
-#define SWIGTYPE_p_void swig_types[41]
-static swig_type_info *swig_types[43];
-static swig_module_info swig_module = {swig_types, 42, 0, 0, 0, 0};
+#define SWIGTYPE_p_timeval swig_types[35]
+#define SWIGTYPE_p_unsigned_char swig_types[36]
+#define SWIGTYPE_p_unsigned_int swig_types[37]
+#define SWIGTYPE_p_unsigned_long_long swig_types[38]
+#define SWIGTYPE_p_unsigned_short swig_types[39]
+#define SWIGTYPE_p_void swig_types[40]
+static swig_type_info *swig_types[42];
+static swig_module_info swig_module = {swig_types, 41, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -10099,19 +10098,15 @@ fail:
 
 static int _wrap_new_IDMEFTime__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
-  time_t *arg1 = (time_t *) 0 ;
+  time_t arg1 ;
   Prelude::IDMEFTime *result = 0 ;
   
   SWIG_check_num_args("Prelude::IDMEFTime::IDMEFTime",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::IDMEFTime",1,"time_t const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_time_t,0))){
-    SWIG_fail_ptr("new_IDMEFTime",1,SWIGTYPE_p_time_t);
-  }
-  
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("Prelude::IDMEFTime::IDMEFTime",1,"time_t const");
+  arg1 = (time_t const)lua_tonumber(L, 1);
   {
     try {
-      result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime((time_t const *)arg1);
+      result = (Prelude::IDMEFTime *)new Prelude::IDMEFTime(arg1);
     } catch(Prelude::PreludeError &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
       SWIG_fail;
@@ -10245,20 +10240,6 @@ static int _wrap_new_IDMEFTime(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_time_t, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_new_IDMEFTime__SWIG_2(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
       if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_timeval, 0)) {
         _v = 0;
       } else {
@@ -10286,6 +10267,15 @@ static int _wrap_new_IDMEFTime(lua_State* L) {
   if (argc == 1) {
     int _v;
     {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_IDMEFTime__SWIG_2(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
       _v = SWIG_lua_isnilstring(L,argv[0]);
     }
     if (_v) {
@@ -10297,7 +10287,7 @@ static int _wrap_new_IDMEFTime(lua_State* L) {
     "  Possible C/C++ prototypes are:\n"
     "    Prelude::IDMEFTime::IDMEFTime()\n"
     "    Prelude::IDMEFTime::IDMEFTime(idmef_time_t *)\n"
-    "    Prelude::IDMEFTime::IDMEFTime(time_t const *)\n"
+    "    Prelude::IDMEFTime::IDMEFTime(time_t const)\n"
     "    Prelude::IDMEFTime::IDMEFTime(char const *)\n"
     "    Prelude::IDMEFTime::IDMEFTime(timeval const *)\n"
     "    Prelude::IDMEFTime::IDMEFTime(Prelude::IDMEFTime const &)\n");
@@ -10349,8 +10339,8 @@ static int _wrap_IDMEFTime_set__SWIG_1(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_time_t,0))){
-    SWIG_fail_ptr("IDMEFTime_set",2,SWIGTYPE_p_time_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_long_long,0))){
+    SWIG_fail_ptr("IDMEFTime_set",2,SWIGTYPE_p_long_long);
   }
   
   {
@@ -10476,7 +10466,7 @@ static int _wrap_IDMEFTime_set(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_time_t, 0)) {
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_long_long, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -13101,7 +13091,7 @@ static swig_type_info _swigt__p_idmef_path_t = {"_p_idmef_path_t", "idmef_path_t
 static swig_type_info _swigt__p_idmef_time_t = {"_p_idmef_time_t", "idmef_time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_idmef_value_t = {"_p_idmef_value_t", "idmef_value_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|int32_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_long_long = {"_p_long_long", "int64_t *|long long *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_long_long = {"_p_long_long", "int64_t *|long long *|time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_prelude_client_profile_t = {"_p_prelude_client_profile_t", "prelude_client_profile_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_prelude_client_t = {"_p_prelude_client_t", "prelude_client_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_prelude_connection_pool_t = {"_p_prelude_connection_pool_t", "prelude_connection_pool_t *", 0, 0, (void*)0, 0};
@@ -13113,7 +13103,6 @@ static swig_type_info _swigt__p_std__vectorT_Prelude__Connection_t = {"_p_std__v
 static swig_type_info _swigt__p_std__vectorT_Prelude__IDMEFValue_t = {"_p_std__vectorT_Prelude__IDMEFValue_t", "std::vector< Prelude::IDMEFValue > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_Prelude__IDMEF_t = {"_p_std__vectorT_Prelude__IDMEF_t", "std::vector< Prelude::IDMEF > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__string_t = {"_p_std__vectorT_std__string_t", "std::vector< std::string > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_time_t = {"_p_time_t", "time_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_timeval = {"_p_timeval", "timeval *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uint8_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "uint32_t *|unsigned int *", 0, 0, (void*)0, 0};
@@ -13157,7 +13146,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__vectorT_Prelude__IDMEFValue_t,
   &_swigt__p_std__vectorT_Prelude__IDMEF_t,
   &_swigt__p_std__vectorT_std__string_t,
-  &_swigt__p_time_t,
   &_swigt__p_timeval,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
@@ -13201,7 +13189,6 @@ static swig_cast_info _swigc__p_std__vectorT_Prelude__Connection_t[] = {  {&_swi
 static swig_cast_info _swigc__p_std__vectorT_Prelude__IDMEFValue_t[] = {  {&_swigt__p_std__vectorT_Prelude__IDMEFValue_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_Prelude__IDMEF_t[] = {  {&_swigt__p_std__vectorT_Prelude__IDMEF_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__string_t[] = {  {&_swigt__p_std__vectorT_std__string_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_time_t[] = {  {&_swigt__p_time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_timeval[] = {  {&_swigt__p_timeval, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -13245,7 +13232,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__vectorT_Prelude__IDMEFValue_t,
   _swigc__p_std__vectorT_Prelude__IDMEF_t,
   _swigc__p_std__vectorT_std__string_t,
-  _swigc__p_time_t,
   _swigc__p_timeval,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
