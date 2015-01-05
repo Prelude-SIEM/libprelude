@@ -82,28 +82,50 @@ static char *parse_time_ymd(struct tm *tm, const char *buf)
 
 
 
-static char *parse_time_hmsu(struct tm *tm, uint32_t *usec, const char *buf)
+static int digit2usec(uint32_t n, int digit_count)
 {
-        char *ptr;
-        unsigned int fraction;
+        int i;
+        const size_t max_digit = 6; /* 999999 */
 
-        ptr = strptime(buf, "%H:%M:%S", tm);
-        if ( ! ptr )
-                return NULL;
+        if ( digit_count > max_digit )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Invalid number of digits for time fraction");
 
-        if ( *ptr == '.' || *ptr == ',' ) {
-                ptr++;
+        for ( i = 0; i < (max_digit - digit_count); i++ )
+                n *= 10;
 
-                if ( sscanf(ptr, "%u", &fraction) < 1 )
-                        return NULL;
+        return n;
+}
 
-                *usec = fraction * 10000;
 
-                while ( isdigit((int) *ptr) )
-                        ptr++;
+
+static int parse_time_hmsu(struct tm *tm, uint32_t *usec, char **buf)
+{
+        int fraction;
+        char *eptr = NULL;
+
+        *buf = strptime(*buf, "%H:%M:%S", tm);
+        if ( ! *buf )
+                goto fmterror;
+
+        if ( **buf == '.' || **buf == ',' ) {
+                (*buf)++;
+
+                fraction = strtoul(*buf, &eptr, 10);
+                if ( eptr == *buf )
+                        goto fmterror;
+
+                fraction = digit2usec(fraction, eptr - *buf);
+                if ( fraction < 0 )
+                        return fraction;
+
+                *buf = eptr;
+                *usec = fraction;
         }
 
-        return ptr;
+        return 0;
+
+    fmterror:
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing time field, format should be: HH:MM:SS(.fraction)");
 }
 
 
@@ -178,9 +200,9 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing date field, format should be: YY-MM-DD");
 
         if ( *ptr ) {
-                ptr = parse_time_hmsu(&tm, &time->usec, ptr);
-                if ( ! ptr )
-                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing time field, format should be: HH:MM:SS");
+                ret = parse_time_hmsu(&tm, &time->usec, &ptr);
+                if ( ret < 0 )
+                        return ret;
 
                 if ( *ptr ) {
                         ret = parse_time_gmt(&tm, &time->gmt_offset, ptr);
