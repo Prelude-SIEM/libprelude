@@ -230,7 +230,149 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
+
+%{
+typedef PyObject SwigPyObjectState;
+%}
+
+/*
+ * This is called on Prelude::IDMEF::__getstate__()
+ * Store our internal IDMEF data in the PyObjet __dict__
+ */
+%typemap(out) SwigPyObjectState * {
+        int ret;
+        SwigPyObject *pyobj = (SwigPyObject *) self;
+
+        /*
+         * Our object dictionary (__dict__) is only set if an attribute
+         * is assigned within our instance. If not, we have to create the
+         * object.
+         */
+        if ( ! pyobj->dict )
+                pyobj->dict = PyDict_New();
+
+        ret = PyDict_SetItemString(pyobj->dict, "__idmef_data__", result);
+        Py_DECREF(result);
+
+        if ( ret < 0 )
+                throw PreludeError("error setting internal __idmef_data__ key");
+
+        $result = pyobj->dict;
+}
+
+/*
+ * This typemap specifically intercept the call to Prelude::IDMEF::__setstate__,
+ * since at that time (when unpickling), the object __init__ method has not been
+ * called, and the underlying Prelude::IDMEF object is thus NULL.
+ *
+ * We manually call tp_init() to handle the underlying object creation here.
+ */
+%typemap(arginit) (PyObject *state) {
+        int ret;
+        PyObject *obj;
+        static PyTypeObject *pytype = NULL;
+
+        if ( ! pytype ) {
+                swig_type_info *sti = SWIG_TypeQuery("Prelude::IDMEF *");
+                if ( ! sti )
+                        throw PreludeError("could not find type SWIG type info for 'Prelude::IDMEF'");
+
+                pytype = ((SwigPyClientData *) sti->clientdata)->pytype;
+        }
+
+        obj = PyTuple_New(0);
+        ret = pytype->tp_init(self, obj, NULL);
+        Py_DECREF(obj);
+
+        if ( ret < 0 )
+                throw PreludeError("error calling Prelude::IDMEF tp_init()");
+
+}
+
+
+/*
+ *
+ */
+%exception Prelude::IDMEF::__setstate__ {
+        try {
+                SwigPyObject *pyobj = (SwigPyObject *) self;
+
+                $function
+
+                /*
+                 * This is called at unpickling time, and set our PyObject internal dict.
+                 */
+                pyobj->dict = arg2;
+                Py_INCREF(arg2);
+        } catch(Prelude::PreludeError &e) {
+                SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+                                                     SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+                                  "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+                SWIG_fail;
+        }
+}
+
+
+%{
+static int _getstate_msgbuf_cb(prelude_msgbuf_t *mbuf, prelude_msg_t *msg)
+{
+        prelude_io_t *io = (prelude_io_t *) prelude_msgbuf_get_data(mbuf);
+        return prelude_io_write(io, prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
+}
+
+static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
+{
+        FILE *fd = (FILE *) prelude_io_get_fdptr(io);
+        return fread(buf, 1, size, fd);
+}
+%}
+
+
 %extend Prelude::IDMEF {
+        SwigPyObjectState *__getstate__(void)
+        {
+                int ret;
+                prelude_io_t *io;
+                PyObject *data;
+
+                ret = prelude_io_new(&io);
+                if ( ret < 0 )
+                        throw PreludeError(ret);
+
+                prelude_io_set_buffer_io(io);
+                self->_genericWrite(_getstate_msgbuf_cb, io);
+
+                data = SWIG_FromCharPtrAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
+
+                prelude_io_close(io);
+                prelude_io_destroy(io);
+
+                return data;
+        }
+
+        void __setstate__(PyObject *state) {
+                FILE *fd;
+                char *buf;
+                ssize_t len;
+                PyObject *data;
+
+                data = PyDict_GetItemString(state, "__idmef_data__");
+                if ( ! data )
+                        throw PreludeError("no __idmef_data__ key within state dictionary");
+
+                buf = PyString_AsString(data);
+                len = PyString_Size(data);
+
+                fd = fmemopen(buf, len, "r");
+                if ( ! fd )
+                        throw PreludeError(prelude_error_from_errno(errno));
+
+                self->_genericRead(_setstate_read_cb, fd);
+                fclose(fd);
+
+                PyDict_DelItemString(state, "__idmef_data__");
+        }
+
         int __contains__(const char *key) {
                 return self->get(key).isNull() ? FALSE : TRUE;
         }

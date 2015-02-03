@@ -4084,6 +4084,22 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
+typedef PyObject SwigPyObjectState;
+
+
+static int _getstate_msgbuf_cb(prelude_msgbuf_t *mbuf, prelude_msg_t *msg)
+{
+        prelude_io_t *io = (prelude_io_t *) prelude_msgbuf_get_data(mbuf);
+        return prelude_io_write(io, prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
+}
+
+static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
+{
+        FILE *fd = (FILE *) prelude_io_get_fdptr(io);
+        return fread(buf, 1, size, fd);
+}
+
+
 extern "C" {
 SWIGINTERN PyObject *_wrap_IDMEF___contains__(PyObject *self, PyObject *args);
 }
@@ -5835,6 +5851,47 @@ namespace swig {
     
 SWIGINTERN Prelude::IDMEFClass Prelude_IDMEFClass__get2(Prelude::IDMEFClass *self,int i){
                 return self->get(i);
+        }
+SWIGINTERN SwigPyObjectState *Prelude_IDMEF___getstate__(Prelude::IDMEF *self){
+                int ret;
+                prelude_io_t *io;
+                PyObject *data;
+
+                ret = prelude_io_new(&io);
+                if ( ret < 0 )
+                        throw PreludeError(ret);
+
+                prelude_io_set_buffer_io(io);
+                self->_genericWrite(_getstate_msgbuf_cb, io);
+
+                data = SWIG_FromCharPtrAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
+
+                prelude_io_close(io);
+                prelude_io_destroy(io);
+
+                return data;
+        }
+SWIGINTERN void Prelude_IDMEF___setstate__(Prelude::IDMEF *self,PyObject *state){
+                FILE *fd;
+                char *buf;
+                ssize_t len;
+                PyObject *data;
+
+                data = PyDict_GetItemString(state, "__idmef_data__");
+                if ( ! data )
+                        throw PreludeError("no __idmef_data__ key within state dictionary");
+
+                buf = PyString_AsString(data);
+                len = PyString_Size(data);
+
+                fd = fmemopen(buf, len, "r");
+                if ( ! fd )
+                        throw PreludeError(prelude_error_from_errno(errno));
+
+                self->_genericRead(_setstate_read_cb, fd);
+                fclose(fd);
+
+                PyDict_DelItemString(state, "__idmef_data__");
         }
 SWIGINTERN int Prelude_IDMEF___contains__(Prelude::IDMEF *self,char const *key){
                 return self->get(key).isNull() ? FALSE : TRUE;
@@ -16595,6 +16652,118 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_IDMEF___getstate__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  SwigPyObjectState *result = 0 ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEF___getstate__",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___getstate__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  {
+    try {
+      result = (SwigPyObjectState *)Prelude_IDMEF___getstate__(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  {
+    int ret;
+    SwigPyObject *pyobj = (SwigPyObject *) self;
+    
+    /*
+             * Our object dictionary (__dict__) is only set if an attribute
+             * is assigned within our instance. If not, we have to create the
+             * object.
+             */
+    if ( ! pyobj->dict )
+    pyobj->dict = PyDict_New();
+    
+    ret = PyDict_SetItemString(pyobj->dict, "__idmef_data__", result);
+    Py_DECREF(result);
+    
+    if ( ret < 0 )
+    throw PreludeError("error setting internal __idmef_data__ key");
+    
+    resultobj = pyobj->dict;
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEF___setstate__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  PyObject *arg2 = (PyObject *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  {
+    int ret;
+    PyObject *obj;
+    static PyTypeObject *pytype = NULL;
+    
+    if ( ! pytype ) {
+      swig_type_info *sti = SWIG_TypeQuery("Prelude::IDMEF *");
+      if ( ! sti )
+      throw PreludeError("could not find type SWIG type info for 'Prelude::IDMEF'");
+      
+      pytype = ((SwigPyClientData *) sti->clientdata)->pytype;
+    }
+    
+    obj = PyTuple_New(0);
+    ret = pytype->tp_init(self, obj, NULL);
+    Py_DECREF(obj);
+    
+    if ( ret < 0 )
+    throw PreludeError("error calling Prelude::IDMEF tp_init()");
+    
+  }
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF___setstate__" "', argument " "1"" of type '" "Prelude::IDMEF *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  arg2 = swig_obj[0];
+  {
+    try {
+      SwigPyObject *pyobj = (SwigPyObject *) self;
+      
+      Prelude_IDMEF___setstate__(arg1,arg2);
+      
+      /*
+                       * This is called at unpickling time, and set our PyObject internal dict.
+                       */
+      pyobj->dict = arg2;
+      Py_INCREF(arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_IDMEF___contains__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -19679,6 +19848,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEF_methods[] = {
   { "getId", (PyCFunction) _wrap_IDMEF_getId, METH_NOARGS, (char*) "" },
   { "toString", (PyCFunction) _wrap_IDMEF_toString, METH_NOARGS, (char*) "" },
   { "__eq__", (PyCFunction) _wrap_IDMEF___eq__, METH_O, (char*) "" },
+  { "__getstate__", (PyCFunction) _wrap_IDMEF___getstate__, METH_NOARGS, (char*) "" },
+  { "__setstate__", (PyCFunction) _wrap_IDMEF___setstate__, METH_O, (char*) "" },
   { "__contains__", (PyCFunction) _wrap_IDMEF___contains__, METH_O, (char*) "" },
   { "write", (PyCFunction) _wrap_IDMEF_write, METH_O, (char*) "" },
   { "read", (PyCFunction) _wrap_IDMEF_read, METH_O, (char*) "" },
