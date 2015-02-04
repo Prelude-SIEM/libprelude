@@ -298,7 +298,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
         size_t i = 0;
         char buf[1024];
         struct addrinfo hints, *ai, *ai_start;
-        int sock, ret, on = 1, prev_family = PF_UNSPEC;
+        int sock, ret, on = 1;
 
         snprintf(buf, sizeof(buf), "%u", port);
         memset(&hints, 0, sizeof(hints));
@@ -306,7 +306,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
         hints.ai_flags = AI_PASSIVE;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
-        hints.ai_family = PF_UNSPEC;
+        hints.ai_family = AF_UNSPEC;
 
 #ifdef AI_ADDRCONFIG
         hints.ai_flags |= AI_ADDRCONFIG;
@@ -322,14 +322,34 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
         for ( ai_start = ai; ai && i < *size; ai = ai->ai_next ) {
                 inet_ntop(ai->ai_family, prelude_sockaddr_get_inaddr(ai->ai_addr), buf, sizeof(buf));
 
-                fprintf(stderr, "Waiting for peers install request on %s:%u...\n",
-                        buf, ntohs(((struct sockaddr_in *) ai->ai_addr)->sin_port));
-
                 sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
                 if ( sock < 0 ) {
                         fprintf(stderr, "could not open socket for '%s': %s.\n", buf, strerror(errno));
                         break;
                 }
+
+#ifdef IPV6_V6ONLY
+                /*
+                 * There is a problem on Linux system where getaddrinfo() return address in
+                 * the wrong sort order (IPv4 first, IPv6 next).
+                 *
+                 * As a result we first bind IPv4 addresses, but then we get an error for
+                 * dual-stacked addresses, when the IPv6 addresses come second. When an
+                 * address is dual-stacked, we thus end-up listening only to the IPv4
+                 * instance.
+                 *
+                 * The error happen on dual-stack Linux system, because mapping the IPv6
+                 * address will actually attempt to bind both the IPv4 and IPv6 address.
+                 *
+                 * In order to prevent this problem, we set the IPV6_V6ONLY option so that
+                 * only the IPv6 address will be bound.
+                 */
+                if ( ai->ai_family == AF_INET6 ) {
+                        ret = setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *) &on, sizeof(int));
+                        if ( ret < 0 )
+                                fprintf(stderr, "could not set IPV6_V6ONLY: %s.\n", strerror(errno));
+                }
+#endif
 
                 ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void *) &on, sizeof(int));
                 if ( ret < 0 )
@@ -338,16 +358,6 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
                 ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
                 if ( ret < 0 ) {
                         close(sock);
-
-                        /*
-                         * More information on this at:
-                         * http://lists.debian.org/debian-ipv6/2001/01/msg00031.html
-                         */
-                        if ( errno == EADDRINUSE && ! addr && prev_family != PF_UNSPEC && ai->ai_family != prev_family ) {
-                                ret = 0;
-                                continue;
-                        }
-
                         fprintf(stderr, "could not bind to '%s': %s.\n", buf, strerror(errno));
                         break;
                 }
@@ -359,9 +369,11 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
                         break;
                 }
 
+                fprintf(stderr, "Waiting for peers install request on %s:%u...\n",
+                        buf, ntohs(((struct sockaddr_in *) ai->ai_addr)->sin_port));
+
                 pfd[i].fd = sock;
                 pfd[i].events = POLLIN;
-                prev_family = ai->ai_family;
 
                 i++;
         }

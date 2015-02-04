@@ -960,7 +960,7 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
         hints.ai_flags = AI_ADDRCONFIG;
 #endif
 
-        hints.ai_family = PF_UNSPEC;
+        hints.ai_family = AF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
 
