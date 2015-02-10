@@ -160,9 +160,27 @@ static int btime_parse_wday(const char *value, int *out)
 }
 
 
+
+static int integer_compare(time_t matched, time_t wanted, idmef_criterion_operator_t op)
+{
+        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && matched == wanted )
+                return 1;
+
+        if ( op & IDMEF_CRITERION_OPERATOR_LESSER && matched < wanted)
+                return 1;
+
+        if ( op & IDMEF_CRITERION_OPERATOR_GREATER && matched > wanted )
+                return 1;
+
+        return 0;
+}
+
+
+
 static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t op, idmef_value_t *value)
 {
-        time_t sec, wanted, matched;
+        int ret;
+        time_t sec;
         struct tm lt, *comp = cv->value;
 
         if ( idmef_value_get_type(value) != IDMEF_VALUE_TYPE_TIME )
@@ -184,19 +202,23 @@ static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_ope
         if ( comp->tm_wday < 0 ) lt.tm_wday = -1;
         if ( comp->tm_yday < 0 ) lt.tm_yday = -1;
 
-        wanted  = timegm(comp);
-        matched = timegm(&lt);
+        /*
+         * The timegm() function ignores values supplied in the tm_wday
+         * and tm_yday fields, match them manually:
+         */
+        if ( comp->tm_wday >= 0 ) {
+                ret = integer_compare(comp->tm_wday, lt.tm_wday, op);
+                if ( ret != 1 )
+                        return ret;
+        }
 
-        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && matched == wanted )
-                return 1;
+        if ( comp->tm_yday >= 0 ) {
+                ret = integer_compare(comp->tm_yday, lt.tm_yday, op);
+                if ( ret != 1 )
+                        return ret;
+        }
 
-        if ( op & IDMEF_CRITERION_OPERATOR_LESSER && matched < wanted)
-                return 1;
-
-        if ( op & IDMEF_CRITERION_OPERATOR_GREATER && matched > wanted )
-                return 1;
-
-        return 0;
+        return integer_compare(timegm(comp), timegm(&lt), op);
 }
 
 
