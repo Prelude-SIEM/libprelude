@@ -392,6 +392,28 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
         }
 }
 
+
+/*
+ * When a comparison operator is called, this prevent an exception
+ * if the compared operand does not have the correct datatype.
+ *
+ * By returning Py_NotImplemented, the python code might provide its
+ * own comparison method within the compared operand class
+ */
+%typemap(in) (const Prelude::IDMEFTime &time) {
+        int ret;
+        void *obj;
+
+        ret = SWIG_ConvertPtr($input, &obj, $descriptor(Prelude::IDMEFTime *),  0  | 0);
+        if ( ! SWIG_IsOK(ret) || ! obj ) {
+                Py_INCREF(Py_NotImplemented);
+                return Py_NotImplemented;
+        }
+
+        $1 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
+}
+
+
 /*
  * Workaround SWIG %features bug, which prevent us from applying multiple
  * features to the same method.

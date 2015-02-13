@@ -14642,8 +14642,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14654,14 +14652,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ne__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ne__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___ne__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___ne__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator !=((Prelude::IDMEFTime const &)*arg2);
@@ -14685,8 +14687,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14697,14 +14697,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___ge__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___ge__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___ge__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___ge__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >=((Prelude::IDMEFTime const &)*arg2);
@@ -14728,8 +14732,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14740,14 +14742,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___le__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___le__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___le__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___le__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <=((Prelude::IDMEFTime const &)*arg2);
@@ -14771,8 +14777,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14783,14 +14787,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___eq__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___eq__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___eq__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___eq__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator ==((Prelude::IDMEFTime const &)*arg2);
@@ -14814,8 +14822,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14826,14 +14832,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___gt__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___gt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___gt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___gt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator >((Prelude::IDMEFTime const &)*arg2);
@@ -14857,8 +14867,6 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *self, PyObject *args) {
   Prelude::IDMEFTime *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   PyObject *swig_obj[2] ;
   bool result;
   
@@ -14869,14 +14877,18 @@ SWIGINTERN PyObject *_wrap_IDMEFTime___lt__(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFTime___lt__" "', argument " "1"" of type '" "Prelude::IDMEFTime const *""'"); 
   }
   arg1 = reinterpret_cast< Prelude::IDMEFTime * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IDMEFTime___lt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
+  {
+    int ret;
+    void *obj;
+    
+    ret = SWIG_ConvertPtr(swig_obj[0], &obj, SWIGTYPE_p_Prelude__IDMEFTime,  0  | 0);
+    if ( ! SWIG_IsOK(ret) || ! obj ) {
+      Py_INCREF(Py_NotImplemented);
+      return Py_NotImplemented;
+    }
+    
+    arg2 = reinterpret_cast< Prelude::IDMEFTime * >(obj);
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IDMEFTime___lt__" "', argument " "2"" of type '" "Prelude::IDMEFTime const &""'"); 
-  }
-  arg2 = reinterpret_cast< Prelude::IDMEFTime * >(argp2);
   {
     try {
       result = (bool)((Prelude::IDMEFTime const *)arg1)->operator <((Prelude::IDMEFTime const &)*arg2);
