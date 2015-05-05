@@ -187,7 +187,7 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
         int ret;
         char *ptr;
         struct tm tm;
-        prelude_bool_t miss_gmt = TRUE;
+        prelude_bool_t miss_gmt = FALSE;
 
         prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -199,11 +199,15 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
         if ( ! ptr )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing date field, format should be: YY-MM-DD");
 
+        time->usec = 0;
+        time->gmt_offset = 0;
+
         if ( *ptr ) {
                 ret = parse_time_hmsu(&tm, &time->usec, &ptr);
                 if ( ret < 0 )
                         return ret;
 
+                miss_gmt = TRUE;
                 if ( *ptr ) {
                         ret = parse_time_gmt(&tm, &time->gmt_offset, ptr);
                         if ( ret < 0 )
