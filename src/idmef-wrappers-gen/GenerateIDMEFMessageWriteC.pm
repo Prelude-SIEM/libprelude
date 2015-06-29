@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2012 CS-SI. All Rights Reserved.
+# Copyright (C) 2003-2015 CS-SI. All Rights Reserved.
 # Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 #
 # This file is part of the Prelude library.
@@ -32,7 +32,7 @@ sub        header
      $self->output("
 /*****
 *
-* Copyright (C) 2001-2012 CS-SI. All Rights Reserved.
+* Copyright (C) 2001-2015 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v\@prelude-ids.com>
 * Author: Nicolas Delon <nicolas.delon\@prelude-ids.com>
 *

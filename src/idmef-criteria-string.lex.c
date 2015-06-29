@@ -539,7 +539,7 @@ char *yytext;
 #line 1 "idmef-criteria-string.lex.l"
 /*****
 *
-* Copyright (C) 2003-2012 CS-SI. All Rights Reserved.
+* Copyright (C) 2003-2015 CS-SI. All Rights Reserved.
 * Author: Krzysztof Zaraska
 * Author: Nicolas Delon
 *

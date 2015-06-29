@@ -1,7 +1,7 @@
 
 /*****
 *
-* Copyright (C) 2004-2012 CS-SI. All Rights Reserved.
+* Copyright (C) 2004-2015 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *

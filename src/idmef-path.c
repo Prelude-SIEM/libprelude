@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2012 CS-SI. All Rights Reserved.
+* Copyright (C) 2002-2015 CS-SI. All Rights Reserved.
 * Author: Krzysztof Zaraska
 *         Yoann Vandoorselaere <yoann@prelude-ids.com>
 *
