@@ -16732,23 +16732,30 @@ SWIGINTERN PyObject *_wrap_IDMEF___getstate__(PyObject *self, PyObject *args) {
   }
   {
     int ret;
+    PyObject *state;
     SwigPyObject *pyobj = (SwigPyObject *) self;
     
-    /*
-             * Our object dictionary (__dict__) is only set if an attribute
-             * is assigned within our instance. If not, we have to create the
-             * object.
-             */
-    if ( ! pyobj->dict )
-    pyobj->dict = PyDict_New();
+    state = PyDict_New();
+    if ( ! state ) {
+      Py_XDECREF(result);
+      SWIG_fail;
+    }
     
-    ret = PyDict_SetItemString(pyobj->dict, "__idmef_data__", result);
+    ret = PyDict_SetItemString(state, "__idmef_data__", result);
     Py_DECREF(result);
+    
+    if ( pyobj->dict ) {
+      ret = PyDict_Update(state, pyobj->dict);
+      if ( ret < 0 ) {
+        Py_XDECREF(state);
+        SWIG_fail;
+      }
+    }
     
     if ( ret < 0 )
     throw PreludeError("error setting internal __idmef_data__ key");
     
-    resultobj = pyobj->dict;
+    resultobj = state;
   }
   return resultobj;
 fail:
