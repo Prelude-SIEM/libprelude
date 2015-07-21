@@ -26,7 +26,9 @@
 #include "glthread/thread.h"
 %}
 
-# Lua overloading fixes
+/*
+ * Lua overloading fixes
+ */
 %ignore IDMEFCriteria(std::string const &);
 %ignore IDMEFValue(int8_t);
 %ignore IDMEFValue(uint8_t);
@@ -59,7 +61,9 @@
 %ignore Set(char const *, float);
 %ignore Set(char const *, std::string);
 
-# Conversion not allowed
+/*
+ * Conversion not allowed
+ */
 %ignore *::operator =;
 
 %ignore *::operator int() const;

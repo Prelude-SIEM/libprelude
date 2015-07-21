@@ -26,7 +26,9 @@
 #include "../../libmissing/glthread/thread.h"
 %}
 
-# Conversion not allowed
+/*
+ * Conversion not allowed
+ */
 %ignore *::operator =;
 %ignore *::operator int() const;
 %ignore *::operator long() const;
