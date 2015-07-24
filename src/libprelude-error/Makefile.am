@@ -40,7 +40,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
 
 mkerrcodes.h: Makefile mkerrcodes.awk
 	LANG="" $(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
-	$(CPP) _$@ | grep PRELUDE_ERROR_ | LANG="" $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+	$(CPP) -P _$@ | grep PRELUDE_ERROR_ | LANG="" $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
 	-rm _$@
 
 # It is correct to use $(CC_FOR_BUILD) here.  We want to run the
