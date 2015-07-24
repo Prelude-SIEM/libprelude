@@ -293,6 +293,45 @@ static int levelstr_to_int(const char *wanted)
 
 
 /**
+ * prelude_parse_version:
+ * @version: A version string.
+ * @out: Where to store the parsed version
+ *
+ * Parse version to an integer, and return it in @out.
+ * Accepted format are:
+ *
+ * major.minor.micro.patchlevel
+ * the following special level string are supported : alpha, beta, rc
+ *
+ * For example: 1.1.1rc1
+ *
+ * Returns: The 0 on success, a negative value in case of error.
+ */
+int prelude_parse_version(const char *version, unsigned int *out)
+{
+        int ret;
+        char levels[6] = { 0 };
+        int major = 0, minor = 0, micro = 0, level = 0, patch = 0;
+
+        ret = sscanf(version, "%d.%d.%d%5[^0-9]%d", &major, &minor, &micro, levels, &patch);
+        if ( ret <= 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "version formatting error with '%s'", version);
+
+        if ( *levels == 0 || *levels == '.' )
+                level = LIBPRELUDE_RELEASE_LEVEL_FINAL;
+        else {
+                level = levelstr_to_int(levels);
+                if ( level < 0 )
+                        return level;
+        }
+
+        *out = (major << 24) | (minor << 16) | (micro << 8) | (level << 4) | (patch << 0);
+        return 0;
+}
+
+
+
+/**
  * prelude_check_version:
  * @req_version: The minimum acceptable version number.
  *
@@ -306,27 +345,16 @@ static int levelstr_to_int(const char *wanted)
 const char *prelude_check_version(const char *req_version)
 {
         int ret;
-        unsigned int hexreq;
-        char rq_levels[6] = { 0 };
-        int rq_major, rq_minor, rq_micro, rq_level = 0, rq_patch = 0;
+        unsigned int hexversion;
 
         if ( ! req_version )
                 return VERSION;
 
-        ret = sscanf(req_version, "%d.%d.%d%5[^0-9]%d", &rq_major, &rq_minor, &rq_micro, rq_levels, &rq_patch);
-        if ( ret < 3 )
+        ret = prelude_parse_version(req_version, &hexversion);
+        if ( ret < 0 )
                 return NULL;
 
-        if ( *rq_levels == 0 || *rq_levels == '.' )
-                rq_level = LIBPRELUDE_RELEASE_LEVEL_FINAL;
-        else {
-                rq_level = levelstr_to_int(rq_levels);
-                if ( rq_level < 0 )
-                        return NULL;
-        }
-
-        hexreq = (rq_major << 24) | (rq_minor << 16) | (rq_micro << 8) | (rq_level << 4) | (rq_patch << 0);
-        return (hexreq <= LIBPRELUDE_HEXVERSION) ? VERSION : NULL;
+        return (hexversion <= LIBPRELUDE_HEXVERSION) ? VERSION : NULL;
 }
 
 

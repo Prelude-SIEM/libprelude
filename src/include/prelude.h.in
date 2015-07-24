@@ -77,6 +77,8 @@ int prelude_init(int *argc, char **argv);
 
 void prelude_deinit(void);
 
+int prelude_parse_version(const char *version, unsigned int *out);
+
 const char *prelude_check_version(const char *req_version);
 
 int prelude_thread_init(void *future_use);
