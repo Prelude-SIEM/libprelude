@@ -1,3 +1,39 @@
+* 2015-07-27, libprelude-1.2.6rc5:
+
+Author: Yoann Vandoorselaere
+
+- Low-level bindings are now deprecated
+
+- AdditionalData fixes
+
+    - [#446] Automatic AdditionalData typing
+
+    - [#447] Handle negative AdditionalData
+
+    - Support IDMEFTime() object within AdditionalData,
+      as required per the IDMEF RFC
+
+- SWIG update to 3.0.6
+
+    - SWIG Python now use builtin mode (massive performance improvements)
+
+    - Fix lua/perl code generation
+
+    - [#522, #503] Prevent instance attribute to be reset on __init__()
+
+- Reset all object data when calling idmef_time_set_from_string()
+  on an already initialized time
+
+- IDMEFCriteria time comparison fixes
+
+- Make sure we listen on all interfaces (IPv4+IPv6 dual stack fixes)
+
+- Proper implementation of Prelude::IDMEF __(get|set)state__
+
+- Fix GCC5 libprelude-error compilation failure
+
+
+
 * 2014-10-27, libprelude-1.2.6rc4:
 
 Author: Yoann Vandoorselaere
