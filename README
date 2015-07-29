@@ -1,4 +1,4 @@
-Prelude Library (http://www.prelude-ids.com)
+Prelude Library (https://www.prelude-siem.org)
 The Prelude Library is brought to you by CS (http://www.c-s.fr).
 
 
@@ -32,7 +32,7 @@ providing features used by every sensor:
 Prelude Communication
 =====================
 
-    Prelude IDS uses unique optimized implementation of the XML based IDMEF
+    Prelude SIEM uses unique optimized implementation of the XML based IDMEF
     message format to transmit alerts between the sensors and the manager
     and between managers.
 
@@ -78,10 +78,8 @@ give feedback directly to the authors or you're just bored, visit
 Get Support
 ===========
 
-Prelude-user mailing list archives can be accessed at:
-	https://www.prelude-ids.org/lists/listinfo/prelude-announce
-	https://www.prelude-ids.org/lists/listinfo/prelude-devel
-	https://www.prelude-ids.org/lists/listinfo/prelude-user
+Prelude-user forums can be accessed at:
+    https://www.prelude-siem.org/projects/prelude/boards
 
 Old mailing lists can be accessed at:
 	http://news.gmane.org/gmane.comp.security.ids.prelude.user
@@ -99,21 +97,17 @@ Help development
 
 The Prelude source is constantly changing. If you want to submit a patch,
 please do so from the most recent GIT source tree, subscribe to the
-prelude-devel mailing list by sending a mail to:
-
-        prelude-devel-subscribe@prelude-ids.com
-
-and post your patch with a description of functionality.
+prelude-devel forum and post your patch with a description of functionality.
 You can also attach patches to bugs on
 
-        https://www.prelude-ids.org
+        https://www.prelude-siem.org
 
 
 2. BUGS
 
 If you find any bugs, please report them to:
 
-	https://www.prelude-ids.org
+	https://www.prelude-siem.org
 
 Please make sure that what you're reporting is actually a BUG and not
 a problem on your side.
@@ -132,7 +126,7 @@ How to install the Prelude Library
 1. Prelude Library installation
 
 If you don't want to build the Prelude Library yourself, you can get
-prebuild rpm and debian packages at http://www.prelude-ids.org.
+prebuild rpm and debian packages at https://www.prelude-siem.org.
 
 If you want to build Prelude, unpack the tarball and cd into the
 newly created directory. Then type :
