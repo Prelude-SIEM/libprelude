@@ -188,16 +188,16 @@ static const char *level_to_string(prelude_log_t level)
 static ssize_t get_header(prelude_log_t level, char *buf, size_t size)
 {
         int ret;
-        struct tm *t;
+        struct tm t;
         size_t len = 0;
         time_t now = time(NULL);
 
         buf[0] = 0;
 
         if ( ! (log_flags & PRELUDE_LOG_FLAGS_SYSLOG) ) {
-                t = localtime(&now);
+                t = localtime_r(&now, &t);
                 if ( t )
-                        len = strftime(buf, size, "%d %b %H:%M:%S ", t);
+                        len = strftime(buf, size, "%d %b %H:%M:%S ", &t);
 
                 ret = snprintf(buf + len, size - len, "(process:%d) %s: ", (int) getpid(), level_to_string(level));
                 if ( ret < 0 || (size_t) ret >= (size - len) )
