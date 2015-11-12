@@ -45,7 +45,8 @@
 #include "prelude-error.h"
 
 
-#define CHUNK_SIZE 1024
+#define BUFFER_CHUNK_SIZE 16
+#define BUFFER_GROWTH_FACTOR 1.5
 
 
 /*
@@ -142,10 +143,10 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
         char *ptr;
         size_t len;
 
-        if ( needed_len )
-                len = MAX(needed_len - (s->size - s->index), CHUNK_SIZE);
+        if ( ! needed_len )
+                len = BUFFER_CHUNK_SIZE;
         else
-                len = CHUNK_SIZE;
+                len = MAX(needed_len - (s->size - s->index), s->size * BUFFER_GROWTH_FACTOR);
 
         if ( s->size + len < s->size )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
