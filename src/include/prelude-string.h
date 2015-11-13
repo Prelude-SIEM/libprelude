@@ -91,6 +91,8 @@ int prelude_string_get_string_released(prelude_string_t *string, char **outptr);
 
 prelude_bool_t prelude_string_is_empty(const prelude_string_t *string);
 
+int prelude_string_truncate(prelude_string_t *string, size_t len);
+
 void prelude_string_clear(prelude_string_t *string);
 
 /*

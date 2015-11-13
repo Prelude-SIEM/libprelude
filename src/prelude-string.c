@@ -138,8 +138,29 @@ static void string_buf_copy(prelude_string_t *string, const char *buf, size_t le
 
 
 
+static int make_string_own(prelude_string_t *s, size_t len)
+{
+        char *ptr;
+
+        ptr = malloc(len);
+        if ( ! ptr )
+                return prelude_error_from_errno(errno);
+
+        if ( s->data.robuf )
+                memcpy(ptr, s->data.robuf, s->index + 1);
+
+        s->size = len;
+        s->data.rwbuf = ptr;
+        s->flags |= PRELUDE_STRING_CAN_REALLOC|PRELUDE_STRING_OWN_DATA;
+
+        return 0;
+}
+
+
+
 static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
 {
+        int ret;
         char *ptr;
         size_t len;
 
@@ -152,25 +173,19 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 
         if ( s->flags & PRELUDE_STRING_CAN_REALLOC ) {
-
                 ptr = _prelude_realloc(s->data.rwbuf, s->size + len);
                 if ( ! ptr )
                         return prelude_error_from_errno(errno);
+
+                s->size += len;
+                s->data.rwbuf = ptr;
         }
 
         else {
-                ptr = malloc(s->size + len);
-                if ( ! ptr )
-                        return prelude_error_from_errno(errno);
-
-                if ( s->data.robuf )
-                        memcpy(ptr, s->data.robuf, s->index + 1);
-
-                s->flags |= PRELUDE_STRING_CAN_REALLOC|PRELUDE_STRING_OWN_DATA;
+                ret = make_string_own(s, s->size + len);
+                if ( ret < 0 )
+                        return ret;
         }
-
-        s->size += len;
-        s->data.rwbuf = ptr;
 
         return 0;
 }
@@ -939,6 +954,37 @@ int prelude_string_cat(prelude_string_t *dst, const char *str)
 
 
 /**
+ * prelude_string_truncate:
+ * @string: Pointer to a #prelude_string_t object.
+ * @len: New @string size
+ *
+ * Truncate @string content.
+ */
+int prelude_string_truncate(prelude_string_t *string, size_t len)
+{
+        int ret;
+
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(len <= string->index, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( len && ! (string->flags & PRELUDE_STRING_OWN_DATA) ) {
+                ret = make_string_own(string, 0);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        if ( string->data.rwbuf )
+                *(string->data.rwbuf + len) = '\0';
+        else
+                string->data.robuf = NULL;
+
+        string->index = len;
+        return 0;
+}
+
+
+
+/**
  * prelude_string_clear:
  * @string: Pointer to a #prelude_string_t object.
  *
@@ -946,15 +992,9 @@ int prelude_string_cat(prelude_string_t *dst, const char *str)
  */
 void prelude_string_clear(prelude_string_t *string)
 {
-        prelude_return_if_fail(string);
-
-        string->index = 0;
-
-        if ( string->data.rwbuf && string->flags & PRELUDE_STRING_OWN_DATA )
-                *(string->data.rwbuf) = '\0';
-
-        else string->data.rwbuf = NULL;
+        prelude_string_truncate(string, 0);
 }
+
 
 
 
