@@ -60,12 +60,6 @@
 #define PRELUDE_STRING_OWN_DATA       0x2
 
 
-/*
- * Whether we can reallocate this string
- */
-#define PRELUDE_STRING_CAN_REALLOC    0x4
-
-
 
 
 #if ! defined (PRELUDE_VA_COPY)
@@ -151,7 +145,7 @@ static int make_string_own(prelude_string_t *s, size_t len)
 
         s->size = len;
         s->data.rwbuf = ptr;
-        s->flags |= PRELUDE_STRING_CAN_REALLOC|PRELUDE_STRING_OWN_DATA;
+        s->flags |= PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -172,7 +166,7 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
         if ( s->size + len < s->size )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 
-        if ( s->flags & PRELUDE_STRING_CAN_REALLOC ) {
+        if ( s->flags & PRELUDE_STRING_OWN_DATA ) {
                 ptr = _prelude_realloc(s->data.rwbuf, s->size + len);
                 if ( ! ptr )
                         return prelude_error_from_errno(errno);
@@ -262,7 +256,7 @@ int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size
                 return ret;
 
         string_buf_copy(*string, str, len);
-        (*string)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        (*string)->flags |= PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -315,7 +309,7 @@ int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t l
         (*string)->index = len;
         (*string)->size = len + 1;
         (*string)->data.rwbuf = str;
-        (*string)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        (*string)->flags |= PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -416,7 +410,7 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
                 return ret;
 
         string_buf_copy(string, buf, len);
-        string->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        string->flags |= PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -465,7 +459,7 @@ int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t le
         string->size = len + 1;
         string->data.rwbuf = buf;
 
-        string->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        string->flags |= PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -516,7 +510,7 @@ int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_
         string->size = len + 1;
         string->data.robuf = buf;
 
-        string->flags &= ~(PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC);
+        string->flags &= ~PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -564,7 +558,7 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
         dst->size = src->size;
         dst->index = src->index;
         dst->data.robuf = src->data.robuf;
-        dst->flags &= ~(PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC);
+        dst->flags &= ~PRELUDE_STRING_OWN_DATA;
 
         return 0;
 }
@@ -590,7 +584,7 @@ int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 
         dst->size = src->size;
         dst->index = src->index;
-        dst->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        dst->flags |= PRELUDE_STRING_OWN_DATA;
 
         if ( src->size ) {
                 dst->data.rwbuf = malloc(src->size);
@@ -627,7 +621,7 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
 
         (*dst)->size = src->size;
         (*dst)->index = src->index;
-        (*dst)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        (*dst)->flags |= PRELUDE_STRING_OWN_DATA;
 
         if ( src->size ) {
                 (*dst)->data.rwbuf = malloc(src->size);
@@ -716,7 +710,7 @@ int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
         if ( ! string->index )
                 return 0;
 
-        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
+        if ( ! (string->flags & PRELUDE_STRING_OWN_DATA) ) {
                 *outptr = strdup(string->data.robuf);
                 return (*outptr) ? 0 : prelude_error_from_errno(errno);
         }
@@ -822,7 +816,7 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
         prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(fmt, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
+        if ( ! (string->flags & PRELUDE_STRING_OWN_DATA) ) {
 
                 ret = allocate_more_chunk_if_needed(string, 0);
                 if ( ret < 0 )
@@ -909,7 +903,7 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
         prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(str, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < (dst->size - dst->index) ) {
+        if ( dst->flags & PRELUDE_STRING_OWN_DATA && len < (dst->size - dst->index) ) {
 
                 memcpy(dst->data.rwbuf + dst->index, str, len);
 
