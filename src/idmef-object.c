@@ -30,6 +30,14 @@
 typedef struct idmef_linked_object idmef_linked_object_t;
 
 
+
+idmef_class_id_t idmef_object_get_class(idmef_object_t *obj)
+{
+        return obj->_idmef_object_id;
+}
+
+
+
 idmef_object_t *idmef_object_ref(idmef_object_t *obj)
 {
         int ret;

@@ -37,6 +37,8 @@
 
 typedef struct idmef_object idmef_object_t;
 
+idmef_class_id_t idmef_object_get_class(idmef_object_t *obj);
+
 idmef_object_t *idmef_object_ref(idmef_object_t *obj);
 
 void idmef_object_destroy(idmef_object_t *obj);
