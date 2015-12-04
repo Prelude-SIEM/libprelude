@@ -974,17 +974,6 @@ int idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *m
                                 break;
                         }
 
-                        case IDMEF_MSG_SNMP_SERVICE_COMMUNITY: {
-                                prelude_string_t *tmp = NULL;
-
-                                ret = prelude_extract_string_safe(&tmp, buf, len, msg);
-                                if ( ret < 0 )
-                                        return ret;
-
-                                idmef_snmp_service_set_community(snmp_service, tmp);
-                                break;
-                        }
-
                         case IDMEF_MSG_END_OF_TAG:
                                 return 0;
 

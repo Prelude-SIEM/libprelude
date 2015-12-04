@@ -324,11 +324,6 @@ struct {
         prelude_string_t *context_name;
         prelude_string_t *context_engine_id;
         prelude_string_t *command;
-
-        /*
-         * FIXME: deprecated
-         */
-        prelude_string_t *community;
 } TYPE_ID(idmef_snmp_service_t, 15);
 
 
