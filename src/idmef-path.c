@@ -270,12 +270,12 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                 else {
                         idmef_value_type_id_t type = path->elem[depth - 1].value_type;
 
-                        ret = idmef_value_new(&value, type, tmp);
+                        ret = idmef_value_new(&value, type, idmef_linked_object_get_object(tmp));
                         if ( ret == 0 ) {
                                 idmef_value_type_t vt;
 
                                 vt.id = type;
-                                vt.data.string_val = (void *) tmp;
+                                vt.data.string_val = (void *) idmef_linked_object_get_object(tmp);
 
                                 ret = idmef_value_type_ref(&vt);
                                 if ( ret < 0 )
