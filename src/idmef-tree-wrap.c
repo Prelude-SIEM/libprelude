@@ -2276,6 +2276,11 @@ int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additio
 
         ret = 0;
 
+        if ( dst->meaning ) {
+                prelude_string_destroy(dst->meaning);
+                dst->meaning = NULL;
+        }
+
         if ( src->meaning ) {
                 ret = prelude_string_clone(src->meaning, &dst->meaning);
                 if ( ret < 0 )
@@ -2808,6 +2813,11 @@ int idmef_reference_copy(const idmef_reference_t *src, idmef_reference_t *dst)
                         return ret;
         }
 
+        if ( dst->meaning ) {
+                prelude_string_destroy(dst->meaning);
+                dst->meaning = NULL;
+        }
+
         if ( src->meaning ) {
                 ret = prelude_string_clone(src->meaning, &dst->meaning);
                 if ( ret < 0 )
@@ -3329,6 +3339,11 @@ int idmef_classification_copy(const idmef_classification_t *src, idmef_classific
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -3344,6 +3359,11 @@ int idmef_classification_copy(const idmef_classification_t *src, idmef_classific
         {
                 prelude_list_t *n, *tmp;
                 idmef_reference_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->reference_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_reference_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->reference_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -3927,6 +3947,11 @@ int idmef_user_id_copy(const idmef_user_id_t *src, idmef_user_id_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -3935,10 +3960,20 @@ int idmef_user_id_copy(const idmef_user_id_t *src, idmef_user_id_t *dst)
 
         dst->type = src->type;
 
+        if ( dst->tty ) {
+                prelude_string_destroy(dst->tty);
+                dst->tty = NULL;
+        }
+
         if ( src->tty ) {
                 ret = prelude_string_clone(src->tty, &dst->tty);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->name ) {
+                prelude_string_destroy(dst->name);
+                dst->name = NULL;
         }
 
         if ( src->name ) {
@@ -4443,6 +4478,11 @@ int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -4454,6 +4494,11 @@ int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_user_id_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->user_id_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_user_id_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->user_id_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -5125,6 +5170,11 @@ int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -5132,6 +5182,11 @@ int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
         }
 
         dst->category = src->category;
+
+        if ( dst->vlan_name ) {
+                prelude_string_destroy(dst->vlan_name);
+                dst->vlan_name = NULL;
+        }
 
         if ( src->vlan_name ) {
                 ret = prelude_string_clone(src->vlan_name, &dst->vlan_name);
@@ -5147,6 +5202,11 @@ int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
                 ret = prelude_string_copy(src->address, dst->address);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->netmask ) {
+                prelude_string_destroy(dst->netmask);
+                dst->netmask = NULL;
         }
 
         if ( src->netmask ) {
@@ -5989,6 +6049,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -6005,6 +6070,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
 
         dst->pid = src->pid;
 
+        if ( dst->path ) {
+                prelude_string_destroy(dst->path);
+                dst->path = NULL;
+        }
+
         if ( src->path ) {
                 ret = prelude_string_clone(src->path, &dst->path);
                 if ( ret < 0 )
@@ -6014,6 +6084,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->arg_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_string_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->arg_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -6025,6 +6100,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->env_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_string_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->env_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -6686,10 +6766,20 @@ int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *
                         return ret;
         }
 
+        if ( dst->cgi ) {
+                prelude_string_destroy(dst->cgi);
+                dst->cgi = NULL;
+        }
+
         if ( src->cgi ) {
                 ret = prelude_string_clone(src->cgi, &dst->cgi);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->http_method ) {
+                prelude_string_destroy(dst->http_method);
+                dst->http_method = NULL;
         }
 
         if ( src->http_method ) {
@@ -6701,6 +6791,11 @@ int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->arg_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_string_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->arg_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -7519,6 +7614,11 @@ int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_
 
         ret = 0;
 
+        if ( dst->oid ) {
+                prelude_string_destroy(dst->oid);
+                dst->oid = NULL;
+        }
+
         if ( src->oid ) {
                 ret = prelude_string_clone(src->oid, &dst->oid);
                 if ( ret < 0 )
@@ -7533,6 +7633,11 @@ int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_
 
         dst->security_model = src->security_model;
 
+        if ( dst->security_name ) {
+                prelude_string_destroy(dst->security_name);
+                dst->security_name = NULL;
+        }
+
         if ( src->security_name ) {
                 ret = prelude_string_clone(src->security_name, &dst->security_name);
                 if ( ret < 0 )
@@ -7543,16 +7648,31 @@ int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_
 
         dst->security_level = src->security_level;
 
+        if ( dst->context_name ) {
+                prelude_string_destroy(dst->context_name);
+                dst->context_name = NULL;
+        }
+
         if ( src->context_name ) {
                 ret = prelude_string_clone(src->context_name, &dst->context_name);
                 if ( ret < 0 )
                         return ret;
         }
 
+        if ( dst->context_engine_id ) {
+                prelude_string_destroy(dst->context_engine_id);
+                dst->context_engine_id = NULL;
+        }
+
         if ( src->context_engine_id ) {
                 ret = prelude_string_clone(src->context_engine_id, &dst->context_engine_id);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->command ) {
+                prelude_string_destroy(dst->command);
+                dst->command = NULL;
         }
 
         if ( src->command ) {
@@ -8606,6 +8726,11 @@ int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -8620,10 +8745,20 @@ int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst)
 
         dst->iana_protocol_number = src->iana_protocol_number;
 
+        if ( dst->iana_protocol_name ) {
+                prelude_string_destroy(dst->iana_protocol_name);
+                dst->iana_protocol_name = NULL;
+        }
+
         if ( src->iana_protocol_name ) {
                 ret = prelude_string_clone(src->iana_protocol_name, &dst->iana_protocol_name);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->name ) {
+                prelude_string_destroy(dst->name);
+                dst->name = NULL;
         }
 
         if ( src->name ) {
@@ -8636,16 +8771,40 @@ int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst)
 
         dst->port = src->port;
 
+        if ( dst->portlist ) {
+                prelude_string_destroy(dst->portlist);
+                dst->portlist = NULL;
+        }
+
         if ( src->portlist ) {
                 ret = prelude_string_clone(src->portlist, &dst->portlist);
                 if ( ret < 0 )
                         return ret;
         }
 
+        if ( dst->protocol ) {
+                prelude_string_destroy(dst->protocol);
+                dst->protocol = NULL;
+        }
+
         if ( src->protocol ) {
                 ret = prelude_string_clone(src->protocol, &dst->protocol);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        switch ( dst->type ) {
+
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_destroy(dst->specific.web_service);
+                        break;
+
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_destroy(dst->specific.snmp_service);
+                        break;
+
+                default:
+                        break;
         }
 
         switch ( src->type ) {
@@ -9351,6 +9510,11 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -9359,10 +9523,20 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
 
         dst->category = src->category;
 
+        if ( dst->location ) {
+                prelude_string_destroy(dst->location);
+                dst->location = NULL;
+        }
+
         if ( src->location ) {
                 ret = prelude_string_clone(src->location, &dst->location);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->name ) {
+                prelude_string_destroy(dst->name);
+                dst->name = NULL;
         }
 
         if ( src->name ) {
@@ -9374,6 +9548,11 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_address_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->address_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_address_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->address_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -10140,6 +10319,11 @@ int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -10148,10 +10332,20 @@ int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst)
 
         dst->spoofed = src->spoofed;
 
+        if ( dst->interface ) {
+                prelude_string_destroy(dst->interface);
+                dst->interface = NULL;
+        }
+
         if ( src->interface ) {
                 ret = prelude_string_clone(src->interface, &dst->interface);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->node ) {
+                idmef_node_destroy(dst->node);
+                dst->node = NULL;
         }
 
         if ( src->node ) {
@@ -10160,16 +10354,31 @@ int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst)
                         return ret;
         }
 
+        if ( dst->user ) {
+                idmef_user_destroy(dst->user);
+                dst->user = NULL;
+        }
+
         if ( src->user ) {
                 ret = idmef_user_clone(src->user, &dst->user);
                 if ( ret < 0 )
                         return ret;
         }
 
+        if ( dst->process ) {
+                idmef_process_destroy(dst->process);
+                dst->process = NULL;
+        }
+
         if ( src->process ) {
                 ret = idmef_process_clone(src->process, &dst->process);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->service ) {
+                idmef_service_destroy(dst->service);
+                dst->service = NULL;
         }
 
         if ( src->service ) {
@@ -10642,6 +10851,11 @@ int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->permission_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        prelude_string_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->permission_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -11274,6 +11488,11 @@ int idmef_inode_copy(const idmef_inode_t *src, idmef_inode_t *dst)
 
         ret = 0;
 
+        if ( dst->change_time ) {
+                idmef_time_destroy(dst->change_time);
+                dst->change_time = NULL;
+        }
+
         if ( src->change_time ) {
                 ret = idmef_time_clone(src->change_time, &dst->change_time);
                 if ( ret < 0 )
@@ -11742,6 +11961,11 @@ int idmef_checksum_copy(const idmef_checksum_t *src, idmef_checksum_t *dst)
                 ret = prelude_string_copy(src->value, dst->value);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->key ) {
+                prelude_string_destroy(dst->key);
+                dst->key = NULL;
         }
 
         if ( src->key ) {
@@ -13346,6 +13570,11 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -13364,16 +13593,31 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                         return ret;
         }
 
+        if ( dst->create_time ) {
+                idmef_time_destroy(dst->create_time);
+                dst->create_time = NULL;
+        }
+
         if ( src->create_time ) {
                 ret = idmef_time_clone(src->create_time, &dst->create_time);
                 if ( ret < 0 )
                         return ret;
         }
 
+        if ( dst->modify_time ) {
+                idmef_time_destroy(dst->modify_time);
+                dst->modify_time = NULL;
+        }
+
         if ( src->modify_time ) {
                 ret = idmef_time_clone(src->modify_time, &dst->modify_time);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->access_time ) {
+                idmef_time_destroy(dst->access_time);
+                dst->access_time = NULL;
         }
 
         if ( src->access_time ) {
@@ -13394,6 +13638,11 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_file_access_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->file_access_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_file_access_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->file_access_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_file_access_clone(entry, &new);
@@ -13405,11 +13654,21 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_linkage_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->linkage_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_linkage_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->linkage_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_linkage_clone(entry, &new);
                         prelude_list_add_tail(&dst->linkage_list, &((prelude_linked_object_t *) new)->_list);
                 }
+        }
+
+        if ( dst->inode ) {
+                idmef_inode_destroy(dst->inode);
+                dst->inode = NULL;
         }
 
         if ( src->inode ) {
@@ -13421,6 +13680,11 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_checksum_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->checksum_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_checksum_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->checksum_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -13434,6 +13698,11 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
         dst->fstype_is_set = src->fstype_is_set;
 
         dst->fstype = src->fstype;
+
+        if ( dst->file_type ) {
+                prelude_string_destroy(dst->file_type);
+                dst->file_type = NULL;
+        }
 
         if ( src->file_type ) {
                 ret = prelude_string_clone(src->file_type, &dst->file_type);
@@ -14988,6 +15257,11 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
 
         ret = 0;
 
+        if ( dst->ident ) {
+                prelude_string_destroy(dst->ident);
+                dst->ident = NULL;
+        }
+
         if ( src->ident ) {
                 ret = prelude_string_clone(src->ident, &dst->ident);
                 if ( ret < 0 )
@@ -14996,10 +15270,20 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
 
         dst->decoy = src->decoy;
 
+        if ( dst->interface ) {
+                prelude_string_destroy(dst->interface);
+                dst->interface = NULL;
+        }
+
         if ( src->interface ) {
                 ret = prelude_string_clone(src->interface, &dst->interface);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->node ) {
+                idmef_node_destroy(dst->node);
+                dst->node = NULL;
         }
 
         if ( src->node ) {
@@ -15008,16 +15292,31 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
                         return ret;
         }
 
+        if ( dst->user ) {
+                idmef_user_destroy(dst->user);
+                dst->user = NULL;
+        }
+
         if ( src->user ) {
                 ret = idmef_user_clone(src->user, &dst->user);
                 if ( ret < 0 )
                         return ret;
         }
 
+        if ( dst->process ) {
+                idmef_process_destroy(dst->process);
+                dst->process = NULL;
+        }
+
         if ( src->process ) {
                 ret = idmef_process_clone(src->process, &dst->process);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->service ) {
+                idmef_service_destroy(dst->service);
+                dst->service = NULL;
         }
 
         if ( src->service ) {
@@ -15029,6 +15328,11 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_file_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->file_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_file_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->file_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -16059,10 +16363,20 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
 
         ret = 0;
 
+        if ( dst->analyzerid ) {
+                prelude_string_destroy(dst->analyzerid);
+                dst->analyzerid = NULL;
+        }
+
         if ( src->analyzerid ) {
                 ret = prelude_string_clone(src->analyzerid, &dst->analyzerid);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->name ) {
+                prelude_string_destroy(dst->name);
+                dst->name = NULL;
         }
 
         if ( src->name ) {
@@ -16071,10 +16385,20 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
                         return ret;
         }
 
+        if ( dst->manufacturer ) {
+                prelude_string_destroy(dst->manufacturer);
+                dst->manufacturer = NULL;
+        }
+
         if ( src->manufacturer ) {
                 ret = prelude_string_clone(src->manufacturer, &dst->manufacturer);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->model ) {
+                prelude_string_destroy(dst->model);
+                dst->model = NULL;
         }
 
         if ( src->model ) {
@@ -16083,10 +16407,20 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
                         return ret;
         }
 
+        if ( dst->version ) {
+                prelude_string_destroy(dst->version);
+                dst->version = NULL;
+        }
+
         if ( src->version ) {
                 ret = prelude_string_clone(src->version, &dst->version);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->class ) {
+                prelude_string_destroy(dst->class);
+                dst->class = NULL;
         }
 
         if ( src->class ) {
@@ -16095,10 +16429,20 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
                         return ret;
         }
 
+        if ( dst->ostype ) {
+                prelude_string_destroy(dst->ostype);
+                dst->ostype = NULL;
+        }
+
         if ( src->ostype ) {
                 ret = prelude_string_clone(src->ostype, &dst->ostype);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->osversion ) {
+                prelude_string_destroy(dst->osversion);
+                dst->osversion = NULL;
         }
 
         if ( src->osversion ) {
@@ -16107,10 +16451,20 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
                         return ret;
         }
 
+        if ( dst->node ) {
+                idmef_node_destroy(dst->node);
+                dst->node = NULL;
+        }
+
         if ( src->node ) {
                 ret = idmef_node_clone(src->node, &dst->node);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->process ) {
+                idmef_process_destroy(dst->process);
+                dst->process = NULL;
         }
 
         if ( src->process ) {
@@ -16507,6 +16861,11 @@ int idmef_alertident_copy(const idmef_alertident_t *src, idmef_alertident_t *dst
                 ret = prelude_string_copy(src->alertident, dst->alertident);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->analyzerid ) {
+                prelude_string_destroy(dst->analyzerid);
+                dst->analyzerid = NULL;
         }
 
         if ( src->analyzerid ) {
@@ -16987,6 +17346,11 @@ int idmef_impact_copy(const idmef_impact_t *src, idmef_impact_t *dst)
 
         dst->type = src->type;
 
+        if ( dst->description ) {
+                prelude_string_destroy(dst->description);
+                dst->description = NULL;
+        }
+
         if ( src->description ) {
                 ret = prelude_string_clone(src->description, &dst->description);
                 if ( ret < 0 )
@@ -17328,6 +17692,11 @@ int idmef_action_copy(const idmef_action_t *src, idmef_action_t *dst)
         ret = 0;
 
         dst->category = src->category;
+
+        if ( dst->description ) {
+                prelude_string_destroy(dst->description);
+                dst->description = NULL;
+        }
 
         if ( src->description ) {
                 ret = prelude_string_clone(src->description, &dst->description);
@@ -18130,6 +18499,11 @@ int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst
 
         ret = 0;
 
+        if ( dst->impact ) {
+                idmef_impact_destroy(dst->impact);
+                dst->impact = NULL;
+        }
+
         if ( src->impact ) {
                 ret = idmef_impact_clone(src->impact, &dst->impact);
                 if ( ret < 0 )
@@ -18140,11 +18514,21 @@ int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst
                 prelude_list_t *n, *tmp;
                 idmef_action_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->action_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_action_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->action_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_action_clone(entry, &new);
                         prelude_list_add_tail(&dst->action_list, &((prelude_linked_object_t *) new)->_list);
                 }
+        }
+
+        if ( dst->confidence ) {
+                idmef_confidence_destroy(dst->confidence);
+                dst->confidence = NULL;
         }
 
         if ( src->confidence ) {
@@ -18692,6 +19076,11 @@ int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
                         return ret;
         }
 
+        if ( dst->command ) {
+                prelude_string_destroy(dst->command);
+                dst->command = NULL;
+        }
+
         if ( src->command ) {
                 ret = prelude_string_clone(src->command, &dst->command);
                 if ( ret < 0 )
@@ -18701,6 +19090,11 @@ int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
         {
                 prelude_list_t *n, *tmp;
                 idmef_alertident_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->alertident_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_alertident_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -19173,6 +19567,11 @@ int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_cor
                 prelude_list_t *n, *tmp;
                 idmef_alertident_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->alertident_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_alertident_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_alertident_clone(entry, &new);
@@ -19626,6 +20025,11 @@ int idmef_overflow_alert_copy(const idmef_overflow_alert_t *src, idmef_overflow_
         dst->size_is_set = src->size_is_set;
 
         dst->size = src->size;
+
+        if ( dst->buffer ) {
+                idmef_data_destroy(dst->buffer);
+                dst->buffer = NULL;
+        }
 
         if ( src->buffer ) {
                 ret = idmef_data_clone(src->buffer, &dst->buffer);
@@ -21327,6 +21731,11 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
 
         ret = 0;
 
+        if ( dst->messageid ) {
+                prelude_string_destroy(dst->messageid);
+                dst->messageid = NULL;
+        }
+
         if ( src->messageid ) {
                 ret = prelude_string_clone(src->messageid, &dst->messageid);
                 if ( ret < 0 )
@@ -21336,6 +21745,11 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_analyzer_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->analyzer_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_analyzer_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -21356,10 +21770,20 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                         return ret;
         }
 
+        if ( dst->detect_time ) {
+                idmef_time_destroy(dst->detect_time);
+                dst->detect_time = NULL;
+        }
+
         if ( src->detect_time ) {
                 ret = idmef_time_clone(src->detect_time, &dst->detect_time);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->analyzer_time ) {
+                idmef_time_destroy(dst->analyzer_time);
+                dst->analyzer_time = NULL;
         }
 
         if ( src->analyzer_time ) {
@@ -21372,6 +21796,11 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_source_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->source_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_source_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->source_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_source_clone(entry, &new);
@@ -21383,11 +21812,21 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_target_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->target_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_target_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->target_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_target_clone(entry, &new);
                         prelude_list_add_tail(&dst->target_list, &((prelude_linked_object_t *) new)->_list);
                 }
+        }
+
+        if ( dst->assessment ) {
+                idmef_assessment_destroy(dst->assessment);
+                dst->assessment = NULL;
         }
 
         if ( src->assessment ) {
@@ -21400,11 +21839,34 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_additional_data_t *entry, *new;
 
+                prelude_list_for_each_safe(&dst->additional_data_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_additional_data_destroy(entry);
+                }
+
                 prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
                         idmef_additional_data_clone(entry, &new);
                         prelude_list_add_tail(&dst->additional_data_list, &((prelude_linked_object_t *) new)->_list);
                 }
+        }
+
+        switch ( dst->type ) {
+
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(dst->detail.tool_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(dst->detail.correlation_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(dst->detail.overflow_alert);
+                        break;
+
+                default:
+                        break;
         }
 
         switch ( src->type ) {
@@ -22386,6 +22848,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
 
         ret = 0;
 
+        if ( dst->messageid ) {
+                prelude_string_destroy(dst->messageid);
+                dst->messageid = NULL;
+        }
+
         if ( src->messageid ) {
                 ret = prelude_string_clone(src->messageid, &dst->messageid);
                 if ( ret < 0 )
@@ -22395,6 +22862,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_analyzer_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->analyzer_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_analyzer_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -22407,6 +22879,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
                 ret = idmef_time_copy(src->create_time, dst->create_time);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        if ( dst->analyzer_time ) {
+                idmef_time_destroy(dst->analyzer_time);
+                dst->analyzer_time = NULL;
         }
 
         if ( src->analyzer_time ) {
@@ -22422,6 +22899,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
         {
                 prelude_list_t *n, *tmp;
                 idmef_additional_data_t *entry, *new;
+
+                prelude_list_for_each_safe(&dst->additional_data_list, tmp, n) {
+                        entry = prelude_linked_object_get_object(tmp);
+                        idmef_additional_data_destroy(entry);
+                }
 
                 prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
                         entry = prelude_linked_object_get_object(tmp);
@@ -22977,6 +23459,20 @@ int idmef_message_copy(const idmef_message_t *src, idmef_message_t *dst)
                 ret = prelude_string_copy(src->version, dst->version);
                 if ( ret < 0 )
                         return ret;
+        }
+
+        switch ( dst->type ) {
+
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_destroy(dst->message.alert);
+                        break;
+
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_destroy(dst->message.heartbeat);
+                        break;
+
+                default:
+                        break;
         }
 
         switch ( src->type ) {

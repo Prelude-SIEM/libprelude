@@ -786,10 +786,12 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
     foreach my $field ( @{ $struct->{field_list} } ) {
         my $clone_func = "$field->{short_typename}_clone";
         my $copy_func = "$field->{short_typename}_copy";
+        my $destroy_func = "$field->{short_typename}_destroy";
 
         if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
             $clone_func = "idmef_${clone_func}";
             $copy_func = "idmef_${copy_func}";
+            $destroy_func = "idmef_${destroy_func}";
         }
 
         if ( $field->{metatype} & &METATYPE_LIST ) {
@@ -797,6 +799,11 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
         \{
                 prelude_list_t *n, *tmp;
                 $field->{typename} *entry, *new;
+
+                prelude_list_for_each_safe(&dst->$field->{name}, tmp, n) \{
+                        entry = prelude_linked_object_get_object(tmp);
+                        $destroy_func(entry);
+                \}
 
                 prelude_list_for_each_safe(&src->$field->{name}, tmp, n) \{
                         entry = prelude_linked_object_get_object(tmp);
@@ -807,6 +814,24 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 ");
 
         } elsif ( $field->{metatype} & &METATYPE_UNION ) {
+            $self->output("
+        switch ( dst->$field->{var} ) {
+");
+
+            foreach my $member ( @{ $field->{member_list} } ) {
+
+                $self->output("
+                case $member->{value}:
+                        idmef_$member->{short_typename}_destroy(dst->$field->{name}.$member->{name});
+                        break;
+");
+            }
+            $self->output("
+                default:
+                        break;
+        }
+");
+
             $self->output("
         switch ( src->$field->{var} ) {
 ");
@@ -843,6 +868,11 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 
             elsif ( $field->{ptr} ) {
                 $self->output("
+        if ( dst->$field->{name} ) {
+                ${destroy_func}(dst->$field->{name});
+                dst->$field->{name} = NULL;
+        }
+
         if ( src->$field->{name} ) {
                 ret = ${clone_func}(src->$field->{name}, &dst->$field->{name});
                 if ( ret < 0 )
