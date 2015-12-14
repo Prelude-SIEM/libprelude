@@ -466,7 +466,7 @@ static int plugin_load_single(prelude_list_t *head,
 
         ret = plugin_init(pe, data);
         if ( ret < 0 || ! pe->plugin ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s initialization failure.\n", filename);
+                prelude_log(PRELUDE_LOG_WARN, "%s initialization failure : %s.\n", filename, prelude_strerror(ret));
                 prelude_list_del(&pe->list);
                 lt_dlclose(handle);
                 free(pe);
