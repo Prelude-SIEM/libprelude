@@ -38,6 +38,7 @@ typedef struct \{
         prelude_bool_t keyed_list;
         idmef_value_type_id_t type;
         idmef_class_id_t class;
+        int union_id;
 \} children_list_t;
 
 ");
@@ -53,16 +54,18 @@ sub     struct
     my  $keyed_list;
     my  $object;
     my  $object_type;
+    my  $union_id = 0;
 
     $self->output("const children_list_t idmef_$struct->{short_typename}_children_list[] = \{\n");
 
     foreach my $field ( @{ $struct->{field_list} } ) {
 
         if ( $field->{metatype} == &METATYPE_UNION ) {
+            $union_id += 1;
 
             foreach my $member ( @{ $field->{member_list} } ) {
 
-                $self->output("        \{ \"$member->{name}\", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . " \},\n");
+                $self->output("        \{ \"$member->{name}\", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . ", /* union ID */ $union_id \},\n");
             }
 
         } else {
@@ -104,7 +107,7 @@ sub     struct
                 }
             }
 
-            $self->output("        \{ \"$name\", $list, $keyed_list, $object, $object_type \},\n");
+            $self->output("        \{ \"$name\", $list, $keyed_list, $object, $object_type, 0 \},\n");
         }
     }
     $self->output("\};\n\n");

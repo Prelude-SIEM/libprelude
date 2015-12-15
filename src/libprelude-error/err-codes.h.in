@@ -94,6 +94,8 @@
 60	PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS	IDMEF child is not a class
 61	PRELUDE_ERROR_ASSERTION			Critical assertion occurred
 62	PRELUDE_ERROR_IDMEF_VALUE_TYPE_REF_UNAVAILABLE	Reference operation unavailable for specified IDMEF type
+63	PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_UNION	IDMEF child is not an union
+
 
 
 

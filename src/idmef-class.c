@@ -102,6 +102,19 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
 
 
 
+prelude_bool_t idmef_class_is_child_union_member(idmef_class_id_t class, idmef_class_child_id_t child)
+{
+        int ret;
+
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+
+        return (object_data[class].children_list[child].union_id > 0) ? TRUE : FALSE;
+}
+
+
+
 prelude_bool_t idmef_class_is_child_list(idmef_class_id_t class, idmef_class_child_id_t child)
 {
         int ret;
@@ -151,6 +164,25 @@ size_t idmef_class_get_child_count(idmef_class_id_t class)
 
         return object_data[class].children_list_elem;
 }
+
+
+
+int idmef_class_get_child_union_id(idmef_class_id_t class, idmef_class_child_id_t child)
+{
+        int ret;
+        const children_list_t *c;
+
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+
+        c = &object_data[class].children_list[child];
+        if ( ! c->union_id )
+                return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_UNION);
+
+        return c->union_id;
+}
+
 
 
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t class, idmef_class_child_id_t child)

@@ -41,6 +41,10 @@ prelude_bool_t idmef_class_is_child_list(idmef_class_id_t classid, idmef_class_c
 
 prelude_bool_t idmef_class_is_child_keyed_list(idmef_class_id_t classid, idmef_class_child_id_t child);
 
+prelude_bool_t idmef_class_is_child_union_member(idmef_class_id_t classid, idmef_class_child_id_t child);
+
+int idmef_class_get_child_union_id(idmef_class_id_t classid, idmef_class_child_id_t child);
+
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t classid, idmef_class_child_id_t child);
 
 size_t idmef_class_get_child_count(idmef_class_id_t classid);
