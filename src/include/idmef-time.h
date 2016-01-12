@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003-2015 CS-SI. All Rights Reserved.
+* Copyright (C) 2003-2016 CS-SI. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
 * This file is part of the Prelude library.
