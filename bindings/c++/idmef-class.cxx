@@ -62,7 +62,7 @@ IDMEFClass::IDMEFClass(IDMEFClass &parent, int child_id, int depth)
 {
         IDMEFClass::IDMEFClassElem elem;
 
-        if ( depth > 16 )
+        if ( depth >= 16 )
                 throw PreludeError(prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH));
 
         _depth = depth;
