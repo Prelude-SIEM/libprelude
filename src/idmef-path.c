@@ -819,7 +819,7 @@ int idmef_path_new_from_root_fast(idmef_path_t **path, idmef_class_id_t rootclas
         }
 
         if ( *buffer == '\0' )
-                (*path)->elem[0].class = IDMEF_CLASS_ID_MESSAGE;
+                (*path)->top_class = rootclass;
         else {
                 ret = idmef_path_parse_new(*path, rootclass, buffer);
                 if ( ret < 0 ) {
@@ -937,7 +937,7 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
                 depth = path->depth - 1;
 
         if ( path->depth == 0 && depth < 0 )
-                return IDMEF_CLASS_ID_MESSAGE;
+                return path->top_class;
 
         return path->elem[depth].class;
 }
