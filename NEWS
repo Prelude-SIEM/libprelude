@@ -1,3 +1,19 @@
+* 2016-03-01, libprelude-1.3.0beta1:
+
+Author: Thomas Andrejak
+
+- Change c-s.fr to prelude-siem.com
+
+Author: Abdel Elmili
+
+- Fix typos
+
+Author: Antoine Luong
+
+- Fix depth comparison in IDMEFClass()
+
+
+
 * 2016-01-11, libprelude-1.3.0alpha1:
 
 Author: Yoann Vandoorselaere
