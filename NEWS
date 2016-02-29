@@ -1,3 +1,11 @@
+* 2016-02-29, libprelude-1.2.7:
+
+Author: Yoann Vandoorselaere
+
+- Properly set top class when using idmef_path_new_from_root_fast()
+
+
+
 * 2015-07-31, libprelude-1.2.6:
 
 No new changes.
