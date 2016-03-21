@@ -46,6 +46,7 @@ Dependencies
 
    For Redhat based systems (CentOS, Fedora, etc.)
        Minimal            :    gcc gcc-c++ gnutls-devel libgcrypt-devel make
+                               libtool-ltdl-devel
        Documentation      :    gtk-doc
        Perl Binding       :    perl perl-devel
        Python Binding     :    python python-devel
@@ -54,6 +55,7 @@ Dependencies
 
    For Debian systems
        Minimal            :    gcc g++ libcurl4-gnutls-dev libglib2.0-dev make
+                               libltdl-dev
        Documentation      :    gtk-doc-tools
        Perl Binding       :    perl
        Python Binding     :    python python-dev
