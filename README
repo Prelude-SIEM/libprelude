@@ -173,9 +173,8 @@ like :
 
 
 "
-Basic file configuration does not exist. Please run :
-prelude-adduser register prelude-lml "idmef:w admin:r" <manager address>
-program on the analyzer host to setup this analyzer.
+Profile 'prelude-lml' does not exist. In order to create it, please run:
+prelude-admin register "prelude-lml" "idmef:w" <manager address> --uid 0 --gid 0
 "
 
 
@@ -183,11 +182,11 @@ Starting this program with the sensor provided arguments will start
 the registration procedure for this sensor.
 
 
-The prelude-adduser program will ask you to start the prelude-adduser program
+The prelude-admin program will ask you to start the prelude-admin program
 on the Manager host:
 
 "
-  You now need to start "prelude-adduser" on the server host where
+  You now need to start "prelude-admin" on the server host where
   you need to register to:
 
   use: "prelude-admin registration-server <analyzer-name>"
@@ -195,12 +194,12 @@ on the Manager host:
 
 "analyzer-name" should be substituted by the name of your Manager
 (prelude-manager is the default, unless you provided a customized
-analyzer-name option on the prelude-manager command line, or in it's
+analyzer-name option on the prelude-manager command line, or in its
 configuration file).
 
-The manager host prelude-adduser program will provide you a randomly
-generated password to be used when sensor side prelude-adduser request it.
+The manager host prelude-admin program will provide you a randomly
+generated password to be used when sensor side prelude-admin requests it.
 
-The prelude-adduser program will then ask you several question, and it will
-connect to the manager-adduser program. If authentication is okay, the sensors
-and the Manager will be able to exchange their certificates.
+The prelude-admin program will then ask you several questions, and it will
+connect to the manager prelude-admin program. If authentication is okay,
+the sensors and the Manager will be able to exchange their certificates.
