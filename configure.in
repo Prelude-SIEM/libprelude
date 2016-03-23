@@ -1,8 +1,8 @@
 m4_define([libprelude_major_version], [1])
 m4_define([libprelude_minor_version], [3])
 m4_define([libprelude_micro_version], [0])
-m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_BETA])
-m4_define([libprelude_serial_version], [2])
+m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_RC])
+m4_define([libprelude_serial_version], [1])
 
 m4_define([serial_string], ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_ALPHA, alpha,
                                   ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_BETA, beta,
