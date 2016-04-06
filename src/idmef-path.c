@@ -1318,18 +1318,33 @@ int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2)
  */
 int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 {
+        unsigned int i;
+
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         *dst = calloc(1, sizeof(**dst));
         if ( ! *dst )
                 return prelude_error_from_errno(errno);
 
+        memcpy(*dst, src, sizeof(**dst));
+
+        for ( i = 0; i < src->depth; i++ ) {
+                if ( ! src->elem[i].index_key )
+                        continue;
+
+                (*dst)->elem[i].index_key = strdup(src->elem[i].index_key);
+                if ( ! (*dst)->elem[i].index_key ) {
+                        while ( --i ) {
+                                if ( (*dst)->elem[i].index_key )
+                                        free((*dst)->elem[i].index_key);
+                        }
+
+                        free(*dst);
+                        return prelude_error_from_errno(errno);
+                }
+        }
+
         (*dst)->refcount = 1;
-        (*dst)->depth = src->depth;
-
-        strncpy((*dst)->name, src->name, sizeof(src->name));
-        memcpy((*dst)->elem, src->elem, src->depth * sizeof(idmef_path_element_t));
-
         gl_lock_init((*dst)->mutex);
 
         return 0;
