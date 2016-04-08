@@ -181,7 +181,7 @@ static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_ope
 {
         int ret;
         time_t sec;
-        struct tm lt, *comp = cv->value;
+        struct tm lt, comp = *(struct tm *) cv->value;
         prelude_bool_t need_full_compare = FALSE;
 
         if ( idmef_value_get_type(value) != IDMEF_VALUE_TYPE_TIME )
@@ -194,39 +194,39 @@ static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_ope
         /*
          * Apply mask
          */
-        if ( comp->tm_sec < 0 ) lt.tm_sec = -1;
+        if ( comp.tm_sec < 0 ) lt.tm_sec = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_min < 0 ) lt.tm_min = -1;
+        if ( comp.tm_min < 0 ) lt.tm_min = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_mon < 0 ) lt.tm_mon = -1;
+        if ( comp.tm_mon < 0 ) lt.tm_mon = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_hour < 0 ) lt.tm_hour = -1;
+        if ( comp.tm_hour < 0 ) lt.tm_hour = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_mday < 0 ) lt.tm_mday = -1;
+        if ( comp.tm_mday < 0 ) lt.tm_mday = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_year < 0 ) lt.tm_year = -1;
+        if ( comp.tm_year < 0 ) lt.tm_year = -1;
         else need_full_compare = TRUE;
 
-        if ( comp->tm_wday < 0 ) lt.tm_wday = -1;
-        if ( comp->tm_yday < 0 ) lt.tm_yday = -1;
+        if ( comp.tm_wday < 0 ) lt.tm_wday = -1;
+        if ( comp.tm_yday < 0 ) lt.tm_yday = -1;
 
         /*
          * The timegm() function ignores values supplied in the tm_wday
          * and tm_yday fields, match them manually:
          */
-        if ( comp->tm_wday >= 0 ) {
-                ret = integer_compare(lt.tm_wday, comp->tm_wday, (need_full_compare) ? op | IDMEF_CRITERION_OPERATOR_EQUAL : op);
+        if ( comp.tm_wday >= 0 ) {
+                ret = integer_compare(lt.tm_wday, comp.tm_wday, (need_full_compare) ? op | IDMEF_CRITERION_OPERATOR_EQUAL : op);
                 if ( ret != 1 )
                         return ret;
         }
 
-        if ( comp->tm_yday >= 0 ) {
-                ret = integer_compare(lt.tm_yday, comp->tm_yday, (need_full_compare) ? op | IDMEF_CRITERION_OPERATOR_EQUAL : op);
+        if ( comp.tm_yday >= 0 ) {
+                ret = integer_compare(lt.tm_yday, comp.tm_yday, (need_full_compare) ? op | IDMEF_CRITERION_OPERATOR_EQUAL : op);
                 if ( ret != 1 )
                         return ret;
         }
@@ -234,7 +234,7 @@ static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_ope
         if ( ! need_full_compare )
                 return 1;
 
-        return integer_compare(timegm(&lt), timegm(comp), op);
+        return integer_compare(timegm(&lt), timegm(&comp), op);
 }
 
 
