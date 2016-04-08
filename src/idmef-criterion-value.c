@@ -471,12 +471,17 @@ static int do_match_cb(idmef_value_t *value, void *extra)
         idmef_criterion_value_t *cv = mcb->cv;
         idmef_criterion_operator_t operator = mcb->operator;
 
-        if ( idmef_value_is_list(value) )
-                return idmef_value_iterate(value, do_match_cb, mcb);
+        if ( ! cv )
+                ret = (operator == IDMEF_CRITERION_OPERATOR_NOT_NULL) ? (value != NULL) : (value == NULL);
 
-        ret = cv->match(cv, operator, value);
-        if ( ret < 0 )
-                return ret;
+        else {
+                if ( value && idmef_value_is_list(value) )
+                        return idmef_value_iterate(value, do_match_cb, mcb);
+
+                ret = cv->match(cv, operator, value);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         if ( ret > 0 )
                 mcb->match++;
@@ -535,6 +540,16 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *cv, prelude_string_
 
 
 
+static int my_value_match(idmef_value_t *value, struct match_cb *mcb)
+{
+        if ( value )
+                return idmef_value_iterate(value, do_match_cb, mcb);
+        else
+                return do_match_cb(value, mcb);
+}
+
+
+
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value,
                                 idmef_criterion_operator_t op)
 {
@@ -545,19 +560,17 @@ int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *valu
         mcb.operator = op;
         mcb.match = mcb.nmatch = 0;
 
-        ret = idmef_value_iterate(value, do_match_cb, &mcb);
+        ret = my_value_match(value, &mcb);
         if ( ret < 0 )
                 return ret;
 
-        /*
-         * When comparing a path to a value using a negative operator, if the
-         * excluded value was found at least once, return a negative match.
-         *
-         * This is required since the 'match' value might also be positive
-         * in case the path contain a list of value.
-         */
-        if ( op & IDMEF_CRITERION_OPERATOR_NOT && mcb.nmatch > 0 )
-                return 0;
+        if ( value && idmef_value_is_list(value) && op != IDMEF_CRITERION_OPERATOR_NOT_NULL ) {
+                if ( op == IDMEF_CRITERION_OPERATOR_NULL )
+                        return (mcb.nmatch == 0) ? 1 : 0;
+
+                if ( op & IDMEF_CRITERION_OPERATOR_NOT && mcb.nmatch > 0 )
+                        return 0;
+        }
 
         return mcb.match;
 }

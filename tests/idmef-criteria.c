@@ -34,6 +34,12 @@ int main(void)
         assert(idmef_alert_new_classification(alert, &classification) == 0);
         idmef_classification_set_text(classification, str);
 
+        idmef_message_set_string(idmef, "alert.analyzer(0).name", "A");
+        idmef_message_set_string(idmef, "alert.analyzer(1).name", "B");
+        idmef_message_set_string(idmef, "alert.analyzer(1).ostype", "C");
+        idmef_message_set_string(idmef, "alert.analyzer(1).process.arg(0)", "a0");
+        idmef_message_set_string(idmef, "alert.analyzer(1).process.arg(2)", "a2");
+
         test_criteria(idmef, "alert", 0, 1);
         test_criteria(idmef, "heartbeat", 0, 0);
         test_criteria(idmef, "alert || heartbeat", 0, 1);
@@ -134,6 +140,43 @@ int main(void)
         test_criteria(idmef, "alert.create_time > 'wday:monday mday:5'", 0, 0);
         test_criteria(idmef, "alert.create_time <= 'wday:monday mday:5'", 0, 1);
         test_criteria(idmef, "alert.create_time >= 'wday:monday mday:5'", 0, 0);
+
+        /*
+         * Test on listed object without specific index
+         */
+        test_criteria(idmef, "alert.analyzer(*).name == 'A'", 0, 1);
+        test_criteria(idmef, "alert.analyzer(*).name != 'A'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).name == 'NOT EXIST'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).name != 'NOT EXIST'", 0, 1);
+        test_criteria(idmef, "alert.analyzer(*).ostype == 'C'", 0, 1);
+        test_criteria(idmef, "alert.analyzer(*).ostype != 'C'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).ostype == 'NOT EXIST'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).ostype != 'NOT EXIST'", 0, 1);
+
+        test_criteria(idmef, "alert.analyzer(*).class", 0, 0);
+        test_criteria(idmef, "! alert.analyzer(*).class", 0, 1);
+
+        test_criteria(idmef, "alert.analyzer(*).name", 0, 1);
+        test_criteria(idmef, "! alert.analyzer(*).name", 0, 0);
+
+        test_criteria(idmef, "alert.analyzer(*).ostype", 0, 1);
+        test_criteria(idmef, "! alert.analyzer(*).ostype", 0, 0);
+
+        test_criteria(idmef, "alert.source(*).interface", 0, 0);
+        test_criteria(idmef, "! alert.source(*).interface", 0, 1);
+
+        test_criteria(idmef, "alert.source", 0, 0);
+        test_criteria(idmef, "! alert.source", 0, 1);
+
+        test_criteria(idmef, "alert.analyzer", 0, 1);
+        test_criteria(idmef, "! alert.analyzer", 0, 0);
+
+        test_criteria(idmef, "alert.analyzer(*).process.arg", 0, 1);
+        test_criteria(idmef, "! alert.analyzer(*).process.arg", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).process.arg == 'a0'", 0, 1);
+        test_criteria(idmef, "alert.analyzer(*).process.arg != 'a0'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).process.arg == 'NOT EXIST'", 0, 0);
+        test_criteria(idmef, "alert.analyzer(*).process.arg != 'NOT EXIST'", 0, 1);
 
         exit(0);
 }

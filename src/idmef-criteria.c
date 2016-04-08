@@ -334,7 +334,7 @@ idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t 
 int idmef_criterion_match(const idmef_criterion_t *criterion, void *object)
 {
         int ret;
-        idmef_value_t *value;
+        idmef_value_t *value = NULL;
 
         prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -343,20 +343,9 @@ int idmef_criterion_match(const idmef_criterion_t *criterion, void *object)
         if ( ret < 0 )
                 return ret;
 
-        if ( ret == 0 ) {
-                if ( criterion->value && criterion->operator & IDMEF_CRITERION_OPERATOR_NOT )
-                        return 1;
-
-                return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
-        }
-
-        if ( ! criterion->value ) {
-                idmef_value_destroy(value);
-                return (criterion->operator == (IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT)) ? 1 : 0;
-        }
-
         ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
-        idmef_value_destroy(value);
+        if ( value )
+                idmef_value_destroy(value);
 
         if ( ret < 0 )
                 return ret;

@@ -29,6 +29,7 @@
 #include <ctype.h>
 #include <assert.h>
 
+#include "common.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
 
@@ -145,8 +146,8 @@ GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
  */
 static int charstring_compare(const char *s1, const char *s2, idmef_criterion_operator_t op)
 {
-        if ( ! s1 || ! s2 )
-                return (s1) ? 1 : -1;
+        if ( (s1 && !s2) || (s2 && !s1) )
+                return -1;
 
         if ( op == (IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasecmp(s1, s2) == 0 )
                 return 0;
@@ -186,6 +187,9 @@ static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_
                            size_t size, idmef_criterion_operator_t op)
 {
         int ret;
+
+        if ( (t1 && ! t2) || (t2 && ! t1) )
+                return -1;
 
         ret = memcmp(&t1->data, &t2->data, size);
 
@@ -240,6 +244,9 @@ static int enum_compare(const idmef_value_type_t *src, const idmef_value_type_t 
 {
         const char *s1;
 
+        if ( (src && ! dst) || (dst && ! src) )
+                return -1;
+
         if ( dst->id == IDMEF_VALUE_TYPE_STRING ) {
                 s1 = idmef_class_enum_to_string(src->data.enum_val.class_id, src->data.enum_val.value);
                 if ( ! s1 )
@@ -259,6 +266,9 @@ static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
                         size_t size, idmef_criterion_operator_t op)
 {
         int ret;
+
+        if ( (t1 && ! t2) || (t2 && ! t1) )
+                return -1;
 
         ret = idmef_time_compare(t1->data.time_val, t2->data.time_val);
         if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && ret == 0 )
@@ -335,10 +345,10 @@ static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t
 {
         const char *s1 = NULL, *s2 = NULL;
 
-        if ( t1->data.string_val )
+        if ( t1 && t1->data.string_val )
                 s1 = prelude_string_get_string(t1->data.string_val);
 
-        if ( t2->data.string_val )
+        if ( t2 && t2->data.string_val )
                 s2 = prelude_string_get_string(t2->data.string_val);
 
         return charstring_compare(s1, s2, op);
@@ -397,14 +407,14 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
         size_t s1_len, s2_len;
         const void *s1 = NULL, *s2 = NULL;
 
-        if ( t1->data.data_val )
+        if ( t1 && t1->data.data_val )
                 s1 = idmef_data_get_data(t1->data.data_val);
 
-        if ( t2->data.string_val )
+        if ( t2 && t2->data.string_val )
                 s2 = idmef_data_get_data(t2->data.data_val);
 
-        if ( ! s1 || ! s2 )
-                return (s1) ? 1 : -1;
+        if ( (s1 && !s2) || (s2 && !s1) )
+                return -1;
 
         if ( op & IDMEF_CRITERION_OPERATOR_SUBSTR ) {
                 s1_len = idmef_data_get_len(t1->data.data_val);
@@ -475,6 +485,9 @@ static void data_destroy(idmef_value_type_t *type)
 static int class_compare(const idmef_value_type_t *c1,
                          const idmef_value_type_t *c2, size_t len, idmef_criterion_operator_t op)
 {
+        if ( (c1 && !c2) || (c2 && !c1) )
+                return -1;
+
         return idmef_class_compare(c1->data.class_val.class_id,
                                    c1->data.class_val.object, c2->data.class_val.object);
 }
@@ -753,27 +766,31 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
                              idmef_criterion_operator_t op)
 {
         int ret;
+        idmef_value_type_id_t tid;
 
-        ret = is_type_valid(type1->id);
+        prelude_return_val_if_fail(type1 || type2, prelude_error(PRELUDE_ERROR_ASSERTION));
+        tid = (type1) ? type1->id : type2->id;
+
+        ret = is_type_valid(tid);
         if ( ret < 0 )
                 return ret;
 
-        if ( type1->id != type2->id ) {
+        if ( type1 && type2 && type1->id != type2->id ) {
                 if ( type1->id != IDMEF_VALUE_TYPE_ENUM && type2->id != IDMEF_VALUE_TYPE_STRING )
                         return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
         }
 
-        if ( ! (op & ops_tbl[type1->id].operator) )
+        if ( ! (op & ops_tbl[tid].operator) )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
                                              "Object type '%s' does not support operator '%s'",
-                                             idmef_value_type_to_string(type1->id), idmef_criterion_operator_to_string(op));
+                                             idmef_value_type_to_string(tid), idmef_criterion_operator_to_string(op));
 
-        if ( ! ops_tbl[type1->id].compare )
+        if ( ! ops_tbl[tid].compare )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
                                              "Object type '%s' does not support compare operation",
-                                             idmef_value_type_to_string(type1->id));
+                                             idmef_value_type_to_string(tid));
 
-        ret = ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op & ~IDMEF_CRITERION_OPERATOR_NOT);
+        ret = ops_tbl[tid].compare(type1, type2, ops_tbl[tid].len, op & ~IDMEF_CRITERION_OPERATOR_NOT);
         if ( ret < 0 ) /* not an error -> no match */
                 ret = 1;
 
