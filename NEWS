@@ -1,3 +1,13 @@
+* 2016-04-08, libprelude-1.3.0rc3:
+
+Author: Yoann Vandoorselaere
+
+- Broken-down time comparison worked only once
+
+- Fix multiple idmef-path cloning issue
+
+
+
 * 2016-04-01, libprelude-1.3.0rc2:
 
 No new changes.
