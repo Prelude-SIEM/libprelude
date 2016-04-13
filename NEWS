@@ -1,3 +1,15 @@
+* 2016-04-13, libprelude-1.2.8:
+
+Author: Yoann Vandoorselaere
+
+- Fix assertions / wrong object matching behavior on list
+
+- Broken-down time comparison worked only once
+
+- Fix multiple idmef-path cloning issue
+
+
+
 * 2016-02-29, libprelude-1.2.7:
 
 Author: Yoann Vandoorselaere
