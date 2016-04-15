@@ -1,6 +1,14 @@
+* 2016-04-15, libprelude-3.0.0rc4:
+
+No new changes.
+
+
+
 * 2016-04-08, libprelude-1.3.0rc3:
 
 Author: Yoann Vandoorselaere
+
+- Fix assertions / wrong object matching behavior on list
 
 - Broken-down time comparison worked only once
 
