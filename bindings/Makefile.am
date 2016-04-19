@@ -3,7 +3,7 @@ SUBDIRS = c++ lua python ruby
 EXTRA_DIST = libpreludecpp.i perl/libpreludecpp-perl.i perl/Makefile.PL.in perl/Prelude.cxx perl/Prelude.pm
 
 CLEANFILES = perl/pm_to_blib perl/Prelude.o perl/blib python/build
-DISTCLEANFILES=perl/Prelude.cxx
+DISTCLEANFILES = lua/prelude.cxx perl/Prelude.cxx ruby/Prelude.cxx
 MAINTAINERCLEANFILES =   \
 			lua/prelude.cxx	     \
 			perl/Makefile		     \
