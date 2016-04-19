@@ -178,5 +178,6 @@ int main(void)
         test_criteria(idmef, "alert.analyzer(*).process.arg == 'NOT EXIST'", 0, 0);
         test_criteria(idmef, "alert.analyzer(*).process.arg != 'NOT EXIST'", 0, 1);
 
+        idmef_message_destroy(idmef);
         exit(0);
 }
