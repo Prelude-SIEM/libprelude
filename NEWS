@@ -1,3 +1,15 @@
+* 2016-04-22, libprelude-3.0.0:
+
+Author: Antoine Luong
+
+- Fix make distcheck with LUA and Ruby bindings
+
+Author: Yoann Vandoorselaere
+
+- Fix idmef-criteria valgrind unit test (memory leak)
+
+
+
 * 2016-04-15, libprelude-3.0.0rc4:
 
 No new changes.
