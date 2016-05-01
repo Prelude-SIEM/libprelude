@@ -499,7 +499,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
                 break;
 
         case IDMEF_DATA_TYPE_CHAR_STRING:
-                ret = prelude_string_sprintf(out, "%s", (const char *) data->data.ro_data);
+                if ( data->len )
+                        ret = prelude_string_ncat(out, (const char *) data->data.ro_data, data->len - 1);
                 break;
 
         case IDMEF_DATA_TYPE_BYTE_STRING:
