@@ -1,0 +1,60 @@
+.TH "libprelude-config" 1 "2 May 2016"
+.SH NAME
+libprelude\-config \- helper script for building with libprelude
+.LP
+.SH SYNOPSIS
+.B libprelude\-config
+[options]
+.SH DESCRIPTION
+.B libprelude-config
+is a simple shell script used to determine the compiler and linker flags that
+should be used to compile and link programs that use the libprelude library.
+.SH OPTIONS
+.TP 15
+.PD 0
+.B \-\-prefix=dir
+If specified, use dir instead of the installation prefix that the library was
+built with, when computing the output for the \-\-cflags and \-\-libs options.
+This option must be specified before any \-\-libs or \-\-cflags options. This
+option is also used for the exec prefix if the \-\-exec-prefix option is not
+specified.
+.TP
+.PD 0
+.B \-\-exec\-prefix=dir
+If specified, use dir instead of the exec installation prefix that the library
+was built with, when computing the output for the \-\-cflags and \-\-libs
+options. This option must be specified before any \-\-libs or \-\-cflags options.
+.TP
+.PD 0
+.B \-\-config\-prefix
+Print the directory prefix where libprelude configuration is installed on the
+standard output.
+.TP
+.PD 0
+.B \-\-version
+Print the currently installed version of the library on the standard output.
+.TP
+.PD 0
+.B \-\-c++
+If specified, indicate that the linkage will be done with a C++ library
+.TP
+.PD 0
+.B \-\-libs
+Print the linker flags that are necessary to link with the specified library.
+.TP
+.PD 0
+.B \-\-ldflags
+Print the LDflags that are necessary to compile a program using the specified
+library.
+.TP
+.PD 0
+.B \-\-cflags
+Print the compiler flags that are necessary to compile a program using the
+specified library.
+.TP
+.PD 0
+.B \-\-pthread\-cflags
+Print the pthread compiler flags that are necessary to compile a program using
+the specified library.
+.SH AUTHOR
+This man page has been written by CS-SI
