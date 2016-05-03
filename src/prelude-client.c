@@ -957,6 +957,8 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
                 return ret;
 
         ret = prelude_client_handle_msg_default(client, msg, msgbuf);
+        if ( ret == 0 )
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Unexpected message type '%d' received", prelude_msg_get_tag(msg));
 
         prelude_msg_destroy(msg);
         prelude_msgbuf_destroy(msgbuf);
@@ -1540,10 +1542,14 @@ int prelude_client_recv_msg(prelude_client_t *client, int timeout, prelude_msg_t
                 return ret;
 
         ret = prelude_client_handle_msg_default(client, m, client->msgbuf);
-        if ( ret == 0 ) {
+        if ( ret != 0 ) { /* if we handled the message ourselve, or if there was an error */
                 prelude_msg_destroy(m);
-                return 0;
+                return ret;
         }
+
+        /*
+         * There was no default handler for this message
+         */
 
         *msg = m;
         return 1;
@@ -1957,7 +1963,7 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 
         tag = prelude_msg_get_tag(msg);
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Unexpected message type '%d' received", tag);
+                return 0;
 
         /*
          * lock, handle the request, send reply.
@@ -1969,7 +1975,7 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 
         gl_lock_unlock(client->msgbuf_lock);
 
-        return ret;
+        return (ret < 0) ? ret : 1;
 }
 
 
