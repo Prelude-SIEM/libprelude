@@ -315,7 +315,7 @@ again:
                 if ( ret == 1 )
                         break;
 
-                else if ( ret < 0 )
+                else if ( ret <= 0 )
                         i--;
         }}
 
