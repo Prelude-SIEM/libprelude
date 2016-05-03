@@ -65,6 +65,8 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
 
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
 
+int prelude_msg_write_r(prelude_msg_t *msg, prelude_io_t *dst, uint32_t *windex);
+
 
 
 /*

@@ -549,19 +549,22 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
 
 
 
-
 /**
- * prelude_msg_write:
+ * prelude_msg_write_r:
  * @msg: Pointer on a #prelude_msg_t object containing the message.
  * @dst: Pointer on a #prelude_io_t object to send the message to.
+ * @windex: Number of byte written to @dst
  *
- * prelude_msg_write() write the message corresponding to the @msg
+ * prelude_msg_write_r() write the message corresponding to the @msg
  * object to @dst. The message should have been created using the
  * prelude_msg_new() and prelude_msg_set() functions.
  *
+ * @windex hold the number of written byte on @dst, in which case
+ * PRELUDE_ERROR_EAGAIN is returned, or 0 in case the write is complete.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
+int prelude_msg_write_r(prelude_msg_t *msg, prelude_io_t *dst, uint32_t *windex)
 {
         ssize_t ret;
         uint32_t dlen = msg->write_index;
@@ -586,18 +589,36 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         else if ( ! msg->hdr.is_fragment )
                 dlen -= PRELUDE_MSG_HDR_SIZE;
 
-        ret = prelude_io_write(dst, msg->payload + msg->fd_write_index, dlen - msg->fd_write_index);
+        ret = prelude_io_write(dst, msg->payload + *windex, dlen - *windex);
         if ( ret < 0 )
                 return ret;
 
-        msg->fd_write_index += ret;
+        *windex += ret;
 
-        if ( msg->fd_write_index == dlen ) {
-                msg->fd_write_index = 0;
+        if ( *windex == dlen ) {
+                *windex = 0;
                 return 0;
         }
 
         return prelude_error(PRELUDE_ERROR_EAGAIN);
+}
+
+
+
+/**
+ * prelude_msg_write:
+ * @msg: Pointer on a #prelude_msg_t object containing the message.
+ * @dst: Pointer on a #prelude_io_t object to send the message to.
+ *
+ * prelude_msg_write() write the message corresponding to the @msg
+ * object to @dst. The message should have been created using the
+ * prelude_msg_new() and prelude_msg_set() functions.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
+{
+        return prelude_msg_write_r(msg, dst, &msg->fd_write_index);
 }
 
 
@@ -613,6 +634,7 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
 void prelude_msg_recycle(prelude_msg_t *msg)
 {
         msg->header_index = 0;
+        msg->fd_write_index = 0;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
         msg->payload = (unsigned char *) msg + sizeof(*msg);
 
