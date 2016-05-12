@@ -954,6 +954,13 @@ void prelude_msg_set_data(prelude_msg_t *msg, void *data)
 
 
 
+void *prelude_msg_get_data(prelude_msg_t *msg)
+{
+        return msg->send_msg_data;
+}
+
+
+
 /**
  * prelude_msg_is_fragment:
  * @msg: Pointer on a #prelude_msg_t object.

@@ -98,6 +98,8 @@ void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_ms
 
 void prelude_msg_set_data(prelude_msg_t *msg, void *data);
 
+void *prelude_msg_get_data(prelude_msg_t *msg);
+
 prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg);
 
 #ifdef __cplusplus
