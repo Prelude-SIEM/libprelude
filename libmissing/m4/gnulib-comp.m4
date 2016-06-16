@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2014 Free Software Foundation, Inc.
+# Copyright (C) 2002-2016 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +37,11 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_ES$])dnl a valid locale name
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
+
+  # Pre-early section.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_REQUIRE([gl_PROG_AR_RANLIB])
+
   AC_REQUIRE([AM_PROG_CC_C_O])
   # Code from module absolute-header:
   # Code from module accept:
@@ -47,6 +51,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module alloca-opt-tests:
   # Code from module arpa_inet:
   # Code from module arpa_inet-tests:
+  # Code from module assure:
   # Code from module binary-io:
   # Code from module binary-io-tests:
   # Code from module bind:
@@ -64,6 +69,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module configmake:
   # Code from module connect:
   # Code from module connect-tests:
+  # Code from module ctype:
+  # Code from module ctype-tests:
   # Code from module dosname:
   # Code from module dup2:
   # Code from module dup2-tests:
@@ -72,7 +79,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module errno:
   # Code from module errno-tests:
   # Code from module extensions:
-  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   # Code from module extern-inline:
   # Code from module fclose:
   # Code from module fclose-tests:
@@ -133,6 +139,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module gettext-h:
   # Code from module gettimeofday:
   # Code from module gettimeofday-tests:
+  # Code from module hard-locale:
   # Code from module havelib:
   # Code from module hostent:
   # Code from module ignore-value:
@@ -260,7 +267,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module strcasestr:
   # Code from module strcasestr-simple:
   # Code from module strcasestr-tests:
-  # Code from module strdup:
   # Code from module strdup-posix:
   # Code from module streq:
   # Code from module strerror:
@@ -494,6 +500,7 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_GETTIMEOFDAY
   fi
   gl_SYS_TIME_MODULE_INDICATOR([gettimeofday])
+  gl_HARD_LOCALE
   gl_HOSTENT
   gl_FUNC_INET_NTOP
   if test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1; then
@@ -586,11 +593,11 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([mktime])
     gl_PREREQ_MKTIME
   fi
-  gl_MSVC_INVAL
+  AC_REQUIRE([gl_MSVC_INVAL])
   if test $HAVE_MSVC_INVALID_PARAMETER_HANDLER = 1; then
     AC_LIBOBJ([msvc-inval])
   fi
-  gl_MSVC_NOTHROW
+  AC_REQUIRE([gl_MSVC_NOTHROW])
   if test $HAVE_MSVC_INVALID_PARAMETER_HANDLER = 1; then
     AC_LIBOBJ([msvc-nothrow])
   fi
@@ -674,8 +681,8 @@ AC_SUBST([LTALLOCA])
     SYS_IOCTL_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS=1
   fi
   gl_SYS_SOCKET_MODULE_INDICATOR([socket])
-  gl_SOCKETLIB
-  gl_SOCKETS
+  AC_REQUIRE([gl_SOCKETLIB])
+  AC_REQUIRE([gl_SOCKETS])
   gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
   gl_FUNC_STAT
@@ -710,12 +717,6 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_STRCASESTR
   fi
   gl_STRING_MODULE_INDICATOR([strcasestr])
-  gl_FUNC_STRDUP
-  if test $ac_cv_func_strdup = no; then
-    AC_LIBOBJ([strdup])
-    gl_PREREQ_STRDUP
-  fi
-  gl_STRING_MODULE_INDICATOR([strdup])
   gl_FUNC_STRDUP_POSIX
   if test $ac_cv_func_strdup = no || test $REPLACE_STRDUP = 1; then
     AC_LIBOBJ([strdup])
@@ -769,7 +770,7 @@ AC_SUBST([LTALLOCA])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SELECT
   AC_PROG_MKDIR_P
-  gl_HEADER_SYS_SOCKET
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_STAT_H
   AC_PROG_MKDIR_P
@@ -872,6 +873,7 @@ changequote([, ])dnl
   gt_LOCALE_FR_UTF8
   gt_LOCALE_FR
   gt_LOCALE_TR_UTF8
+  gl_CTYPE_H
   gl_ENVIRON
   gl_UNISTD_MODULE_INDICATOR([environ])
   gl_FCNTL_H
@@ -1111,6 +1113,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/alloca.in.h
   lib/arpa_inet.in.h
   lib/asnprintf.c
+  lib/assure.h
   lib/bind.c
   lib/btowc.c
   lib/c-ctype.c
@@ -1158,6 +1161,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/glthread/threadlib.c
   lib/glthread/tls.c
   lib/glthread/tls.h
+  lib/hard-locale.c
+  lib/hard-locale.h
   lib/inet_ntop.c
   lib/inet_pton.c
   lib/intprops.h
@@ -1278,6 +1283,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/codeset.m4
   m4/cond.m4
   m4/configmake.m4
+  m4/ctype.m4
   m4/dup2.m4
   m4/eealloc.m4
   m4/environ.m4
@@ -1313,6 +1319,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gettimeofday.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
+  m4/hard-locale.m4
   m4/hostent.m4
   m4/include_next.m4
   m4/inet_ntop.m4
@@ -1458,6 +1465,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-close.c
   tests/test-cond.c
   tests/test-connect.c
+  tests/test-ctype.c
   tests/test-dup2.c
   tests/test-environ.c
   tests/test-errno.c
@@ -1536,6 +1544,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-mbrtowc2.sh
   tests/test-mbrtowc3.sh
   tests/test-mbrtowc4.sh
+  tests/test-mbrtowc5.sh
   tests/test-mbsinit.c
   tests/test-mbsinit.sh
   tests/test-memchr.c
@@ -1625,6 +1634,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/c-strcase.h
   tests=lib/c-strcasecmp.c
   tests=lib/c-strncasecmp.c
+  tests=lib/ctype.in.h
   tests=lib/fcntl.in.h
   tests=lib/fdopen.c
   tests=lib/fpucw.h
