@@ -248,6 +248,7 @@ int IDMEFValue_to_SWIG(TARGET_LANGUAGE_SELF self, const Prelude::IDMEFValue &res
 }
 }
 
+%ignore Prelude::IDMEF::IDMEF(std::istream &);
 %ignore Prelude::IDMEFValue::operator const char*() const;
 %ignore Prelude::IDMEFValue::operator std::vector<IDMEFValue>() const;
 %ignore Prelude::IDMEFValue::operator Prelude::IDMEFTime() const;

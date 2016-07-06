@@ -50,8 +50,10 @@ namespace Prelude {
             public:
                 ~IDMEF();
                 IDMEF();
+                IDMEF(const char *json);
                 IDMEF(const IDMEF &idmef);
                 IDMEF(idmef_object_t *message);
+                IDMEF(std::istream &is);
 
                 void set(const char *path, const std::vector<Prelude::IDMEF> &value);
                 void set(const char *path, Prelude::IDMEF *value);
@@ -76,6 +78,7 @@ namespace Prelude {
                 IDMEF clone();
                 idmef_class_id_t getId() const;
                 const std::string toString() const;
+                const std::string toJSON() const;
 
                 operator const std::string() const;
                 operator idmef_object_t *() const;

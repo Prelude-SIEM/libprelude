@@ -15697,6 +15697,43 @@ fail:
 
 SWIGINTERN VALUE
 _wrap_new_IDMEF__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  char *arg1 = (char *) 0 ;
+  int res1 ;
+  char *buf1 = 0 ;
+  int alloc1 = 0 ;
+  Prelude::IDMEF *result = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_AsCharPtrAndSize(argv[0], &buf1, NULL, &alloc1);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "char const *","IDMEF", 1, argv[0] ));
+  }
+  arg1 = reinterpret_cast< char * >(buf1);
+  {
+    try {
+      result = (Prelude::IDMEF *)new Prelude::IDMEF((char const *)arg1);
+      DATA_PTR(self) = result;
+    } catch(Prelude::PreludeError &e) {
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
+      rb_raise(rb_eEOFError, "%s", e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+  return self;
+fail:
+  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
   Prelude::IDMEF *arg1 = 0 ;
   void *argp1 ;
   int res1 = 0 ;
@@ -15748,7 +15785,7 @@ _wrap_IDMEF_allocate(int argc, VALUE *argv, VALUE self)
 
 
 SWIGINTERN VALUE
-_wrap_new_IDMEF__SWIG_2(int argc, VALUE *argv, VALUE self) {
+_wrap_new_IDMEF__SWIG_3(int argc, VALUE *argv, VALUE self) {
   idmef_object_t *arg1 = (idmef_object_t *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15800,7 +15837,7 @@ SWIGINTERN VALUE _wrap_new_IDMEF(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Prelude__IDMEF, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEF__SWIG_1(nargs, args, self);
+      return _wrap_new_IDMEF__SWIG_2(nargs, args, self);
     }
   }
   if (argc == 1) {
@@ -15809,13 +15846,22 @@ SWIGINTERN VALUE _wrap_new_IDMEF(int nargs, VALUE *args, VALUE self) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_object_t, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_IDMEF__SWIG_2(nargs, args, self);
+      return _wrap_new_IDMEF__SWIG_3(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_AsCharPtrAndSize(argv[0], 0, NULL, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_IDMEF__SWIG_1(nargs, args, self);
     }
   }
   
 fail:
   Ruby_Format_OverloadedError( argc, 1, "IDMEF.new", 
     "    IDMEF.new()\n"
+    "    IDMEF.new(char const *json)\n"
     "    IDMEF.new(Prelude::IDMEF const &idmef)\n"
     "    IDMEF.new(idmef_object_t *message)\n");
   
@@ -16736,6 +16782,41 @@ _wrap_IDMEF_toString(int argc, VALUE *argv, VALUE self) {
   {
     try {
       result = ((Prelude::IDMEF const *)arg1)->toString();
+    } catch(Prelude::PreludeError &e) {
+      if ( e.getCode() == PRELUDE_ERROR_EOF )
+      rb_raise(rb_eEOFError, "%s", e.what());
+      else
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      
+      SWIG_fail;
+    }
+  }
+  vresult = SWIG_From_std_string(static_cast< std::string >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_IDMEF_toJSON(int argc, VALUE *argv, VALUE self) {
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::string result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), Ruby_Format_TypeError( "", "Prelude::IDMEF const *","toJSON", 1, self )); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  {
+    try {
+      result = ((Prelude::IDMEF const *)arg1)->toJSON();
     } catch(Prelude::PreludeError &e) {
       if ( e.getCode() == PRELUDE_ERROR_EOF )
       rb_raise(rb_eEOFError, "%s", e.what());
@@ -17912,6 +17993,7 @@ SWIGEXPORT void Init_Prelude(void) {
   rb_define_method(SwigClassIDMEF.klass, "clone", VALUEFUNC(_wrap_IDMEF_clone), -1);
   rb_define_method(SwigClassIDMEF.klass, "getId", VALUEFUNC(_wrap_IDMEF_getId), -1);
   rb_define_method(SwigClassIDMEF.klass, "toString", VALUEFUNC(_wrap_IDMEF_toString), -1);
+  rb_define_method(SwigClassIDMEF.klass, "toJSON", VALUEFUNC(_wrap_IDMEF_toJSON), -1);
   rb_define_method(SwigClassIDMEF.klass, "to_s", VALUEFUNC(_wrap_IDMEF___str__), -1);
   rb_define_method(SwigClassIDMEF.klass, "==", VALUEFUNC(_wrap_IDMEF___eq__), -1);
   rb_define_method(SwigClassIDMEF.klass, "write", VALUEFUNC(_wrap_IDMEF_write), -1);

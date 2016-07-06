@@ -6052,6 +6052,18 @@ SWIGINTERN void Prelude_IDMEF___setstate__(Prelude::IDMEF *self,PyObject *state)
 SWIGINTERN int Prelude_IDMEF___contains__(Prelude::IDMEF *self,char const *key){
                 return self->get(key).isNull() ? FALSE : TRUE;
         }
+SWIGINTERN Prelude::IDMEF *new_Prelude_IDMEF__SWIG_4(void *nocast_file_p){
+                IDMEF *x = new IDMEF;
+
+                try {
+                        x->_genericRead(_cb_python_read, nocast_file_p);
+                } catch(...) {
+                        delete(x);
+                        throw;
+                }
+
+                return x;
+        }
 SWIGINTERN void Prelude_IDMEF_write(Prelude::IDMEF *self,void *nocast_file_p){
                 self->_genericWrite(_cb_python_write, nocast_file_p);
         }
@@ -15921,6 +15933,39 @@ fail:
 
 SWIGINTERN int _wrap_new_IDMEF__SWIG_1(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
+  char *arg1 = (char *) 0 ;
+  int res1 ;
+  char *buf1 = 0 ;
+  int alloc1 = 0 ;
+  Prelude::IDMEF *result = 0 ;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(swig_obj[0], &buf1, NULL, &alloc1);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "char const *""'");
+  }
+  arg1 = reinterpret_cast< char * >(buf1);
+  {
+    try {
+      result = (Prelude::IDMEF *)new Prelude::IDMEF((char const *)arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
+  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_IDMEF__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15952,7 +15997,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_IDMEF__SWIG_2(PyObject *self, int nobjs, PyObject **swig_obj) {
+SWIGINTERN int _wrap_new_IDMEF__SWIG_3(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   idmef_object_t *arg1 = (idmef_object_t *) 0 ;
   void *argp1 = 0 ;
@@ -15978,42 +16023,6 @@ SWIGINTERN int _wrap_new_IDMEF__SWIG_2(PyObject *self, int nobjs, PyObject **swi
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
   return resultobj == Py_None ? -1 : 0;
 fail:
-  return -1;
-}
-
-
-SWIGINTERN int _wrap_new_IDMEF(PyObject *self, PyObject *args) {
-  Py_ssize_t argc;
-  PyObject *argv[2] = {
-    0
-  };
-  
-  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEF",0,1,argv))) SWIG_fail;
-  --argc;
-  if (argc == 0) {
-    return _wrap_new_IDMEF__SWIG_0(self, argc, argv);
-  }
-  if (argc == 1) {
-    int _v = 0;
-    {
-      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEF, 0);
-      _v = SWIG_CheckState(res);
-    }
-    if (!_v) goto check_2;
-    return _wrap_new_IDMEF__SWIG_1(self, argc, argv);
-  }
-check_2:
-  
-  if (argc == 1) {
-    return _wrap_new_IDMEF__SWIG_2(self, argc, argv);
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_IDMEF'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    Prelude::IDMEF::IDMEF()\n"
-    "    Prelude::IDMEF::IDMEF(Prelude::IDMEF const &)\n"
-    "    Prelude::IDMEF::IDMEF(idmef_object_t *)\n");
   return -1;
 }
 
@@ -16820,6 +16829,37 @@ fail:
 
 SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEF_toString)
 
+SWIGINTERN PyObject *_wrap_IDMEF_toJSON(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  std::string result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEF_toJSON",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_toJSON" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+  {
+    try {
+      result = ((Prelude::IDMEF const *)arg1)->toJSON();
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_IDMEF___eq__(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -17022,6 +17062,109 @@ fail:
 }
 
 
+SWIGINTERN int _wrap_new_IDMEF__SWIG_4(PyObject *self, int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  void *arg1 = (void *) 0 ;
+  Prelude::IDMEF *result = 0 ;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  
+#if PY_VERSION_HEX < 0x03000000
+  if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+    
+  }
+#else
+  extern PyTypeObject PyIOBase_Type;
+  if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+  }
+#endif
+  
+  arg1 = swig_obj[0];
+  
+  {
+    try {
+      result = (Prelude::IDMEF *)new_Prelude_IDMEF__SWIG_4(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_IDMEF(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[2] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_IDMEF",0,1,argv))) SWIG_fail;
+  --argc;
+  if (argc == 0) {
+    return _wrap_new_IDMEF__SWIG_0(self, argc, argv);
+  }
+  if (argc == 1) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Prelude__IDMEF, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_2;
+    return _wrap_new_IDMEF__SWIG_2(self, argc, argv);
+  }
+check_2:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_idmef_object_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
+    return _wrap_new_IDMEF__SWIG_3(self, argc, argv);
+  }
+check_3:
+  
+  if (argc == 1) {
+    int _v = 0;
+    {
+#if PY_VERSION_HEX < 0x03000000
+      _v = PyFile_Check((PyObject *) argv[0]);
+#else
+      extern PyTypeObject PyIOBase_Type;
+      _v = PyObject_IsInstance((PyObject *) argv[0], (PyObject *) &PyIOBase_Type);
+#endif
+    }
+    if (!_v) goto check_4;
+    return _wrap_new_IDMEF__SWIG_4(self, argc, argv);
+  }
+check_4:
+  
+  if (argc == 1) {
+    return _wrap_new_IDMEF__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_IDMEF'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Prelude::IDMEF::IDMEF()\n"
+    "    Prelude::IDMEF::IDMEF(char const *)\n"
+    "    Prelude::IDMEF::IDMEF(Prelude::IDMEF const &)\n"
+    "    Prelude::IDMEF::IDMEF(idmef_object_t *)\n"
+    "    Prelude::IDMEF::IDMEF(void *)\n");
+  return -1;
+}
+
+
 SWIGINTERN PyObject *_wrap_IDMEF_write(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -17040,16 +17183,13 @@ SWIGINTERN PyObject *_wrap_IDMEF_write(PyObject *self, PyObject *args) {
   
 #if PY_VERSION_HEX < 0x03000000
   if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+    
   }
 #else
   extern PyTypeObject PyIOBase_Type;
   if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
   }
 #endif
   
@@ -17091,16 +17231,13 @@ SWIGINTERN PyObject *_wrap_IDMEF_read(PyObject *self, PyObject *args) {
   
 #if PY_VERSION_HEX < 0x03000000
   if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+    
   }
 #else
   extern PyTypeObject PyIOBase_Type;
   if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
   }
 #endif
   
@@ -17146,16 +17283,13 @@ SWIGINTERN PyObject *_wrap_IDMEF_readExcept(PyObject *self, PyObject *args) {
   
 #if PY_VERSION_HEX < 0x03000000
   if ( !PyFile_Check((PyObject *) swig_obj[0]) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+    
   }
 #else
   extern PyTypeObject PyIOBase_Type;
   if ( ! PyObject_IsInstance((PyObject *) swig_obj[0], (PyObject *) &PyIOBase_Type) ) {
-    const char *errstr = "Argument is not a file object.";
-    PyErr_SetString(PyExc_RuntimeError, errstr);
-    return NULL;
+    SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
   }
 #endif
   
@@ -20485,6 +20619,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEF_methods[] = {
   { "clone", (PyCFunction) _wrap_IDMEF_clone, METH_NOARGS, (char*) "" },
   { "getId", (PyCFunction) _wrap_IDMEF_getId, METH_NOARGS, (char*) "" },
   { "toString", (PyCFunction) _wrap_IDMEF_toString, METH_NOARGS, (char*) "" },
+  { "toJSON", (PyCFunction) _wrap_IDMEF_toJSON, METH_NOARGS, (char*) "" },
   { "__eq__", (PyCFunction) _wrap_IDMEF___eq__, METH_O, (char*) "" },
   { "__getstate__", (PyCFunction) _wrap_IDMEF___getstate__, METH_NOARGS, (char*) "" },
   { "__setstate__", (PyCFunction) _wrap_IDMEF___setstate__, METH_O, (char*) "" },

@@ -163,26 +163,32 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 };
 
 
-/* tell squid not to cast void * value */
+/* tell swig not to cast void * value */
 %typemap(in) void *nocast_file_p %{
 #if PY_VERSION_HEX < 0x03000000
         if ( !PyFile_Check((PyObject *) $input) ) {
-                const char *errstr = "Argument is not a file object.";
-                PyErr_SetString(PyExc_RuntimeError, errstr);
-                return NULL;
+                SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
+
         }
 #else
         extern PyTypeObject PyIOBase_Type;
         if ( ! PyObject_IsInstance((PyObject *) $input, (PyObject *) &PyIOBase_Type) ) {
-                const char *errstr = "Argument is not a file object.";
-                PyErr_SetString(PyExc_RuntimeError, errstr);
-                return NULL;
+                SWIG_exception_fail(SWIG_RuntimeError, "Argument is not a file object");
         }
 #endif
 
         $1 = $input;
 %}
 
+
+%typemap(typecheck, precedence=SWIG_TYPECHECK_POINTER) void *nocast_file_p %{
+#if PY_VERSION_HEX < 0x03000000
+        $1 = PyFile_Check((PyObject *) $input);
+#else
+        extern PyTypeObject PyIOBase_Type;
+        $1 = PyObject_IsInstance((PyObject *) $input, (PyObject *) &PyIOBase_Type);
+#endif
+%}
 
 
 %exception readExcept(void *nocast_file_p) {
@@ -335,6 +341,7 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
 %}
 
 
+
 %extend Prelude::IDMEF {
         SwigPyObjectState *__getstate__(void)
         {
@@ -382,6 +389,19 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
 
         int __contains__(const char *key) {
                 return self->get(key).isNull() ? FALSE : TRUE;
+        }
+
+        IDMEF(void *nocast_file_p) {
+                IDMEF *x = new IDMEF;
+
+                try {
+                        x->_genericRead(_cb_python_read, nocast_file_p);
+                } catch(...) {
+                        delete(x);
+                        throw;
+                }
+
+                return x;
         }
 
         void write(void *nocast_file_p) {

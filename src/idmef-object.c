@@ -87,6 +87,12 @@ int idmef_object_print(idmef_object_t *obj, prelude_io_t *fd)
 }
 
 
+int idmef_object_print_json(idmef_object_t *obj, prelude_io_t *fd)
+{
+        return idmef_class_print_json(obj->_idmef_object_id, obj, fd);
+}
+
+
 void idmef_object_add(prelude_list_t *head, idmef_object_t *object)
 {
         prelude_return_if_fail(idmef_class_is_listed(object->_idmef_object_id));

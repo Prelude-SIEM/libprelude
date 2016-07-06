@@ -46,6 +46,7 @@
 
 #include "idmef-tree-wrap.h"
 #include "idmef-message-print.h"
+#include "idmef-message-print-json.h"
 #include "idmef-tree-data.h"
 #include "idmef-path.h"
 
@@ -376,6 +377,19 @@ int idmef_class_print(idmef_class_id_t class, void *obj, prelude_io_t *fd)
                 return ret;
 
         return object_data[class].print(obj, fd);
+}
+
+
+
+int idmef_class_print_json(idmef_class_id_t class, void *obj, prelude_io_t *fd)
+{
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+
+        return object_data[class].print_json(obj, fd);
 }
 
 

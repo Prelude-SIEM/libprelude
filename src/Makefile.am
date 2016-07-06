@@ -1,7 +1,7 @@
-SUBDIRS = libprelude-error include
+SUBDIRS = libprelude-error jsmn include
 
 AM_CPPFLAGS = @PCFLAGS@ -I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error \
--I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@ 
+-I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libprelude.pc
@@ -51,7 +51,9 @@ libprelude_la_SOURCES = 		\
 	idmef-criterion-value.c		\
 	idmef-data.c			\
 	idmef-message-helpers.c		\
+	idmef-message-read-json.c	\
 	idmef-message-print.c		\
+        idmef-message-print-json.c	\
 	idmef-message-read.c		\
 	idmef-message-write.c		\
 	idmef-object.c			\

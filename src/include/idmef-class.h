@@ -98,6 +98,8 @@ int idmef_class_ref(idmef_class_id_t classid, void *obj);
 
 int idmef_class_print(idmef_class_id_t classid, void *obj, prelude_io_t *fd);
 
+int idmef_class_print_json(idmef_class_id_t classid, void *obj, prelude_io_t *fd);
+
 int idmef_class_destroy(idmef_class_id_t classid, void *obj);
 
 prelude_bool_t idmef_class_is_listed(idmef_class_id_t classid);

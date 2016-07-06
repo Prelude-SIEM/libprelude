@@ -36,6 +36,27 @@
 using namespace Prelude;
 
 
+
+static int ostream_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
+{
+        std::ostream *os = (std::ostream *) prelude_msgbuf_get_data(fd);
+
+        os->write((const char *)prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
+        prelude_msg_recycle(msg);
+
+        return 0;
+}
+
+
+static ssize_t istream_read(prelude_io_t *fd, void *buf, size_t size)
+{
+        std::istream *is = (std::istream *) prelude_io_get_fdptr(fd);
+
+        is->read((char *) buf, size);
+        return is->gcount();
+}
+
+
 IDMEF::IDMEF() : _object(NULL)
 {
         int ret;
@@ -43,6 +64,22 @@ IDMEF::IDMEF() : _object(NULL)
         ret = idmef_message_new((idmef_message_t **) &_object);
         if ( ret < 0 )
                 throw PreludeError(ret);
+}
+
+
+IDMEF::IDMEF(const char *json) : _object(NULL)
+{
+        int ret;
+
+        ret = idmef_object_new_from_json(&_object, json);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+}
+
+
+IDMEF::IDMEF(std::istream &is)
+{
+        _genericRead(istream_read, &is);
 }
 
 
@@ -202,25 +239,26 @@ const std::string IDMEF::toString() const
 
 
 
-static int ostream_write(prelude_msgbuf_t *fd, prelude_msg_t *msg)
+const std::string IDMEF::toJSON() const
 {
-        std::ostream *os = (std::ostream *) prelude_msgbuf_get_data(fd);
+        int ret;
+        std::string str;
+        prelude_io_t *fd;
 
-        os->write((const char *)prelude_msg_get_message_data(msg), prelude_msg_get_len(msg));
-        prelude_msg_recycle(msg);
+        ret = prelude_io_new(&fd);
+        if ( ret < 0 )
+                throw PreludeError(ret);
 
-        return 0;
+        prelude_io_set_buffer_io(fd);
+        idmef_object_print_json(_object, fd);
+
+        str.assign((const char *) prelude_io_get_fdptr(fd), prelude_io_pending(fd));
+
+        prelude_io_close(fd);
+        prelude_io_destroy(fd);
+
+        return str;
 }
-
-
-static ssize_t istream_read(prelude_io_t *fd, void *buf, size_t size)
-{
-        std::istream *is = (std::istream *) prelude_io_get_fdptr(fd);
-
-        is->read((char *) buf, size);
-        return is->gcount();
-}
-
 
 
 void IDMEF::_genericRead(ssize_t (read_cb)(prelude_io_t *fd, void *buf, size_t size), void *fd_data)

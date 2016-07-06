@@ -133,6 +133,7 @@ typedef struct \{
         int (*clone)(const void *src, void **dst);
         int (*compare)(const void *obj1, const void *obj2);
         int (*print)(const void *obj, prelude_io_t *fd);
+        int (*print_json)(const void *obj, prelude_io_t *fd);
         void *(*ref)(void *src);
         void (*destroy)(void *obj);
         prelude_bool_t is_listed;
@@ -163,6 +164,7 @@ const object_data_t object_data[] = \{
                       "(void *) idmef_$obj->{short_typename}_clone, ",
                       "(void *) idmef_$obj->{short_typename}_compare, ",
                       "(void *) idmef_$obj->{short_typename}_print, ",
+                      "(void *) idmef_$obj->{short_typename}_print_json, ",
                       "(void *) idmef_$obj->{short_typename}_ref, ",
                       "(void *) idmef_$obj->{short_typename}_destroy, ",
                       "$obj->{is_listed} \},",

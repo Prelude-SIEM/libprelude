@@ -28,6 +28,9 @@ use GenerateIDMEFTreeWrapH;
 use GenerateIDMEFTreeData;
 use GenerateIDMEFMessageWriteC;
 use GenerateIDMEFMessageWriteH;
+use GenerateIDMEFMessagePrintJSONC;
+use GenerateIDMEFMessagePrintJSONH;
+use GenerateIDMEFMessageReadJSONC;
 use GenerateIDMEFMessageReadC;
 use GenerateIDMEFMessageReadH;
 use GenerateIDMEFMessageIdH;
@@ -94,6 +97,18 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 		      { source => 'GenerateIDMEFMessageWriteH.pm',
 			target => '../include/idmef-message-write.h',
 			func => sub { new GenerateIDMEFMessageWriteH(-filename => shift) } },
+
+		      { source => 'GenerateIDMEFMessagePrintJSONC.pm',
+			target => '../idmef-message-print-json.c',
+			func => sub { new GenerateIDMEFMessagePrintJSONC(-filename => shift) } },
+
+		      { source => 'GenerateIDMEFMessageJSONH.pm',
+			target => '../include/idmef-message-print-json.h',
+			func => sub { new GenerateIDMEFMessageJSONH(-filename => shift) } },
+
+		      { source => 'GenerateIDMEFMessageReadJSONC.pm',
+			target => '../idmef-message-read-json.c',
+			func => sub { new GenerateIDMEFMessageReadJSONC(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFMessageReadC.pm',
 			target => '../idmef-message-read.c',

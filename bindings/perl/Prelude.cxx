@@ -15590,6 +15590,42 @@ XS(_wrap_new_IDMEF__SWIG_0) {
 
 XS(_wrap_new_IDMEF__SWIG_1) {
   {
+    char *arg1 = (char *) 0 ;
+    int res1 ;
+    char *buf1 = 0 ;
+    int alloc1 = 0 ;
+    int argvi = 0;
+    Prelude::IDMEF *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: new_IDMEF(json);");
+    }
+    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEF" "', argument " "1"" of type '" "char const *""'");
+    }
+    arg1 = reinterpret_cast< char * >(buf1);
+    {
+      try {
+        result = (Prelude::IDMEF *)new Prelude::IDMEF((char const *)arg1);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEF, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+    XSRETURN(argvi);
+  fail:
+    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_IDMEF__SWIG_2) {
+  {
     Prelude::IDMEF *arg1 = 0 ;
     void *argp1 ;
     int res1 = 0 ;
@@ -15626,7 +15662,7 @@ XS(_wrap_new_IDMEF__SWIG_1) {
 }
 
 
-XS(_wrap_new_IDMEF__SWIG_2) {
+XS(_wrap_new_IDMEF__SWIG_3) {
   {
     idmef_object_t *arg1 = (idmef_object_t *) 0 ;
     void *argp1 = 0 ;
@@ -15717,14 +15753,36 @@ XS(_wrap_new_IDMEF) {
     }
   check_3:
     
+    if (items == 1) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        int res = SWIG_AsCharPtrAndSize(ST(0), 0, NULL, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 4;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_4:
+    
   dispatch:
     switch(_index) {
     case 1:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEF__SWIG_0); return;
     case 2:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEF__SWIG_1); return;
-    case 3:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEF__SWIG_2); return;
+    case 3:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEF__SWIG_3); return;
+    case 4:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEF__SWIG_1); return;
     }
   }
   
@@ -17015,6 +17073,41 @@ XS(_wrap_IDMEF_toString) {
 }
 
 
+XS(_wrap_IDMEF_toJSON) {
+  {
+    Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    std::string result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: IDMEF_toJSON(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_Prelude__IDMEF, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEF_toJSON" "', argument " "1"" of type '" "Prelude::IDMEF const *""'"); 
+    }
+    arg1 = reinterpret_cast< Prelude::IDMEF * >(argp1);
+    {
+      try {
+        result = ((Prelude::IDMEF const *)arg1)->toJSON();
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_From_std_string  SWIG_PERL_CALL_ARGS_1(static_cast< std::string >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_IDMEF___eq__) {
   {
     Prelude::IDMEF *arg1 = (Prelude::IDMEF *) 0 ;
@@ -17564,6 +17657,7 @@ static swig_command_info swig_commands[] = {
 {"Preludec::IDMEF_clone", _wrap_IDMEF_clone},
 {"Preludec::IDMEF_getId", _wrap_IDMEF_getId},
 {"Preludec::IDMEF_toString", _wrap_IDMEF_toString},
+{"Preludec::IDMEF_toJSON", _wrap_IDMEF_toJSON},
 {"Preludec::IDMEF___eq__", _wrap_IDMEF___eq__},
 {"Preludec::IDMEF_write", _wrap_IDMEF_write},
 {"Preludec::IDMEF_read", _wrap_IDMEF_read},

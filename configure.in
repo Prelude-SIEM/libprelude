@@ -814,6 +814,7 @@ m4/Makefile
 src/Makefile
 src/libprelude.pc
 src/libprelude-error/Makefile
+src/jsmn/Makefile
 src/include/Makefile
 
 src/include/prelude.h

@@ -777,6 +777,7 @@ sub new {
 *clone = *Preludec::IDMEF_clone;
 *getId = *Preludec::IDMEF_getId;
 *toString = *Preludec::IDMEF_toString;
+*toJSON = *Preludec::IDMEF_toJSON;
 *__eq__ = *Preludec::IDMEF___eq__;
 *write = *Preludec::IDMEF_write;
 *read = *Preludec::IDMEF_read;

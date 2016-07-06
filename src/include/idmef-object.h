@@ -51,6 +51,8 @@ int idmef_object_copy(idmef_object_t *src, idmef_object_t *dst);
 
 int idmef_object_print(idmef_object_t *obj, prelude_io_t *fd);
 
+int idmef_object_print_json(idmef_object_t *obj, prelude_io_t *fd);
+
 void idmef_object_add(prelude_list_t *head, idmef_object_t *obj);
 
 void idmef_object_add_tail(prelude_list_t *head, idmef_object_t *obj);
@@ -60,6 +62,8 @@ void idmef_object_del(idmef_object_t *object);
 void idmef_object_del_init(idmef_object_t *object);
 
 void *idmef_object_get_list_entry(prelude_list_t *listm);
+
+int idmef_object_new_from_json(idmef_object_t **object, const char * json_message);
 
 #ifdef __cplusplus
   }
