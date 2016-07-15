@@ -526,8 +526,10 @@ dnl * Ruby support                                   *
 dnl **************************************************
 
 
-AM_PATH_RUBY(,with_ruby=yes, with_ruby=no)
+AC_ARG_WITH(ruby, AC_HELP_STRING(--with-ruby@<:@=PATH@:>@, Enable support for ruby binding @<:@default=auto@:>@),
+   [ruby_required=yes; if test x$withval = xyes; then with_ruby="ruby"; fi], with_ruby="ruby")
 if test x$with_ruby != xno; then
+    AM_PATH_RUBY(,with_ruby=yes, with_ruby=no, `dirname $with_ruby`:$PATH)
     RUBY_ARCHDIR=`$RUBY -e 'require "rbconfig.rb"; puts RbConfig::expand("\$(archdir)")'`
     RUBY_LIBRUBYARG=`$RUBY -e 'require "rbconfig.rb"; puts RbConfig::expand("\$(LIBRUBYARG)")'`
 
@@ -541,6 +543,9 @@ if test x$with_ruby != xno; then
     CPPFLAGS="$RUBY_INCLUDES"
     AC_CHECK_HEADER(ruby.h, with_ruby=yes, with_ruby=no)
     CPPFLAGS="$old_CPPFLAGS"
+    if test x$with_ruby = xno && test x$ruby_required = xyes; then
+            AC_MSG_ERROR([Could not find ruby])
+    fi
 fi
 AM_CONDITIONAL([HAVE_RUBY], [test x$with_ruby = xyes])
 

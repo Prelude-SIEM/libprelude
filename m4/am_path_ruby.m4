@@ -1,4 +1,4 @@
-# AM_PATH_RUBY([MINIMUM-VERSION], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
+# AM_PATH_RUBY([MINIMUM-VERSION], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND], [PATH])
 # ---------------------------------------------------------------------------
 # Adds support for distributing Ruby modules and packages.  To
 # install modules, copy them to $(rubydir), using the ruby_RUBY
@@ -21,7 +21,7 @@ AC_DEFUN([AM_PATH_RUBY],
     dnl No version check is needed.
     # Find any Ruby interpreter.
     if test -z "$RUBY"; then
-      AC_PATH_PROGS([RUBY], _AM_RUBY_INTERPRETER_LIST, :)
+      AC_PATH_PROGS([RUBY], _AM_RUBY_INTERPRETER_LIST, :, $4)
     fi
     am_display_RUBY=ruby
   ], [
@@ -41,13 +41,12 @@ AC_DEFUN([AM_PATH_RUBY],
         for am_cv_pathless_RUBY in _AM_RUBY_INTERPRETER_LIST none; do
           test "$am_cv_pathless_RUBY" = none && break
           #AM_RUBY_CHECK_VERSION([$am_cv_pathless_RUBY], [$1], [break])
-          [], [$1], [break])
         done])
       # Set $RUBY to the absolute path of $am_cv_pathless_RUBY.
       if test "$am_cv_pathless_RUBY" = none; then
         RUBY=:
       else
-        AC_PATH_PROG([RUBY], [$am_cv_pathless_RUBY])
+        AC_PATH_PROG([RUBY], [$am_cv_pathless_RUBY], , $4)
       fi
       am_display_RUBY=$am_cv_pathless_RUBY
     fi
