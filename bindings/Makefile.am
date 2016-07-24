@@ -2,7 +2,7 @@ SUBDIRS = c++ lua python ruby
 
 EXTRA_DIST = libpreludecpp.i perl/libpreludecpp-perl.i perl/Makefile.PL.in perl/Prelude.cxx perl/Prelude.pm
 
-CLEANFILES = perl/pm_to_blib perl/Prelude.o perl/blib python/build
+CLEANFILES = perl/Prelude.o
 DISTCLEANFILES = lua/prelude.cxx perl/Prelude.cxx ruby/Prelude.cxx
 MAINTAINERCLEANFILES =   \
 			lua/prelude.cxx	     \
@@ -48,7 +48,7 @@ uninstall-hook: perl-makefile
 
 
 clean-local:
-	cd perl && test -f Makefile && $(MAKE) clean
+	if test -f perl/Makefile; then cd perl && $(MAKE) clean; fi
 	rm -f perl/Makefile.old
 else
 perl:
