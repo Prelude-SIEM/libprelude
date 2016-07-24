@@ -34,6 +34,13 @@ def split_args(s):
     return re.split("\s+", s.strip())
 
 
+def get_prefix():
+    try:
+        return sys.argv[sys.argv.index("--prefix") + 1]
+    except ValueError:
+        return None
+
+
 def get_root():
     try:
         return sys.argv[sys.argv.index("--root") + 1]
@@ -71,10 +78,10 @@ def pre_clean():
 
 def uninstall():
     if is_system_wide_install():
-        prefix = None
+        prefix = get_prefix()
     else:
         prefix = "@prefix@"
-    
+
     for f in "prelude.py", "prelude.pyc", "_prelude.so":
         file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + f
         exists(file) and os.remove(file)

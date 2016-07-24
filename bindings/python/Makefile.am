@@ -17,18 +17,18 @@ if HAVE_PYTHON3
 endif
 install-exec-hook:
 if HAVE_PYTHON2
-	$(PYTHON2) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+	$(PYTHON2) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)` --prefix @prefix@
 endif
 if HAVE_PYTHON3
-	$(PYTHON3) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+	$(PYTHON3) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)` --prefix @prefix@
 endif
 
 uninstall-hook:
 if HAVE_PYTHON2
-	$(PYTHON2) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+	$(PYTHON2) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)` --prefix @prefix@
 endif
 if HAVE_PYTHON3
-	$(PYTHON3) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+	$(PYTHON3) setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)` --prefix @prefix@
 endif
 
 clean-local:
