@@ -5,7 +5,7 @@ AM_CPPFLAGS = @PCFLAGS@ -I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libprelude.pc
-DISTCLEANFILES = $(pkgconfig_DATA)
+DISTCLEANFILES = $(pkgconfig_DATA) idmef-criteria-string.yac.h idmef-criteria-string.lex.c idmef-criteria-string.yac.c
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @LIBPRELUDE_LIBS@ $(LIBLTDL) $(top_builddir)/libmissing/libmissing.la libprelude-error/libprelude-error.la
