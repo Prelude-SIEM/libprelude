@@ -556,19 +556,17 @@ AC_ARG_WITH(lua, AC_HELP_STRING(--with-lua-config@<:@=PATH@:>@, Enable support f
 if test x$with_lua != xno; then
 
    lua_pkg_found=0
-   PKG_CHECK_MODULES(LUA, lua >= 5.1, [
-      AC_DEFINE([HAVE_LUA], [1], [liblua])
-      AC_DEFINE([HAVE_LUA_H], [1], [lua.h])
-      lua_pkg_found=1
-   ],[
-      PKG_CHECK_MODULES(LUA, lua5.1 >= 5.1, [
-        AC_DEFINE([HAVE_LUA], [1], [liblua])
-        AC_DEFINE([HAVE_LUA_H], [1], [lua.h])
-        lua_pkg_found=1
-      ], [
-         AC_MSG_WARN([*** lua >= 5.1 not found])
-      ])
-   ])
+   m4_foreach([lua_ver],[[lua],[lua5.1],[lua5.2]],
+       [PKG_CHECK_MODULES(LUA, [lua_ver >= 5.1], [
+          AC_DEFINE([HAVE_LUA], [1], [liblua])
+          AC_DEFINE([HAVE_LUA_H], [1], [lua.h])
+          lua_pkg_found=1
+       ],[:])]
+   )
+
+   if test x$lua_pkg_found = x0; then
+       AC_MSG_WARN([*** lua >= 5.1 not found])
+   fi
 
    if test x$lua_pkg_found = x1; then
       AC_SUBST(LUA_CFLAGS)
