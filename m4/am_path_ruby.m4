@@ -99,8 +99,13 @@ AC_DEFUN([AM_PATH_RUBY],
     [am_cv_ruby_rbexecdir=`$RUBY -rrbconfig -e "drive = File::PATH_SEPARATOR == ';' ? /\A\w:/ : /\A/; prefix = Regexp.new('\\A' + Regexp.quote(RbConfig::CONFIG[['prefix']])); \\$prefix = RbConfig::CONFIG[['prefix']].sub(drive, ''); \\$sitearchdir = RbConfig::CONFIG[['sitearchdir']].sub(prefix, '\\$(prefix)').sub(drive, ''); print \\$sitearchdir;" 2>/dev/null || echo "${RUBY_EXEC_PREFIX}/local/lib/site_ruby/${RUBY_VERSION}/${RUBY_PLATFORM}"`])
   AC_SUBST([rbexecdir], [$am_cv_ruby_rbexecdir])
 
-  RUBY_INCLUDES=`$RUBY -r rbconfig -e 'if RbConfig::CONFIG[["archdir"]] then print " -I" + RbConfig::CONFIG[["archdir"]] end
-                                       if RbConfig::CONFIG[["rubyhdrdir"]] then print " -I" + RbConfig::CONFIG[["rubyhdrdir"]] end'`
+  dnl if PKG-CONFIG is available, we use it. Else, we try to dectect RUBY_INCLUDES manually
+  RUBY_VER=`$RUBY -rrbconfig -e "print RbConfig::CONFIG[['ruby_pc']]" | sed 's/.pc//g'`
+  PKG_CHECK_MODULES(RUBY_PKG_CONFIG, $RUBY_VER, [RUBY_INCLUDES=`pkg-config $RUBY_VER --cflags`], [RUBY_INCLUDES=`$RUBY -r rbconfig -e '
+               if RbConfig::CONFIG[["archdir"]] then print " -I" + RbConfig::CONFIG[["archdir"]] end
+               if RbConfig::CONFIG[["rubyhdrdir"]] then print " -I" + RbConfig::CONFIG[["rubyhdrdir"]] end
+               if RbConfig::CONFIG[["rubyhdrdir"]] and RbConfig::CONFIG[["sitearch"]] then print " -I" + RbConfig::CONFIG[["rubyhdrdir"]] + "/" + RbConfig::CONFIG[["sitearch"]] end'`] )
+
   AC_SUBST([RUBY_INCLUDES])
 
   dnl pkgrbexecdir -- $(rbexecdir)/$(PACKAGE)
