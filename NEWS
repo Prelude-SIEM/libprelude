@@ -1,3 +1,42 @@
+* 2016-08-05, libprelude-3.1.0rc1:
+
+Author: Thomas Andrejak
+
+- Various autotools fixes
+
+    - Fix detection of lua 5.2
+    - Fix python uninstall with /usr and /usr/local
+    - Fix perl binding cleaning
+    - Make the perl binding use LDFLAGS
+    - Enable configure to detect ruby with pkg-config
+    - Fix cleaning of lex and yacc files
+    - Make libprelude-error take CFLAGS into account
+    - Rename configure.in to configure.ac
+
+- Missing dependencies in README
+
+- Update FSF address and copyrights
+
+Author: Yoann Vandoorselaere
+
+- Add a JSON export/import module
+
+- Update SWIG and GnuLib code
+
+- Various code fixes
+
+    - idmef_data_to_string() can output binary string stored as "char-string"
+    - Handle EAGAIN even if it's not supposed to happen
+    - Implement prelude_msg_get_data()
+    - API for atomic message write
+    - Improved message handling
+
+Author: Sélim Menouar
+
+- Add libprelude-config man page
+
+
+
 * 2016-04-22, libprelude-3.0.0:
 
 Author: Antoine Luong
