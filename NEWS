@@ -1,3 +1,11 @@
+* 2016-08-19, libprelude-3.1.0rc2:
+
+Author: Thomas Andrejak
+
+- Fix configure --with-ruby
+
+
+
 * 2016-08-05, libprelude-3.1.0rc1:
 
 Author: Thomas Andrejak
