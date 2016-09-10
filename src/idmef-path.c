@@ -566,7 +566,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_class_id_t class, siz
 /**
  * idmef_path_get:
  * @path: Pointer to a #idmef_path_t object.
- * @message: Pointer to a #idmef_message_t object.
+ * @obj: Pointer to a #idmef_object_t object.
  * @ret: Address where to store the retrieved #idmef_value_t.
  *
  * This function retrieves the value for @path within @message,
@@ -590,7 +590,7 @@ int idmef_path_get(const idmef_path_t *path, void *obj, idmef_value_t **ret)
 /**
  * idmef_path_set:
  * @path: Pointer to a #idmef_path_t object.
- * @message: Pointer to a #idmef_message_t object.
+ * @obj: Pointer to a #idmef_object_t object.
  * @value: Pointer to a #idmef_value_t object.
  *
  * This function sets the provided @value for @path within @message.
