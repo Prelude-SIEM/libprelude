@@ -1,3 +1,11 @@
+* 2016-09-14, libprelude-3.1.0:
+
+Author: Thomas Andrejak
+
+- Fix idmef_path_(get|set) docstring
+
+
+
 * 2016-09-01, libprelude-3.1.0rc3:
 
 No new changes.
