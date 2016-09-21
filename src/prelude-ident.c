@@ -40,8 +40,6 @@
 # endif
 #endif
 
-#include <gcrypt.h>
-
 #include "prelude-log.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
@@ -171,6 +169,7 @@ static void uuidgen(prelude_ident_t *ident)
  */
 int prelude_ident_new(prelude_ident_t **ret)
 {
+        struct timeval tv;
         prelude_ident_t *new;
 
         *ret = new = malloc(sizeof(*new));
@@ -179,7 +178,11 @@ int prelude_ident_new(prelude_ident_t **ret)
 
         new->last = 0;
         new->tick = 0;
-        gcry_randomize(&new->clockseq, sizeof(new->clockseq), GCRY_STRONG_RANDOM);
+
+        gettimeofday(&tv, NULL);
+
+        srand((getpid() << 16) ^ tv.tv_sec ^ tv.tv_usec ^ (long) new);
+        new->clockseq = rand() % 65536;
 
         return 0;
 }

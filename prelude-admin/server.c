@@ -37,8 +37,8 @@
 #include <arpa/inet.h>
 #include <poll.h>
 
-#include <gcrypt.h>
 #include <gnutls/gnutls.h>
+#include <gnutls/crypto.h>
 
 #ifdef NEED_GNUTLS_EXTRA
 # include <gnutls/extra.h>
@@ -418,15 +418,19 @@ static int srp_callback(gnutls_session_t session, const char *username, gnutls_d
         if ( strcmp(username, "prelude-adduser") != 0 )
                 return -1;
 
-        salt->size = 4;
+        salt->size = 16;
 
-        salt->data = gnutls_malloc(4);
+        salt->data = gnutls_malloc(salt->size);
         if ( ! salt->data ) {
                 fprintf(stderr, "memory exhausted.\n");
                 return -1;
         }
 
-        gcry_randomize(salt->data, salt->size, GCRY_WEAK_RANDOM);
+        ret = gnutls_rnd(GNUTLS_RND_NONCE, salt->data, salt->size);
+        if ( ret < 0 ) {
+                fprintf(stderr, "could not create nonce.\n");
+                return -1;
+        }
 
         ret = copy_datum(generator, &gnutls_srp_1024_group_generator);
         if ( ret < 0 )

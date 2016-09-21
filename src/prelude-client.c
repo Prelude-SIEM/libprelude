@@ -38,9 +38,9 @@
 #include <arpa/inet.h>
 #include <sys/utsname.h>
 
-#include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
+#include <gnutls/crypto.h>
 
 #include "glthread/lock.h"
 
@@ -159,17 +159,21 @@ static int generate_sha1sum(const char *filename, prelude_string_t *out)
         size_t len, i;
         unsigned char digest[20], *data;
 
+        len = gnutls_hash_get_len(GNUTLS_DIG_SHA1);
+        if ( len != sizeof(digest) )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "invalid SHA1 digest length");
+
         ret = _prelude_load_file(filename, &data, &len);
         if ( ret < 0 )
                 return ret;
 
-        gcry_md_hash_buffer(GCRY_MD_SHA1, digest, data, len);
+        ret = gnutls_hash_fast(GNUTLS_DIG_SHA1, data, len, digest);
         _prelude_unload_file(data, len);
 
-        len = gcry_md_get_algo_dlen(GCRY_MD_SHA1);
-        assert(len == sizeof(digest));
+        if ( ret < 0 )
+                return ret;
 
-        for ( i = 0; i < len; i++ ) {
+        for ( i = 0; i < sizeof(digest); i++ ) {
                 ret = prelude_string_sprintf(out, "%.2x", digest[i]);
                 if ( ret < 0 )
                         return ret;

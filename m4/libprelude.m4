@@ -3,7 +3,6 @@ dnl $id$
 
 # Modified for LIBPRELUDE -- Yoann Vandoorselaere
 # Modified for LIBGNUTLS -- nmav
-# Configure paths for LIBGCRYPT
 # Shamelessly stolen from the one of XDELTA by Owen Taylor
 # Werner Koch   99-12-09
 

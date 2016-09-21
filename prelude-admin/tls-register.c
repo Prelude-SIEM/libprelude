@@ -37,7 +37,6 @@
 #ifdef HAVE_GNUTLS_PRIVKEY_ABSTRACT
 # include <gnutls/abstract.h>
 #endif
-#include <gcrypt.h>
 
 #include "prelude-client.h"
 #include "prelude-error.h"
@@ -458,17 +457,6 @@ static gnutls_x509_crt_t generate_ca_certificate(prelude_client_profile_t *cp, g
 
 
 
-static void entropy_progress_cb(void *cb_data, const char *what, int printchar, int current, int total)
-{
-        //printf("\nwhat='%s' printchar='%c' current='%d' total='%d\n", what, printchar, current, total);
-        if ( printchar == '\n')
-                printchar = 'O';
-
-        fprintf(stderr, "%c", printchar);
-        fflush(stderr);
-}
-
-
 static gnutls_x509_privkey_t generate_private_key(void)
 {
         int ret;
@@ -479,8 +467,6 @@ static gnutls_x509_privkey_t generate_private_key(void)
                 fprintf(stderr, "error initializing private key: %s.\n", gnutls_strerror(ret));
                 return NULL;
         }
-
-        gcry_set_progress_handler(entropy_progress_cb, NULL);
 
         fprintf(stderr, "Generating %d bits RSA private key... This might take a very long time.\n", generated_key_size);
         fprintf(stderr, "[Increasing system activity will speed-up the process].\n");

@@ -183,24 +183,11 @@ AC_C_BIGENDIAN(AC_DEFINE_UNQUOTED(PRELUDE_WORDS_BIGENDIAN, , Byte ordering))
 
 
 
-dnl **************************************************
-dnl * Check for Gcrypt.                              *
-dnl **************************************************
-
-AM_PATH_LIBGCRYPT(1:1.1.94,,
-        AC_MSG_ERROR([[
-***
-*** libgcrypt was not found. You may want to get it from
-*** ftp://ftp.gnupg.org/gcrypt/libgcrypt/
-***
-]]))
-
-
 
 dnl **************************************************
 dnl * Check for GnuTLS.                              *
 dnl **************************************************
-GNUTLS_MIN_VERSION=1.0.17
+GNUTLS_MIN_VERSION=2.12.0
 
 PKG_CHECK_MODULES([LIBGNUTLS], [gnutls >= $GNUTLS_MIN_VERSION], [],
                   [AM_PATH_LIBGNUTLS($GNUTLS_MIN_VERSION, [], [AC_MSG_ERROR($LIBGNUTLS_PKG_ERRORS)])])
@@ -235,7 +222,7 @@ CPPFLAGS=$old_CPPFLAGS
 AC_SUBST(PRELUDE_ADMIN_LIBS)
 AC_SUBST(PRELUDE_ADMIN_CFLAGS)
 PRELUDE_ADMIN_CFLAGS="$LIBGNUTLS_CFLAGS"
-PRELUDE_ADMIN_LIBS="$LIBGNUTLS_LIBS $LIBGCRYPT_LIBS"
+PRELUDE_ADMIN_LIBS="$LIBGNUTLS_LIBS"
 
 if test x$srp_available = xno; then
    dnl **************************************************
@@ -253,7 +240,7 @@ if test x$srp_available = xno; then
         AC_CHECK_HEADER(gnutls/extra.h, [AC_CHECK_LIB(gnutls-extra, gnutls_srp_verifier, srp_available=yes, srp_available=no)], srp_available=no)
         if test x$srp_available = xyes; then
                 PRELUDE_ADMIN_CFLAGS="$PRELUDE_ADMIN_CFLAGS $LIBGNUTLS_EXTRA_CFLAGS"
-                PRELUDE_ADMIN_LIBS="$LIBGNUTLS_LIBS $LIBGNUTLS_EXTRA_LIBS $LIBGCRYPT_LIBS"
+                PRELUDE_ADMIN_LIBS="$LIBGNUTLS_LIBS $LIBGNUTLS_EXTRA_LIBS"
                 AC_DEFINE_UNQUOTED(NEED_GNUTLS_EXTRA, , Define whether SRP support is available through gnutls-extra)
         fi
 
@@ -266,7 +253,7 @@ if test x$srp_available = xyes; then
 	AC_DEFINE_UNQUOTED(GNUTLS_SRP_ENABLED, , Define whether SRP support is enabled)
 fi
 
-LIBPRELUDE_LIBS="$LIBPRELUDE_LIBS $LIBGNUTLS_LIBS $LIBGCRYPT_LIBS"
+LIBPRELUDE_LIBS="$LIBPRELUDE_LIBS $LIBGNUTLS_LIBS"
 
 
 dnl **************************************************

@@ -37,7 +37,6 @@
 #include <errno.h>
 
 #include <assert.h>
-#include <gcrypt.h>
 
 #include "glthread/thread.h"
 
@@ -92,14 +91,14 @@ static void unmask_signal(sigset_t *oldmask)
 }
 
 
-static void journal_checksum(failover_journal_entry_t *fj, unsigned char *digest, size_t digest_size)
+static void journal_checksum(failover_journal_entry_t *fj, unsigned char *digest)
 {
-        size_t len;
+        uint32_t crc = prelude_crc32(fj->data, sizeof(fj->data) - FAILOVER_CHECKSUM_SIZE);
 
-        len = gcry_md_get_algo_dlen(GCRY_MD_CRC32);
-        assert(len == digest_size);
-
-        gcry_md_hash_buffer(GCRY_MD_CRC32, digest, fj->data, sizeof(fj->data) - FAILOVER_CHECKSUM_SIZE);
+        digest[0] = (crc >> 24) & 0xff;
+        digest[1] = (crc >> 16) & 0xff;
+        digest[2] = (crc >>  8) & 0xff;
+        digest[3] = crc & 0xff;
 }
 
 
@@ -111,7 +110,7 @@ static int journal_write(prelude_failover_t *failover)
 
         fj.value.count = failover->count;
         fj.value.rindex = failover->rindex;
-        journal_checksum(&fj, fj.value.checksum, sizeof(fj.value.checksum));
+        journal_checksum(&fj, fj.value.checksum);
 
         do {
                 ret = write(failover->jfd, fj.data + rcount, sizeof(fj.data) - rcount);
@@ -206,7 +205,7 @@ static int journal_check(prelude_failover_t *failover, failover_journal_entry_t 
         int ret;
         unsigned char digest[FAILOVER_CHECKSUM_SIZE];
 
-        journal_checksum(jentry, digest, sizeof(digest));
+        journal_checksum(jentry, digest);
 
         ret = memcmp(digest, jentry->value.checksum, sizeof(digest));
         if ( ret != 0 ) {

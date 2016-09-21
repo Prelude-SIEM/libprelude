@@ -1,7 +1,7 @@
 SUBDIRS = libprelude-error jsmn include
 
 AM_CPPFLAGS = @PCFLAGS@ -I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error \
--I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@
+-I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing $(LTDLINCL) @LIBPRELUDE_CFLAGS@ @LIBGNUTLS_CFLAGS@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libprelude.pc

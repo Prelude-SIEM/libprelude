@@ -97,6 +97,8 @@ void _prelude_unload_file(unsigned char *fdata, size_t size);
 
 double prelude_simple_strtod(const char *s, char **endptr);
 
+uint32_t prelude_crc32(const unsigned char *data, size_t length);
+
 #ifdef __cplusplus
  }
 #endif
