@@ -67,6 +67,8 @@
         {                                                                                  \
                 char *endptr;                                                              \
                                                                                            \
+                errno = 0;                                                                 \
+                                                                                           \
                 (dst)->data. name ##_val = strtod(buf, &endptr);                           \
                 if ( buf == endptr || *endptr != '\0' || errno == ERANGE )                 \
                         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
@@ -86,10 +88,12 @@
                 type tmp;                                                                            \
                 char *endptr;                                                                        \
                                                                                                      \
+                errno = 0;                                                                           \
+                                                                                                     \
                 tmp = rfunc(buf, &endptr, 0);                                                        \
                 if ( buf == endptr || *endptr != '\0' || tmp < min || tmp > max || errno == ERANGE ) \
                         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,           \
-                        "Value out of range, required: [" # min " - " # max "], got '%s'", buf);     \
+                        "Value " #name " out of range, required: [" # min " - " # max "], got '%s'", buf);     \
                                                                                                      \
                 dst->data.name ##_val = tmp;                                                         \
                 return 0;                                                                            \
