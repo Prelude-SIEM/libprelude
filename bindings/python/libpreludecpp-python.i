@@ -22,6 +22,7 @@
 *****/
 
 %begin %{
+#define SWIG_PYTHON_2_UNICODE
 #define TARGET_LANGUAGE_SELF PyObject *
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
 %}
@@ -236,6 +237,14 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
+
+%inline %{
+void python2_return_unicode(int enabled)
+{
+    _PYTHON2_RETURN_UNICODE = enabled;
+}
+
+%}
 
 %{
 typedef PyObject SwigPyObjectState;

@@ -8,6 +8,10 @@
  * interface file instead.
  * ----------------------------------------------------------------------------- */
 
+static int _PYTHON2_RETURN_UNICODE = 0;
+
+
+#define SWIG_PYTHON_2_UNICODE
 #define TARGET_LANGUAGE_SELF PyObject *
 #define TARGET_LANGUAGE_OUTPUT_TYPE PyObject **
 
@@ -4311,6 +4315,29 @@ static ssize_t _cb_python_read(prelude_io_t *fd, void *buf, size_t size)
 }
 
 
+void python2_return_unicode(int enabled)
+{
+    _PYTHON2_RETURN_UNICODE = enabled;
+}
+
+
+
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
 typedef PyObject SwigPyObjectState;
 
 
@@ -5377,76 +5404,109 @@ SWIG_pchar_descriptor(void)
 SWIGINTERN int
 SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 {
-  if (PyUnicode_Check(obj) || PyString_Check(obj))
+#if PY_VERSION_HEX>=0x03000000
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+  if (PyBytes_Check(obj))
+#else
+  if (PyUnicode_Check(obj))
+#endif
+#else
+  if (PyString_Check(obj))
+#endif
   {
     char *cstr; Py_ssize_t len;
-    PyObject *newobj = NULL;
-    if (PyUnicode_Check(obj))
-    {
-      if (!alloc && cptr) {
+#if PY_VERSION_HEX>=0x03000000
+#if !defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+    if (!alloc && cptr) {
         /* We can't allow converting without allocation, since the internal
            representation of string in Python 3 is UCS-2/UCS-4 but we require
            a UTF-8 representation.
            TODO(bhy) More detailed explanation */
         return SWIG_RuntimeError;
-      }
-      newobj = obj = PyUnicode_AsUTF8String(obj);
-#if PY_VERSION_HEX<0x03000000
-      PyString_AsStringAndSize(obj, &cstr, &len);
-#else
-      PyBytes_AsStringAndSize(obj, &cstr, &len);
-#endif
-      if(alloc) *alloc = SWIG_NEWOBJ;
     }
-    else
-#if PY_VERSION_HEX<0x03000000
-      PyString_AsStringAndSize(obj, &cstr, &len);
+    obj = PyUnicode_AsUTF8String(obj);
+    if(alloc) *alloc = SWIG_NEWOBJ;
+#endif
+    PyBytes_AsStringAndSize(obj, &cstr, &len);
 #else
-      PyBytes_AsStringAndSize(obj, &cstr, &len);
+    PyString_AsStringAndSize(obj, &cstr, &len);
 #endif
     if (cptr) {
       if (alloc) {
-	/* 
-	   In python the user should not be able to modify the inner
-	   string representation. To warranty that, if you define
-	   SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
-	   buffer is always returned.
+    /*
+       In python the user should not be able to modify the inner
+       string representation. To warranty that, if you define
+       SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
+       buffer is always returned.
 
-	   The default behavior is just to return the pointer value,
-	   so, be careful.
-	*/ 
+       The default behavior is just to return the pointer value,
+       so, be careful.
+    */
 #if defined(SWIG_PYTHON_SAFE_CSTRINGS)
-	if (*alloc != SWIG_OLDOBJ) 
+    if (*alloc != SWIG_OLDOBJ)
 #else
-	if (*alloc == SWIG_NEWOBJ) 
+    if (*alloc == SWIG_NEWOBJ)
 #endif
-	  {
-	    *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
-	    *alloc = SWIG_NEWOBJ;
-	  }
-	else {
-	  *cptr = cstr;
-	  *alloc = SWIG_OLDOBJ;
-	}
+    {
+      *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
+      *alloc = SWIG_NEWOBJ;
+    } else {
+      *cptr = cstr;
+      *alloc = SWIG_OLDOBJ;
+    }
       } else {
-        #if PY_VERSION_HEX>=0x03000000
-        assert(0); /* Should never reach here in Python 3 */
-        #endif
-	*cptr = SWIG_Python_str_AsChar(obj);
+#if PY_VERSION_HEX>=0x03000000
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+    *cptr = PyBytes_AsString(obj);
+#else
+    assert(0); /* Should never reach here with Unicode strings in Python 3 */
+#endif
+#else
+    *cptr = SWIG_Python_str_AsChar(obj);
+#endif
       }
     }
     if (psize) *psize = len + 1;
-    Py_XDECREF(newobj);
+#if PY_VERSION_HEX>=0x03000000 && !defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+    Py_XDECREF(obj);
+#endif
     return SWIG_OK;
   } else {
+#if defined(SWIG_PYTHON_2_UNICODE)
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+#error "Cannot use both SWIG_PYTHON_2_UNICODE and SWIG_PYTHON_STRICT_BYTE_CHAR at once"
+#endif
+#if PY_VERSION_HEX<0x03000000
+    if (PyUnicode_Check(obj)) {
+      char *cstr; Py_ssize_t len;
+      if (!alloc && cptr) {
+        return SWIG_RuntimeError;
+      }
+      obj = PyUnicode_AsUTF8String(obj);
+      if (PyString_AsStringAndSize(obj, &cstr, &len) != -1) {
+        if (cptr) {
+          if (alloc) *alloc = SWIG_NEWOBJ;
+          *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
+        }
+        if (psize) *psize = len + 1;
+
+        Py_XDECREF(obj);
+        return SWIG_OK;
+      } else {
+        Py_XDECREF(obj);
+      }
+    }
+#endif
+#endif
+
     swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
     if (pchar_descriptor) {
       void* vptr = 0;
       if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
-	if (cptr) *cptr = (char *) vptr;
-	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
-	if (alloc) *alloc = SWIG_OLDOBJ;
-	return SWIG_OK;
+    if (cptr) *cptr = (char *) vptr;
+    if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+    if (alloc) *alloc = SWIG_OLDOBJ;
+    return SWIG_OK;
       }
     }
   }
@@ -5463,17 +5523,24 @@ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
   if (carray) {
     if (size > INT_MAX) {
       swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-      return pchar_descriptor ? 
-	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
+      return pchar_descriptor ?
+    SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
     } else {
 #if PY_VERSION_HEX >= 0x03000000
-#if PY_VERSION_HEX >= 0x03010000
-      return PyUnicode_DecodeUTF8(carray, static_cast< int >(size), "surrogateescape");
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+      return PyBytes_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
 #else
-      return PyUnicode_FromStringAndSize(carray, static_cast< int >(size));
+#if PY_VERSION_HEX >= 0x03010000
+      return PyUnicode_DecodeUTF8(carray, static_cast< Py_ssize_t >(size), "surrogateescape");
+#else
+      return PyUnicode_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
+#endif
 #endif
 #else
-      return PyString_FromStringAndSize(carray, static_cast< int >(size));
+      if ( _PYTHON2_RETURN_UNICODE )
+        return PyUnicode_DecodeUTF8(carray, static_cast< Py_ssize_t >(size), "surrogateescape");
+      else
+        return PyString_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
 #endif
     }
   } else {
@@ -5524,22 +5591,6 @@ SWIG_AsVal_bool (PyObject *obj, bool *val)
     return SWIG_ERROR;
   if (val) *val = r ? true : false;
   return SWIG_OK;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_int (PyObject * obj, int *val)
-{
-  long v;
-  int res = SWIG_AsVal_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < INT_MIN || v > INT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< int >(v);
-    }
-  }  
-  return res;
 }
 
 
@@ -6864,6 +6915,37 @@ fail:
 
 
 SWIGPY_BINARYFUNC_CLOSURE(_wrap_SwigPyIterator___sub__)
+
+SWIGINTERN PyObject *_wrap_python2_return_unicode(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "python2_return_unicode" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      python2_return_unicode(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
 
 SWIGINTERN PyObject *_wrap_checkVersion__SWIG_0(PyObject *self, int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
@@ -17379,6 +17461,7 @@ fail:
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
+	 { (char *)"python2_return_unicode", (PyCFunction)_wrap_python2_return_unicode, METH_O, NULL},
 	 { (char *)"checkVersion", _wrap_checkVersion, METH_VARARGS, NULL},
 	 { (char *)"Client_setRecvTimeout", _wrap_Client_setRecvTimeout, METH_VARARGS, NULL},
 	 { (char *)"PreludeLog_setLevel", (PyCFunction)_wrap_PreludeLog_setLevel, METH_O, NULL},
