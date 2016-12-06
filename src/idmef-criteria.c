@@ -656,3 +656,30 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
 
         return (criteria->negated) ? !ret : ret;
 }
+
+
+
+idmef_class_id_t idmef_criteria_get_class(const idmef_criteria_t *criteria)
+{
+        int pc, ret;
+        idmef_path_t *path;
+
+        while ( criteria ) {
+                path = idmef_criterion_get_path(idmef_criteria_get_criterion(criteria));
+                if ( path ) {
+                        pc = idmef_path_get_class(path, 0);
+                        if ( pc == IDMEF_CLASS_ID_ALERT || IDMEF_CLASS_ID_HEARTBEAT )
+                                return pc;
+                }
+
+                if ( idmef_criteria_get_or(criteria) ) {
+                        ret = idmef_criteria_get_class(idmef_criteria_get_or(criteria));
+                        if ( ret >= 0 )
+                                return ret;
+                }
+
+                criteria = idmef_criteria_get_and(criteria);
+        }
+
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not get message class from criteria");
+}

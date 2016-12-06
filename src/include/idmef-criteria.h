@@ -104,6 +104,8 @@ void idmef_criteria_set_negation(idmef_criteria_t *criteria, prelude_bool_t nega
 
 prelude_bool_t idmef_criteria_get_negation(const idmef_criteria_t *criteria);
 
+idmef_class_id_t idmef_criteria_get_class(const idmef_criteria_t *criteria);
+
 #ifdef __cplusplus
  }
 #endif
