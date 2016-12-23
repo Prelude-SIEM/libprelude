@@ -1,3 +1,21 @@
+* 2016-12-23, libprelude-4.0.0beta1:
+
+Author: Yoann Vandoorselaere
+
+- Implement idmef_criteria_get_class()
+
+    This function can be used to retrieve the idmef_class_id_t of the root
+    paths elements used for a given criteria.
+
+- Implement prelude.return_unicode(flags)
+
+    When enabled, string returned from SWIG wrapped function will be
+    converted to unicode.
+
+- Fix possible IDMEFValue 'out of range' error
+
+
+
 * 2016-09-14, libprelude-3.1.0:
 
 Author: Thomas Andrejak
