@@ -1,5 +1,5 @@
 /* Convert a 'struct tm' to a time_t value.
-   Copyright (C) 1993-2016 Free Software Foundation, Inc.
+   Copyright (C) 1993-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert <eggert@twinsun.com>.
 
@@ -470,6 +470,8 @@ mktime (struct tm *tp)
      time zone names contained in the external variable 'tzname' shall
      be set as if the tzset() function had been called.  */
   __tzset ();
+#elif HAVE_TZSET
+  tzset ();
 #endif
 
   return __mktime_internal (tp, __localtime_r, &localtime_offset);

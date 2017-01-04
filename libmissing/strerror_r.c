@@ -1,6 +1,6 @@
 /* strerror_r.c --- POSIX compatible system error routine
 
-   Copyright (C) 2010-2016 Free Software Foundation, Inc.
+   Copyright (C) 2010-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -40,7 +40,7 @@ extern
 #endif
 int __xpg_strerror_r (int errnum, char *buf, size_t buflen);
 
-#elif HAVE_DECL_STRERROR_R && !(__GLIBC__ >= 2 || defined __UCLIBC__ || defined __CYGWIN__)
+#elif HAVE_DECL_STRERROR_R_ORIG && !(__GLIBC__ >= 2 || defined __UCLIBC__ || defined __CYGWIN__)
 
 /* The system's strerror_r function is OK, except that its third argument
    is 'int', not 'size_t', or its return type is wrong.  */

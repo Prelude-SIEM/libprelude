@@ -1,5 +1,5 @@
 /* Provide relocatable packages.
-   Copyright (C) 2003-2006, 2008-2016 Free Software Foundation, Inc.
+   Copyright (C) 2003-2006, 2008-2017 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software: you can redistribute it and/or modify
@@ -539,6 +539,18 @@ relocate (const char *pathname)
     }
 
 #ifdef __EMX__
+# ifdef __KLIBC__
+#  undef strncmp
+
+  if (pathname && strncmp (pathname, "/@unixroot", 10) == 0
+      && (pathname[10] == '\0' || pathname[10] == '/' || pathname[10] == '\\'))
+    {
+      /* kLIBC itself processes /@unixroot prefix */
+
+      return pathname;
+    }
+  else
+# endif
   if (pathname && ISSLASH (pathname[0]))
     {
       const char *unixroot = getenv ("UNIXROOT");

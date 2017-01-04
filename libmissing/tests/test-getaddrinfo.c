@@ -1,6 +1,6 @@
 /* Test the getaddrinfo module.
 
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,11 +22,16 @@
 #include <netdb.h>
 
 #include "signature.h"
-SIGNATURE_CHECK (freeaddrinfo, void, (struct addrinfo *));
 SIGNATURE_CHECK (gai_strerror, char const *, (int));
+/* On native Windows, these two functions may have the __stdcall calling
+   convention.  But the SIGNATURE_CHECK works only for functions with __cdecl
+   calling convention.  */
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
+SIGNATURE_CHECK (freeaddrinfo, void, (struct addrinfo *));
 SIGNATURE_CHECK (getaddrinfo, int, (char const *, char const *,
                                     struct addrinfo const *,
                                     struct addrinfo **));
+#endif
 
 #include <arpa/inet.h>
 #include <errno.h>

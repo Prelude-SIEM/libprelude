@@ -1,5 +1,5 @@
 /* Flushing buffers of a FILE stream.
-   Copyright (C) 2007-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -98,10 +98,10 @@ fpurge (FILE *fp)
   if (fp->_ptr != NULL)
     fp->_count = 0;
   return 0;
-# elif defined _IOERR               /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, NonStop Kernel */
-  fp->_ptr = fp->_base;
-  if (fp->_ptr != NULL)
-    fp->_cnt = 0;
+# elif defined _IOERR               /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel */
+  fp_->_ptr = fp_->_base;
+  if (fp_->_ptr != NULL)
+    fp_->_cnt = 0;
   return 0;
 # elif defined __UCLIBC__           /* uClibc */
 #  ifdef __STDIO_BUFFERS

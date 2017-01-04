@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2016 Free Software Foundation, Inc.
+# Copyright (C) 2002-2017 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 # other built files.
 
 
-# This macro should be invoked from ./configure.in, in the section
+# This macro should be invoked from ./configure.ac, in the section
 # "Checks for programs", right after AC_PROG_CC, and certainly before
 # any checks for libraries, header files, types and library functions.
 AC_DEFUN([gl_EARLY],
@@ -58,6 +58,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module bind-tests:
   # Code from module btowc:
   # Code from module btowc-tests:
+  # Code from module builtin-expect:
   # Code from module c-ctype:
   # Code from module c-ctype-tests:
   # Code from module c-strcase:
@@ -91,6 +92,7 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([AC_FUNC_FSEEKO])
   # Code from module fflush-tests:
   # Code from module fgetc-tests:
+  # Code from module flexmember:
   # Code from module float:
   # Code from module float-tests:
   # Code from module fopen:
@@ -156,10 +158,14 @@ AC_DEFUN([gl_EARLY],
   # Code from module inttypes-tests:
   # Code from module ioctl:
   # Code from module ioctl-tests:
+  # Code from module isblank:
+  # Code from module isblank-tests:
   # Code from module langinfo:
   # Code from module langinfo-tests:
   # Code from module largefile:
   AC_REQUIRE([AC_SYS_LARGEFILE])
+  # Code from module limits-h:
+  # Code from module limits-h-tests:
   # Code from module listen:
   # Code from module listen-tests:
   # Code from module localcharset:
@@ -215,7 +221,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module putenv:
   # Code from module raise:
   # Code from module raise-tests:
-  # Code from module realloc-posix:
   # Code from module regex:
   # Code from module regex-tests:
   # Code from module relocatable-lib-lgpl:
@@ -335,11 +340,12 @@ AC_DEFUN([gl_EARLY],
   # Code from module wctype-h-tests:
   # Code from module write:
   # Code from module write-tests:
+  # Code from module xalloc-oversized:
   # Code from module xsize:
   # Code from module yield:
 ])
 
-# This macro should be invoked from ./configure.in, in the section
+# This macro should be invoked from ./configure.ac, in the section
 # "Check for header files, types and library functions".
 AC_DEFUN([gl_INIT],
 [
@@ -376,6 +382,7 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_BTOWC
   fi
   gl_WCHAR_MODULE_INDICATOR([btowc])
+  gl___BUILTIN_EXPECT
   gl_FUNC_CLOSE
   if test $REPLACE_CLOSE = 1; then
     AC_LIBOBJ([close])
@@ -521,6 +528,7 @@ AC_SUBST([LTALLOCA])
   gl_SYS_IOCTL_MODULE_INDICATOR([ioctl])
   gl_LANGINFO_H
   AC_REQUIRE([gl_LARGEFILE])
+  gl_LIMITS_H
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([listen])
@@ -629,11 +637,6 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_RAISE
   fi
   gl_SIGNAL_MODULE_INDICATOR([raise])
-  gl_FUNC_REALLOC_POSIX
-  if test $REPLACE_REALLOC = 1; then
-    AC_LIBOBJ([realloc])
-  fi
-  gl_STDLIB_MODULE_INDICATOR([realloc-posix])
   gl_REGEX
   if test $ac_use_included_regex = yes; then
     AC_LIBOBJ([regex])
@@ -883,6 +886,7 @@ changequote([, ])dnl
     gl_PREREQ_FDOPEN
   fi
   gl_STDIO_MODULE_INDICATOR([fdopen])
+  AC_C_FLEXIBLE_ARRAY_MEMBER
   gl_FUNC_UNGETC_WORKS
   gl_FUNC_UNGETC_WORKS
   gl_FUNC_UNGETC_WORKS
@@ -913,6 +917,11 @@ changequote([, ])dnl
   AC_C_BIGENDIAN
   gl_INTTYPES_H
   gl_INTTYPES_INCOMPLETE
+  gl_FUNC_ISBLANK
+  if test $HAVE_ISBLANK = 0; then
+    AC_LIBOBJ([isblank])
+  fi
+  gl_CTYPE_MODULE_INDICATOR([isblank])
   AC_CHECK_FUNCS_ONCE([newlocale])
   gl_LOCALENAME
   AC_CHECK_FUNCS_ONCE([newlocale])
@@ -1169,6 +1178,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/ioctl.c
   lib/itold.c
   lib/langinfo.in.h
+  lib/limits.in.h
   lib/listen.c
   lib/localcharset.c
   lib/localcharset.h
@@ -1202,7 +1212,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-parse.c
   lib/printf-parse.h
   lib/raise.c
-  lib/realloc.c
   lib/ref-add.sin
   lib/ref-del.sin
   lib/regcomp.c
@@ -1279,6 +1288,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/alloca.m4
   m4/arpa_inet_h.m4
   m4/btowc.m4
+  m4/builtin-expect.m4
   m4/close.m4
   m4/codeset.m4
   m4/cond.m4
@@ -1296,6 +1306,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/fcntl_h.m4
   m4/fdopen.m4
   m4/fflush.m4
+  m4/flexmember.m4
   m4/float_h.m4
   m4/fopen.m4
   m4/fpieee.m4
@@ -1330,12 +1341,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/inttypes.m4
   m4/inttypes_h.m4
   m4/ioctl.m4
+  m4/isblank.m4
   m4/langinfo_h.m4
   m4/largefile.m4
   m4/lcmessage.m4
   m4/lib-ld.m4
   m4/lib-link.m4
   m4/lib-prefix.m4
+  m4/limits-h.m4
   m4/localcharset.m4
   m4/locale-fr.m4
   m4/locale-ja.m4
@@ -1378,7 +1391,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/printf.m4
   m4/putenv.m4
   m4/raise.m4
-  m4/realloc.m4
   m4/regex.m4
   m4/relocatable-lib.m4
   m4/select.m4
@@ -1522,7 +1534,9 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-intprops.c
   tests/test-inttypes.c
   tests/test-ioctl.c
+  tests/test-isblank.c
   tests/test-langinfo.c
+  tests/test-limits-h.c
   tests/test-listen.c
   tests/test-locale.c
   tests/test-localeconv.c
@@ -1637,6 +1651,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/ctype.in.h
   tests=lib/fcntl.in.h
   tests=lib/fdopen.c
+  tests=lib/flexmember.h
   tests=lib/fpucw.h
   tests=lib/ftruncate.c
   tests=lib/getcwd-lgpl.c
@@ -1645,6 +1660,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/glthread/yield.h
   tests=lib/ignore-value.h
   tests=lib/inttypes.in.h
+  tests=lib/isblank.c
   tests=lib/localename.c
   tests=lib/localename.h
   tests=lib/lstat.c
@@ -1662,4 +1678,5 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/wctob.c
   tests=lib/wctomb-impl.h
   tests=lib/wctomb.c
+  tests=lib/xalloc-oversized.h
 ])

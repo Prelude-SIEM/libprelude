@@ -1,6 +1,6 @@
 #!/bin/sh
 # Unit tests for init.sh
-# Copyright (C) 2011-2016 Free Software Foundation, Inc.
+# Copyright (C) 2011-2017 Free Software Foundation, Inc.
 # This file is part of the GNUlib Library.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,8 @@ EOF
     # Also remove the @@ line, since Solaris 5.10 and GNU diff formats differ:
     # -@@ -0,0 +1 @@
     # +@@ -1,0 +1,1 @@
-    sed 's/	.*//;/^@@/d' out > k && mv k out
+    # Also, remove space after leading '+', since AIX 7.1 diff outputs a space.
+    sed 's/	.*//;/^@@/d;s/^+ /+/' out > k && mv k out
     cat <<\EOF > exp
 --- empty
 +++ in

@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002-2016 Free Software Foundation, Inc.
+   Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -32,6 +32,8 @@
 #include <wctype.h>
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "intprops.h"
 
 #ifdef _LIBC
 # include <libc-lock.h>
@@ -113,11 +115,7 @@
 # define RE_ENABLE_I18N
 #endif
 
-#if __GNUC__ >= 3
-# define BE(expr, val) __builtin_expect (expr, val)
-#else
-# define BE(expr, val) (expr)
-#endif
+#define BE(expr, val) __builtin_expect (expr, val)
 
 /* Number of ASCII characters.  */
 #define ASCII_CHARS 0x80

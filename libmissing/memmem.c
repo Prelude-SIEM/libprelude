@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994, 1996-1998, 2000, 2004, 2007-2016 Free Software
+/* Copyright (C) 1991-1994, 1996-1998, 2000, 2004, 2007-2017 Free Software
    Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -23,10 +23,6 @@
 
 /* Specification of memmem.  */
 #include <string.h>
-
-#ifndef _LIBC
-# define __builtin_expect(expr, val)   (expr)
-#endif
 
 #define RETURN_TYPE void *
 #define AVAILABLE(h, h_l, j, n_l) ((j) <= (h_l) - (n_l))

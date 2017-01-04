@@ -1,6 +1,6 @@
-/* Determine whether two stat buffers refer to the same file.
+/* Determine whether two stat buffers are known to refer to the same file.
 
-   Copyright (C) 2006, 2009-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2009-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,10 @@
      && (a).st_ino[1] == (b).st_ino[1] \
      && (a).st_ino[2] == (b).st_ino[2] \
      && (a).st_dev == (b).st_dev)
+# elif (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+/* On MinGW, struct stat lacks necessary info, so always return 0.
+   Callers can use !a.st_ino to deduce that the information is unknown.  */
+#  define SAME_INODE(a, b) 0
 # else
 #  define SAME_INODE(a, b)    \
     ((a).st_ino == (b).st_ino \

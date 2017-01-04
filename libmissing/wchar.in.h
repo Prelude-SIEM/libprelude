@@ -1,6 +1,6 @@
 /* A substitute for ISO C99 <wchar.h>, for platforms that have issues.
 
-   Copyright (C) 2007-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2017 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -35,6 +35,7 @@
      || (defined __hpux                                                 \
          && ((defined _INTTYPES_INCLUDED && !defined strtoimax)         \
              || defined _GL_JUST_INCLUDE_SYSTEM_WCHAR_H))               \
+     || (defined __MINGW32__ && defined __STRING_H_SOURCED__)           \
      || defined _GL_ALREADY_INCLUDING_WCHAR_H)
 /* Special invocation convention:
    - Inside glibc and uClibc header files, but not MinGW.
@@ -44,6 +45,8 @@
      and once directly.  In both situations 'wint_t' is not yet defined,
      therefore we cannot provide the function overrides; instead include only
      the system's <wchar.h>.
+   - With MinGW 3.22, when <string.h> includes <wchar.h>, only some part of
+     <wchar.h> is actually processed, and that doesn't include 'mbstate_t'.
    - On IRIX 6.5, similarly, we have an include <wchar.h> -> <wctype.h>, and
      the latter includes <wchar.h>.  But here, we have no way to detect whether
      <wctype.h> is completely included or is still being included.  */
@@ -110,10 +113,10 @@
 #  define WEOF -1
 # endif
 #else
-/* MSVC defines wint_t as 'unsigned short' in <crtdefs.h>.
+/* mingw and MSVC define wint_t as 'unsigned short' in <crtdefs.h>.
    This is too small: ISO C 99 section 7.24.1.(2) says that wint_t must be
    "unchanged by default argument promotions".  Override it.  */
-# if defined _MSC_VER
+# if @GNULIB_OVERRIDES_WINT_T@
 #  if !GNULIB_defined_wint_t
 #   include <crtdefs.h>
 typedef unsigned int rpl_wint_t;

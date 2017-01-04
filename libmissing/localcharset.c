@@ -1,6 +1,6 @@
 /* Determine a canonical name for the current locale's character encoding.
 
-   Copyright (C) 2000-2006, 2008-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2006, 2008-2017 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -507,7 +507,7 @@ locale_charset (void)
     current_locale = setlocale (LC_CTYPE, NULL);
 
   pdot = strrchr (current_locale, '.');
-  if (pdot)
+  if (pdot && 2 + strlen (pdot + 1) + 1 <= sizeof (buf))
     sprintf (buf, "CP%s", pdot + 1);
   else
     {

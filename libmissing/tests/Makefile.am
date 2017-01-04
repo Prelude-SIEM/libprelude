@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2016 Free Software Foundation, Inc.
+# Copyright (C) 2002-2017 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -312,6 +312,13 @@ check_PROGRAMS += test-fgetc
 EXTRA_DIST += test-fgetc.c signature.h macros.h
 
 ## end   gnulib module fgetc-tests
+
+## begin gnulib module flexmember
+
+
+EXTRA_DIST += flexmember.h
+
+## end   gnulib module flexmember
 
 ## begin gnulib module float-tests
 
@@ -638,6 +645,23 @@ EXTRA_DIST += test-ioctl.c signature.h macros.h
 
 ## end   gnulib module ioctl-tests
 
+## begin gnulib module isblank
+
+
+EXTRA_DIST += isblank.c
+
+EXTRA_libtests_a_SOURCES += isblank.c
+
+## end   gnulib module isblank
+
+## begin gnulib module isblank-tests
+
+TESTS += test-isblank
+check_PROGRAMS += test-isblank
+EXTRA_DIST += test-isblank.c signature.h macros.h
+
+## end   gnulib module isblank-tests
+
 ## begin gnulib module langinfo-tests
 
 TESTS += test-langinfo
@@ -645,6 +669,14 @@ check_PROGRAMS += test-langinfo
 EXTRA_DIST += test-langinfo.c
 
 ## end   gnulib module langinfo-tests
+
+## begin gnulib module limits-h-tests
+
+TESTS += test-limits-h
+check_PROGRAMS += test-limits-h
+EXTRA_DIST += test-limits-h.c
+
+## end   gnulib module limits-h-tests
 
 ## begin gnulib module listen-tests
 
@@ -1464,6 +1496,13 @@ check_PROGRAMS += test-write
 EXTRA_DIST += test-write.c signature.h macros.h
 
 ## end   gnulib module write-tests
+
+## begin gnulib module xalloc-oversized
+
+
+EXTRA_DIST += xalloc-oversized.h
+
+## end   gnulib module xalloc-oversized
 
 ## begin gnulib module yield
 

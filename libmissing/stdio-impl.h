@@ -1,5 +1,5 @@
 /* Implementation details of FILE streams.
-   Copyright (C) 2007-2008, 2010-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2008, 2010-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -109,5 +109,32 @@
 #  define _base __base
 #  define _flag __flag
 # endif
+
+#elif (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__  /* newer Windows with MSVC */
+
+/* <stdio.h> does not define the innards of FILE any more.  */
+# define WINDOWS_OPAQUE_FILE
+
+struct _gl_real_FILE
+{
+  /* Note: Compared to older Windows and to mingw, it has the fields
+     _base and _cnt swapped. */
+  unsigned char *_ptr;
+  unsigned char *_base;
+  int _cnt;
+  int _flag;
+  int _file;
+  int _charbuf;
+  int _bufsiz;
+};
+# define fp_ ((struct _gl_real_FILE *) fp)
+
+/* These values were determined by a program similar to the one at
+   <http://lists.gnu.org/archive/html/bug-gnulib/2010-12/msg00165.html>.  */
+# define _IOREAD   0x1
+# define _IOWRT    0x2
+# define _IORW     0x4
+# define _IOEOF    0x8
+# define _IOERR   0x10
 
 #endif

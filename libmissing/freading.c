@@ -1,5 +1,5 @@
 /* Retrieve information about a FILE stream.
-   Copyright (C) 2007-2016 Free Software Foundation, Inc.
+   Copyright (C) 2007-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -42,11 +42,11 @@ freading (FILE *fp)
   return (fp->_flags & _IOREAD) != 0;
 # elif defined __minix               /* Minix */
   return (fp->_flags & _IOREADING) != 0;
-# elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, NonStop Kernel */
+# elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel */
 #  if defined __sun                  /* Solaris */
-  return (fp->_flag & _IOREAD) != 0 && (fp->_flag & _IOWRT) == 0;
+  return (fp_->_flag & _IOREAD) != 0 && (fp_->_flag & _IOWRT) == 0;
 #  else
-  return (fp->_flag & _IOREAD) != 0;
+  return (fp_->_flag & _IOREAD) != 0;
 #  endif
 # elif defined __UCLIBC__            /* uClibc */
   return (fp->__modeflags & (__FLAG_READONLY | __FLAG_READING)) != 0;
