@@ -1,3 +1,16 @@
+* 2017-01-12, libprelude-4.0.0beta2:
+
+Author: Yoann Vandoorselaere
+
+- Update GnuLib and SWIG generated code
+
+- Get rid of libgcrypt
+
+    Nowadays, libgcrypt functions that we used are now available
+    directly from GnuTLS, which uses libnettle.
+
+
+
 * 2016-12-23, libprelude-4.0.0beta1:
 
 Author: Yoann Vandoorselaere
