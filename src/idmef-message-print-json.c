@@ -1,7 +1,7 @@
 
 /*****
 *
-* Copyright (C) 2016 CS-SI. All Rights Reserved.
+* Copyright (C) 2016-2017 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoannv@gmail.com>
 *
 * This file is part of the Prelude library.
