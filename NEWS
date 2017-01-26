@@ -1,3 +1,11 @@
+* 2017-01-27, libprelude-4.0.0rc1:
+
+Author: Yoann Vandoorselaere
+
+- Fix crash when retrieving listed value
+
+
+
 * 2017-01-12, libprelude-4.0.0beta2:
 
 Author: Yoann Vandoorselaere
