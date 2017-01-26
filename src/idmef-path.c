@@ -246,6 +246,33 @@ static int set_index_key(const idmef_path_element_t *elem, void *ptr)
 
 
 
+static int get_internal(idmef_value_t **value, const idmef_path_t *path, int depth, void *parent, idmef_class_id_t parent_class)
+{
+        int ret;
+        idmef_value_type_t vt;
+        idmef_value_type_id_t type;
+
+        if ( parent_class >= 0 )
+                return idmef_path_get_internal(value, path, depth, parent, parent_class);
+
+        type = path->elem[depth - 1].value_type;
+
+        ret = idmef_value_new(value, type, parent);
+        if ( ret < 0 )
+                return ret;
+
+        vt.id = type;
+        vt.data.string_val = (void *) parent;
+
+        ret = idmef_value_type_ref(&vt);
+        if ( ret < 0 )
+                idmef_value_destroy(*value);
+
+        return 1;
+}
+
+
+
 static int idmef_path_get_list_internal(idmef_value_t **value_list,
                                         const idmef_path_t *path, int depth,
                                         prelude_list_t *list, idmef_class_id_t parent_class)
@@ -265,24 +292,7 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                 if ( path->elem[depth - 1].index_key && ! has_index_key(tmp, path->elem[depth - 1].index_key) )
                         continue;
 
-                if ( parent_class >= 0 )
-                        ret = idmef_path_get_internal(&value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
-                else {
-                        idmef_value_type_id_t type = path->elem[depth - 1].value_type;
-
-                        ret = idmef_value_new(&value, type, idmef_linked_object_get_object(tmp));
-                        if ( ret == 0 ) {
-                                idmef_value_type_t vt;
-
-                                vt.id = type;
-                                vt.data.string_val = (void *) idmef_linked_object_get_object(tmp);
-
-                                ret = idmef_value_type_ref(&vt);
-                                if ( ret < 0 )
-                                        idmef_value_destroy(value);
-                        }
-                }
-
+                ret = get_internal(&value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
                 if ( ret < 0 ) {
                         idmef_value_destroy(*value_list);
                         return ret;
@@ -306,29 +316,43 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
 }
 
 
+static prelude_list_t *list_get_nth(prelude_list_t *head, int which)
+{
+        int cnt = 0;
+        prelude_list_t *tmp;
+
+        if ( which >= 0 ) {
+                prelude_list_for_each(head, tmp) {
+                        if ( cnt++ == which )
+                                return tmp;
+                }
+        }
+
+        else {
+                prelude_list_for_each_reversed(head, tmp) {
+                        if ( --cnt == which )
+                                return tmp;
+                }
+        }
+
+        return NULL;
+}
+
+
+
 static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t *path,
                                        unsigned int depth, prelude_list_t *list,
                                        idmef_class_id_t parent_class, int which, const char *index_key)
 {
-        int cnt = 0;
-        prelude_list_t *tmp = NULL;
+        prelude_list_t *tmp;
 
-        if ( which >= 0 ) {
-                prelude_list_for_each(list, tmp) {
-                        if ( cnt++ == which )
-                                return idmef_path_get_internal(value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
-                }
-        } else {
-                which = -which;
-                which--; /* With negative value, -1 is the base, translate to 0 */
-
-                prelude_list_for_each_reversed(list, tmp) {
-                        if ( cnt++ == which )
-                                return idmef_path_get_internal(value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
-                }
+        tmp = list_get_nth(list, which);
+        if ( ! tmp ) {
+                *value = NULL;
+                return 0;
         }
 
-        return 0;
+        return get_internal(value, path, depth, idmef_linked_object_get_object(tmp), parent_class);
 }
 
 
