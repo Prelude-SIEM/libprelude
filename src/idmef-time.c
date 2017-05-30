@@ -197,7 +197,7 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
 
         ptr = parse_time_ymd(&tm, buf);
         if ( ! ptr )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing date field, format should be: YY-MM-DD");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing date field, format should be: YYYY-MM-DD");
 
         time->usec = 0;
         time->gmt_offset = 0;
