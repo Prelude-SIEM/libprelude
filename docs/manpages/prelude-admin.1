@@ -22,15 +22,15 @@ prelude-admin \- Manage agents accounts
 
 .SH DESCRIPTION
 In order for an agent to communicate with a manager, it must be registered. Registration involves several steps:
- - Allocating an unique identity for the agent
+ - Allocating a unique identity for the agent
  - Creating directory to be used by the agent (example: failover purpose)
  - Registering to a remote 'prelude-manager': get a signed X509 certificate that will allow communication between agent and manager using the specified permissions. 
 
-All these informations are stored in an agent profile. 
+All this information is stored in an agent profile.
 
 An agent profile is identified by its name. When an agent is started, it will load the profile of the same name as the program itself, that is, if your agent is named "prelude-lml", the agent will load the profile named "prelude-lml". 
 
-The name of the profile can be overriden using the '--prelude --profile name_of_my_profile' command line option. It is possible to define the profile name so that you can have several instances of one agent running with different permissions, using different profiles. 
+The name of the profile can be overridden using the '--prelude --profile name_of_my_profile' command line option. It is possible to define the profile name so that you can have several instances of one agent running with different permissions, using different profiles. 
 
 Note that profiles are not specific to agents, but are used in all programs of the Prelude suite (agents, managers, etc).
 
@@ -44,10 +44,10 @@ is the default name of the agent you are installing or your own defined name.
 If you start your agent without prior registration, a warning is displayed including the default profile name on how to register the agent. 
 
 .B <requested permission>
-is the permission your agent needs. It is composed of permission attributes (idmef or admin) and access type: read/write (r/w). By default, an agent need permissions for writing IDMEF to a manager, and reading administrative command sent to it. That is : "idmef:w admin:r".
+is the permission your agent needs. It is composed of permission attributes (idmef or admin) and access type: read/write (r/w). By default, an agent need permissions for writing IDMEF to a manager, and reading administrative command sent to it. That is: "idmef:w admin:r".
 
 .B <manager address>
-is the address of the prelude-manager you wish to register. this can either be its IP address or its hostname. If you made a local installation, you can write localhost to connect via unix socket.
+is the address of the prelude-manager you wish to register. This can either be its IP address or its hostname. If you made a local installation, you can write localhost to connect via unix socket.
 
 Remember to use the correct uid/gid when registering your agent. For instance, if you want to register snort (running with snort euid / egid), use --uid snort --gid snort. 
 
