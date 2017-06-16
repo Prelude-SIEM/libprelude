@@ -1,3 +1,13 @@
+* 2017-06-16, libprelude-4.1.0beta1:
+
+Author: Thomas Andrejak
+
+- Manpage spelling check
+
+- Correct the format of the year in date error message
+
+
+
 * 2017-02-16, libprelude-4.0.0:
 * 2017-02-12, libprelude-4.0.0rc3:
 * 2017-02-03, libprelude-4.0.0rc2:

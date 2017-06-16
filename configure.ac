@@ -1,8 +1,8 @@
 m4_define([libprelude_major_version], [4])
-m4_define([libprelude_minor_version], [0])
+m4_define([libprelude_minor_version], [1])
 m4_define([libprelude_micro_version], [0])
-m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_FINAL])
-m4_define([libprelude_serial_version], [0])
+m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_BETA])
+m4_define([libprelude_serial_version], [1])
 
 m4_define([serial_string], ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_ALPHA, alpha,
                                   ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_BETA, beta,
@@ -32,12 +32,12 @@ dnl * Library soname (https://www.sourceware.org/autobook/autobook/autobook_61.h
 dnl **********************************************************
 
 libprelude_current=27
-libprelude_revision=0
+libprelude_revision=1
 libprelude_age=4
 LIBPRELUDE_SONAME=$libprelude_current:$libprelude_revision:$libprelude_age
 
 libpreludecpp_current=10
-libpreludecpp_revision=0
+libpreludecpp_revision=1
 libpreludecpp_age=2
 LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
 
