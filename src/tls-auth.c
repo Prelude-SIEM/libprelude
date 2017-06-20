@@ -171,8 +171,11 @@ static int handle_gnutls_error(gnutls_session_t session, int ret)
                 return -1;
         }
 
-        if ( ret == GNUTLS_E_AGAIN || ret == GNUTLS_E_INTERRUPTED )
+        else if ( ret == GNUTLS_E_AGAIN || ret == GNUTLS_E_INTERRUPTED )
                 return 0;
+
+        else if ( gnutls_error_is_fatal(ret) )
+                return -1;
 
         gnutls_alert_send_appropriate(session, ret);
         return ret;
