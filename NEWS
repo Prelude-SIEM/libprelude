@@ -1,3 +1,11 @@
+* 2017-06-30, libprelude-4.1.0rc1:
+
+Author: Yoann Vandoorselaere
+
+- Copy prelude-client analyzer object instead of referencing it
+
+
+
 * 2017-06-23, libprelude-4.1.0beta2:
 
 Author: Yoann Vandoorselaere
