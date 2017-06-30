@@ -526,14 +526,14 @@ static int add_analyzer(prelude_client_t *client, void *top,
                         void *(*geta)(void *top, idmef_analyzer_t *analyzer),
                         int (*insa)(void *top, idmef_analyzer_t *analyzer, int pos))
 {
+        int ret;
         prelude_string_t *str;
+        idmef_analyzer_t *analyzer = NULL;
         uint64_t wanted_analyzerid, analyzerid;
-        idmef_analyzer_t *analyzer = NULL, *canalyzer;
 
-        canalyzer = prelude_client_get_analyzer(client);
         wanted_analyzerid = prelude_client_profile_get_analyzerid(prelude_client_get_profile(client));
 
-        while ( (analyzer = geta(top, analyzer)) && analyzer != canalyzer ) {
+        while ( (analyzer = geta(top, analyzer)) ) {
                 str = idmef_analyzer_get_analyzerid(analyzer);
                 if ( ! str )
                         continue;
@@ -543,7 +543,11 @@ static int add_analyzer(prelude_client_t *client, void *top,
                         return 0;
         }
 
-        return insa(top, idmef_analyzer_ref(prelude_client_get_analyzer(client)), IDMEF_LIST_PREPEND);
+        ret = idmef_analyzer_clone(prelude_client_get_analyzer(client), &analyzer);
+        if ( ret < 0 )
+                return ret;
+
+        return insa(top, analyzer, IDMEF_LIST_PREPEND);
 }
 
 
