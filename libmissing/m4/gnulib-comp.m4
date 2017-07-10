@@ -92,6 +92,7 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([AC_FUNC_FSEEKO])
   # Code from module fflush-tests:
   # Code from module fgetc-tests:
+  # Code from module filename:
   # Code from module flexmember:
   # Code from module float:
   # Code from module float-tests:
@@ -175,6 +176,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module localeconv-tests:
   # Code from module localename:
   # Code from module localename-tests:
+  # Code from module localtime-buffer:
   # Code from module lock:
   # Code from module lock-tests:
   # Code from module lseek:
@@ -324,6 +326,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module unistd-tests:
   # Code from module unsetenv:
   # Code from module unsetenv-tests:
+  # Code from module usleep:
+  # Code from module usleep-tests:
   # Code from module vasnprintf:
   # Code from module vasnprintf-tests:
   # Code from module verify:
@@ -448,6 +452,11 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_FSTAT
   if test $REPLACE_FSTAT = 1; then
     AC_LIBOBJ([fstat])
+    case "$host_os" in
+      mingw*)
+        AC_LIBOBJ([stat-w32])
+        ;;
+    esac
     gl_PREREQ_FSTAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([fstat])
@@ -544,6 +553,8 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_LOCALECONV
   fi
   gl_LOCALE_MODULE_INDICATOR([localeconv])
+  AC_REQUIRE([gl_LOCALTIME_BUFFER_DEFAULTS])
+  AC_LIBOBJ([localtime-buffer])
   gl_LOCK
   gl_MODULE_INDICATOR([lock])
   gl_FUNC_LSEEK
@@ -556,6 +567,7 @@ AC_SUBST([LTALLOCA])
     AC_LIBOBJ([malloc])
   fi
   gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+  gl_MALLOCA
   gl_FUNC_MBRTOWC
   if test $HAVE_MBRTOWC = 0 || test $REPLACE_MBRTOWC = 1; then
     AC_LIBOBJ([mbrtowc])
@@ -597,7 +609,7 @@ AC_SUBST([LTALLOCA])
   fi
   gl_TIME_MODULE_INDICATOR([mktime])
   gl_FUNC_MKTIME_INTERNAL
-  if test $REPLACE_MKTIME = 1; then
+  if test $WANT_MKTIME_INTERNAL = 1; then
     AC_LIBOBJ([mktime])
     gl_PREREQ_MKTIME
   fi
@@ -609,6 +621,7 @@ AC_SUBST([LTALLOCA])
   if test $HAVE_MSVC_INVALID_PARAMETER_HANDLER = 1; then
     AC_LIBOBJ([msvc-nothrow])
   fi
+  gl_MODULE_INDICATOR([msvc-nothrow])
   gl_MULTIARCH
   gl_HEADER_NETDB
   gl_HEADER_NETINET_IN
@@ -643,6 +656,9 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_REGEX
   fi
   gl_RELOCATABLE_LIBRARY
+  if test $RELOCATABLE = yes; then
+    AC_LIBOBJ([relocatable])
+  fi
   gl_FUNC_SELECT
   if test $REPLACE_SELECT = 1; then
     AC_LIBOBJ([select])
@@ -691,6 +707,11 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_STAT
   if test $REPLACE_STAT = 1; then
     AC_LIBOBJ([stat])
+    case "$host_os" in
+      mingw*)
+        AC_LIBOBJ([stat-w32])
+        ;;
+    esac
     gl_PREREQ_STAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([stat])
@@ -744,6 +765,8 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_STRERROR_R
   fi
   gl_STRING_MODULE_INDICATOR([strerror_r])
+  dnl For the modules argp, error.
+  gl_MODULE_INDICATOR([strerror_r-posix])
   gl_HEADER_STRING_H
   gl_HEADER_STRINGS_H
   gl_FUNC_STRNDUP
@@ -771,7 +794,7 @@ AC_SUBST([LTALLOCA])
   gl_STRING_MODULE_INDICATOR([strsep])
   gl_SYS_IOCTL_H
   AC_PROG_MKDIR_P
-  gl_HEADER_SYS_SELECT
+  AC_REQUIRE([gl_HEADER_SYS_SELECT])
   AC_PROG_MKDIR_P
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   AC_PROG_MKDIR_P
@@ -925,13 +948,13 @@ changequote([, ])dnl
   AC_CHECK_FUNCS_ONCE([newlocale])
   gl_LOCALENAME
   AC_CHECK_FUNCS_ONCE([newlocale])
+  AC_CHECK_HEADERS_ONCE([semaphore.h])
   gl_FUNC_LSTAT
   if test $REPLACE_LSTAT = 1; then
     AC_LIBOBJ([lstat])
     gl_PREREQ_LSTAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([lstat])
-  gl_MALLOCA
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
@@ -1001,6 +1024,11 @@ changequote([, ])dnl
     gl_PREREQ_UNSETENV
   fi
   gl_STDLIB_MODULE_INDICATOR([unsetenv])
+  gl_FUNC_USLEEP
+  if test $HAVE_USLEEP = 0 || test $REPLACE_USLEEP = 1; then
+    AC_LIBOBJ([usleep])
+  fi
+  gl_UNISTD_MODULE_INDICATOR([usleep])
   gt_LOCALE_FR
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
@@ -1111,32 +1139,30 @@ AC_DEFUN([gltests_LIBSOURCES], [
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
   build-aux/config.rpath
-  build-aux/snippet/_Noreturn.h
-  build-aux/snippet/arg-nonnull.h
-  build-aux/snippet/c++defs.h
-  build-aux/snippet/unused-parameter.h
-  build-aux/snippet/warn-on-use.h
   doc/relocatable.texi
+  lib/_Noreturn.h
   lib/accept.c
   lib/alloca.c
   lib/alloca.in.h
+  lib/arg-nonnull.h
   lib/arpa_inet.in.h
   lib/asnprintf.c
   lib/assure.h
   lib/bind.c
   lib/btowc.c
+  lib/c++defs.h
   lib/c-ctype.c
   lib/c-ctype.h
   lib/close.c
   lib/config.charset
   lib/connect.c
-  lib/dosname.h
   lib/dup2.c
   lib/errno.in.h
   lib/fclose.c
   lib/fd-hook.c
   lib/fd-hook.h
   lib/fflush.c
+  lib/filename.h
   lib/float+.h
   lib/float.c
   lib/float.in.h
@@ -1184,8 +1210,13 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/localcharset.h
   lib/locale.in.h
   lib/localeconv.c
+  lib/localtime-buffer.c
+  lib/localtime-buffer.h
   lib/lseek.c
   lib/malloc.c
+  lib/malloca.c
+  lib/malloca.h
+  lib/malloca.valgrind
   lib/mbrtowc.c
   lib/mbsinit.c
   lib/mbtowc-impl.h
@@ -1232,6 +1263,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/socket.c
   lib/sockets.c
   lib/sockets.h
+  lib/stat-w32.c
+  lib/stat-w32.h
   lib/stat.c
   lib/stdalign.in.h
   lib/stdbool.in.h
@@ -1271,16 +1304,19 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/uname.c
   lib/unistd.c
   lib/unistd.in.h
+  lib/unused-parameter.h
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/verify.h
   lib/vsnprintf.c
   lib/w32sock.h
+  lib/warn-on-use.h
   lib/wchar.in.h
   lib/wcrtomb.c
   lib/wctype-h.c
   lib/wctype.in.h
   lib/write.c
+  lib/xalloc-oversized.h
   lib/xsize.c
   lib/xsize.h
   m4/00gnulib.m4
@@ -1357,6 +1393,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/locale_h.m4
   m4/localeconv.m4
   m4/localename.m4
+  m4/localtime-buffer.m4
   m4/lock.m4
   m4/longlong.m4
   m4/lseek.m4
@@ -1389,6 +1426,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/poll.m4
   m4/poll_h.m4
   m4/printf.m4
+  m4/pthread_rwlock_rdlock.m4
   m4/putenv.m4
   m4/raise.m4
   m4/regex.m4
@@ -1445,6 +1483,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/uname.m4
   m4/ungetc.m4
   m4/unistd_h.m4
+  m4/usleep.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/warn-on-use.m4
@@ -1460,6 +1499,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/yield.m4
   tests/init.sh
   tests/macros.h
+  tests/null-ptr.h
   tests/signature.h
   tests/test-accept.c
   tests/test-alloca-opt.c
@@ -1578,6 +1618,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-poll.c
   tests/test-raise.c
   tests/test-regex.c
+  tests/test-rwlock1.c
   tests/test-select-fd.c
   tests/test-select-in.sh
   tests/test-select-out.sh
@@ -1627,7 +1668,9 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-uname.c
   tests/test-unistd.c
   tests/test-unsetenv.c
+  tests/test-usleep.c
   tests/test-vasnprintf.c
+  tests/test-verify-try.c
   tests/test-verify.c
   tests/test-verify.sh
   tests/test-vsnprintf.c
@@ -1643,12 +1686,16 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-wctype-h.c
   tests/test-write.c
   tests/zerosize-ptr.h
+  tests=lib/_Noreturn.h
+  tests=lib/arg-nonnull.h
   tests=lib/binary-io.c
   tests=lib/binary-io.h
+  tests=lib/c++defs.h
   tests=lib/c-strcase.h
   tests=lib/c-strcasecmp.c
   tests=lib/c-strncasecmp.c
   tests=lib/ctype.in.h
+  tests=lib/dosname.h
   tests=lib/fcntl.in.h
   tests=lib/fdopen.c
   tests=lib/flexmember.h
@@ -1664,9 +1711,6 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/localename.c
   tests=lib/localename.h
   tests=lib/lstat.c
-  tests=lib/malloca.c
-  tests=lib/malloca.h
-  tests=lib/malloca.valgrind
   tests=lib/open.c
   tests=lib/pipe.c
   tests=lib/putenv.c
@@ -1675,8 +1719,10 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/setlocale.c
   tests=lib/symlink.c
   tests=lib/unsetenv.c
+  tests=lib/unused-parameter.h
+  tests=lib/usleep.c
+  tests=lib/warn-on-use.h
   tests=lib/wctob.c
   tests=lib/wctomb-impl.h
   tests=lib/wctomb.c
-  tests=lib/xalloc-oversized.h
 ])

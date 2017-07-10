@@ -52,7 +52,7 @@ fseeko (FILE *fp, off_t offset, int whence)
       && fp->_IO_write_ptr == fp->_IO_write_base
       && fp->_IO_save_base == NULL)
 #elif defined __sferror || defined __DragonFly__ || defined __ANDROID__
-  /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Android */
+  /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Minix 3, Android */
 # if defined __SL64 && defined __SCLE /* Cygwin */
   if ((fp->_flags & __SL64) == 0)
     {
@@ -80,7 +80,7 @@ fseeko (FILE *fp, off_t offset, int whence)
 #elif defined __minix               /* Minix */
   if (fp_->_ptr == fp_->_buf
       && (fp_->_ptr == NULL || fp_->_count == 0))
-#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel */
+#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel, OpenVMS */
   if (fp_->_ptr == fp_->_base
       && (fp_->_ptr == NULL || fp_->_cnt == 0))
 #elif defined __UCLIBC__            /* uClibc */
@@ -117,7 +117,7 @@ fseeko (FILE *fp, off_t offset, int whence)
       if (pos == -1)
         {
 #if defined __sferror || defined __DragonFly__ || defined __ANDROID__
-          /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Android */
+          /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Minix 3, Android */
           fp_->_flags &= ~__SOFF;
 #endif
           return -1;
@@ -127,8 +127,8 @@ fseeko (FILE *fp, off_t offset, int whence)
       fp->_flags &= ~_IO_EOF_SEEN;
       fp->_offset = pos;
 #elif defined __sferror || defined __DragonFly__ || defined __ANDROID__
-      /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Android */
-# if defined __CYGWIN__ || (defined __NetBSD__ && __NetBSD_Version__ >= 600000000)
+      /* FreeBSD, NetBSD, OpenBSD, DragonFly, Mac OS X, Cygwin, Minix 3, Android */
+# if defined __CYGWIN__ || (defined __NetBSD__ && __NetBSD_Version__ >= 600000000) || defined __minix
       /* fp_->_offset is typed as an integer.  */
       fp_->_offset = pos;
 # else
@@ -150,7 +150,7 @@ fseeko (FILE *fp, off_t offset, int whence)
       fp_->_flags &= ~__SEOF;
 #elif defined __EMX__               /* emx+gcc */
       fp->_flags &= ~_IOEOF;
-#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel */
+#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, MSVC, NonStop Kernel, OpenVMS */
       fp_->_flag &= ~_IOEOF;
 #elif defined __MINT__              /* Atari FreeMiNT */
       fp->__offset = pos;

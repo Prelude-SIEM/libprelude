@@ -40,7 +40,7 @@
 # if defined __APPLE__ && defined __MACH__
 #  include <xlocale.h>
 # endif
-# if __GLIBC__ >= 2 && !defined __UCLIBC__
+# if (__GLIBC__ >= 2 && !defined __UCLIBC__) || defined __CYGWIN__
 #  include <langinfo.h>
 # endif
 # if !defined IN_LIBINTL
@@ -61,7 +61,7 @@ extern char * getlocalename_l(int, locale_t);
 # endif
 #endif
 
-#if defined _WIN32 || defined __WIN32__
+#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
 # define WINDOWS_NATIVE
 # if !defined IN_LIBINTL
 #  include "glthread/lock.h"
@@ -2703,7 +2703,7 @@ gl_locale_name_thread_unsafe (int category, const char *categoryname)
              nl_langinfo (_NL_LOCALE_NAME (category)).  */
           name = thread_locale->__names[category];
         return name;
-#  elif defined __FreeBSD__ || (defined __APPLE__ && defined __MACH__)
+#  elif (defined __FreeBSD__ || defined __DragonFly__) || (defined __APPLE__ && defined __MACH__)
         /* FreeBSD, Mac OS X */
         int mask;
 
@@ -2734,6 +2734,19 @@ gl_locale_name_thread_unsafe (int category, const char *categoryname)
 #  elif defined __sun && HAVE_GETLOCALENAME_L
         /* Solaris >= 12.  */
         return getlocalename_l (category, thread_locale);
+#  elif defined __CYGWIN__
+        /* Cygwin < 2.6 lacks uselocale and thread-local locales altogether.
+           Cygwin <= 2.6.1 lacks NL_LOCALE_NAME, requiring peeking inside
+           an opaque struct.  */
+#   ifdef NL_LOCALE_NAME
+        return nl_langinfo_l (NL_LOCALE_NAME (category), thread_locale);
+#   else
+        /* FIXME: Remove when we can assume new-enough Cygwin.  */
+        struct __locale_t {
+          char categories[7][32];
+        };
+        return ((struct __locale_t *) thread_locale)->categories[category];
+#   endif
 #  elif defined __ANDROID__
         return MB_CUR_MAX == 4 ? "C.UTF-8" : "C";
 #  endif

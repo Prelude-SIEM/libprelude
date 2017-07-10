@@ -1,4 +1,4 @@
-# printf.m4 serial 52
+# printf.m4 serial 54
 dnl Copyright (C) 2003, 2007-2017 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -489,6 +489,13 @@ int main ()
           && strcmp (buf, "0x6.0ap-2 33") != 0
           && strcmp (buf, "0xc.14p-3 33") != 0))
     result |= 4;
+  /* This catches a Mac OS X 10.12.4 (Darwin 16.5) bug: it doesn't round.  */
+  if (sprintf (buf, "%.0a %d", 1.51, 33, 44, 55) < 0
+      || (strcmp (buf, "0x2p+0 33") != 0
+          && strcmp (buf, "0x3p-1 33") != 0
+          && strcmp (buf, "0x6p-2 33") != 0
+          && strcmp (buf, "0xcp-3 33") != 0))
+    result |= 4;
   /* This catches a FreeBSD 6.1 bug.  See
      <http://lists.gnu.org/archive/html/bug-gnulib/2007-04/msg00107.html> */
   if (sprintf (buf, "%010a %d", 1.0 / zero, 33, 44, 55) < 0
@@ -581,8 +588,8 @@ changequote(,)dnl
            darwin[1-6].*)        gl_cv_func_printf_directive_f="guessing no";;
            darwin*)              gl_cv_func_printf_directive_f="guessing yes";;
                                  # Guess yes on Solaris >= 2.10.
-           solaris2.[1-9][0-9]*) gl_cv_func_printf_sizes_c99="guessing yes";;
-           solaris*)             gl_cv_func_printf_sizes_c99="guessing no";;
+           solaris2.[1-9][0-9]*) gl_cv_func_printf_directive_f="guessing yes";;
+           solaris*)             gl_cv_func_printf_directive_f="guessing no";;
                                  # If we don't know, assume the worst.
            *)                    gl_cv_func_printf_directive_f="guessing no";;
          esac

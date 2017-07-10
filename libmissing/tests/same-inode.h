@@ -18,16 +18,26 @@
 #ifndef SAME_INODE_H
 # define SAME_INODE_H 1
 
-# ifdef __VMS
+# include <sys/types.h>
+
+# if defined __VMS && __CRTL_VER < 80200000
 #  define SAME_INODE(a, b)             \
     ((a).st_ino[0] == (b).st_ino[0]    \
      && (a).st_ino[1] == (b).st_ino[1] \
      && (a).st_ino[2] == (b).st_ino[2] \
      && (a).st_dev == (b).st_dev)
 # elif (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
-/* On MinGW, struct stat lacks necessary info, so always return 0.
-   Callers can use !a.st_ino to deduce that the information is unknown.  */
-#  define SAME_INODE(a, b) 0
+   /* Native Windows.  */
+#  if _GL_WINDOWS_STAT_INODES
+    /* stat() and fstat() set st_dev and st_ino to 0 if information about
+       the inode is not available.  */
+#   define SAME_INODE(a, b) \
+     (!((a).st_ino == 0 && (a).st_dev == 0) \
+      && (a).st_ino == (b).st_ino && (a).st_dev == (b).st_dev)
+#  else
+    /* stat() and fstat() set st_ino to 0 always.  */
+#   define SAME_INODE(a, b) 0
+#  endif
 # else
 #  define SAME_INODE(a, b)    \
     ((a).st_ino == (b).st_ino \

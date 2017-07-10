@@ -31,14 +31,18 @@
 
 /* Ensure that <windows.h> declares GetFileSizeEx.  */
 #  undef _WIN32_WINNT
-#  define _WIN32_WINNT 0x500
+#  define _WIN32_WINNT _WIN32_WINNT_WIN2K
 
 /* Get declarations of the native Windows API functions.  */
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
 
 /* Get _get_osfhandle.  */
-#  include "msvc-nothrow.h"
+#  if GNULIB_MSVC_NOTHROW
+#   include "msvc-nothrow.h"
+#  else
+#   include <io.h>
+#  endif
 
 static BOOL
 SetFileSize (HANDLE h, LONGLONG size)
@@ -175,13 +179,14 @@ chsize_nothrow (int fd, long length)
 
   return result;
 }
-#   define chsize chsize_nothrow
+#  else
+#   define chsize_nothrow chsize
 #  endif
 
 int
 ftruncate (int fd, off_t length)
 {
-  return chsize (fd, length);
+  return chsize_nothrow (fd, length);
 }
 
 # endif

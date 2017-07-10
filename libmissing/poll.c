@@ -41,7 +41,11 @@
 # include <io.h>
 # include <stdio.h>
 # include <conio.h>
-# include "msvc-nothrow.h"
+# if GNULIB_MSVC_NOTHROW
+#  include "msvc-nothrow.h"
+# else
+#  include <io.h>
+# endif
 #else
 # include <sys/time.h>
 # include <unistd.h>
@@ -71,6 +75,14 @@
 #endif
 
 #ifdef WINDOWS_NATIVE
+
+/* Here we need the recv() function from Windows, that takes a SOCKET as
+   first argument, not any possible gnulib override.  */
+# undef recv
+
+/* Here we need the select() function from Windows, because we pass bit masks
+   of SOCKETs, not bit masks of FDs.  */
+# undef select
 
 static BOOL IsConsoleHandle (HANDLE h)
 {
@@ -335,13 +347,13 @@ poll (struct pollfd *pfd, nfds_t nfd, int timeout)
   int maxfd, rc;
   nfds_t i;
 
-  if (nfd < 0)
+  if (nfd > INT_MAX)
     {
       errno = EINVAL;
       return -1;
     }
-  /* Don't check directly for NFD too large.  Any practical use of a
-     too-large NFD is caught by one of the other checks below, and
+  /* Don't check directly for NFD greater than OPEN_MAX.  Any practical use
+     of a too-large NFD is caught by one of the other checks below, and
      checking directly for getdtablesize is too much of a portability
      and/or performance and/or correctness hassle.  */
 
@@ -433,7 +445,7 @@ poll (struct pollfd *pfd, nfds_t nfd, int timeout)
   int rc = 0;
   nfds_t i;
 
-  if (nfd < 0 || timeout < -1)
+  if (nfd > INT_MAX || timeout < -1)
     {
       errno = EINVAL;
       return -1;
