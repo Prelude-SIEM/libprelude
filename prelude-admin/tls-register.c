@@ -409,7 +409,7 @@ static gnutls_x509_crt_t generate_signed_certificate(prelude_client_profile_t *c
                 goto err;
         }
 
-        ret = gnutls_x509_crt_sign(crt, ca_crt, ca_key);
+        ret = gnutls_x509_crt_sign2(crt, ca_crt, ca_key, GNUTLS_DIG_SHA256, 0);
         if ( ret < 0 ) {
                 fprintf(stderr, "error signing certificate: %s.\n", gnutls_strerror(ret));
                 goto err;
@@ -445,7 +445,7 @@ static gnutls_x509_crt_t generate_ca_certificate(prelude_client_profile_t *cp, g
         gnutls_x509_crt_set_ca_status(crt, 1);
         gnutls_x509_crt_set_key_usage(crt, usage);
 
-        ret = gnutls_x509_crt_sign(crt, crt, key);
+        ret = gnutls_x509_crt_sign2(crt, crt, key, GNUTLS_DIG_SHA256, 0);
         if ( ret < 0 ) {
                 fprintf(stderr, "error self-signing certificate: %s.\n", gnutls_strerror(ret));
                 gnutls_x509_crt_deinit(crt);
