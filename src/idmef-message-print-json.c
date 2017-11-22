@@ -1348,9 +1348,9 @@ int idmef_node_print_json(idmef_node_t *ptr, prelude_io_t *fd)
         {
                 prelude_string_t *field;
 
-                field = idmef_node_get_location(ptr);
+                field = idmef_node_get_name(ptr);
                 if ( field ) {
-                        ret = do_write(fd, ", \"location\": ");
+                        ret = do_write(fd, ", \"name\": ");
                         if ( ret < 0 )
                                 return ret;
 
@@ -1363,9 +1363,9 @@ int idmef_node_print_json(idmef_node_t *ptr, prelude_io_t *fd)
         {
                 prelude_string_t *field;
 
-                field = idmef_node_get_name(ptr);
+                field = idmef_node_get_location(ptr);
                 if ( field ) {
-                        ret = do_write(fd, ", \"name\": ");
+                        ret = do_write(fd, ", \"location\": ");
                         if ( ret < 0 )
                                 return ret;
 

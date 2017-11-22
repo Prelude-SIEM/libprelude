@@ -51,6 +51,9 @@ size_t idmef_class_get_child_count(idmef_class_id_t classid);
 
 idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t classid, idmef_class_child_id_t child);
 
+const char **idmef_class_get_child_attributes(idmef_class_id_t classid, idmef_class_child_id_t child);
+
+
 
 /*
  *

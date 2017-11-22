@@ -26,6 +26,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "idmef-criteria.hxx"
 #include "idmef-path.hxx"
@@ -61,6 +62,8 @@ namespace Prelude {
                 std::string getName(void);
                 std::string toString(void);
                 Prelude::IDMEFValue::IDMEFValueTypeEnum getValueType(void);
+                std::map<std::string,std::string> getAttributes(void);
+
                 std::string getPath(int rootidx=0, int depth=-1, const std::string &sep = ".", const std::string &listidx="");
                 std::vector<std::string> getEnumValues(void);
                 Prelude::IDMEFCriterion::IDMEFCriterionOperatorEnum getApplicableOperator(void);

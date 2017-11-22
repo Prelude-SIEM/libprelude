@@ -1632,13 +1632,13 @@ static int idmef_node_read_json(idmef_node_t *node, json_data_t *ctrl)
 
                 }
 
-                else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "location") == 0 ) {
+                else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "name") == 0 ) {
                         ctrl->idx++;
 
                         int ret;
                         prelude_string_t *str;
 
-                        ret = idmef_node_new_location(node, &str);
+                        ret = idmef_node_new_name(node, &str);
                         if ( ret < 0 )
                                 return ret;
 
@@ -1648,13 +1648,13 @@ static int idmef_node_read_json(idmef_node_t *node, json_data_t *ctrl)
 
                 }
 
-                else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "name") == 0 ) {
+                else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "location") == 0 ) {
                         ctrl->idx++;
 
                         int ret;
                         prelude_string_t *str;
 
-                        ret = idmef_node_new_name(node, &str);
+                        ret = idmef_node_new_location(node, &str);
                         if ( ret < 0 )
                                 return ret;
 

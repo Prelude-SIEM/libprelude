@@ -124,6 +124,27 @@ Prelude::IDMEFValue::IDMEFValueTypeEnum IDMEFClass::getValueType(void)
 }
 
 
+
+std::map<std::string, std::string> IDMEFClass::getAttributes(void)
+{
+        int i;
+        std::map<std::string,std::string> ret;
+        const char **attrs;
+
+        if ( _pathelem.size() == 0 )
+                throw PreludeError("Already in rootclass, cannot retrieve parents info");
+
+        attrs = idmef_class_get_child_attributes(_pathelem.back().parent_id, _pathelem.back().idx);
+        for ( i = 0; attrs && attrs[i] != NULL; i++ ) {
+                if ( i % 2 == 1 )
+                        ret[attrs[i - 1]] = attrs[i];
+        }
+
+        return ret;
+}
+
+
+
 std::string IDMEFClass::getName(void)
 {
         if ( _pathelem.size() == 0 )

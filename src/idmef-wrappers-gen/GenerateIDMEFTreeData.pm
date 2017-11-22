@@ -39,6 +39,7 @@ typedef struct \{
         idmef_value_type_id_t type;
         idmef_class_id_t class;
         int union_id;
+        const char **attributes;
 \} children_list_t;
 
 ");
@@ -56,16 +57,27 @@ sub     struct
     my  $object_type;
     my  $union_id = 0;
 
+    foreach my $field ( @{ $struct->{field_list} }) {
+      if ( $field->{attributes} ) {
+        $self->output("static const char *$struct->{short_typename}_$field->{name}_attributes[] = $field->{attributes};\n");
+      }
+    }
+
     $self->output("const children_list_t idmef_$struct->{short_typename}_children_list[] = \{\n");
 
     foreach my $field ( @{ $struct->{field_list} } ) {
+        my $dattr;
+        if ( $field->{attributes} ) {
+            $dattr = "$struct->{short_typename}_$field->{name}_attributes";
+        } else {
+            $dattr = "NULL";
+        }
 
         if ( $field->{metatype} == &METATYPE_UNION ) {
             $union_id += 1;
 
             foreach my $member ( @{ $field->{member_list} } ) {
-
-                $self->output("        \{ \"$member->{name}\", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . ", /* union ID */ $union_id \},\n");
+                $self->output("        \{ \"$member->{name}\", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . ", /* union ID */ $union_id, $dattr\},\n");
             }
 
         } else {
@@ -107,7 +119,7 @@ sub     struct
                 }
             }
 
-            $self->output("        \{ \"$name\", $list, $keyed_list, $object, $object_type, 0 \},\n");
+            $self->output("        \{ \"$name\", $list, $keyed_list, $object, $object_type, 0, $dattr \},\n");
         }
     }
     $self->output("\};\n\n");

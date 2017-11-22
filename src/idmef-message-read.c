@@ -1190,17 +1190,6 @@ int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg)
                                 break;
                         }
 
-                        case IDMEF_MSG_NODE_LOCATION: {
-                                prelude_string_t *tmp = NULL;
-
-                                ret = prelude_extract_string_safe(&tmp, buf, len, msg);
-                                if ( ret < 0 )
-                                        return ret;
-
-                                idmef_node_set_location(node, tmp);
-                                break;
-                        }
-
                         case IDMEF_MSG_NODE_NAME: {
                                 prelude_string_t *tmp = NULL;
 
@@ -1209,6 +1198,17 @@ int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg)
                                         return ret;
 
                                 idmef_node_set_name(node, tmp);
+                                break;
+                        }
+
+                        case IDMEF_MSG_NODE_LOCATION: {
+                                prelude_string_t *tmp = NULL;
+
+                                ret = prelude_extract_string_safe(&tmp, buf, len, msg);
+                                if ( ret < 0 )
+                                        return ret;
+
+                                idmef_node_set_location(node, tmp);
                                 break;
                         }
 

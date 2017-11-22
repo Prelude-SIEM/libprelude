@@ -1158,9 +1158,9 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 
         {
                 prelude_string_t *field;
-                const char tmp[] = "location: ";
+                const char tmp[] = "name: ";
 
-                field = idmef_node_get_location(ptr);
+                field = idmef_node_get_name(ptr);
 
                 if ( field ) {
                         print_indent(fd);
@@ -1172,9 +1172,9 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 
         {
                 prelude_string_t *field;
-                const char tmp[] = "name: ";
+                const char tmp[] = "location: ";
 
-                field = idmef_node_get_name(ptr);
+                field = idmef_node_get_location(ptr);
 
                 if ( field ) {
                         print_indent(fd);

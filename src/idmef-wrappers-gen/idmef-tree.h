@@ -83,6 +83,8 @@
 
 #define IDENT(name) uint64_t name
 
+#define DISPLAY_ATTRS(...)
+
 
 #endif /* _GENERATE */
 
@@ -164,7 +166,7 @@ struct {
         REFCOUNT;
         idmef_reference_origin_t origin;
 
-        REQUIRED(prelude_string_t, *name);
+        REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
         REQUIRED(prelude_string_t, *url);
         prelude_string_t *meaning;
 } TYPE_ID(idmef_reference_t, 50);
@@ -180,8 +182,8 @@ struct {
         IDMEF_OBJECT;
         REFCOUNT;
         prelude_string_t *ident;
-        REQUIRED(prelude_string_t, *text);
-        LISTED_OBJECT(reference_list, idmef_reference_t);
+        REQUIRED(prelude_string_t, *text); DISPLAY_ATTRS({"priority", "0", NULL})
+        LISTED_OBJECT(reference_list, idmef_reference_t); DISPLAY_ATTRS({"priority", "0", NULL})
 
 } TYPE_ID(idmef_classification_t, 6);
 
@@ -210,8 +212,8 @@ struct {
         prelude_string_t *ident;
         idmef_user_id_type_t type;
         prelude_string_t *tty;
-        prelude_string_t *name;
-        OPTIONAL_INT(uint32_t, number);
+        prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL})
+        OPTIONAL_INT(uint32_t, number); DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_user_id_t, 8);
 
 
@@ -236,7 +238,7 @@ struct {
         REFCOUNT;
         prelude_string_t *ident;
         idmef_user_category_t category;
-        LISTED_OBJECT(user_id_list, idmef_user_id_t);
+        LISTED_OBJECT(user_id_list, idmef_user_id_t); DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_user_t, 10);
 
 
@@ -274,7 +276,7 @@ struct {
         idmef_address_category_t category;
         prelude_string_t *vlan_name;
         OPTIONAL_INT(int32_t, vlan_num);
-        REQUIRED(prelude_string_t, *address);
+        REQUIRED(prelude_string_t, *address); DISPLAY_ATTRS({"priority", "0", NULL})
         prelude_string_t *netmask;
 } TYPE_ID(idmef_address_t, 12);
 
@@ -350,8 +352,8 @@ struct {
         prelude_string_t *iana_protocol_name;
 
         prelude_string_t *name;
-        OPTIONAL_INT(uint16_t, port);
-        prelude_string_t *portlist;
+        OPTIONAL_INT(uint16_t, port); DISPLAY_ATTRS({"priority", "0", NULL})
+        prelude_string_t *portlist; DISPLAY_ATTRS({"priority", "0", NULL})
         prelude_string_t *protocol;
 
         UNION(idmef_service_type_t, type) {
@@ -390,9 +392,9 @@ struct {
         REFCOUNT;
         prelude_string_t *ident;
         idmef_node_category_t category;
-        prelude_string_t *location;
-        prelude_string_t *name;
-        LISTED_OBJECT(address_list, idmef_address_t);
+        prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL});
+        prelude_string_t *location; DISPLAY_ATTRS({"priority", "0", NULL});
+        LISTED_OBJECT(address_list, idmef_address_t); DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_node_t, 19);
 
 
@@ -418,10 +420,10 @@ struct {
         idmef_source_spoofed_t spoofed;
         prelude_string_t *interface;
 
-        idmef_node_t *node;
-        idmef_user_t *user;
-        idmef_process_t *process;
-        idmef_service_t *service;
+        idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_user_t *user; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_process_t *process; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_service_t *service; DISPLAY_ATTRS({"priority", "0", NULL})
 
 } TYPE_ID(idmef_source_t, 21);
 
@@ -586,11 +588,11 @@ struct {
         idmef_target_decoy_t decoy;
         prelude_string_t *interface;
 
-        idmef_node_t *node;
-        idmef_user_t *user;
-        idmef_process_t *process;
-        idmef_service_t *service;
-        LISTED_OBJECT(file_list, idmef_file_t);
+        idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_user_t *user; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_process_t *process; DISPLAY_ATTRS({"priority", "0", NULL})
+        idmef_service_t *service; DISPLAY_ATTRS({"priority", "0", NULL})
+        LISTED_OBJECT(file_list, idmef_file_t); DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_target_t, 30);
 
 
@@ -605,15 +607,15 @@ struct {
         REFCOUNT;
         prelude_string_t *analyzerid;
 
-        prelude_string_t *name;
+        prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL})
         prelude_string_t *manufacturer;
-        prelude_string_t *model;
+        prelude_string_t *model; DISPLAY_ATTRS({"priority", "0", NULL})
         prelude_string_t *version;
-        prelude_string_t *class;
+        prelude_string_t *class; DISPLAY_ATTRS({"priority", "0", NULL})
         prelude_string_t *ostype;
         prelude_string_t *osversion;
 
-        idmef_node_t *node;
+        idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
         idmef_process_t *process;
 
 } TYPE_ID(idmef_analyzer_t, 31);
@@ -673,7 +675,7 @@ struct {
         OPTIONAL_INT(idmef_impact_severity_t, severity);
         OPTIONAL_INT(idmef_impact_completion_t, completion);
         idmef_impact_type_t type;
-        prelude_string_t *description;
+        prelude_string_t *description; DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_impact_t, 36);
 
 
@@ -727,9 +729,9 @@ struct {
         IDMEF_OBJECT;
         REFCOUNT;
 
-        idmef_impact_t *impact;
+        idmef_impact_t *impact; DISPLAY_ATTRS({"priority", "0", NULL})
         LISTED_OBJECT(action_list, idmef_action_t);
-        idmef_confidence_t *confidence;
+        idmef_confidence_t *confidence; DISPLAY_ATTRS({"priority", "0", NULL})
 } TYPE_ID(idmef_assessment_t, 41);
 
 
@@ -741,8 +743,8 @@ struct {
         IDMEF_OBJECT;
         REFCOUNT;
 
-        REQUIRED(prelude_string_t, *name);
-        prelude_string_t *command;
+        REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
+        prelude_string_t *command; DISPLAY_ATTRS({"priority", "0", NULL})
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_tool_alert_t, 42);
 
@@ -757,7 +759,7 @@ struct {
         IDMEF_OBJECT;
         REFCOUNT;
 
-        REQUIRED(prelude_string_t, *name);
+        REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_correlation_alert_t, 43);
 
@@ -771,7 +773,7 @@ struct {
         IDMEF_OBJECT;
         REFCOUNT;
 
-        REQUIRED(prelude_string_t, *program);
+        REQUIRED(prelude_string_t, *program); DISPLAY_ATTRS({"priority", "0", NULL})
         OPTIONAL_INT(uint32_t, size);
         idmef_data_t *buffer;
 } TYPE_ID(idmef_overflow_alert_t, 44);

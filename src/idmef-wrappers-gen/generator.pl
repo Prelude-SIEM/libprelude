@@ -20,6 +20,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 use strict;
+use lib '.';
 
 use IDMEFTree;
 use GenerateDebug;
@@ -121,10 +122,6 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 		      { source => 'GenerateIDMEFMessageIdH.pm',
 			target => '../include/idmef-message-id.h',
 			func => sub { new GenerateIDMEFMessageIdH(-filename => shift) } },
-
-		      { source => 'GenerateIDMEFValueClasstSwigMapping.pm',
-			target => '../../bindings/low-level/idmef-value-class-mapping.i',
-			func => sub { new GenerateIDMEFValueClassSwigMapping(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFTreeWrapCxx.pm',
 			target => '../../bindings/c++/idmef-tree-wrap.cxx',

@@ -116,6 +116,8 @@ sub     header
 
 #define OPTIONAL_INT(type, name) type name; unsigned int name ## _is_set:1
 
+#define DISPLAY_ATTRS(...)
+
 #define IDENT(name) uint64_t name
 
 
@@ -307,7 +309,7 @@ sub     struct_desc
     foreach ( @{ $struct->{desc} } ) {
         $line = $_;
         $line =~ s/.*TYPE_ID.*//;
-        $line =~ s/struct {//;
+        $line =~ s/struct \{//;
     $self->output(" $line\n");
 
     }

@@ -32,6 +32,7 @@
 
 %include "std_string.i"
 %include "std_vector.i"
+%include "std_map.i"
 %include "exception.i"
 
 %{
@@ -114,6 +115,7 @@ typedef long long time_t;
 %template() std::vector<Prelude::IDMEF>;
 %template() std::vector<Prelude::IDMEFValue>;
 %template() std::vector<Prelude::Connection>;
+%template() std::map<std::string, std::string>;
 
 #ifdef SWIG_COMPILE_LIBPRELUDE
 %extend Prelude::IDMEF {

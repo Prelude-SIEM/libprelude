@@ -8,251 +8,284 @@ typedef struct {
         idmef_value_type_id_t type;
         idmef_class_id_t class;
         int union_id;
+        const char **attributes;
 } children_list_t;
 
 const children_list_t idmef_additional_data_children_list[] = {
-        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE, 0 },
-        { "data", 0, 0, IDMEF_VALUE_TYPE_DATA, 0, 0 },
+        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE, 0, NULL },
+        { "data", 0, 0, IDMEF_VALUE_TYPE_DATA, 0, 0, NULL },
 };
 
+static const char *reference_name_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_reference_children_list[] = {
-        { "origin", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_REFERENCE_ORIGIN, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "origin", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_REFERENCE_ORIGIN, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, reference_name_attributes },
+        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "meaning", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
+static const char *classification_text_attributes[] = {"priority", "0", NULL};
+static const char *classification_reference_list_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_classification_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "text", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "reference", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_REFERENCE, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "text", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, classification_text_attributes },
+        { "reference", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_REFERENCE, 0, classification_reference_list_attributes },
 };
 
+static const char *user_id_name_attributes[] = {"priority", "0", NULL};
+static const char *user_id_number_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_user_id_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_ID_TYPE, 0 },
-        { "tty", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_ID_TYPE, 0, NULL },
+        { "tty", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, user_id_name_attributes },
+        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, user_id_number_attributes },
 };
 
+static const char *user_user_id_list_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_user_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_CATEGORY, 0 },
-        { "user_id", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_USER_CATEGORY, 0, NULL },
+        { "user_id", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID, 0, user_user_id_list_attributes },
 };
 
+static const char *address_address_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_address_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDRESS_CATEGORY, 0 },
-        { "vlan_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "vlan_num", 0, 0, IDMEF_VALUE_TYPE_INT32, 0, 0 },
-        { "address", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "netmask", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ADDRESS_CATEGORY, 0, NULL },
+        { "vlan_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "vlan_num", 0, 0, IDMEF_VALUE_TYPE_INT32, 0, 0, NULL },
+        { "address", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, address_address_attributes },
+        { "netmask", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_process_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "pid", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "env", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "pid", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "env", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_web_service_children_list[] = {
-        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "cgi", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "http_method", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "url", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "cgi", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "http_method", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "arg", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_snmp_service_children_list[] = {
-        { "oid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "message_processing_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "security_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "security_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "security_level", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "context_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "context_engine_id", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "oid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "message_processing_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "security_model", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "security_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "security_level", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "context_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "context_engine_id", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
+static const char *service_port_attributes[] = {"priority", "0", NULL};
+static const char *service_portlist_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_service_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "ip_version", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0, 0 },
-        { "iana_protocol_number", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0, 0 },
-        { "iana_protocol_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "port", 0, 0, IDMEF_VALUE_TYPE_UINT16, 0, 0 },
-        { "portlist", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "protocol", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "web_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_WEB_SERVICE, /* union ID */ 1 },
-        { "snmp_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SNMP_SERVICE, /* union ID */ 1 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "ip_version", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0, 0, NULL },
+        { "iana_protocol_number", 0, 0, IDMEF_VALUE_TYPE_UINT8, 0, 0, NULL },
+        { "iana_protocol_name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "port", 0, 0, IDMEF_VALUE_TYPE_UINT16, 0, 0, service_port_attributes },
+        { "portlist", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, service_portlist_attributes },
+        { "protocol", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "web_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_WEB_SERVICE, /* union ID */ 1, NULL},
+        { "snmp_service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SNMP_SERVICE, /* union ID */ 1, NULL},
 };
 
+static const char *node_name_attributes[] = {"priority", "0", NULL};
+static const char *node_location_attributes[] = {"priority", "0", NULL};
+static const char *node_address_list_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_node_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_NODE_CATEGORY, 0 },
-        { "location", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "address", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDRESS, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_NODE_CATEGORY, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, node_name_attributes },
+        { "location", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, node_location_attributes },
+        { "address", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDRESS, 0, node_address_list_attributes },
 };
 
+static const char *source_node_attributes[] = {"priority", "0", NULL};
+static const char *source_user_attributes[] = {"priority", "0", NULL};
+static const char *source_process_attributes[] = {"priority", "0", NULL};
+static const char *source_service_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_source_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "spoofed", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_SOURCE_SPOOFED, 0 },
-        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0 },
-        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER, 0 },
-        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0 },
-        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "spoofed", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_SOURCE_SPOOFED, 0, NULL },
+        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0, source_node_attributes },
+        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER, 0, source_user_attributes },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0, source_process_attributes },
+        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE, 0, source_service_attributes },
 };
 
 const children_list_t idmef_file_access_children_list[] = {
-        { "user_id", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID, 0 },
-        { "permission", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "user_id", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER_ID, 0, NULL },
+        { "permission", 1, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_inode_children_list[] = {
-        { "change_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "c_major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "c_minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
+        { "change_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "number", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "c_major_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "c_minor_device", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
 };
 
 const children_list_t idmef_checksum_children_list[] = {
-        { "value", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "key", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "algorithm", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CHECKSUM_ALGORITHM, 0 },
+        { "value", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "key", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "algorithm", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CHECKSUM_ALGORITHM, 0, NULL },
 };
 
 const children_list_t idmef_file_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "modify_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "access_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "data_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0, 0 },
-        { "disk_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0, 0 },
-        { "file_access", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE_ACCESS, 0 },
-        { "linkage", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_LINKAGE, 0 },
-        { "inode", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_INODE, 0 },
-        { "checksum", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CHECKSUM, 0 },
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_CATEGORY, 0 },
-        { "fstype", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_FSTYPE, 0 },
-        { "file_type", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "modify_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "access_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "data_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0, 0, NULL },
+        { "disk_size", 0, 0, IDMEF_VALUE_TYPE_UINT64, 0, 0, NULL },
+        { "file_access", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE_ACCESS, 0, NULL },
+        { "linkage", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_LINKAGE, 0, NULL },
+        { "inode", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_INODE, 0, NULL },
+        { "checksum", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CHECKSUM, 0, NULL },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_CATEGORY, 0, NULL },
+        { "fstype", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_FSTYPE, 0, NULL },
+        { "file_type", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_linkage_children_list[] = {
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_LINKAGE_CATEGORY, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "file", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_LINKAGE_CATEGORY, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "path", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "file", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE, 0, NULL },
 };
 
+static const char *target_node_attributes[] = {"priority", "0", NULL};
+static const char *target_user_attributes[] = {"priority", "0", NULL};
+static const char *target_process_attributes[] = {"priority", "0", NULL};
+static const char *target_service_attributes[] = {"priority", "0", NULL};
+static const char *target_file_list_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_target_children_list[] = {
-        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "decoy", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_TARGET_DECOY, 0 },
-        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0 },
-        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER, 0 },
-        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0 },
-        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE, 0 },
-        { "file", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE, 0 },
+        { "ident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "decoy", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_TARGET_DECOY, 0, NULL },
+        { "interface", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0, target_node_attributes },
+        { "user", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_USER, 0, target_user_attributes },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0, target_process_attributes },
+        { "service", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SERVICE, 0, target_service_attributes },
+        { "file", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_FILE, 0, target_file_list_attributes },
 };
 
+static const char *analyzer_name_attributes[] = {"priority", "0", NULL};
+static const char *analyzer_model_attributes[] = {"priority", "0", NULL};
+static const char *analyzer_class_attributes[] = {"priority", "0", NULL};
+static const char *analyzer_node_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_analyzer_children_list[] = {
-        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "manufacturer", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "model", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "class", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "ostype", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "osversion", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0 },
-        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0 },
+        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, analyzer_name_attributes },
+        { "manufacturer", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "model", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, analyzer_model_attributes },
+        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "class", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, analyzer_class_attributes },
+        { "ostype", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "osversion", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "node", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_NODE, 0, analyzer_node_attributes },
+        { "process", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_PROCESS, 0, NULL },
 };
 
 const children_list_t idmef_alertident_children_list[] = {
-        { "alertident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "alertident", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "analyzerid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
+static const char *impact_description_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_impact_children_list[] = {
-        { "severity", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_SEVERITY, 0 },
-        { "completion", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_COMPLETION, 0 },
-        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_TYPE, 0 },
-        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "severity", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_SEVERITY, 0, NULL },
+        { "completion", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_COMPLETION, 0, NULL },
+        { "type", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_IMPACT_TYPE, 0, NULL },
+        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, impact_description_attributes },
 };
 
 const children_list_t idmef_action_children_list[] = {
-        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ACTION_CATEGORY, 0 },
-        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
+        { "category", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ACTION_CATEGORY, 0, NULL },
+        { "description", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
 };
 
 const children_list_t idmef_confidence_children_list[] = {
-        { "rating", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CONFIDENCE_RATING, 0 },
-        { "confidence", 0, 0, IDMEF_VALUE_TYPE_FLOAT, 0, 0 },
+        { "rating", 0, 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_CONFIDENCE_RATING, 0, NULL },
+        { "confidence", 0, 0, IDMEF_VALUE_TYPE_FLOAT, 0, 0, NULL },
 };
 
+static const char *assessment_impact_attributes[] = {"priority", "0", NULL};
+static const char *assessment_confidence_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_assessment_children_list[] = {
-        { "impact", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_IMPACT, 0 },
-        { "action", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ACTION, 0 },
-        { "confidence", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CONFIDENCE, 0 },
+        { "impact", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_IMPACT, 0, assessment_impact_attributes },
+        { "action", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ACTION, 0, NULL },
+        { "confidence", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CONFIDENCE, 0, assessment_confidence_attributes },
 };
 
+static const char *tool_alert_name_attributes[] = {"priority", "0", NULL};
+static const char *tool_alert_command_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_tool_alert_children_list[] = {
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, tool_alert_name_attributes },
+        { "command", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, tool_alert_command_attributes },
+        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT, 0, NULL },
 };
 
+static const char *correlation_alert_name_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_correlation_alert_children_list[] = {
-        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT, 0 },
+        { "name", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, correlation_alert_name_attributes },
+        { "alertident", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERTIDENT, 0, NULL },
 };
 
+static const char *overflow_alert_program_attributes[] = {"priority", "0", NULL};
 const children_list_t idmef_overflow_alert_children_list[] = {
-        { "program", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "size", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "buffer", 0, 0, IDMEF_VALUE_TYPE_DATA, 0, 0 },
+        { "program", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, overflow_alert_program_attributes },
+        { "size", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "buffer", 0, 0, IDMEF_VALUE_TYPE_DATA, 0, 0, NULL },
 };
 
 const children_list_t idmef_alert_children_list[] = {
-        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER, 0 },
-        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "classification", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CLASSIFICATION, 0 },
-        { "detect_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "source", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SOURCE, 0 },
-        { "target", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TARGET, 0 },
-        { "assessment", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ASSESSMENT, 0 },
-        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA, 0 },
-        { "tool_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TOOL_ALERT, /* union ID */ 1 },
-        { "correlation_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CORRELATION_ALERT, /* union ID */ 1 },
-        { "overflow_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_OVERFLOW_ALERT, /* union ID */ 1 },
+        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER, 0, NULL },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "classification", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CLASSIFICATION, 0, NULL },
+        { "detect_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "source", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SOURCE, 0, NULL },
+        { "target", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TARGET, 0, NULL },
+        { "assessment", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ASSESSMENT, 0, NULL },
+        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA, 0, NULL },
+        { "tool_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TOOL_ALERT, /* union ID */ 1, NULL},
+        { "correlation_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CORRELATION_ALERT, /* union ID */ 1, NULL},
+        { "overflow_alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_OVERFLOW_ALERT, /* union ID */ 1, NULL},
 };
 
 const children_list_t idmef_heartbeat_children_list[] = {
-        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER, 0 },
-        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0 },
-        { "heartbeat_interval", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0 },
-        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA, 0 },
+        { "messageid", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "analyzer", 1, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ANALYZER, 0, NULL },
+        { "create_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "analyzer_time", 0, 0, IDMEF_VALUE_TYPE_TIME, 0, 0, NULL },
+        { "heartbeat_interval", 0, 0, IDMEF_VALUE_TYPE_UINT32, 0, 0, NULL },
+        { "additional_data", 1, 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA, 0, NULL },
 };
 
 const children_list_t idmef_message_children_list[] = {
-        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0 },
-        { "alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERT, /* union ID */ 1 },
-        { "heartbeat", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_HEARTBEAT, /* union ID */ 1 },
+        { "version", 0, 0, IDMEF_VALUE_TYPE_STRING, 0, 0, NULL },
+        { "alert", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERT, /* union ID */ 1, NULL},
+        { "heartbeat", 0, 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_HEARTBEAT, /* union ID */ 1, NULL},
 };
 
 

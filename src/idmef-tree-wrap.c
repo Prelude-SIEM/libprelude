@@ -84,6 +84,8 @@
 
 #define OPTIONAL_INT(type, name) type name; unsigned int name ## _is_set:1
 
+#define DISPLAY_ATTRS(...)
+
 #define IDENT(name) uint64_t name
 
 
@@ -407,7 +409,7 @@ struct idmef_reference {
          REFCOUNT;
          idmef_reference_origin_t origin;
  
-         REQUIRED(prelude_string_t, *name);
+         REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
          REQUIRED(prelude_string_t, *url);
          prelude_string_t *meaning;
  
@@ -420,8 +422,8 @@ struct idmef_classification {
          IDMEF_OBJECT;
          REFCOUNT;
          prelude_string_t *ident;
-         REQUIRED(prelude_string_t, *text);
-         LISTED_OBJECT(reference_list, idmef_reference_t);
+         REQUIRED(prelude_string_t, *text); DISPLAY_ATTRS({"priority", "0", NULL})
+         LISTED_OBJECT(reference_list, idmef_reference_t); DISPLAY_ATTRS({"priority", "0", NULL})
  
  
 };
@@ -496,8 +498,8 @@ struct idmef_user_id {
          prelude_string_t *ident;
          idmef_user_id_type_t type;
          prelude_string_t *tty;
-         prelude_string_t *name;
-         OPTIONAL_INT(uint32_t, number);
+         prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL})
+         OPTIONAL_INT(uint32_t, number); DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -562,7 +564,7 @@ struct idmef_user {
          REFCOUNT;
          prelude_string_t *ident;
          idmef_user_category_t category;
-         LISTED_OBJECT(user_id_list, idmef_user_id_t);
+         LISTED_OBJECT(user_id_list, idmef_user_id_t); DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -653,7 +655,7 @@ struct idmef_address {
          idmef_address_category_t category;
          prelude_string_t *vlan_name;
          OPTIONAL_INT(int32_t, vlan_num);
-         REQUIRED(prelude_string_t, *address);
+         REQUIRED(prelude_string_t, *address); DISPLAY_ATTRS({"priority", "0", NULL})
          prelude_string_t *netmask;
  
 };
@@ -770,8 +772,8 @@ struct idmef_service {
          prelude_string_t *iana_protocol_name;
  
          prelude_string_t *name;
-         OPTIONAL_INT(uint16_t, port);
-         prelude_string_t *portlist;
+         OPTIONAL_INT(uint16_t, port); DISPLAY_ATTRS({"priority", "0", NULL})
+         prelude_string_t *portlist; DISPLAY_ATTRS({"priority", "0", NULL})
          prelude_string_t *protocol;
  
          UNION(idmef_service_type_t, type) {
@@ -863,9 +865,9 @@ struct idmef_node {
          REFCOUNT;
          prelude_string_t *ident;
          idmef_node_category_t category;
-         prelude_string_t *location;
-         prelude_string_t *name;
-         LISTED_OBJECT(address_list, idmef_address_t);
+         prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL});
+         prelude_string_t *location; DISPLAY_ATTRS({"priority", "0", NULL});
+         LISTED_OBJECT(address_list, idmef_address_t); DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -933,10 +935,10 @@ struct idmef_source {
          idmef_source_spoofed_t spoofed;
          prelude_string_t *interface;
  
-         idmef_node_t *node;
-         idmef_user_t *user;
-         idmef_process_t *process;
-         idmef_service_t *service;
+         idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_user_t *user; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_process_t *process; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_service_t *service; DISPLAY_ATTRS({"priority", "0", NULL})
  
  
 };
@@ -1334,11 +1336,11 @@ struct idmef_target {
          idmef_target_decoy_t decoy;
          prelude_string_t *interface;
  
-         idmef_node_t *node;
-         idmef_user_t *user;
-         idmef_process_t *process;
-         idmef_service_t *service;
-         LISTED_OBJECT(file_list, idmef_file_t);
+         idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_user_t *user; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_process_t *process; DISPLAY_ATTRS({"priority", "0", NULL})
+         idmef_service_t *service; DISPLAY_ATTRS({"priority", "0", NULL})
+         LISTED_OBJECT(file_list, idmef_file_t); DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -1350,15 +1352,15 @@ struct idmef_analyzer {
          REFCOUNT;
          prelude_string_t *analyzerid;
  
-         prelude_string_t *name;
+         prelude_string_t *name; DISPLAY_ATTRS({"priority", "0", NULL})
          prelude_string_t *manufacturer;
-         prelude_string_t *model;
+         prelude_string_t *model; DISPLAY_ATTRS({"priority", "0", NULL})
          prelude_string_t *version;
-         prelude_string_t *class;
+         prelude_string_t *class; DISPLAY_ATTRS({"priority", "0", NULL})
          prelude_string_t *ostype;
          prelude_string_t *osversion;
  
-         idmef_node_t *node;
+         idmef_node_t *node; DISPLAY_ATTRS({"priority", "0", NULL})
          idmef_process_t *process;
  
  
@@ -1552,7 +1554,7 @@ struct idmef_impact {
          OPTIONAL_INT(idmef_impact_severity_t, severity);
          OPTIONAL_INT(idmef_impact_completion_t, completion);
          idmef_impact_type_t type;
-         prelude_string_t *description;
+         prelude_string_t *description; DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -1697,9 +1699,9 @@ struct idmef_assessment {
          IDMEF_OBJECT;
          REFCOUNT;
  
-         idmef_impact_t *impact;
+         idmef_impact_t *impact; DISPLAY_ATTRS({"priority", "0", NULL})
          LISTED_OBJECT(action_list, idmef_action_t);
-         idmef_confidence_t *confidence;
+         idmef_confidence_t *confidence; DISPLAY_ATTRS({"priority", "0", NULL})
  
 };
 
@@ -1710,8 +1712,8 @@ struct idmef_tool_alert {
          IDMEF_OBJECT;
          REFCOUNT;
  
-         REQUIRED(prelude_string_t, *name);
-         prelude_string_t *command;
+         REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
+         prelude_string_t *command; DISPLAY_ATTRS({"priority", "0", NULL})
          LISTED_OBJECT(alertident_list, idmef_alertident_t);
  
 };
@@ -1723,7 +1725,7 @@ struct idmef_correlation_alert {
          IDMEF_OBJECT;
          REFCOUNT;
  
-         REQUIRED(prelude_string_t, *name);
+         REQUIRED(prelude_string_t, *name); DISPLAY_ATTRS({"priority", "0", NULL})
          LISTED_OBJECT(alertident_list, idmef_alertident_t);
  
 };
@@ -1735,7 +1737,7 @@ struct idmef_overflow_alert {
          IDMEF_OBJECT;
          REFCOUNT;
  
-         REQUIRED(prelude_string_t, *program);
+         REQUIRED(prelude_string_t, *program); DISPLAY_ATTRS({"priority", "0", NULL})
          OPTIONAL_INT(uint32_t, size);
          idmef_data_t *buffer;
  
@@ -8986,9 +8988,9 @@ int _idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr
                                                                 IDMEF_CLASS_ID_NODE_CATEGORY, ptr->category);
 
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->location, TRUE);
-                case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->name, TRUE);
+                case 3:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->location, TRUE);
                 case 4:
                         *childptr = &ptr->address_list;
                         return 0;
@@ -9013,10 +9015,10 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         return idmef_node_new_category(ptr, (idmef_node_category_t **) ret);
 
                 case 2:
-                        return idmef_node_new_location(ptr, (prelude_string_t **) ret);
+                        return idmef_node_new_name(ptr, (prelude_string_t **) ret);
 
                 case 3:
-                        return idmef_node_new_name(ptr, (prelude_string_t **) ret);
+                        return idmef_node_new_location(ptr, (prelude_string_t **) ret);
 
                 case 4: {
                         int i = 0;
@@ -9078,17 +9080,17 @@ int _idmef_node_destroy_child(void *p, idmef_class_child_id_t child, int n)
                         return 0;
 
                 case 2:
-                        if ( ptr->location ) {
-                                prelude_string_destroy(ptr->location);
-                                ptr->location = NULL;
+                        if ( ptr->name ) {
+                                prelude_string_destroy(ptr->name);
+                                ptr->name = NULL;
                         }
 
                         return 0;
 
                 case 3:
-                        if ( ptr->name ) {
-                                prelude_string_destroy(ptr->name);
-                                ptr->name = NULL;
+                        if ( ptr->location ) {
+                                prelude_string_destroy(ptr->location);
+                                ptr->location = NULL;
                         }
 
                         return 0;
@@ -9138,14 +9140,14 @@ static void idmef_node_destroy_internal(idmef_node_t *ptr)
                 ptr->ident = NULL;
         }
 
-        if ( ptr->location ) {
-                prelude_string_destroy(ptr->location);
-                ptr->location = NULL;
-        }
-
         if ( ptr->name ) {
                 prelude_string_destroy(ptr->name);
                 ptr->name = NULL;
+        }
+
+        if ( ptr->location ) {
+                prelude_string_destroy(ptr->location);
+                ptr->location = NULL;
         }
 
         {
@@ -9293,67 +9295,6 @@ int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
 }
 
 /**
- * idmef_node_get_location:
- * @ptr: pointer to a #idmef_node_t object.
- *
- * Get location children of the #idmef_node_t object.
- *
- * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
- */
-prelude_string_t *idmef_node_get_location(idmef_node_t *ptr)
-{
-        prelude_return_val_if_fail(ptr, 0); /* FIXME */
-
-        return ptr->location;
-}
-
-/**
- * idmef_node_set_location:
- * @ptr: pointer to a #idmef_node_t object.
- * @location: pointer to a #prelude_string_t object.
- *
- * Set @location object as a children of @ptr.
- * if @ptr already contain an @location object, then it is destroyed,
- * and updated to point to the provided @location object.
- */
-
-void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location)
-{
-        prelude_return_if_fail(ptr);
-
-        if ( ptr->location )
-                prelude_string_destroy(ptr->location);
-
-        ptr->location = location;
-}
-
-/**
- * idmef_node_new_location:
- * @ptr: pointer to a #idmef_node_t object.
- * @ret: pointer to an address where to store the created #prelude_string_t object.
- *
- * Create a new location object, children of #idmef_node_t.
- * If @ptr already contain a #prelude_string_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
-{
-        int retval;
-
-        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        if ( ! ptr->location ) {
-                retval = prelude_string_new(&ptr->location);
-                if ( retval < 0 )
-                        return retval;
-        }
-
-        *ret = ptr->location;
-        return 0;
-}
-
-/**
  * idmef_node_get_name:
  * @ptr: pointer to a #idmef_node_t object.
  *
@@ -9411,6 +9352,67 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
         }
 
         *ret = ptr->name;
+        return 0;
+}
+
+/**
+ * idmef_node_get_location:
+ * @ptr: pointer to a #idmef_node_t object.
+ *
+ * Get location children of the #idmef_node_t object.
+ *
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ */
+prelude_string_t *idmef_node_get_location(idmef_node_t *ptr)
+{
+        prelude_return_val_if_fail(ptr, 0); /* FIXME */
+
+        return ptr->location;
+}
+
+/**
+ * idmef_node_set_location:
+ * @ptr: pointer to a #idmef_node_t object.
+ * @location: pointer to a #prelude_string_t object.
+ *
+ * Set @location object as a children of @ptr.
+ * if @ptr already contain an @location object, then it is destroyed,
+ * and updated to point to the provided @location object.
+ */
+
+void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location)
+{
+        prelude_return_if_fail(ptr);
+
+        if ( ptr->location )
+                prelude_string_destroy(ptr->location);
+
+        ptr->location = location;
+}
+
+/**
+ * idmef_node_new_location:
+ * @ptr: pointer to a #idmef_node_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new location object, children of #idmef_node_t.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
+{
+        int retval;
+
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( ! ptr->location ) {
+                retval = prelude_string_new(&ptr->location);
+                if ( retval < 0 )
+                        return retval;
+        }
+
+        *ret = ptr->location;
         return 0;
 }
 
@@ -9523,17 +9525,6 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
 
         dst->category = src->category;
 
-        if ( dst->location ) {
-                prelude_string_destroy(dst->location);
-                dst->location = NULL;
-        }
-
-        if ( src->location ) {
-                ret = prelude_string_clone(src->location, &dst->location);
-                if ( ret < 0 )
-                        return ret;
-        }
-
         if ( dst->name ) {
                 prelude_string_destroy(dst->name);
                 dst->name = NULL;
@@ -9541,6 +9532,17 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
 
         if ( src->name ) {
                 ret = prelude_string_clone(src->name, &dst->name);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        if ( dst->location ) {
+                prelude_string_destroy(dst->location);
+                dst->location = NULL;
+        }
+
+        if ( src->location ) {
+                ret = prelude_string_clone(src->location, &dst->location);
                 if ( ret < 0 )
                         return ret;
         }
@@ -9612,11 +9614,11 @@ int idmef_node_compare(const idmef_node_t *obj1, const idmef_node_t *obj2)
         if ( obj1->category != obj2->category )
                 return -1;
 
-        ret = prelude_string_compare(obj1->location, obj2->location);
+        ret = prelude_string_compare(obj1->name, obj2->name);
         if ( ret != 0 )
                 return ret;
 
-        ret = prelude_string_compare(obj1->name, obj2->name);
+        ret = prelude_string_compare(obj1->location, obj2->location);
         if ( ret != 0 )
                 return ret;
 

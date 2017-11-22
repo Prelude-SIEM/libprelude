@@ -167,7 +167,7 @@ sub	parse_struct
 {
     my	$self = shift;
     my	$line = shift;
-    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, is_key_listed => 0, refcount => 0, desc => [ $line ] };
+    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, is_key_listed => 0, refcount => 0, desc => [ $line ], attributes => [] };
     my	@field_list;
     my	$ptr;
     my	$typename;
@@ -175,9 +175,14 @@ sub	parse_struct
     my  $key;
     my	$id;
     my	$var;
+    my  $dattrs;
 
     while ( defined($line = $self->get_line) ) {
 	push(@{ $struct->{desc} }, $line);
+        if ( ($dattrs) = $line =~ /DISPLAY_ATTRS\(([^)]*)\)/ ) {
+            push(@{ $struct->{attributes} }, $dattrs)
+        }
+
 	if ( $line =~ /^\s*HIDE\(/ ) {
 	    next;
 
@@ -195,7 +200,8 @@ sub	parse_struct
 				name => $name,
 				short_name => $name,
 				ptr => $ptr ? 1 : 0,
-				dynamic_ident => 0 });
+				dynamic_ident => 0,
+                                attributes => $dattrs });
 
 	    $self->debug("parse direct struct field metatype:normal name:$name typename:$typename ptr:", $ptr ? "yes" : "no", "\n");
 
@@ -237,7 +243,8 @@ sub	parse_struct
                                 short_name => $name,
                                 ptr => ($ptr ? 1 : 0),
 				required => 1,
-                                dynamic_ident => 0 });
+                                dynamic_ident => 0,
+                                attributes => $dattrs });
 
             $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
 
@@ -275,7 +282,8 @@ sub	parse_struct
 				name => $name,
 				short_name => $name,
 				ptr => ($ptr ? 1 : 0),
-				dynamic_ident => 0 });
+				dynamic_ident => 0,
+                                attributes => $dattrs });
 
 	    $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
 	    
@@ -302,7 +310,8 @@ sub	parse_struct
 				short_typename => get_idmef_name($typename),
 				name => $name,
 				value_type => $value_type,
-				short_name => $short_name });
+				short_name => $short_name,
+                                attributes => $dattrs });
 	    $self->debug("parse struct field metatype:list name:$name typename:$typename\n");
 
 	} elsif ( ($typename, $var) = $line =~ /^\s*UNION\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{/ ) {
@@ -310,7 +319,8 @@ sub	parse_struct
 			  typename => $typename,
 			  short_typename => get_idmef_name($typename),
 			  var => $var,
-			  member_list => [ ] };
+			  member_list => [ ],
+                          attributes => $dattrs };
 	    my $member;
 	    my($value, $type, $name);
 
@@ -325,12 +335,14 @@ sub	parse_struct
 				typename => $typename,
 				short_typename => get_idmef_name($typename),
 				name => $name,
-				ptr => ($ptr ? 1 : 0) };
+				ptr => ($ptr ? 1 : 0),
+                                attributess => $dattrs };
 		    push(@{ $field->{member_list} }, $member);
 		    $self->debug("parse union member name:$name typename:$typename value:$value ptr:", ($ptr ? 1 : 0), "\n");
 
 		} elsif ( ($name) = $line =~ /^\s*\}\s*(\w+)\;/ ) {
 		    $field->{name} = $name;
+                    $field->{attributes} = $dattrs;
 		    push(@field_list, $field);
 		    $self->debug("parsing of union $name finished\n");
 		    last;
@@ -346,7 +358,8 @@ sub	parse_struct
 		   name => $name,
 		   short_name => $name,
 		   ptr => 0,
-		   dynamic_ident => 1 });
+		   dynamic_ident => 1,
+                   attributes => $dattrs });
 	    $self->debug("parse struct field metatype:normal name:$name dynamic_ident\n");
 
 	} 
@@ -379,7 +392,8 @@ sub	parse_struct
                                 required => 0,
                                 is_listed => 1,
                                 is_key_listed => 1,
-                                dynamic_ident => 0 });
+                                dynamic_ident => 0,
+                                attributes => $dattrs });
 
         }
         elsif ( ($typename, $name) = $line =~ /\s*OPTIONAL_INT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
@@ -406,7 +420,8 @@ sub	parse_struct
 				name => $name,
 				short_name => $name,
 				ptr => 0,
-				dynamic_ident => 0 });
+				dynamic_ident => 0,
+                                attributes => $dattrs });
 
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $struct->{typename} = $typename;

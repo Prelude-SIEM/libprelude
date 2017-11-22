@@ -766,11 +766,11 @@ int idmef_node_write(idmef_node_t *node, prelude_msgbuf_t *msg)
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_string_write(idmef_node_get_location(node), msg, IDMEF_MSG_NODE_LOCATION);
+        ret = prelude_string_write(idmef_node_get_name(node), msg, IDMEF_MSG_NODE_NAME);
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_string_write(idmef_node_get_name(node), msg, IDMEF_MSG_NODE_NAME);
+        ret = prelude_string_write(idmef_node_get_location(node), msg, IDMEF_MSG_NODE_LOCATION);
         if ( ret < 0 )
                 return ret;
 
