@@ -141,7 +141,7 @@ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
 %#endif
 %#else
       if ( _PYTHON2_RETURN_UNICODE )
-        return PyUnicode_DecodeUTF8(carray, %numeric_cast(size, Py_ssize_t), "surrogateescape");
+        return PyUnicode_DecodeUTF8(carray, %numeric_cast(size, Py_ssize_t), "replace");
       else
         return PyString_FromStringAndSize(carray, %numeric_cast(size, Py_ssize_t));
 %#endif
