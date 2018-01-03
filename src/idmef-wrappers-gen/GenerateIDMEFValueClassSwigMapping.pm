@@ -1,4 +1,4 @@
-# Copyright (C) 2003-2017 CS-SI. All Rights Reserved.
+# Copyright (C) 2003-2018 CS-SI. All Rights Reserved.
 # Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 #
 # This file is part of the Prelude library.
@@ -33,7 +33,7 @@ sub	header
     $self->output("
 /*****
 *
-* Copyright (C) 2005-2017 CS-SI. All Rights Reserved.
+* Copyright (C) 2005-2018 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v\@prelude-ids.com>
 *
 * This file is part of the Prelude library.

@@ -1,7 +1,7 @@
 /*****
 *
-* Copyright (C) 2002, 2003, 2004 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-* All Rights Reserved
+* Copyright (C) 2002-2018 CS-SI. All Rights Reserved.
+* Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
 * This file is part of the Prelude library.
 *
