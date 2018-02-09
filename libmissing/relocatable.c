@@ -1,5 +1,5 @@
 /* Provide relocatable packages.
-   Copyright (C) 2003-2006, 2008-2017 Free Software Foundation, Inc.
+   Copyright (C) 2003-2006, 2008-2018 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 
 /* Tell glibc's <stdio.h> to provide a prototype for getline().
@@ -315,7 +315,7 @@ static char *shared_library_fullname;
    On Cygwin, it is better to use the Cygwin provided /proc interface, than
    to use native Windows API and cygwin_conv_to_posix_path, because it
    supports longer file names
-   (see <http://cygwin.com/ml/cygwin/2011-01/msg00410.html>).  */
+   (see <https://cygwin.com/ml/cygwin/2011-01/msg00410.html>).  */
 
 /* Determine the full pathname of the shared library when it is loaded.  */
 

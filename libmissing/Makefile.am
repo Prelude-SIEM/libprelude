@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2017 Free Software Foundation, Inc.
+# Copyright (C) 2002-2018 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+# along with this file.  If not, see <https://www.gnu.org/licenses/>.
 #
 # As a special exception to the GNU General Public License,
 # this file may be distributed as part of a program that
@@ -59,6 +59,7 @@ libmissing_la_LDFLAGS += $(INET_NTOP_LIB)
 libmissing_la_LDFLAGS += $(INET_PTON_LIB)
 libmissing_la_LDFLAGS += $(LIBSOCKET)
 libmissing_la_LDFLAGS += $(LIB_POLL)
+libmissing_la_LDFLAGS += $(LIB_PTHREAD_SIGMASK)
 libmissing_la_LDFLAGS += $(LIB_SELECT)
 libmissing_la_LDFLAGS += $(LTLIBINTL)
 libmissing_la_LDFLAGS += $(LTLIBMULTITHREAD)
@@ -577,6 +578,7 @@ langinfo.h: langinfo.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(WARN_ON_U
 	      -e 's/@''GNULIB_NL_LANGINFO''@/$(GNULIB_NL_LANGINFO)/g' \
 	      -e 's|@''HAVE_LANGINFO_CODESET''@|$(HAVE_LANGINFO_CODESET)|g' \
 	      -e 's|@''HAVE_LANGINFO_T_FMT_AMPM''@|$(HAVE_LANGINFO_T_FMT_AMPM)|g' \
+	      -e 's|@''HAVE_LANGINFO_ALTMON''@|$(HAVE_LANGINFO_ALTMON)|g' \
 	      -e 's|@''HAVE_LANGINFO_ERA''@|$(HAVE_LANGINFO_ERA)|g' \
 	      -e 's|@''HAVE_LANGINFO_YESEXPR''@|$(HAVE_LANGINFO_YESEXPR)|g' \
 	      -e 's|@''HAVE_NL_LANGINFO''@|$(HAVE_NL_LANGINFO)|g' \
@@ -784,7 +786,7 @@ EXTRA_libmissing_la_SOURCES += malloc.c
 
 libmissing_la_SOURCES += malloca.c
 
-EXTRA_DIST += malloca.h malloca.valgrind
+EXTRA_DIST += malloca.h
 
 ## end   gnulib module malloca
 
@@ -1003,6 +1005,15 @@ EXTRA_DIST += poll.in.h
 
 ## end   gnulib module poll-h
 
+## begin gnulib module pthread_sigmask
+
+
+EXTRA_DIST += pthread_sigmask.c
+
+EXTRA_libmissing_la_SOURCES += pthread_sigmask.c
+
+## end   gnulib module pthread_sigmask
+
 ## begin gnulib module raise
 
 
@@ -1025,7 +1036,7 @@ EXTRA_libmissing_la_SOURCES += regcomp.c regex.c regex_internal.c regexec.c
 
 DEFS += -DNO_XMALLOC
 
-EXTRA_DIST += relocatable.c relocatable.h
+EXTRA_DIST += relocatable.c relocatable.h relocatable.valgrind
 
 EXTRA_libmissing_la_SOURCES += relocatable.c
 
@@ -1063,8 +1074,8 @@ signal.h: signal.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_SIGNAL_H''@|$(NEXT_SIGNAL_H)|g' \
-	      -e 's|@''GNULIB_PTHREAD_SIGMASK''@|$(GNULIB_PTHREAD_SIGMASK)|g' \
-	      -e 's|@''GNULIB_RAISE''@|$(GNULIB_RAISE)|g' \
+	      -e 's/@''GNULIB_PTHREAD_SIGMASK''@/$(GNULIB_PTHREAD_SIGMASK)/g' \
+	      -e 's/@''GNULIB_RAISE''@/$(GNULIB_RAISE)/g' \
 	      -e 's/@''GNULIB_SIGNAL_H_SIGPIPE''@/$(GNULIB_SIGNAL_H_SIGPIPE)/g' \
 	      -e 's/@''GNULIB_SIGPROCMASK''@/$(GNULIB_SIGPROCMASK)/g' \
 	      -e 's/@''GNULIB_SIGACTION''@/$(GNULIB_SIGACTION)/g' \
@@ -1209,6 +1220,14 @@ EXTRA_DIST += stat-w32.c stat-w32.h stat.c
 EXTRA_libmissing_la_SOURCES += stat-w32.c stat.c
 
 ## end   gnulib module stat
+
+## begin gnulib module stat-time
+
+libmissing_la_SOURCES += stat-time.c
+
+EXTRA_DIST += stat-time.h
+
+## end   gnulib module stat-time
 
 ## begin gnulib module stdalign
 
@@ -1504,6 +1523,7 @@ stdlib.h: stdlib.in.h $(top_builddir)/config.status $(CXXDEFS_H) \
 	      -e 's/@''GNULIB_RANDOM''@/$(GNULIB_RANDOM)/g' \
 	      -e 's/@''GNULIB_RANDOM_R''@/$(GNULIB_RANDOM_R)/g' \
 	      -e 's/@''GNULIB_REALLOC_POSIX''@/$(GNULIB_REALLOC_POSIX)/g' \
+	      -e 's/@''GNULIB_REALLOCARRAY''@/$(GNULIB_REALLOCARRAY)/g' \
 	      -e 's/@''GNULIB_REALPATH''@/$(GNULIB_REALPATH)/g' \
 	      -e 's/@''GNULIB_RPMATCH''@/$(GNULIB_RPMATCH)/g' \
 	      -e 's/@''GNULIB_SECURE_GETENV''@/$(GNULIB_SECURE_GETENV)/g' \
@@ -1522,6 +1542,7 @@ stdlib.h: stdlib.in.h $(top_builddir)/config.status $(CXXDEFS_H) \
 	      -e 's|@''HAVE_DECL_GETLOADAVG''@|$(HAVE_DECL_GETLOADAVG)|g' \
 	      -e 's|@''HAVE_GETSUBOPT''@|$(HAVE_GETSUBOPT)|g' \
 	      -e 's|@''HAVE_GRANTPT''@|$(HAVE_GRANTPT)|g' \
+	      -e 's|@''HAVE_DECL_INITSTATE''@|$(HAVE_DECL_INITSTATE)|g' \
 	      -e 's|@''HAVE_MKDTEMP''@|$(HAVE_MKDTEMP)|g' \
 	      -e 's|@''HAVE_MKOSTEMP''@|$(HAVE_MKOSTEMP)|g' \
 	      -e 's|@''HAVE_MKOSTEMPS''@|$(HAVE_MKOSTEMPS)|g' \
@@ -1534,10 +1555,12 @@ stdlib.h: stdlib.in.h $(top_builddir)/config.status $(CXXDEFS_H) \
 	      -e 's|@''HAVE_RANDOM''@|$(HAVE_RANDOM)|g' \
 	      -e 's|@''HAVE_RANDOM_H''@|$(HAVE_RANDOM_H)|g' \
 	      -e 's|@''HAVE_RANDOM_R''@|$(HAVE_RANDOM_R)|g' \
+	      -e 's|@''HAVE_REALLOCARRAY''@|$(HAVE_REALLOCARRAY)|g' \
 	      -e 's|@''HAVE_REALPATH''@|$(HAVE_REALPATH)|g' \
 	      -e 's|@''HAVE_RPMATCH''@|$(HAVE_RPMATCH)|g' \
 	      -e 's|@''HAVE_SECURE_GETENV''@|$(HAVE_SECURE_GETENV)|g' \
 	      -e 's|@''HAVE_DECL_SETENV''@|$(HAVE_DECL_SETENV)|g' \
+	      -e 's|@''HAVE_DECL_SETSTATE''@|$(HAVE_DECL_SETSTATE)|g' \
 	      -e 's|@''HAVE_STRTOD''@|$(HAVE_STRTOD)|g' \
 	      -e 's|@''HAVE_STRTOLL''@|$(HAVE_STRTOLL)|g' \
 	      -e 's|@''HAVE_STRTOULL''@|$(HAVE_STRTOULL)|g' \
@@ -1648,6 +1671,7 @@ string.h: string.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_STRING_H''@|$(NEXT_STRING_H)|g' \
+	      -e 's/@''GNULIB_EXPLICIT_BZERO''@/$(GNULIB_EXPLICIT_BZERO)/g' \
 	      -e 's/@''GNULIB_FFSL''@/$(GNULIB_FFSL)/g' \
 	      -e 's/@''GNULIB_FFSLL''@/$(GNULIB_FFSLL)/g' \
 	      -e 's/@''GNULIB_MBSLEN''@/$(GNULIB_MBSLEN)/g' \
@@ -1686,7 +1710,8 @@ string.h: string.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's/@''GNULIB_STRSIGNAL''@/$(GNULIB_STRSIGNAL)/g' \
 	      -e 's/@''GNULIB_STRVERSCMP''@/$(GNULIB_STRVERSCMP)/g' \
 	      < $(srcdir)/string.in.h | \
-	  sed -e 's|@''HAVE_FFSL''@|$(HAVE_FFSL)|g' \
+	  sed -e 's|@''HAVE_EXPLICIT_BZERO''@|$(HAVE_EXPLICIT_BZERO)|g' \
+	      -e 's|@''HAVE_FFSL''@|$(HAVE_FFSL)|g' \
 	      -e 's|@''HAVE_FFSLL''@|$(HAVE_FFSLL)|g' \
 	      -e 's|@''HAVE_MBSLEN''@|$(HAVE_MBSLEN)|g' \
 	      -e 's|@''HAVE_MEMCHR''@|$(HAVE_MEMCHR)|g' \
@@ -1707,20 +1732,20 @@ string.h: string.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's|@''HAVE_DECL_STRERROR_R''@|$(HAVE_DECL_STRERROR_R)|g' \
 	      -e 's|@''HAVE_DECL_STRSIGNAL''@|$(HAVE_DECL_STRSIGNAL)|g' \
 	      -e 's|@''HAVE_STRVERSCMP''@|$(HAVE_STRVERSCMP)|g' \
-	      -e 's|@''REPLACE_STPNCPY''@|$(REPLACE_STPNCPY)|g' \
 	      -e 's|@''REPLACE_MEMCHR''@|$(REPLACE_MEMCHR)|g' \
 	      -e 's|@''REPLACE_MEMMEM''@|$(REPLACE_MEMMEM)|g' \
-	      -e 's|@''REPLACE_STRCASESTR''@|$(REPLACE_STRCASESTR)|g' \
+	      -e 's|@''REPLACE_STPNCPY''@|$(REPLACE_STPNCPY)|g' \
 	      -e 's|@''REPLACE_STRCHRNUL''@|$(REPLACE_STRCHRNUL)|g' \
 	      -e 's|@''REPLACE_STRDUP''@|$(REPLACE_STRDUP)|g' \
-	      -e 's|@''REPLACE_STRSTR''@|$(REPLACE_STRSTR)|g' \
-	      -e 's|@''REPLACE_STRERROR''@|$(REPLACE_STRERROR)|g' \
-	      -e 's|@''REPLACE_STRERROR_R''@|$(REPLACE_STRERROR_R)|g' \
 	      -e 's|@''REPLACE_STRNCAT''@|$(REPLACE_STRNCAT)|g' \
 	      -e 's|@''REPLACE_STRNDUP''@|$(REPLACE_STRNDUP)|g' \
 	      -e 's|@''REPLACE_STRNLEN''@|$(REPLACE_STRNLEN)|g' \
-	      -e 's|@''REPLACE_STRSIGNAL''@|$(REPLACE_STRSIGNAL)|g' \
+	      -e 's|@''REPLACE_STRSTR''@|$(REPLACE_STRSTR)|g' \
+	      -e 's|@''REPLACE_STRCASESTR''@|$(REPLACE_STRCASESTR)|g' \
 	      -e 's|@''REPLACE_STRTOK_R''@|$(REPLACE_STRTOK_R)|g' \
+	      -e 's|@''REPLACE_STRERROR''@|$(REPLACE_STRERROR)|g' \
+	      -e 's|@''REPLACE_STRERROR_R''@|$(REPLACE_STRERROR_R)|g' \
+	      -e 's|@''REPLACE_STRSIGNAL''@|$(REPLACE_STRSIGNAL)|g' \
 	      -e 's|@''UNDEFINE_STRTOK_R''@|$(UNDEFINE_STRTOK_R)|g' \
 	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
@@ -1749,7 +1774,7 @@ strings.h: strings.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(WARN_ON_USE
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_STRINGS_H''@|$(NEXT_STRINGS_H)|g' \
-	      -e 's|@''GNULIB_FFS''@|$(GNULIB_FFS)|g' \
+	      -e 's/@''GNULIB_FFS''@/$(GNULIB_FFS)/g' \
 	      -e 's|@''HAVE_FFS''@|$(HAVE_FFS)|g' \
 	      -e 's|@''HAVE_STRCASECMP''@|$(HAVE_STRCASECMP)|g' \
 	      -e 's|@''HAVE_DECL_STRNCASECMP''@|$(HAVE_DECL_STRNCASECMP)|g' \
@@ -2318,6 +2343,7 @@ unistd.h: unistd.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's|@''REPLACE_CLOSE''@|$(REPLACE_CLOSE)|g' \
 	      -e 's|@''REPLACE_DUP''@|$(REPLACE_DUP)|g' \
 	      -e 's|@''REPLACE_DUP2''@|$(REPLACE_DUP2)|g' \
+	      -e 's|@''REPLACE_FACCESSAT''@|$(REPLACE_FACCESSAT)|g' \
 	      -e 's|@''REPLACE_FCHOWNAT''@|$(REPLACE_FCHOWNAT)|g' \
 	      -e 's|@''REPLACE_FTRUNCATE''@|$(REPLACE_FTRUNCATE)|g' \
 	      -e 's|@''REPLACE_GETCWD''@|$(REPLACE_GETCWD)|g' \

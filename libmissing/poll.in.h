@@ -1,7 +1,7 @@
 /* Header for poll(2) emulation
    Contributed by Paolo Bonzini.
 
-   Copyright 2001-2003, 2007, 2009-2017 Free Software Foundation, Inc.
+   Copyright 2001-2003, 2007, 2009-2018 Free Software Foundation, Inc.
 
    This file is part of gnulib.
 
@@ -16,7 +16,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License along
-   with this program; if not, see <http://www.gnu.org/licenses/>.  */
+   with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _@GUARD_PREFIX@_POLL_H
 

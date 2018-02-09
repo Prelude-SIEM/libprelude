@@ -1,12 +1,12 @@
 # getcwd.m4 - check for working getcwd that is compatible with glibc
 
-# Copyright (C) 2001, 2003-2007, 2009-2017 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003-2007, 2009-2018 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
 # Written by Paul Eggert.
-# serial 14
+# serial 15
 
 AC_DEFUN([gl_FUNC_GETCWD_NULL],
   [
@@ -48,12 +48,12 @@ AC_DEFUN([gl_FUNC_GETCWD_NULL],
         [gl_cv_func_getcwd_null=yes],
         [gl_cv_func_getcwd_null=no],
         [[case "$host_os" in
-                     # Guess yes on glibc systems.
-            *-gnu*)  gl_cv_func_getcwd_null="guessing yes";;
-                     # Guess yes on Cygwin.
-            cygwin*) gl_cv_func_getcwd_null="guessing yes";;
-                     # If we don't know, assume the worst.
-            *)       gl_cv_func_getcwd_null="guessing no";;
+                           # Guess yes on glibc systems.
+            *-gnu* | gnu*) gl_cv_func_getcwd_null="guessing yes";;
+                           # Guess yes on Cygwin.
+            cygwin*)       gl_cv_func_getcwd_null="guessing yes";;
+                           # If we don't know, assume the worst.
+            *)             gl_cv_func_getcwd_null="guessing no";;
           esac
         ]])])
 ])

@@ -1,5 +1,5 @@
 /* Test of perror() function.
-   Copyright (C) 2011-2017 Free Software Foundation, Inc.
+   Copyright (C) 2011-2018 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
+   along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #include <config.h>
 
@@ -121,10 +121,10 @@ main (void)
     perror (NULL);
 #if 0
     /* Commented out until cygwin behaves:
-       http://sourceware.org/ml/newlib/2011/msg00228.html */
+       https://sourceware.org/ml/newlib/2011/msg00228.html */
     ASSERT (errno > 0);
     /* Commented out until glibc behaves:
-       http://sourceware.org/bugzilla/show_bug.cgi?id=12792 */
+       https://sourceware.org/bugzilla/show_bug.cgi?id=12792 */
     ASSERT (ferror (stderr));
 #endif
   }

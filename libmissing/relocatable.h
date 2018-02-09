@@ -1,5 +1,5 @@
 /* Provide relocatable packages.
-   Copyright (C) 2003, 2005, 2008-2017 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2008-2018 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _RELOCATABLE_H
 #define _RELOCATABLE_H

@@ -1,5 +1,5 @@
 /* Pausing execution of the current thread.
-   Copyright (C) 2009-2017 Free Software Foundation, Inc.
+   Copyright (C) 2009-2018 Free Software Foundation, Inc.
    Written by Eric Blake <ebb9@byu.net>, 2009.
 
    This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* This file is _intentionally_ light-weight.  Rather than using
    select or nanosleep, both of which drag in external libraries on

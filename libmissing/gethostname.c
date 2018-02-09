@@ -1,6 +1,6 @@
 /* gethostname emulation for SysV and POSIX.1.
 
-   Copyright (C) 1992, 2003, 2006, 2008-2017 Free Software Foundation, Inc.
+   Copyright (C) 1992, 2003, 2006, 2008-2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* David MacKenzie <djm@gnu.ai.mit.edu>
    Windows port by Simon Josefsson <simon@josefsson.org> */

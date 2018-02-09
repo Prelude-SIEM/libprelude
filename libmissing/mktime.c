@@ -1,5 +1,5 @@
 /* Convert a 'struct tm' to a time_t value.
-   Copyright (C) 1993-2017 Free Software Foundation, Inc.
+   Copyright (C) 1993-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert <eggert@twinsun.com>.
 
@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Define this to 1 to have a standalone program to test this implementation of
    mktime.  */

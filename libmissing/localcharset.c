@@ -1,6 +1,6 @@
 /* Determine a canonical name for the current locale's character encoding.
 
-   Copyright (C) 2000-2006, 2008-2017 Free Software Foundation, Inc.
+   Copyright (C) 2000-2006, 2008-2018 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License along
-   with this program; if not, see <http://www.gnu.org/licenses/>.  */
+   with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 /* Written by Bruno Haible <bruno@clisp.org>.  */
 
@@ -355,7 +355,7 @@ get_charset_aliases (void)
          by Alex Taylor:
          <http://altsan.org/os2/toolkits/uls/index.html#codepages>.
          See also "IBM Globalization - Code page identifiers":
-         <http://www-01.ibm.com/software/globalization/cp/cp_cpgid.html>.  */
+         <https://www-01.ibm.com/software/globalization/cp/cp_cpgid.html>.  */
       cp = "CP813" "\0" "ISO-8859-7" "\0"
            "CP878" "\0" "KOI8-R" "\0"
            "CP819" "\0" "ISO-8859-1" "\0"

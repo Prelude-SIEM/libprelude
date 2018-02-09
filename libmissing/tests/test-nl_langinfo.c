@@ -1,5 +1,5 @@
 /* Test of nl_langinfo replacement.
-   Copyright (C) 2009-2017 Free Software Foundation, Inc.
+   Copyright (C) 2009-2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Written by Bruno Haible <bruno@clisp.org>, 2009.  */
 
@@ -92,6 +92,32 @@ main (int argc, char *argv[])
   ASSERT (strlen (nl_langinfo (MON_10)) > 0);
   ASSERT (strlen (nl_langinfo (MON_11)) > 0);
   ASSERT (strlen (nl_langinfo (MON_12)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_1)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_2)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_3)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_4)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_5)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_6)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_7)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_8)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_9)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_10)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_11)) > 0);
+  ASSERT (strlen (nl_langinfo (ALTMON_12)) > 0);
+  /* In the tested locales, alternate month names and month names ought to be
+     the same.  */
+  ASSERT (strcmp (nl_langinfo (ALTMON_1), nl_langinfo (MON_1)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_2), nl_langinfo (MON_2)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_3), nl_langinfo (MON_3)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_4), nl_langinfo (MON_4)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_5), nl_langinfo (MON_5)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_6), nl_langinfo (MON_6)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_7), nl_langinfo (MON_7)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_8), nl_langinfo (MON_8)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_9), nl_langinfo (MON_9)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_10), nl_langinfo (MON_10)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_11), nl_langinfo (MON_11)) == 0);
+  ASSERT (strcmp (nl_langinfo (ALTMON_12), nl_langinfo (MON_12)) == 0);
   ASSERT (strlen (nl_langinfo (ABMON_1)) > 0);
   ASSERT (strlen (nl_langinfo (ABMON_2)) > 0);
   ASSERT (strlen (nl_langinfo (ABMON_3)) > 0);

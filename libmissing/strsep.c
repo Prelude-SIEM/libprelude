@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2007, 2009-2017 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2007, 2009-2018 Free Software Foundation, Inc.
 
    Written by Yoann Vandoorselaere <yoann@prelude-ids.org>.
 
@@ -13,7 +13,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
+   along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>

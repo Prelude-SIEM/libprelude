@@ -1,5 +1,5 @@
 /* Test intprops.h.
-   Copyright (C) 2011-2017 Free Software Foundation, Inc.
+   Copyright (C) 2011-2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Written by Paul Eggert.  */
 
@@ -43,7 +43,7 @@
    and falls back on a dynamic assertion for other compilers.
    These tests should be checkable via 'verify' rather than 'ASSERT', but
    using 'verify' would run into a bug with HP-UX 11.23 cc; see
-   <http://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00401.html>.  */
+   <https://lists.gnu.org/r/bug-gnulib/2011-05/msg00401.html>.  */
 #if __GNUC__ || __SUNPRO_C
 # define VERIFY(x) do { verify (x); } while (0)
 #else

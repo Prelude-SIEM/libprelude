@@ -1,5 +1,5 @@
 /* Creating and controlling threads.
-   Copyright (C) 2005-2017 Free Software Foundation, Inc.
+   Copyright (C) 2005-2018 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -12,7 +12,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
+   along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 /* Written by Bruno Haible <bruno@clisp.org>, 2005.
    Based on GCC's gthr-posix.h, gthr-posix95.h, gthr-solaris.h,
@@ -54,7 +54,7 @@
        gl_thread_exit (return_value);
        extern _Noreturn void gl_thread_exit (void *return_value);
 
-   Requesting custom code to be executed at fork() time(not supported on all
+   Requesting custom code to be executed at fork() time (not supported on all
    platforms):
        gl_thread_atfork (prepare_func, parent_func, child_func);
    Or with control of error handling:
@@ -64,7 +64,7 @@
                                    void (*child_func) (void));
    Note that even on platforms where this is supported, use of fork() and
    threads together is problematic, see
-     <http://lists.gnu.org/archive/html/bug-gnulib/2008-08/msg00062.html>
+     <https://lists.gnu.org/r/bug-gnulib/2008-08/msg00062.html>
  */
 
 
@@ -128,7 +128,9 @@ extern int glthread_in_use (void);
   /* Without this, clang complains that pthread_sigmask is never declared.  */
 #   include <signal.h>
 #  endif
-#  pragma weak pthread_sigmask
+#  ifndef pthread_sigmask /* Do not declare rpl_pthread_sigmask weak.  */
+#   pragma weak pthread_sigmask
+#  endif
 
 #  pragma weak pthread_join
 #  ifndef pthread_self

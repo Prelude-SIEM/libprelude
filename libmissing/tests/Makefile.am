@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2017 Free Software Foundation, Inc.
+# Copyright (C) 2002-2018 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+# along with this file.  If not, see <https://www.gnu.org/licenses/>.
 #
 # As a special exception to the GNU General Public License,
 # this file may be distributed as part of a program that
@@ -142,6 +142,22 @@ EXTRA_DIST += test-c-strcase.sh test-c-strcasecmp.c test-c-strncasecmp.c macros.
 
 ## end   gnulib module c-strcase-tests
 
+## begin gnulib module cloexec
+
+libtests_a_SOURCES += cloexec.c
+
+EXTRA_DIST += cloexec.h
+
+## end   gnulib module cloexec
+
+## begin gnulib module cloexec-tests
+
+TESTS += test-cloexec
+check_PROGRAMS += test-cloexec
+EXTRA_DIST += test-cloexec.c macros.h
+
+## end   gnulib module cloexec-tests
+
 ## begin gnulib module close-tests
 
 TESTS += test-close
@@ -244,6 +260,15 @@ EXTRA_DIST += test-fclose.c
 
 ## end   gnulib module fclose-tests
 
+## begin gnulib module fcntl
+
+
+EXTRA_DIST += fcntl.c
+
+EXTRA_libtests_a_SOURCES += fcntl.c
+
+## end   gnulib module fcntl
+
 ## begin gnulib module fcntl-h
 
 BUILT_SOURCES += fcntl.h
@@ -286,6 +311,14 @@ check_PROGRAMS += test-fcntl-h
 EXTRA_DIST += test-fcntl-h.c
 
 ## end   gnulib module fcntl-h-tests
+
+## begin gnulib module fcntl-tests
+
+TESTS += test-fcntl
+check_PROGRAMS += test-fcntl
+EXTRA_DIST += test-fcntl.c signature.h macros.h
+
+## end   gnulib module fcntl-tests
 
 ## begin gnulib module fdopen
 
@@ -537,7 +570,7 @@ EXTRA_libtests_a_SOURCES += getpagesize.c
 
 TESTS += test-getsockname
 check_PROGRAMS += test-getsockname
-test_getsockname_LDADD = $(LDADD) @LIBSOCKET@
+test_getsockname_LDADD = $(LDADD) @LIBSOCKET@ $(INET_PTON_LIB)
 EXTRA_DIST += test-getsockname.c signature.h macros.h
 
 ## end   gnulib module getsockname-tests
@@ -817,6 +850,24 @@ EXTRA_DIST += test-memmem.c signature.h null-ptr.h zerosize-ptr.h macros.h
 
 ## end   gnulib module memmem-tests
 
+## begin gnulib module nanosleep
+
+
+EXTRA_DIST += nanosleep.c
+
+EXTRA_libtests_a_SOURCES += nanosleep.c
+
+## end   gnulib module nanosleep
+
+## begin gnulib module nanosleep-tests
+
+TESTS += test-nanosleep
+check_PROGRAMS += test-nanosleep
+test_nanosleep_LDADD = $(LDADD) $(LIB_NANOSLEEP)
+EXTRA_DIST += test-nanosleep.c signature.h macros.h
+
+## end   gnulib module nanosleep-tests
+
 ## begin gnulib module netdb-tests
 
 TESTS += test-netdb
@@ -908,6 +959,16 @@ test_poll_LDADD = $(LDADD) $(LIB_POLL) @LIBSOCKET@ $(INET_PTON_LIB)
 EXTRA_DIST += test-poll.c signature.h macros.h
 
 ## end   gnulib module poll-tests
+
+## begin gnulib module pthread_sigmask-tests
+
+TESTS += test-pthread_sigmask1 test-pthread_sigmask2
+check_PROGRAMS += test-pthread_sigmask1 test-pthread_sigmask2
+test_pthread_sigmask1_LDADD = $(LDADD) @LIB_PTHREAD_SIGMASK@
+test_pthread_sigmask2_LDADD = $(LDADD) @LIB_PTHREAD_SIGMASK@ @LIBMULTITHREAD@
+EXTRA_DIST += test-pthread_sigmask1.c test-pthread_sigmask2.c signature.h macros.h
+
+## end   gnulib module pthread_sigmask-tests
 
 ## begin gnulib module putenv
 
@@ -1001,6 +1062,24 @@ test_setsockopt_LDADD = $(LDADD) @LIBSOCKET@
 EXTRA_DIST += test-setsockopt.c signature.h macros.h
 
 ## end   gnulib module setsockopt-tests
+
+## begin gnulib module sigaction
+
+libtests_a_SOURCES += sig-handler.c
+
+EXTRA_DIST += sig-handler.h sigaction.c
+
+EXTRA_libtests_a_SOURCES += sigaction.c
+
+## end   gnulib module sigaction
+
+## begin gnulib module sigaction-tests
+
+TESTS += test-sigaction
+check_PROGRAMS += test-sigaction
+EXTRA_DIST += test-sigaction.c signature.h macros.h
+
+## end   gnulib module sigaction-tests
 
 ## begin gnulib module signal-h-tests
 
@@ -1112,6 +1191,15 @@ test_stat_LDADD = $(LDADD) $(LIBINTL)
 EXTRA_DIST += test-stat.h test-stat.c signature.h macros.h
 
 ## end   gnulib module stat-tests
+
+## begin gnulib module stat-time-tests
+
+TESTS += test-stat-time
+check_PROGRAMS += test-stat-time
+test_stat_time_LDADD = $(LDADD) $(LIB_NANOSLEEP)
+EXTRA_DIST += test-stat-time.c macros.h nap.h
+
+## end   gnulib module stat-time-tests
 
 ## begin gnulib module stdalign-tests
 
