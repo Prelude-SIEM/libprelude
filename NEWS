@@ -1,3 +1,19 @@
+* 2018-02-09, libprelude-4.2.0rc1:
+
+Author: Yoann Vandoorselaere
+
+- Ability to specify attributes for IDMEF path
+
+Author: Antoine Luong
+
+- Fix the encoding error handler for Python 2
+
+Author: Thomas Andrejak
+
+- Use SHA256 signature with GnuTLS instead of default SHA1
+
+
+
 * 2017-07-21, libprelude-4.1.0:
 
 No new changes.
