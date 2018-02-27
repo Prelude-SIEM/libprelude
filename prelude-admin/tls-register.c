@@ -48,7 +48,7 @@
 # define fchown(x, y, z) (0)
 #endif
 
-extern int server_confirm;
+extern prelude_bool_t server_confirm;
 extern int generated_key_size;
 extern int authority_certificate_lifetime;
 extern int generated_certificate_lifetime;
