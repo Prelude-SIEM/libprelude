@@ -216,7 +216,7 @@ static ssize_t _cb_perl_read(prelude_io_t *fd, void *buf, size_t size)
                 argc += ret + 1;
 
         if ( argc + 1 < 0 )
-                throw PreludeError("Invalide argc length");
+                throw PreludeError("Invalid argc length");
 
         argv = (char **) malloc((argc + 1) * sizeof(char *));
         if ( ! argv )

@@ -18046,7 +18046,7 @@ XS(SWIG_init) {
   argc += ret + 1;
   
   if ( argc + 1 < 0 )
-  throw PreludeError("Invalide argc length");
+  throw PreludeError("Invalid argc length");
   
   argv = (char **) malloc((argc + 1) * sizeof(char *));
   if ( ! argv )
