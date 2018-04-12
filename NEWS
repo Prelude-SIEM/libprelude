@@ -1,3 +1,19 @@
+* 2018-04-13, libprelude-5.0.0beta1:
+
+Author: Antoine Luong
+
+- Update GnuLib code
+
+Author: Thomas Andrejak
+
+- Add python 3.6 support
+
+- Fix spelling in Perl bindings
+
+- Fix server_confirm type
+
+
+
 * 2018-02-09, libprelude-4.2.0rc1:
 
 Author: Yoann Vandoorselaere
