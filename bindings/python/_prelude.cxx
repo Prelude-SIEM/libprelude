@@ -5980,6 +5980,25 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
   return SWIG_ERROR;
 }
 
+SWIGINTERN PyObject *Prelude_IDMEFCriteria___reduce__(Prelude::IDMEFCriteria *self){
+        PyObject *s, *args = PyTuple_New(1);
+        #if PY_VERSION_HEX >= 0x03000000
+            s = PyUnicode_FromString(self->toString().c_str());
+        #else
+            s = PyString_FromString(self->toString().c_str());
+        #endif
+
+        PyTuple_SetItem(args, 0, s);
+
+        SwigPyClientData *data = (SwigPyClientData *) SWIGTYPE_p_Prelude__IDMEFCriteria->clientdata;
+        PyObject *callable = (PyObject *)data->pytype;
+        Py_INCREF(callable);
+
+        PyObject *ret = PyTuple_New(2);
+        PyTuple_SetItem(ret, 0, callable);
+        PyTuple_SetItem(ret, 1, args);
+        return ret;
+    }
 
   namespace swig {
     template <>  struct traits< Prelude::IDMEF > {
@@ -6218,6 +6237,26 @@ SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
   return res;
 }
 
+SWIGINTERN PyObject *Prelude_IDMEFPath___reduce__(Prelude::IDMEFPath *self){
+        PyObject *s, *args = PyTuple_New(1);
+
+        #if PY_VERSION_HEX >= 0x03000000
+            s = PyUnicode_FromString(self->getName());
+        #else
+            s = PyString_FromString(self->getName());
+        #endif
+
+        PyTuple_SetItem(args, 0, s);
+
+        SwigPyClientData *data = (SwigPyClientData *) SWIGTYPE_p_Prelude__IDMEFPath->clientdata;
+        PyObject *callable = (PyObject *)data->pytype;
+        Py_INCREF(callable);
+
+        PyObject *ret = PyTuple_New(2);
+        PyTuple_SetItem(ret, 0, callable);
+        PyTuple_SetItem(ret, 1, args);
+        return ret;
+    }
 SWIGINTERN Prelude::IDMEFValue Prelude_IDMEFPath_get(Prelude::IDMEFPath *self,Prelude::IDMEF &message){
                 Prelude::IDMEFValue value;
 
@@ -11938,6 +11977,37 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_IDMEFCriteria___reduce__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFCriteria *arg1 = (Prelude::IDMEFCriteria *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  PyObject *result = 0 ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFCriteria___reduce__",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFCriteria, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFCriteria___reduce__" "', argument " "1"" of type '" "Prelude::IDMEFCriteria *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFCriteria * >(argp1);
+  {
+    try {
+      result = (PyObject *)Prelude_IDMEFCriteria___reduce__(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = result;
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_IDMEFCriteria) /* defines _wrap_delete_IDMEFCriteria_destructor_closure */
 
 SWIGPY_REPRFUNC_CLOSURE(_wrap_IDMEFCriteria_toString) /* defines _wrap_IDMEFCriteria_toString_reprfunc_closure */
@@ -14648,6 +14718,37 @@ SWIGINTERN PyObject *_wrap_IDMEFPath_getDepth(PyObject *self, PyObject *args) {
     }
   }
   resultobj = SWIG_From_unsigned_SS_int(static_cast< unsigned int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_IDMEFPath___reduce__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Prelude::IDMEFPath *arg1 = (Prelude::IDMEFPath *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  PyObject *result = 0 ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"IDMEFPath___reduce__",0,0,0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IDMEFPath___reduce__" "', argument " "1"" of type '" "Prelude::IDMEFPath *""'"); 
+  }
+  arg1 = reinterpret_cast< Prelude::IDMEFPath * >(argp1);
+  {
+    try {
+      result = (PyObject *)Prelude_IDMEFPath___reduce__(arg1);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_Python_Raise(SWIG_NewPointerObj(new PreludeError(e),
+          SWIGTYPE_p_Prelude__PreludeError, SWIG_POINTER_OWN),
+        "PreludeError", SWIGTYPE_p_Prelude__PreludeError);
+      SWIG_fail;
+    }
+  }
+  resultobj = result;
   return resultobj;
 fail:
   return NULL;
@@ -17686,7 +17787,6 @@ SWIGINTERN PyObject *_wrap_IDMEF___setstate__(PyObject *self, PyObject *args) {
     
     if ( ret < 0 )
     throw PreludeError("error calling Prelude::IDMEF tp_init()");
-    
   }
   if (!args) SWIG_fail;
   swig_obj[0] = args;
@@ -20154,6 +20254,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFCriteria_methods[] = {
   { "andCriteria", (PyCFunction) _wrap_IDMEFCriteria_andCriteria, METH_O, (char *) "" },
   { "orCriteria", (PyCFunction) _wrap_IDMEFCriteria_orCriteria, METH_O, (char *) "" },
   { "toString", (PyCFunction) _wrap_IDMEFCriteria_toString, METH_NOARGS, (char *) "" },
+  { "__reduce__", (PyCFunction) _wrap_IDMEFCriteria___reduce__, METH_NOARGS, (char *) "" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };
 
@@ -20621,6 +20722,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__Prelude__IDMEFPath_methods[] = {
   { "hasLists", (PyCFunction) _wrap_IDMEFPath_hasLists, METH_NOARGS, (char *) "" },
   { "isList", (PyCFunction) _wrap_IDMEFPath_isList, METH_VARARGS|METH_KEYWORDS, (char *) "" },
   { "getDepth", (PyCFunction) _wrap_IDMEFPath_getDepth, METH_NOARGS, (char *) "" },
+  { "__reduce__", (PyCFunction) _wrap_IDMEFPath___reduce__, METH_NOARGS, (char *) "" },
   { "get", (PyCFunction) _wrap_IDMEFPath_get, METH_O, (char *) "" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };

@@ -308,7 +308,6 @@ typedef PyObject SwigPyObjectState;
 
         if ( ret < 0 )
                 throw PreludeError("error calling Prelude::IDMEF tp_init()");
-
 }
 
 
@@ -349,6 +348,51 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
 }
 %}
 
+
+%extend Prelude::IDMEFCriteria {
+    PyObject *__reduce__() {
+        PyObject *s, *args = PyTuple_New(1);
+        %#if PY_VERSION_HEX >= 0x03000000
+            s = PyUnicode_FromString(self->toString().c_str());
+        %#else
+            s = PyString_FromString(self->toString().c_str());
+        %#endif
+
+        PyTuple_SetItem(args, 0, s);
+
+        SwigPyClientData *data = (SwigPyClientData *) SWIGTYPE_p_Prelude__IDMEFCriteria->clientdata;
+        PyObject *callable = (PyObject *)data->pytype;
+        Py_INCREF(callable);
+
+        PyObject *ret = PyTuple_New(2);
+        PyTuple_SetItem(ret, 0, callable);
+        PyTuple_SetItem(ret, 1, args);
+        return ret;
+    }
+};
+
+%extend Prelude::IDMEFPath {
+    PyObject *__reduce__() {
+        PyObject *s, *args = PyTuple_New(1);
+
+        %#if PY_VERSION_HEX >= 0x03000000
+            s = PyUnicode_FromString(self->getName());
+        %#else
+            s = PyString_FromString(self->getName());
+        %#endif
+
+        PyTuple_SetItem(args, 0, s);
+
+        SwigPyClientData *data = (SwigPyClientData *) SWIGTYPE_p_Prelude__IDMEFPath->clientdata;
+        PyObject *callable = (PyObject *)data->pytype;
+        Py_INCREF(callable);
+
+        PyObject *ret = PyTuple_New(2);
+        PyTuple_SetItem(ret, 0, callable);
+        PyTuple_SetItem(ret, 1, args);
+        return ret;
+    }
+};
 
 
 %extend Prelude::IDMEF {
