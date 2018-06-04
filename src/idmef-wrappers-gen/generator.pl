@@ -103,9 +103,9 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			target => '../idmef-message-print-json.c',
 			func => sub { new GenerateIDMEFMessagePrintJSONC(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFMessageJSONH.pm',
+		      { source => 'GenerateIDMEFMessagePrintJSONH.pm',
 			target => '../include/idmef-message-print-json.h',
-			func => sub { new GenerateIDMEFMessageJSONH(-filename => shift) } },
+			func => sub { new GenerateIDMEFMessagePrintJSONH(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFMessageReadJSONC.pm',
 			target => '../idmef-message-read-json.c',
