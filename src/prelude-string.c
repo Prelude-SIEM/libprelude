@@ -885,16 +885,16 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
 
 
 /**
- * prelude_string_cat:
+ * prelude_string_ncat:
  * @dst: Pointer to a #prelude_string_t object.
  * @str: Pointer to a string.
  * @len: Length of @str to copy.
  *
  * The prelude_string_ncat() function appends @len characters from @str to
  * the @dst #prelude_string_t object over-writing the `\0' character at the
- * end of @dst, and then adds a termi-nating `\0' character.
+ * end of @dst, and then adds a terminating `\0' character.
  *
- * Returns: @len, or a negative value if an error occured.
+ * Returns: @len, or a negative value if an error occurred.
  */
 int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
 {
@@ -932,9 +932,9 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
  *
  * The prelude_string_cat() function appends the @str string to the @dst
  * prelude_string_t object over-writing the `\0' character at the end of
- * @dst, and then adds a termi-nating `\0' character.
+ * @dst, and then adds a terminating `\0' character.
  *
- * Returns: @len, or a negative value if an error occured.
+ * Returns: @len, or a negative value if an error occurred.
  */
 int prelude_string_cat(prelude_string_t *dst, const char *str)
 {
