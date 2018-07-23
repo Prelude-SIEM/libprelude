@@ -7913,6 +7913,9 @@ static swig_lua_attribute swig_IDMEFCriteria_Sf_SwigStatic_attributes[] = {
     {0,0,0}
 };
 static swig_lua_const_info swig_IDMEFCriteria_Sf_SwigStatic_constants[]= {
+    {SWIG_LUA_CONSTTAB_INT("OPERATOR_NOT", Prelude::IDMEFCriteria::OPERATOR_NOT)},
+    {SWIG_LUA_CONSTTAB_INT("OPERATOR_AND", Prelude::IDMEFCriteria::OPERATOR_AND)},
+    {SWIG_LUA_CONSTTAB_INT("OPERATOR_OR", Prelude::IDMEFCriteria::OPERATOR_OR)},
     {0,0,0,0,0,0}
 };
 static swig_lua_method swig_IDMEFCriteria_Sf_SwigStatic_methods[]= {
@@ -14506,6 +14509,9 @@ static swig_lua_const_info swig_SwigModule_constants[]= {
     {SWIG_LUA_CONSTTAB_INT("IDMEFCriterion_OPERATOR_NOT_REGEX_NOCASE", Prelude::IDMEFCriterion::OPERATOR_NOT_REGEX_NOCASE)},
     {SWIG_LUA_CONSTTAB_INT("IDMEFCriterion_OPERATOR_NULL", Prelude::IDMEFCriterion::OPERATOR_NULL)},
     {SWIG_LUA_CONSTTAB_INT("IDMEFCriterion_OPERATOR_NOT_NULL", Prelude::IDMEFCriterion::OPERATOR_NOT_NULL)},
+    {SWIG_LUA_CONSTTAB_INT("IDMEFCriteria_OPERATOR_NOT", Prelude::IDMEFCriteria::OPERATOR_NOT)},
+    {SWIG_LUA_CONSTTAB_INT("IDMEFCriteria_OPERATOR_AND", Prelude::IDMEFCriteria::OPERATOR_AND)},
+    {SWIG_LUA_CONSTTAB_INT("IDMEFCriteria_OPERATOR_OR", Prelude::IDMEFCriteria::OPERATOR_OR)},
     {SWIG_LUA_CONSTTAB_INT("IDMEFValue_TYPE_UNKNOWN", Prelude::IDMEFValue::TYPE_UNKNOWN)},
     {SWIG_LUA_CONSTTAB_INT("IDMEFValue_TYPE_INT8", Prelude::IDMEFValue::TYPE_INT8)},
     {SWIG_LUA_CONSTTAB_INT("IDMEFValue_TYPE_UINT8", Prelude::IDMEFValue::TYPE_UINT8)},

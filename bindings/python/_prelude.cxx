@@ -2465,25 +2465,22 @@ SWIG_Python_ConvertFunctionPtr(PyObject *obj, void **ptr, swig_type_info *ty) {
     return SWIG_ConvertPtr(obj, ptr, ty, 0);
   } else {
     void *vptr = 0;
-    
+    swig_cast_info *tc;
+
     /* here we get the method pointer for callbacks */
     const char *doc = (((PyCFunctionObject *)obj) -> m_ml -> ml_doc);
     const char *desc = doc ? strstr(doc, "swig_ptr: ") : 0;
     if (desc)
       desc = ty ? SWIG_UnpackVoidPtr(desc + 10, &vptr, ty->name) : 0;
-    if (!desc) 
+    if (!desc)
       return SWIG_ERROR;
-    if (ty) {
-      swig_cast_info *tc = SWIG_TypeCheck(desc,ty);
-      if (tc) {
-        int newmemory = 0;
-        *ptr = SWIG_TypeCast(tc,vptr,&newmemory);
-        assert(!newmemory); /* newmemory handling not yet implemented */
-      } else {
-        return SWIG_ERROR;
-      }
+    tc = SWIG_TypeCheck(desc,ty);
+    if (tc) {
+      int newmemory = 0;
+      *ptr = SWIG_TypeCast(tc,vptr,&newmemory);
+      assert(!newmemory); /* newmemory handling not yet implemented */
     } else {
-      *ptr = vptr;
+      return SWIG_ERROR;
     }
     return SWIG_OK;
   }
@@ -5101,7 +5098,7 @@ namespace swig {
         typename Sequence::const_iterator isit = is.begin();
         typename Sequence::iterator it = self->begin();
         std::advance(it,ii);
-        for (size_t rc=0; rc<replacecount; ++rc) {
+        for (size_t rc=0; rc<replacecount && it != self->end(); ++rc) {
           *it++ = *isit++;
           for (Py_ssize_t c=0; c<(step-1) && it != self->end(); ++c)
             it++;
@@ -5117,7 +5114,7 @@ namespace swig {
       typename Sequence::const_iterator isit = is.begin();
       typename Sequence::reverse_iterator it = self->rbegin();
       std::advance(it,size-ii-1);
-      for (size_t rc=0; rc<replacecount; ++rc) {
+      for (size_t rc=0; rc<replacecount && it != self->rend(); ++rc) {
         *it++ = *isit++;
         for (Py_ssize_t c=0; c<(-step-1) && it != self->rend(); ++c)
           it++;
@@ -22361,9 +22358,9 @@ extern "C" {
             char *ndoc = (char*)malloc(ldoc + lptr + 10);
             if (ndoc) {
               char *buff = ndoc;
-              strncpy(buff, methods[i].ml_doc, ldoc);
+              memcpy(buff, methods[i].ml_doc, ldoc);
               buff += ldoc;
-              strncpy(buff, "swig_ptr: ", 10);
+              memcpy(buff, "swig_ptr: ", 10);
               buff += 10;
               SWIG_PackVoidPtr(buff, ptr, ty->name, lptr);
               methods[i].ml_doc = ndoc;
@@ -22830,6 +22827,9 @@ SWIG_init(void) {
   /* type 'Prelude::IDMEFCriteria' */
   builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__Prelude__IDMEFCriteria_type;
   builtin_pytype->tp_dict = d = PyDict_New();
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_NOT",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_NOT)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_AND",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_AND)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "OPERATOR_OR",SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_OR)));
   SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
   builtin_pytype->tp_new = PyType_GenericNew;
   builtin_base_count = 0;

@@ -35,38 +35,35 @@
 #include "idmef-criteria.h"
 
 
-struct idmef_criterion {
-        idmef_path_t *path;
-        idmef_criterion_value_t *value;
-        idmef_criterion_operator_t operator;
-};
-
 
 struct idmef_criteria {
         int refcount;
-        prelude_bool_t negated;
-        idmef_criterion_t *criterion;
-        struct idmef_criteria *or;
-        struct idmef_criteria *and;
+
+        void *left;
+        void *right;
+
+        int operator;
 };
 
 
 
 /**
- * idmef_criterion_operator_to_string:
- * @op: #idmef_criterion_operator_t type.
+ * idmef_criteria_operator_to_string:
+ * @op: #idmef_criteria_operator_t type.
  *
  * Transforms @op to string.
  *
- * Returns: A pointer to an operator string or NULL.
+ * Returns: A pointer to a boolean operator string or NULL.
  */
-const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
+const char *idmef_criteria_operator_to_string(idmef_criteria_operator_t op)
 {
         int i;
         const struct {
-                idmef_criterion_operator_t operator;
+                int operator;
                 const char *name;
         } tbl[] = {
+                { IDMEF_CRITERIA_OPERATOR_AND, "&&"},
+                { IDMEF_CRITERIA_OPERATOR_OR, "||"},
                 { IDMEF_CRITERION_OPERATOR_EQUAL,     "="            },
                 { IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE, "=*"        },
 
@@ -103,29 +100,31 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
 
 /**
  * idmef_criterion_new:
- * @criterion: Address where to store the created #idmef_criterion_t object.
+ * @criterion: Address where to store the created #idmef_criteria_t object.
  * @path: Pointer to an #idmef_path_t object.
  * @value: Pointer to an #idmef_criterion_value_t object.
  * @op: #idmef_criterion_operator_t to use for matching this criterion.
  *
- * Creates a new #idmef_criterion_t object and store it in @criterion.
+ * Creates a new #idmef_criteria_t object and store it in @criterion.
  * Matching this criterion will result in comparing the object value
  * pointed by @path against the provided @value, using @op.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
+int idmef_criterion_new(idmef_criteria_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op)
 {
+        int ret;
+
         prelude_return_val_if_fail(path != NULL, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(! (value == NULL && ! (op & IDMEF_CRITERION_OPERATOR_NULL)), prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        *criterion = calloc(1, sizeof(**criterion));
-        if ( ! *criterion )
-                return prelude_error_from_errno(errno);
+        ret = idmef_criteria_new(criterion);
+        if ( ret < 0 )
+                return ret;
 
-        (*criterion)->path = path;
-        (*criterion)->value = value;
+        (*criterion)->left = path;
+        (*criterion)->right = value;
         (*criterion)->operator = op;
 
         return 0;
@@ -133,36 +132,8 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
 
 
 
-/**
- * idmef_criterion_destroy:
- * @criterion: Pointer to a #idmef_criterion_t object.
- *
- * Destroys @criterion and its content.
- */
-void idmef_criterion_destroy(idmef_criterion_t *criterion)
-{
-        prelude_return_if_fail(criterion);
 
-        idmef_path_destroy(criterion->path);
-
-        if ( criterion->value ) /* can be NULL if operator is is_null or is_not_null */
-                idmef_criterion_value_destroy(criterion->value);
-
-        free(criterion);
-}
-
-
-
-/**
- * idmef_criterion_clone:
- * @criterion: Pointer to a #idmef_criterion_t object to clone.
- * @dst: Address where to store the cloned #idmef_criterion_t object.
- *
- * Clones @criterion and stores the cloned criterion within @dst.
- *
- * Returns: 0 on success, a negative value if an error occured.
- */
-int idmef_criterion_clone(const idmef_criterion_t *criterion, idmef_criterion_t **dst)
+static int criterion_clone(const idmef_criteria_t *criterion, idmef_criteria_t **dst)
 {
         int ret;
         idmef_path_t *path;
@@ -170,12 +141,12 @@ int idmef_criterion_clone(const idmef_criterion_t *criterion, idmef_criterion_t 
 
         prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        ret = idmef_path_clone(criterion->path, &path);
+        ret = idmef_path_clone(criterion->left, &path);
         if ( ret < 0 )
                 return ret;
 
-        if ( criterion->value ) {
-                ret = idmef_criterion_value_clone(criterion->value, &value);
+        if ( criterion->right ) {
+                ret = idmef_criterion_value_clone(criterion->right, &value);
                 if ( ret < 0 ) {
                         idmef_path_destroy(path);
                         return ret;
@@ -194,100 +165,48 @@ int idmef_criterion_clone(const idmef_criterion_t *criterion, idmef_criterion_t 
 
 
 
-/**
- * idmef_criterion_print:
- * @criterion: Pointer to a #idmef_criterion_t object.
- * @fd: Pointer to a #prelude_io_t object.
- *
- * Dump @criterion to @fd in the form of:
- * [path] [operator] [value]
- *
- * Or if there is no value associated with the criterion:
- * [operator] [path]
- *
- * Returns: 0 on success, a negative value if an error occured.
- */
-int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
-{
-        int ret;
-        prelude_string_t *out;
-
-        prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        ret = prelude_string_new(&out);
-        if ( ret < 0 )
-                return ret;
-
-        ret = idmef_criterion_to_string(criterion, out);
-        if ( ret < 0 ) {
-                prelude_string_destroy(out);
-                return ret;
-        }
-
-        ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
-        prelude_string_destroy(out);
-
-        return ret;
-}
-
-
-
-/**
- * idmef_criterion_to_string:
- * @criterion: Pointer to a #idmef_criterion_t object.
- * @out: Pointer to a #prelude_string_t object.
- *
- * Dump @criterion as a string to the @out buffer in the form of:
- * [path] [operator] [value]
- *
- * Or if there is no value associated with the criterion:
- * [operator] [path]
- *
- * Returns: 0 on success, a negative value if an error occured.
- */
-int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out)
+static int criterion_to_string(const idmef_criteria_t *criterion, prelude_string_t *out)
 {
         const char *name, *operator;
 
-        prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(criterion && idmef_criteria_is_criterion(criterion), prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        operator = idmef_criterion_operator_to_string(criterion->operator);
+        operator = idmef_criteria_operator_to_string(criterion->operator);
         if ( ! operator )
                 return -1;
 
-        name = idmef_path_get_name(criterion->path, -1);
+        name = idmef_path_get_name(criterion->left, -1);
 
-        if ( ! criterion->value )
+        if ( ! criterion->right )
                 return prelude_string_sprintf(out, "%s%s%s", operator, (*operator) ? " " : "", name);
 
         prelude_string_sprintf(out, "%s %s ", name, operator);
 
-        return idmef_criterion_value_to_string(criterion->value, out);
+        return idmef_criterion_value_to_string(criterion->right, out);
 }
 
 
 
 /**
- * idmef_criterion_get_path:
- * @criterion: Pointer to a #idmef_criterion_t object.
+ * idmef_criteria_get_path:
+ * @criteria: Pointer to a #idmef_criteria_t object.
  *
- * Used to access the #idmef_path_t object associated with @criterion.
+ * Used to access the #idmef_path_t object associated with @criteria.
  *
- * Returns: the #idmef_path_t object associated with @criterion.
+ * Returns: the #idmef_path_t object associated with @criteria.
  */
-idmef_path_t *idmef_criterion_get_path(const idmef_criterion_t *criterion)
+idmef_path_t *idmef_criteria_get_path(const idmef_criteria_t *criterion)
 {
-        prelude_return_val_if_fail(criterion, NULL);
-        return criterion->path;
+        prelude_return_val_if_fail(criterion && idmef_criteria_is_criterion(criterion), NULL);
+        return criterion->left;
 }
 
 
 
 /**
- * idmef_criterion_get_value:
- * @criterion: Pointer to a #idmef_criterion_t object.
+ * idmef_criteria_get_value:
+ * @criterion: Pointer to a #idmef_criteria_t object.
  *
  * Used to access the #idmef_criterion_value_t associated with @criterion.
  * There might be no value specifically if the provided #idmef_criterion_operator_t
@@ -295,55 +214,28 @@ idmef_path_t *idmef_criterion_get_path(const idmef_criterion_t *criterion)
  *
  * Returns: the #idmef_criterion_value_t object associated with @criterion.
  */
-idmef_criterion_value_t *idmef_criterion_get_value(const idmef_criterion_t *criterion)
+idmef_criterion_value_t *idmef_criteria_get_value(const idmef_criteria_t *criterion)
 {
-        prelude_return_val_if_fail(criterion, NULL);
-        return criterion->value;
+        prelude_return_val_if_fail(criterion && idmef_criteria_is_criterion(criterion), NULL);
+        return criterion->right;
 }
 
 
 
-
-/**
- * idmef_criterion_get_operator:
- * @criterion: Pointer to a #idmef_criterion_t object.
- *
- * Used to access the #idmef_criterion_operator_t enumeration associated with @criterion.
- *
- * Returns: the #idmef_criterion_operator_t associated with @criterion.
- */
-idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t *criterion)
-{
-        prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
-        return criterion->operator;
-}
-
-
-
-/**
- * idmef_criterion_match:
- * @criterion: Pointer to a #idmef_criterion_t object.
- * @object: Pointer to a #idmef_object_t object to match against @criterion.
- *
- * Matches @message against the provided @criterion. This implies retrieving the
- * value associated with @criterion path, and matching it with the @idmef_criterion_value_t
- * object within @criterion.
- *
- * Returns: 1 for a match, 0 for no match, or a negative value if an error occured.
- */
-int idmef_criterion_match(const idmef_criterion_t *criterion, void *object)
+static int criterion_match(const idmef_criteria_t *criterion, void *object)
 {
         int ret;
         idmef_value_t *value = NULL;
 
         prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(idmef_criteria_is_criterion(criterion), prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        ret = idmef_path_get(criterion->path, object, &value);
+        ret = idmef_path_get(criterion->left, object, &value);
         if ( ret < 0 )
                 return ret;
 
-        ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
+        ret = idmef_criterion_value_match(criterion->right, value, criterion->operator);
         if ( value )
                 idmef_value_destroy(value);
 
@@ -369,8 +261,6 @@ int idmef_criteria_new(idmef_criteria_t **criteria)
         if ( ! *criteria )
                 return prelude_error_from_errno(errno);
 
-        (*criteria)->or = NULL;
-        (*criteria)->and = NULL;
         (*criteria)->refcount = 1;
 
         return 0;
@@ -391,14 +281,19 @@ void idmef_criteria_destroy(idmef_criteria_t *criteria)
         if ( --criteria->refcount )
                 return;
 
-        if ( criteria->criterion )
-                idmef_criterion_destroy(criteria->criterion);
+        if ( idmef_criteria_is_criterion(criteria) ) {
+                idmef_path_destroy(criteria->left);
+                if ( criteria->right ) /* can be NULL if operator is is_null or is_not_null */
+                        idmef_criterion_value_destroy(criteria->right);
+        }
 
-        if ( criteria->or )
-                idmef_criteria_destroy(criteria->or);
+        else {
+                if ( criteria->left )
+                        idmef_criteria_destroy(criteria->left);
 
-        if ( criteria->and )
-                idmef_criteria_destroy(criteria->and);
+                if ( criteria->right )
+                        idmef_criteria_destroy(criteria->right);
+        }
 
         free(criteria);
 }
@@ -441,52 +336,64 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
 
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
+        if ( idmef_criteria_is_criterion(src) )
+                return criterion_clone(src, dst);
+
         ret = idmef_criteria_new(dst);
         if ( ret < 0 )
                 return ret;
 
         new = *dst;
-        new->negated = src->negated;
+        new->operator = src->operator;
 
-        if ( src->or ) {
-                ret = idmef_criteria_clone(src->or, &new->or);
+        if ( src->left ) {
+                ret = idmef_criteria_clone(src->left, (idmef_criteria_t **) &new->left);
                 if ( ret < 0 ) {
                         idmef_criteria_destroy(new);
                         return ret;
                 }
         }
 
-        if ( src->and ) {
-                ret = idmef_criteria_clone(src->and, &new->and);
+        if ( src->right ) {
+                ret = idmef_criteria_clone(src->right, (idmef_criteria_t **) &new->right);
                 if ( ret < 0 ) {
                         idmef_criteria_destroy(new);
                         return ret;
                 }
-        }
-
-        ret = idmef_criterion_clone(src->criterion, &new->criterion);
-        if ( ret < 0 ) {
-                idmef_criteria_destroy(new);
-                return ret;
         }
 
         return 0;
 }
 
 
-
-idmef_criteria_t *idmef_criteria_get_or(const idmef_criteria_t *criteria)
+void idmef_criteria_set_operator(idmef_criteria_t *criteria, idmef_criteria_operator_t op)
 {
-        prelude_return_val_if_fail(criteria, NULL);
-        return criteria->or;
+        prelude_return_if_fail(criteria);
+        criteria->operator = op;
 }
 
 
 
-idmef_criteria_t *idmef_criteria_get_and(const idmef_criteria_t *criteria)
+int idmef_criteria_get_operator(const idmef_criteria_t *criteria)
 {
-        prelude_return_val_if_fail(criteria, NULL);
-        return criteria->and;
+        prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
+        return criteria->operator;
+}
+
+
+
+idmef_criteria_t *idmef_criteria_get_left(const idmef_criteria_t *criteria)
+{
+        prelude_return_val_if_fail(criteria && ! idmef_criteria_is_criterion(criteria), NULL);
+        return criteria->left;
+}
+
+
+
+idmef_criteria_t *idmef_criteria_get_right(const idmef_criteria_t *criteria)
+{
+        prelude_return_val_if_fail(criteria && ! idmef_criteria_is_criterion(criteria), NULL);
+        return criteria->right;
 }
 
 
@@ -517,111 +424,95 @@ int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd)
 
 int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out)
 {
+        const char *operator;
+
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        if ( criteria->or )
-                prelude_string_sprintf(out, "((");
+        if ( idmef_criteria_is_criterion(criteria) )
+                return criterion_to_string(criteria, out);
 
-        idmef_criterion_to_string(criteria->criterion, out);
+        prelude_string_sprintf(out, "(");
+        idmef_criteria_to_string(criteria->left, out);
 
-        if ( criteria->and ) {
-                prelude_string_sprintf(out, " && ");
-                idmef_criteria_to_string(criteria->and, out);
-        }
+        operator = idmef_criteria_operator_to_string(criteria->operator);
+        if ( ! operator )
+                return -1;
 
-        if ( criteria->or ) {
-                prelude_string_sprintf(out, ") || (");
-                idmef_criteria_to_string(criteria->or, out);
-                prelude_string_sprintf(out, "))");
-        }
+        prelude_string_sprintf(out, " %s ", operator);
+
+        idmef_criteria_to_string(criteria->right, out);
+        prelude_string_sprintf(out, ")");
 
         return 0;
 }
 
 
 
-prelude_bool_t idmef_criteria_is_criterion(const idmef_criteria_t *criteria)
+inline prelude_bool_t idmef_criteria_is_criterion(const idmef_criteria_t *criteria)
 {
         prelude_return_val_if_fail(criteria, FALSE);
-        return (criteria->criterion != NULL) ? TRUE : FALSE;
+        return ! (criteria->operator & (IDMEF_CRITERIA_OPERATOR_OR|IDMEF_CRITERIA_OPERATOR_AND));
 }
 
 
 
-idmef_criterion_t *idmef_criteria_get_criterion(const idmef_criteria_t *criteria)
+static int _idmef_criteria_append_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2, idmef_criteria_operator_t op)
 {
-        prelude_return_val_if_fail(criteria, NULL);
-        return criteria->criterion;
+        int ret;
+        idmef_criteria_t *new;
+
+        prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(criteria2, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        ret = idmef_criteria_new(&new);
+        if ( ret < 0 )
+                return ret;
+
+        new->operator = criteria->operator;
+        new->left = criteria->left;
+        new->right = criteria->right;
+
+        criteria->operator = op;
+        criteria->left = new;
+        criteria->right = criteria2;
+
+        return 0;
 }
 
 
 
-void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
+int idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
-        prelude_return_if_fail(criteria);
-        prelude_return_if_fail(criteria2);
-
-        while ( criteria->or )
-                criteria = criteria->or;
-
-        criteria->or = criteria2;
+        return _idmef_criteria_append_criteria(criteria, criteria2, IDMEF_CRITERIA_OPERATOR_OR);
 }
 
 
 
 int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
+        return _idmef_criteria_append_criteria(criteria, criteria2, IDMEF_CRITERIA_OPERATOR_AND);
+}
+
+
+
+int idmef_criteria_join(idmef_criteria_t **criteria, idmef_criteria_t *left, idmef_criteria_operator_t op, idmef_criteria_t *right)
+{
         int ret;
-        idmef_criteria_t *new, *last = NULL;
 
-        prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(criteria2, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(left, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(right, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        while ( criteria ) {
-                last = criteria;
+        ret = idmef_criteria_new(criteria);
+        if ( ret < 0 )
+                return ret;
 
-                if ( criteria->or ) {
-                        ret = idmef_criteria_clone(criteria2, &new);
-                        if ( ret < 0 )
-                                return ret;
-
-                        ret = idmef_criteria_and_criteria(criteria->or, new);
-                        if ( ret < 0 )
-                                return ret;
-                }
-
-                criteria = criteria->and;
-        }
-
-        last->and = criteria2;
+        (*criteria)->operator = op;
+        (*criteria)->left = left;
+        (*criteria)->right = right;
 
         return 0;
 }
-
-
-void idmef_criteria_set_negation(idmef_criteria_t *criteria, prelude_bool_t negate)
-{
-        prelude_return_if_fail(criteria);
-        criteria->negated = negate;
-}
-
-
-prelude_bool_t idmef_criteria_get_negation(const idmef_criteria_t *criteria)
-{
-        prelude_return_val_if_fail(criteria, FALSE);
-        return criteria->negated;
-}
-
-
-void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion)
-{
-        prelude_return_if_fail(criteria);
-        prelude_return_if_fail(criterion);
-
-        criteria->criterion = criterion;
-}
-
 
 
 
@@ -641,20 +532,17 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        ret = idmef_criterion_match(criteria->criterion, object);
+        if ( idmef_criteria_is_criterion(criteria) )
+                return criterion_match(criteria, object);
+
+        ret = idmef_criteria_match(criteria->left, object);
         if ( ret < 0 )
                 return ret;
 
-        if ( ret == 1 && criteria->and )
-                ret = idmef_criteria_match(criteria->and, object);
+        if ( (ret == 0 && criteria->operator & IDMEF_CRITERIA_OPERATOR_OR) || (ret == 1 && criteria->operator & IDMEF_CRITERIA_OPERATOR_AND) )
+                ret = idmef_criteria_match(criteria->right, object);
 
-        if ( ret == 0 && criteria->or )
-                ret = idmef_criteria_match(criteria->or, object);
-
-        if ( ret < 0 )
-                return ret;
-
-        return (criteria->negated) ? !ret : ret;
+        return (criteria->operator & IDMEF_CRITERIA_OPERATOR_NOT) ? !ret : ret;
 }
 
 
@@ -665,20 +553,20 @@ idmef_class_id_t idmef_criteria_get_class(const idmef_criteria_t *criteria)
         idmef_path_t *path;
 
         while ( criteria ) {
-                path = idmef_criterion_get_path(idmef_criteria_get_criterion(criteria));
+                path = idmef_criteria_get_path(criteria);
                 if ( path ) {
                         pc = idmef_path_get_class(path, 0);
                         if ( pc == IDMEF_CLASS_ID_ALERT || IDMEF_CLASS_ID_HEARTBEAT )
                                 return pc;
                 }
 
-                if ( idmef_criteria_get_or(criteria) ) {
-                        ret = idmef_criteria_get_class(idmef_criteria_get_or(criteria));
+                if ( idmef_criteria_get_left(criteria) ) {
+                        ret = idmef_criteria_get_class(idmef_criteria_get_left(criteria));
                         if ( ret >= 0 )
                                 return ret;
                 }
 
-                criteria = idmef_criteria_get_and(criteria);
+                criteria = idmef_criteria_get_right(criteria);
         }
 
         return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not get message class from criteria");

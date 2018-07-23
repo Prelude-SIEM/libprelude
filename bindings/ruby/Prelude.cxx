@@ -18238,6 +18238,9 @@ SWIGEXPORT void Init_Prelude(void) {
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFCriteria, (void *) &SwigClassIDMEFCriteria);
   rb_define_alloc_func(SwigClassIDMEFCriteria.klass, _wrap_IDMEFCriteria_allocate);
   rb_define_method(SwigClassIDMEFCriteria.klass, "initialize", VALUEFUNC(_wrap_new_IDMEFCriteria), -1);
+  rb_define_const(SwigClassIDMEFCriteria.klass, "OPERATOR_NOT", SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_NOT)));
+  rb_define_const(SwigClassIDMEFCriteria.klass, "OPERATOR_AND", SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_AND)));
+  rb_define_const(SwigClassIDMEFCriteria.klass, "OPERATOR_OR", SWIG_From_int(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_OR)));
   rb_define_method(SwigClassIDMEFCriteria.klass, "match", VALUEFUNC(_wrap_IDMEFCriteria_match), -1);
   rb_define_method(SwigClassIDMEFCriteria.klass, "clone", VALUEFUNC(_wrap_IDMEFCriteria_clone), -1);
   rb_define_method(SwigClassIDMEFCriteria.klass, "andCriteria", VALUEFUNC(_wrap_IDMEFCriteria_andCriteria), -1);

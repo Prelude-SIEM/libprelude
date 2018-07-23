@@ -32,32 +32,32 @@ namespace Prelude {
         class IDMEFCriterion {
             public:
                 enum IDMEFCriterionOperatorEnum {
-                        OPERATOR_NOT     = IDMEF_CRITERION_OPERATOR_NOT,
-                        OPERATOR_NOCASE  = IDMEF_CRITERION_OPERATOR_NOCASE,
+                        OPERATOR_NOT                = IDMEF_CRITERION_OPERATOR_NOT,
+                        OPERATOR_NOCASE             = IDMEF_CRITERION_OPERATOR_NOCASE,
 
-                        OPERATOR_EQUAL   = IDMEF_CRITERION_OPERATOR_EQUAL,
-                        OPERATOR_EQUAL_NOCASE = IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE,
-                        OPERATOR_NOT_EQUAL = IDMEF_CRITERION_OPERATOR_NOT_EQUAL,
-                        OPERATOR_NOT_EQUAL_NOCASE = IDMEF_CRITERION_OPERATOR_NOT_EQUAL_NOCASE,
+                        OPERATOR_EQUAL              = IDMEF_CRITERION_OPERATOR_EQUAL,
+                        OPERATOR_EQUAL_NOCASE       = IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE,
+                        OPERATOR_NOT_EQUAL          = IDMEF_CRITERION_OPERATOR_NOT_EQUAL,
+                        OPERATOR_NOT_EQUAL_NOCASE   = IDMEF_CRITERION_OPERATOR_NOT_EQUAL_NOCASE,
 
-                        OPERATOR_LESSER = IDMEF_CRITERION_OPERATOR_LESSER,
-                        OPERATOR_LESSER_OR_EQUAL = IDMEF_CRITERION_OPERATOR_LESSER_OR_EQUAL,
+                        OPERATOR_LESSER             = IDMEF_CRITERION_OPERATOR_LESSER,
+                        OPERATOR_LESSER_OR_EQUAL    = IDMEF_CRITERION_OPERATOR_LESSER_OR_EQUAL,
 
-                        OPERATOR_GREATER = IDMEF_CRITERION_OPERATOR_GREATER,
-                        OPERATOR_GREATER_OR_EQUAL = IDMEF_CRITERION_OPERATOR_GREATER_OR_EQUAL,
+                        OPERATOR_GREATER            = IDMEF_CRITERION_OPERATOR_GREATER,
+                        OPERATOR_GREATER_OR_EQUAL   = IDMEF_CRITERION_OPERATOR_GREATER_OR_EQUAL,
 
-                        OPERATOR_SUBSTR = IDMEF_CRITERION_OPERATOR_SUBSTR,
-                        OPERATOR_SUBSTR_NOCASE = IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE,
-                        OPERATOR_NOT_SUBSTR = IDMEF_CRITERION_OPERATOR_NOT_SUBSTR,
-                        OPERATOR_NOT_SUBSTR_NOCASE = IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE,
+                        OPERATOR_SUBSTR             = IDMEF_CRITERION_OPERATOR_SUBSTR,
+                        OPERATOR_SUBSTR_NOCASE      = IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE,
+                        OPERATOR_NOT_SUBSTR         = IDMEF_CRITERION_OPERATOR_NOT_SUBSTR,
+                        OPERATOR_NOT_SUBSTR_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE,
 
-                        OPERATOR_REGEX = IDMEF_CRITERION_OPERATOR_REGEX,
-                        OPERATOR_REGEX_NOCASE = IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
-                        OPERATOR_NOT_REGEX = IDMEF_CRITERION_OPERATOR_NOT_REGEX,
-                        OPERATOR_NOT_REGEX_NOCASE = IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE,
+                        OPERATOR_REGEX              = IDMEF_CRITERION_OPERATOR_REGEX,
+                        OPERATOR_REGEX_NOCASE       = IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
+                        OPERATOR_NOT_REGEX          = IDMEF_CRITERION_OPERATOR_NOT_REGEX,
+                        OPERATOR_NOT_REGEX_NOCASE   = IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE,
 
-                        OPERATOR_NULL = IDMEF_CRITERION_OPERATOR_NULL,
-                        OPERATOR_NOT_NULL = IDMEF_CRITERION_OPERATOR_NOT_NULL
+                        OPERATOR_NULL               = IDMEF_CRITERION_OPERATOR_NULL,
+                        OPERATOR_NOT_NULL           = IDMEF_CRITERION_OPERATOR_NOT_NULL
                 };
         };
 
@@ -66,6 +66,12 @@ namespace Prelude {
                 idmef_criteria_t *_criteria;
 
             public:
+                enum IDMEFCriteriaOperatorEnum {
+                        OPERATOR_NOT    = IDMEF_CRITERIA_OPERATOR_NOT,
+                        OPERATOR_AND    = IDMEF_CRITERIA_OPERATOR_AND,
+                        OPERATOR_OR     = IDMEF_CRITERIA_OPERATOR_OR
+                };
+
                 ~IDMEFCriteria();
                 IDMEFCriteria();
                 IDMEFCriteria(const IDMEFCriteria &criteria);

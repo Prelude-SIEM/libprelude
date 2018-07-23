@@ -72,22 +72,13 @@ void _idmef_criteria_string_init_lexer(void);
 static int create_criteria(idmef_criteria_t **criteria, idmef_path_t *path,
                            idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
 {
-        idmef_criterion_t *criterion;
-
-        real_ret = idmef_criteria_new(criteria);
-        if ( real_ret < 0 )
-                goto err;
-
         if ( path_count++ > 0 )
                 idmef_path_ref(path);
 
-        real_ret = idmef_criterion_new(&criterion, path, value, operator);
-        if ( real_ret < 0 ) {
-                idmef_criteria_destroy(*criteria);
+        real_ret = idmef_criterion_new(criteria, path, value, operator);
+        if ( real_ret < 0 )
                 goto err;
-        }
 
-        idmef_criteria_set_criterion(*criteria, criterion);
         return 0;
 
 err:
@@ -105,7 +96,7 @@ err:
         int operator;
         idmef_path_t *path;
         idmef_criteria_t *criteria;
-        idmef_criterion_operator_t relation;
+        idmef_criteria_operator_t relation;
 }
 
 /* BISON Declarations */
@@ -186,7 +177,7 @@ criteria_base:
         }
 
         | TOK_NOT '(' criteria ')' {
-                idmef_criteria_set_negation($3, TRUE);
+                idmef_criteria_set_operator($3, idmef_criteria_get_operator($3) | IDMEF_CRITERIA_OPERATOR_NOT);
                 $$ = $3;
         }
 ;

@@ -28,7 +28,18 @@
  extern "C" {
 #endif
 
+
 typedef enum {
+
+        IDMEF_CRITERIA_OPERATOR_NOT               = 0x8000,
+        IDMEF_CRITERIA_OPERATOR_AND               = 0x0040,
+        IDMEF_CRITERIA_OPERATOR_OR                = 0x0080,
+
+} idmef_criteria_operator_t;
+
+
+typedef enum {
+
         IDMEF_CRITERION_OPERATOR_NOT               = 0x8000,
         IDMEF_CRITERION_OPERATOR_NOCASE            = 0x4000,
 
@@ -54,30 +65,21 @@ typedef enum {
         IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
 
         IDMEF_CRITERION_OPERATOR_NULL              = 0x0020,
-        IDMEF_CRITERION_OPERATOR_NOT_NULL          = IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
+        IDMEF_CRITERION_OPERATOR_NOT_NULL          = IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT,
 } idmef_criterion_operator_t;
 
 
 typedef struct idmef_criteria idmef_criteria_t;
-typedef struct idmef_criterion idmef_criterion_t;
 
 #include "idmef-path.h"
 #include "idmef-criterion-value.h"
 
-const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op);
+const char *idmef_criteria_operator_to_string(idmef_criteria_operator_t op);
 
-int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
+int idmef_criterion_new(idmef_criteria_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op);
 
-void idmef_criterion_destroy(idmef_criterion_t *criterion);
 idmef_criteria_t *idmef_criteria_ref(idmef_criteria_t *criteria);
-int idmef_criterion_clone(const idmef_criterion_t *criterion, idmef_criterion_t **dst);
-int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd);
-int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
-idmef_path_t *idmef_criterion_get_path(const idmef_criterion_t *criterion);
-idmef_criterion_value_t *idmef_criterion_get_value(const idmef_criterion_t *criterion);
-idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t *criterion);
-int idmef_criterion_match(const idmef_criterion_t *criterion, void *object);
 
 int idmef_criteria_new(idmef_criteria_t **criteria);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
@@ -85,24 +87,28 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst);
 int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd);
 int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out);
 prelude_bool_t idmef_criteria_is_criterion(const idmef_criteria_t *criteria);
-idmef_criterion_t *idmef_criteria_get_criterion(const idmef_criteria_t *criteria);
-void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion);
 
-void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
+int idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
 int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
+int idmef_criteria_join(idmef_criteria_t **criteria, idmef_criteria_t *left, idmef_criteria_operator_t op, idmef_criteria_t *right);
+
 int idmef_criteria_match(const idmef_criteria_t *criteria, void *object);
 
-idmef_criteria_t *idmef_criteria_get_or(const idmef_criteria_t *criteria);
+void idmef_criteria_set_operator(idmef_criteria_t *criteria, idmef_criteria_operator_t op);
 
-idmef_criteria_t *idmef_criteria_get_and(const idmef_criteria_t *criteria);
+int idmef_criteria_get_operator(const idmef_criteria_t *criteria);
+
+idmef_criteria_t *idmef_criteria_get_left(const idmef_criteria_t *criteria);
+
+idmef_criteria_t *idmef_criteria_get_right(const idmef_criteria_t *criteria);
+
+idmef_path_t *idmef_criteria_get_path(const idmef_criteria_t *criterion);
+
+idmef_criterion_value_t *idmef_criteria_get_value(const idmef_criteria_t *criterion);
 
 int idmef_criteria_new_from_string(idmef_criteria_t **criteria, const char *str);
-
-void idmef_criteria_set_negation(idmef_criteria_t *criteria, prelude_bool_t negate);
-
-prelude_bool_t idmef_criteria_get_negation(const idmef_criteria_t *criteria);
 
 idmef_class_id_t idmef_criteria_get_class(const idmef_criteria_t *criteria);
 

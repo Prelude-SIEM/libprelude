@@ -471,6 +471,9 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( Prelude );
 %OWNER = ();
 %ITERATORS = ();
+*OPERATOR_NOT = *Preludec::IDMEFCriteria_OPERATOR_NOT;
+*OPERATOR_AND = *Preludec::IDMEFCriteria_OPERATOR_AND;
+*OPERATOR_OR = *Preludec::IDMEFCriteria_OPERATOR_OR;
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});

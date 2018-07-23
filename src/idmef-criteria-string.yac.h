@@ -98,13 +98,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 103 "idmef-criteria-string.yac.y" /* yacc.c:1909  */
+#line 94 "idmef-criteria-string.yac.y" /* yacc.c:1909  */
 
         char *str;
         int operator;
         idmef_path_t *path;
         idmef_criteria_t *criteria;
-        idmef_criterion_operator_t relation;
+        idmef_criteria_operator_t relation;
 
 #line 110 "idmef-criteria-string.yac.h" /* yacc.c:1909  */
 };

@@ -18300,6 +18300,21 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFCriterion, (void*) "Prelude::IDMEFCriterion");
+  /*@SWIG:/usr/share/swig/3.0.12/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "IDMEFCriteria_OPERATOR_NOT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_NOT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig/3.0.12/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "IDMEFCriteria_OPERATOR_AND", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_AND)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig/3.0.12/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "IDMEFCriteria_OPERATOR_OR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(Prelude::IDMEFCriteria::OPERATOR_OR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_Prelude__IDMEFCriteria, (void*) "Prelude::IDMEFCriteria");
   /*@SWIG:/usr/share/swig/3.0.12/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "IDMEFValue_TYPE_UNKNOWN", TRUE | 0x2 | GV_ADDMULTI);

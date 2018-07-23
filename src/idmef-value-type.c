@@ -787,7 +787,7 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
         if ( ! (op & ops_tbl[tid].operator) )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
                                              "Object type '%s' does not support operator '%s'",
-                                             idmef_value_type_to_string(tid), idmef_criterion_operator_to_string(op));
+                                             idmef_value_type_to_string(tid), idmef_criteria_operator_to_string(op));
 
         if ( ! ops_tbl[tid].compare )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
@@ -875,7 +875,7 @@ int idmef_value_type_check_operator(idmef_value_type_id_t type, idmef_criterion_
 
         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR,
                                      "Object type '%s' does not support operator '%s'",
-                                     idmef_value_type_to_string(type), idmef_criterion_operator_to_string(op));
+                                     idmef_value_type_to_string(type), idmef_criteria_operator_to_string(op));
 }
 
 

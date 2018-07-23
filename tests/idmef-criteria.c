@@ -47,6 +47,9 @@ int main(void)
         test_criteria(idmef, "alert.classification.text = (A || B || C || D) || heartbeat", 0, 1);
         test_criteria(idmef, "(alert.classification.text == A || heartbeat", -1, -1);
 
+        test_criteria(idmef, "!(alert.classification.text == A || heartbeat)", 0, 0);
+        test_criteria(idmef, "!(alert.classification.text == A && heartbeat)", 0, 1);
+
         prelude_string_set_ref(str, "My String");
 
         test_criteria(idmef, "alert.classification.text != 'My String'", 0, 0);
