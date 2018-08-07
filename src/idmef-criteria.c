@@ -425,17 +425,20 @@ int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd)
 int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out)
 {
         const char *operator;
+        prelude_bool_t negated = FALSE;
 
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
+        negated = criteria->operator & IDMEF_CRITERIA_OPERATOR_NOT;
+
         if ( idmef_criteria_is_criterion(criteria) )
                 return criterion_to_string(criteria, out);
 
-        prelude_string_sprintf(out, "(");
+        prelude_string_sprintf(out, "%s(", (negated) ? "!" : "");
         idmef_criteria_to_string(criteria->left, out);
 
-        operator = idmef_criteria_operator_to_string(criteria->operator);
+        operator = idmef_criteria_operator_to_string(criteria->operator & ~IDMEF_CRITERIA_OPERATOR_NOT);
         if ( ! operator )
                 return -1;
 
