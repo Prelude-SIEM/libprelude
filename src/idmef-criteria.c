@@ -553,18 +553,16 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
 idmef_class_id_t idmef_criteria_get_class(const idmef_criteria_t *criteria)
 {
         int pc, ret;
-        idmef_path_t *path;
 
         while ( criteria ) {
-                path = idmef_criteria_get_path(criteria);
-                if ( path ) {
-                        pc = idmef_path_get_class(path, 0);
+                if ( idmef_criteria_is_criterion(criteria) ) {
+                        pc = idmef_path_get_class(criteria->left, 0);
                         if ( pc == IDMEF_CLASS_ID_ALERT || IDMEF_CLASS_ID_HEARTBEAT )
                                 return pc;
                 }
 
                 if ( idmef_criteria_get_left(criteria) ) {
-                        ret = idmef_criteria_get_class(idmef_criteria_get_left(criteria));
+                        ret = idmef_criteria_get_class(criteria->left);
                         if ( ret >= 0 )
                                 return ret;
                 }
