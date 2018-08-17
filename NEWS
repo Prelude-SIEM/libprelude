@@ -1,3 +1,17 @@
+* 2018-08-17, libprelude-5.0.0rc1:
+
+Author: Yoann Vandoorselaere
+
+- Change the structure of IDMEF criteria
+
+- Make IDMEFPath and IDMEFCriteria pickle compatible
+
+Author: Antoine Luong
+
+- Fix IDMEF_MSG_REFERENCE_NAME value
+
+
+
 * 2018-05-04, libprelude-5.0.0beta2:
 
 No new changes.
