@@ -22,12 +22,13 @@
 
 #include <locale.h>
 #include <string.h>
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+#if defined _WIN32 && ! defined __CYGWIN__
 # define WIN32_LEAN_AND_MEAN  /* avoid including junk */
 # include <windows.h>
 # include <stdio.h>
 #endif
 
+#if !REPLACE_NL_LANGINFO || GNULIB_defined_CODESET
 /* Return the codeset of the current locale, if this is easily deducible.
    Otherwise, return "".  */
 static char *
@@ -64,7 +65,7 @@ ctype_codeset (void)
         }
     }
 
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+# if defined _WIN32 && ! defined __CYGWIN__
   /* If setlocale is successful, it returns the number of the
      codepage, as a string.  Otherwise, fall back on Windows API
      GetACP, which returns the locale's codepage as a number (although
@@ -76,9 +77,10 @@ ctype_codeset (void)
   else
     sprintf (buf + 2, "%u", GetACP ());
   codeset = memcpy (buf, "CP", 2);
-#endif
+# endif
   return codeset;
 }
+#endif
 
 
 #if REPLACE_NL_LANGINFO
@@ -189,8 +191,10 @@ nl_langinfo (nl_item item)
       return localeconv () ->decimal_point;
     case THOUSEP:
       return localeconv () ->thousands_sep;
+# ifdef GROUPING
     case GROUPING:
       return localeconv () ->grouping;
+# endif
     /* nl_langinfo items of the LC_TIME category.
        TODO: Really use the locale.  */
     case D_T_FMT:
@@ -318,6 +322,7 @@ nl_langinfo (nl_item item)
     /* nl_langinfo items of the LC_MONETARY category.  */
     case CRNCYSTR:
       return localeconv () ->currency_symbol;
+# ifdef INT_CURR_SYMBOL
     case INT_CURR_SYMBOL:
       return localeconv () ->int_curr_symbol;
     case MON_DECIMAL_POINT:
@@ -346,6 +351,7 @@ nl_langinfo (nl_item item)
       return & localeconv () ->p_sign_posn;
     case N_SIGN_POSN:
       return & localeconv () ->n_sign_posn;
+# endif
     /* nl_langinfo items of the LC_MESSAGES category
        TODO: Really use the locale. */
     case YESEXPR:

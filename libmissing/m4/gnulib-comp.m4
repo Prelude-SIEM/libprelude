@@ -69,7 +69,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module close-tests:
   # Code from module cond:
   # Code from module cond-tests:
-  # Code from module configmake:
   # Code from module connect:
   # Code from module connect-tests:
   # Code from module ctype:
@@ -175,6 +174,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module listen:
   # Code from module listen-tests:
   # Code from module localcharset:
+  # Code from module localcharset-tests:
   # Code from module locale:
   # Code from module locale-tests:
   # Code from module localeconv:
@@ -406,7 +406,6 @@ AC_SUBST([LTALLOCA])
   fi
   gl_UNISTD_MODULE_INDICATOR([close])
   gl_COND
-  gl_CONFIGMAKE_PREP
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([connect])
@@ -512,10 +511,11 @@ AC_SUBST([LTALLOCA])
   fi
   gl_STDIO_MODULE_INDICATOR([getline])
   gl_FUNC_GETPASS
-  if test $HAVE_GETPASS = 0; then
+  if test $HAVE_GETPASS = 0 || test $REPLACE_GETPASS = 1; then
     AC_LIBOBJ([getpass])
     gl_PREREQ_GETPASS
   fi
+  gl_UNISTD_MODULE_INDICATOR([getpass])
   AC_REQUIRE([gl_HEADER_SYS_SOCKET])
   if test "$ac_cv_header_winsock2_h" = yes; then
     AC_LIBOBJ([getsockname])
@@ -529,7 +529,6 @@ AC_SUBST([LTALLOCA])
     gl_PREREQ_GETTIMEOFDAY
   fi
   gl_SYS_TIME_MODULE_INDICATOR([gettimeofday])
-  gl_HARD_LOCALE
   AC_REQUIRE([gl_HOST_CPU_C_ABI])
   gl_HOSTENT
   gl_FUNC_INET_NTOP
@@ -558,7 +557,8 @@ AC_SUBST([LTALLOCA])
   fi
   gl_SYS_SOCKET_MODULE_INDICATOR([listen])
   gl_LOCALCHARSET
-  LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(abs_top_builddir)/$gl_source_base\""
+  dnl For backward compatibility. Some packages still use this.
+  LOCALCHARSET_TESTS_ENVIRONMENT=
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
   gl_LOCALE_H
   gl_FUNC_LOCALECONV
@@ -1195,7 +1195,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/c-ctype.c
   lib/c-ctype.h
   lib/close.c
-  lib/config.charset
   lib/connect.c
   lib/dup2.c
   lib/errno.in.h
@@ -1284,8 +1283,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-parse.h
   lib/pthread_sigmask.c
   lib/raise.c
-  lib/ref-add.sin
-  lib/ref-del.sin
   lib/regcomp.c
   lib/regex.c
   lib/regex.h
@@ -1373,7 +1370,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/close.m4
   m4/codeset.m4
   m4/cond.m4
-  m4/configmake.m4
   m4/ctype.m4
   m4/dup2.m4
   m4/eealloc.m4
@@ -1412,7 +1408,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gettimeofday.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
-  m4/hard-locale.m4
   m4/host-cpu-c-abi.m4
   m4/hostent.m4
   m4/include_next.m4
@@ -1633,6 +1628,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-langinfo.c
   tests/test-limits-h.c
   tests/test-listen.c
+  tests/test-localcharset.c
   tests/test-locale.c
   tests/test-localeconv.c
   tests/test-localename.c
@@ -1663,6 +1659,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-netinet_in.c
   tests/test-nl_langinfo.c
   tests/test-nl_langinfo.sh
+  tests/test-once.c
   tests/test-open.c
   tests/test-open.h
   tests/test-pathmax.c

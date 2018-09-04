@@ -34,7 +34,7 @@
 #include <errno.h>
 #include <limits.h>
 
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+#if defined _WIN32 && ! defined __CYGWIN__
 # define WINDOWS_NATIVE
 # include <winsock2.h>
 # include <windows.h>
@@ -83,6 +83,10 @@
 /* Here we need the select() function from Windows, because we pass bit masks
    of SOCKETs, not bit masks of FDs.  */
 # undef select
+
+/* Avoid warnings from gcc -Wcast-function-type.  */
+# define GetProcAddress \
+   (void *) GetProcAddress
 
 static BOOL IsConsoleHandle (HANDLE h)
 {

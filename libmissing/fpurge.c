@@ -19,7 +19,7 @@
 /* Specification.  */
 #include <stdio.h>
 
-#if HAVE___FPURGE                   /* glibc >= 2.2, Haiku, Solaris >= 7 */
+#if HAVE___FPURGE                   /* glibc >= 2.2, Haiku, Solaris >= 7, Android API >= 23 */
 # include <stdio_ext.h>
 #endif
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 int
 fpurge (FILE *fp)
 {
-#if HAVE___FPURGE                   /* glibc >= 2.2, Haiku, Solaris >= 7, musl libc */
+#if HAVE___FPURGE                   /* glibc >= 2.2, Haiku, Solaris >= 7, Android API >= 23, musl libc */
 
   __fpurge (fp);
   /* The __fpurge function does not have a return value.  */
@@ -62,7 +62,8 @@ fpurge (FILE *fp)
   /* Most systems provide FILE as a struct and the necessary bitmask in
      <stdio.h>, because they need it for implementing getc() and putc() as
      fast macros.  */
-# if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+# if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1
+  /* GNU libc, BeOS, Haiku, Linux libc5 */
   fp->_IO_read_end = fp->_IO_read_ptr;
   fp->_IO_write_ptr = fp->_IO_write_base;
   /* Avoid memory leak when there is an active ungetc buffer.  */

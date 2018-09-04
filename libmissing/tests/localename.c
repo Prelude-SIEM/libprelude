@@ -40,7 +40,7 @@
 # if defined __APPLE__ && defined __MACH__
 #  include <xlocale.h>
 # endif
-# if (__GLIBC__ >= 2 && !defined __UCLIBC__) || defined __CYGWIN__
+# if (__GLIBC__ >= 2 && !defined __UCLIBC__) || (defined __linux__ && HAVE_LANGINFO_H) || defined __CYGWIN__
 #  include <langinfo.h>
 # endif
 # if !defined IN_LIBINTL
@@ -61,7 +61,7 @@ extern char * getlocalename_l(int, locale_t);
 # endif
 #endif
 
-#if (defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__
+#if defined _WIN32 && !defined __CYGWIN__
 # define WINDOWS_NATIVE
 # if !defined IN_LIBINTL
 #  include "glthread/lock.h"
@@ -1331,7 +1331,7 @@ gl_locale_name_canonicalize (char *name)
   };
 
   /* Convert script names (ISO 15924) to Unix conventions.
-     See http://www.unicode.org/iso15924/iso15924-codes.html  */
+     See https://www.unicode.org/iso15924/iso15924-codes.html  */
   typedef struct { const char script[4+1]; const char unixy[9+1]; }
           script_entry;
   static const script_entry script_table[] = {
@@ -1492,7 +1492,7 @@ gl_locale_name_from_win32_LANGID (LANGID langid)
     sub = SUBLANGID (langid);
 
     /* Dispatch on language.
-       See also http://www.unicode.org/unicode/onlinedat/languages.html .
+       See also https://www.unicode.org/unicode/onlinedat/languages.html .
        For details about languages, see https://www.ethnologue.com/ .  */
     switch (primary)
       {
@@ -2703,6 +2703,9 @@ gl_locale_name_thread_unsafe (int category, const char *categoryname)
              nl_langinfo (_NL_LOCALE_NAME (category)).  */
           name = thread_locale->__names[category];
         return name;
+#  elif defined __linux__ && HAVE_LANGINFO_H && defined NL_LOCALE_NAME
+        /* musl libc */
+        return nl_langinfo_l (NL_LOCALE_NAME (category), thread_locale);
 #  elif (defined __FreeBSD__ || defined __DragonFly__) || (defined __APPLE__ && defined __MACH__)
         /* FreeBSD, Mac OS X */
         int mask;
@@ -2783,28 +2786,10 @@ gl_locale_name_thread (int category, const char *categoryname)
   const char *name = gl_locale_name_thread_unsafe (category, categoryname);
   if (name != NULL)
     return struniq (name);
-#elif defined WINDOWS_NATIVE
-  if (LC_MIN <= category && category <= LC_MAX)
-    {
-      char *locname = setlocale (category, NULL);
-      LCID lcid = 0;
-
-      /* If CATEGORY is LC_ALL, the result might be a semi-colon
-        separated list of locales.  We need only one, so we take the
-        one corresponding to LC_CTYPE, as the most important for
-        character translations.  */
-      if (strchr (locname, ';'))
-       locname = setlocale (LC_CTYPE, NULL);
-
-      /* Convert locale name to LCID.  We don't want to use
-         LocaleNameToLCID because (a) it is only available since Vista,
-         and (b) it doesn't accept locale names returned by 'setlocale'.  */
-      lcid = get_lcid (locname);
-
-      if (lcid > 0)
-        return gl_locale_name_from_win32_LCID (lcid);
-    }
 #endif
+  /* On WINDOWS_NATIVE, don't use GetThreadLocale() here, because when
+     SetThreadLocale has not been called - which is a very frequent case -
+     the value of GetThreadLocale() ignores past calls to 'setlocale'.  */
   return NULL;
 }
 
@@ -2821,6 +2806,28 @@ gl_locale_name_thread (int category, const char *categoryname)
 const char *
 gl_locale_name_posix (int category, const char *categoryname)
 {
+#if defined WINDOWS_NATIVE
+  if (LC_MIN <= category && category <= LC_MAX)
+    {
+      char *locname = setlocale (category, NULL);
+      LCID lcid = 0;
+
+      /* If CATEGORY is LC_ALL, the result might be a semi-colon
+        separated list of locales.  We need only one, so we take the
+        one corresponding to LC_CTYPE, as the most important for
+        character translations.  */
+      if (category == LC_ALL && strchr (locname, ';'))
+        locname = setlocale (LC_CTYPE, NULL);
+
+      /* Convert locale name to LCID.  We don't want to use
+         LocaleNameToLCID because (a) it is only available since Vista,
+         and (b) it doesn't accept locale names returned by 'setlocale'.  */
+      lcid = get_lcid (locname);
+
+      if (lcid > 0)
+        return gl_locale_name_from_win32_LCID (lcid);
+    }
+#endif
   /* Use the POSIX methods of looking to 'LC_ALL', 'LC_xxx', and 'LANG'.
      On some systems this can be done by the 'setlocale' function itself.  */
 #if defined HAVE_SETLOCALE && defined HAVE_LC_MESSAGES && defined HAVE_LOCALE_NULL

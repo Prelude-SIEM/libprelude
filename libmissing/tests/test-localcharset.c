@@ -1,6 +1,5 @@
-/* getpagesize emulation for systems where it cannot be done in a C macro.
-
-   Copyright (C) 2007, 2009-2018 Free Software Foundation, Inc.
+/* Manual test of localcharset() function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,25 +14,26 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-/* Written by Bruno Haible and Martin Lambers.  */
+/* This program prints the result of locale_charset in the current locale.
+   One way to use it is:
+     $ for l in `locale -a`; do
+         echo -n "$l               "; LANG=$l ./test-localcharset;
+       done \
+       | sort -k 2
+ */
 
 #include <config.h>
 
-/* Specification. */
-#include <unistd.h>
+#include "localcharset.h"
 
-/* This implementation is only for native Windows systems.  */
-#if defined _WIN32 && ! defined __CYGWIN__
-
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
+#include <locale.h>
+#include <stdio.h>
 
 int
-getpagesize (void)
+main (void)
 {
-  SYSTEM_INFO system_info;
-  GetSystemInfo (&system_info);
-  return system_info.dwPageSize;
-}
+  setlocale (LC_ALL, "");
+  printf ("%s\n", locale_charset ());
 
-#endif
+  return 0;
+}

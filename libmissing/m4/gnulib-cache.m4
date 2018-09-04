@@ -27,7 +27,67 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --doc-base=libmissing/doc --tests-base=libmissing/tests --aux-dir=. --with-tests --lgpl=2 --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files accept bind close cond connect dup2 fclose fopen ftw getaddrinfo getpass getsockname gettimeofday inet_ntop inet_pton ioctl listen lock lseek memmem minmax pathmax perror poll regex relocatable-lib-lgpl select setsockopt sigprocmask sleep snprintf socket socklen strcase strcasestr strdup-posix strerror strndup strptime strsep sys_stat thread time_r timegm tls uname vsnprintf write
+# gnulib-tool --import \
+#  --lib=libmissing \
+#  --source-base=libmissing \
+#  --m4-base=libmissing/m4 \
+#  --doc-base=libmissing/doc \
+#  --tests-base=libmissing/tests \
+#  --aux-dir=. \
+#  --with-tests \
+#  --lgpl=2 \
+#  --no-conditional-dependencies \
+#  --libtool \
+#  --macro-prefix=gl \
+#  --no-vc-files \
+#  accept \
+#  bind \
+#  close \
+#  cond \
+#  connect \
+#  dup2 \
+#  fclose \
+#  fopen \
+#  ftw \
+#  getaddrinfo \
+#  getpass \
+#  getsockname \
+#  gettimeofday \
+#  inet_ntop \
+#  inet_pton \
+#  ioctl \
+#  listen \
+#  lock \
+#  lseek \
+#  memmem \
+#  minmax \
+#  pathmax \
+#  perror \
+#  poll \
+#  regex \
+#  relocatable-lib-lgpl \
+#  select \
+#  setsockopt \
+#  sigprocmask \
+#  sleep \
+#  snprintf \
+#  socket \
+#  socklen \
+#  strcase \
+#  strcasestr \
+#  strdup-posix \
+#  strerror \
+#  strndup \
+#  strptime \
+#  strsep \
+#  sys_stat \
+#  thread \
+#  time_r \
+#  timegm \
+#  tls \
+#  uname \
+#  vsnprintf \
+#  write
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])

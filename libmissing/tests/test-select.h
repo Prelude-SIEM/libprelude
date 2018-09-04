@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -29,16 +30,12 @@
 
 #include "macros.h"
 
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+#if defined _WIN32 && ! defined __CYGWIN__
 # define WINDOWS_NATIVE
 #endif
 
 #ifdef HAVE_SYS_WAIT_H
 # include <sys/wait.h>
-#endif
-
-#ifndef SO_REUSEPORT
-# define SO_REUSEPORT    SO_REUSEADDR
 #endif
 
 #define TEST_PORT       12345

@@ -1,6 +1,5 @@
-/* getpagesize emulation for systems where it cannot be done in a C macro.
-
-   Copyright (C) 2007, 2009-2018 Free Software Foundation, Inc.
+/* Test of once-only execution in multithreaded situations.
+   Copyright (C) 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,25 +14,30 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-/* Written by Bruno Haible and Martin Lambers.  */
+/* Written by Bruno Haible <bruno@clisp.org>, 2018.  */
 
 #include <config.h>
 
-/* Specification. */
-#include <unistd.h>
+#include "glthread/lock.h"
 
-/* This implementation is only for native Windows systems.  */
-#if defined _WIN32 && ! defined __CYGWIN__
+#include "macros.h"
 
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
+gl_once_define(static, a_once)
 
-int
-getpagesize (void)
+static int a;
+
+static void
+a_init (void)
 {
-  SYSTEM_INFO system_info;
-  GetSystemInfo (&system_info);
-  return system_info.dwPageSize;
+  a = 42;
 }
 
-#endif
+int
+main ()
+{
+  gl_once (a_once, a_init);
+
+  ASSERT (a == 42);
+
+  return 0;
+}
