@@ -1,3 +1,13 @@
+* 2018-09-07, libprelude-5.0.0:
+
+Author: Antoine Luong
+
+- Fix docstring typos
+
+- Update GnuLib code
+
+
+
 * 2018-08-17, libprelude-5.0.0rc1:
 
 Author: Yoann Vandoorselaere
