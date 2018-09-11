@@ -48,6 +48,7 @@ char *_prelude_internal_argv[1024];
 
 char _prelude_init_cwd[PATH_MAX];
 static int libprelude_refcount = 0;
+static prelude_bool_t deinit_plugin_unload = TRUE;
 extern prelude_option_t *_prelude_generic_optlist;
 extern gl_lock_t _criteria_parse_mutex;
 
@@ -150,6 +151,10 @@ int prelude_init(int *argc, char **argv)
         if ( env )
                 _prelude_prefix = strdup(env);
 
+        env = getenv("LIBPRELUDE_PLUGIN_UNLOAD");
+        if ( env && atoi(env) <= 0 )
+                deinit_plugin_unload = FALSE;
+
         env = getenv("LIBPRELUDE_ABORT");
         if ( env ) {
                 if ( *env )
@@ -197,8 +202,10 @@ void prelude_deinit(void)
         if ( --libprelude_refcount != 0 )
                 return;
 
-        while ( (plugin = prelude_plugin_get_next(NULL, &iter)) )
-                prelude_plugin_unload(plugin);
+        if ( deinit_plugin_unload ) {
+                while ( (plugin = prelude_plugin_get_next(NULL, &iter)) )
+                        prelude_plugin_unload(plugin);
+        }
 
         _idmef_path_cache_destroy();
         prelude_option_destroy(NULL);
