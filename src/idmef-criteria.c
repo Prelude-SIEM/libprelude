@@ -422,7 +422,8 @@ int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd)
 
 
 
-int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out)
+
+static int criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out, unsigned int depth)
 {
         const char *operator;
         prelude_bool_t negated = FALSE;
@@ -430,24 +431,41 @@ int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t 
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        negated = criteria->operator & IDMEF_CRITERIA_OPERATOR_NOT;
+        negated = criteria->operator == IDMEF_CRITERIA_OPERATOR_NOT;
 
         if ( idmef_criteria_is_criterion(criteria) )
                 return criterion_to_string(criteria, out);
 
-        prelude_string_sprintf(out, "%s(", (negated) ? "!" : "");
-        idmef_criteria_to_string(criteria->left, out);
+        if ( depth > 0 )
+                prelude_string_cat(out, "(");
 
-        operator = idmef_criteria_operator_to_string(criteria->operator & ~IDMEF_CRITERIA_OPERATOR_NOT);
-        if ( ! operator )
-                return -1;
+        if ( negated )
+                prelude_string_cat(out, "!");
 
-        prelude_string_sprintf(out, " %s ", operator);
+        if ( criteria->left )
+                criteria_to_string(criteria->left, out, depth + 1);
 
-        idmef_criteria_to_string(criteria->right, out);
-        prelude_string_sprintf(out, ")");
+        if ( ! negated ) {
+                operator = idmef_criteria_operator_to_string(criteria->operator);
+                if ( ! operator )
+                        return -1;
+
+                prelude_string_sprintf(out, " %s ", operator);
+        }
+
+        criteria_to_string(criteria->right, out, depth + 1);
+
+        if ( depth > 0 )
+                prelude_string_cat(out, ")");
 
         return 0;
+}
+
+
+
+int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out)
+{
+        return criteria_to_string(criteria, out, 0);
 }
 
 
@@ -455,7 +473,7 @@ int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t 
 inline prelude_bool_t idmef_criteria_is_criterion(const idmef_criteria_t *criteria)
 {
         prelude_return_val_if_fail(criteria, FALSE);
-        return ! (criteria->operator & (IDMEF_CRITERIA_OPERATOR_OR|IDMEF_CRITERIA_OPERATOR_AND));
+        return ! (criteria->operator & (IDMEF_CRITERIA_OPERATOR_OR|IDMEF_CRITERIA_OPERATOR_AND) || criteria->operator == IDMEF_CRITERIA_OPERATOR_NOT);
 }
 
 
@@ -503,8 +521,8 @@ int idmef_criteria_join(idmef_criteria_t **criteria, idmef_criteria_t *left, idm
 {
         int ret;
 
-        prelude_return_val_if_fail(left, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(right, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(left || op == IDMEF_CRITERIA_OPERATOR_NOT, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = idmef_criteria_new(criteria);
         if ( ret < 0 )
@@ -531,6 +549,7 @@ int idmef_criteria_join(idmef_criteria_t **criteria, idmef_criteria_t *left, idm
 int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
 {
         int ret;
+        prelude_bool_t not = FALSE;
 
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -538,11 +557,15 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, void *object)
         if ( idmef_criteria_is_criterion(criteria) )
                 return criterion_match(criteria, object);
 
-        ret = idmef_criteria_match(criteria->left, object);
-        if ( ret < 0 )
-                return ret;
+        not = criteria->operator == IDMEF_CRITERIA_OPERATOR_NOT;
 
-        if ( (ret == 0 && criteria->operator & IDMEF_CRITERIA_OPERATOR_OR) || (ret == 1 && criteria->operator & IDMEF_CRITERIA_OPERATOR_AND) )
+        if ( ! not ) {
+                ret = idmef_criteria_match(criteria->left, object);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        if ( not || (ret == 0 && criteria->operator & IDMEF_CRITERIA_OPERATOR_OR) || (ret == 1 && criteria->operator & IDMEF_CRITERIA_OPERATOR_AND) )
                 ret = idmef_criteria_match(criteria->right, object);
 
         return (criteria->operator & IDMEF_CRITERIA_OPERATOR_NOT) ? !ret : ret;

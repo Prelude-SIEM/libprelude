@@ -126,7 +126,7 @@ err:
 %token TOK_RELATION_NOT_EQUAL "!="
 %token TOK_RELATION_NOT_EQUAL_NOCASE "!=*"
 
-%token TOK_NOT "!"
+%token TOK_OPERATOR_NOT "!"
 %token TOK_OPERATOR_AND "&&"
 %token TOK_OPERATOR_OR "||"
 
@@ -134,6 +134,8 @@ err:
 
 %type <criteria> criteria
 %type <criteria> criteria_base
+%type <criteria> criteria_and
+%type <criteria> criteria_not
 %type <criteria> value
 %type <criteria> multiple_value
 %type <criteria> criterion
@@ -153,19 +155,45 @@ input:
 
 
 criteria:
-        criteria_base {
+        criteria_and {
                 $$ = $1;
         }
 
-        | criteria operator criteria_base {
-                if ( $2 == operator_or )
-                        idmef_criteria_or_criteria($1, $3);
-                else
-                        idmef_criteria_and_criteria($1, $3);
-
-                $$ = $1;
+        | criteria TOK_OPERATOR_OR criteria_and {
+               idmef_criteria_or_criteria($1, $3);
+               $$ = $1;
         }
 ;
+
+
+criteria_and:
+        criteria_not {
+            $$ = $1;
+        }
+
+        | criteria_and TOK_OPERATOR_AND criteria_not {
+               idmef_criteria_and_criteria($1, $3);
+               $$ = $1;
+        }
+;
+
+
+criteria_not:
+        criteria_base {
+            $$ = $1;
+        }
+
+        | TOK_OPERATOR_NOT criteria_not {
+                idmef_criteria_t *criteria;
+
+                real_ret = idmef_criteria_join(&criteria, NULL, IDMEF_CRITERIA_OPERATOR_NOT, $2);
+                if ( real_ret < 0 )
+                        YYABORT;
+
+                $$ = criteria;
+        }
+;
+
 
 criteria_base:
         criterion {
@@ -174,11 +202,6 @@ criteria_base:
 
         | '(' criteria ')' {
                 $$ = $2;
-        }
-
-        | TOK_NOT '(' criteria ')' {
-                idmef_criteria_set_operator($3, idmef_criteria_get_operator($3) | IDMEF_CRITERIA_OPERATOR_NOT);
-                $$ = $3;
         }
 ;
 
@@ -196,16 +219,6 @@ criterion:
                 idmef_criteria_t *criteria;
 
                 real_ret = create_criteria(&criteria, $1, NULL, IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NULL);
-                if ( real_ret < 0 )
-                        YYABORT;
-
-                $$ = criteria;
-        }
-
-        | TOK_NOT path {
-                idmef_criteria_t *criteria;
-
-                real_ret = create_criteria(&criteria, $2, NULL, IDMEF_CRITERION_OPERATOR_NULL);
                 if ( real_ret < 0 )
                         YYABORT;
 
@@ -286,7 +299,6 @@ relation:
 | TOK_RELATION_EQUAL_NOCASE         { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE; }
 | TOK_RELATION_NOT_EQUAL            { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_NOT_EQUAL_NOCASE     { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
-| TOK_NOT                           { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_NULL; }
 | TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
                                                                        "Criteria parser reported: Invalid operator found"); YYERROR; }
 ;

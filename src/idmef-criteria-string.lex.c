@@ -1003,8 +1003,8 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 115 "idmef-criteria-string.lex.l"
-{ return TOK_NOT; }
+#line 116 "idmef-criteria-string.lex.l"
+{ return TOK_OPERATOR_NOT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP

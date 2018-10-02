@@ -17,6 +17,15 @@ static void test_criteria(idmef_message_t *idmef, const char *criteria_str, int 
         assert(idmef_criteria_match(criteria, idmef) == expect_match);
         idmef_criteria_destroy(criteria);
 
+        prelude_string_t *not;
+        prelude_string_new(&not);
+        prelude_string_sprintf(not, "!(%s)", criteria_str);
+
+        assert(idmef_criteria_new_from_string(&criteria, prelude_string_get_string(not)) == 0);
+        assert(idmef_criteria_match(criteria, idmef) == !expect_match);
+
+        prelude_string_destroy(not);
+        idmef_criteria_destroy(criteria);
 }
 
 int main(void)
@@ -67,6 +76,29 @@ int main(void)
 
         idmef_alert_new_create_time(alert, &ctime);
         assert(idmef_time_set_from_string(ctime, "2015-05-03 1:59:08") == 0);
+
+        /*
+         * Operator precedence
+         *
+         * A || (B && C)
+         */
+        test_criteria(idmef, "alert.classification.text == NOMATCH || alert.classification.text == 'My String' && alert.analyzer(0).name == A", 0, 1);
+        test_criteria(idmef, "alert.classification.text == 'My String' || alert.classification.text == NOMATCH && alert.analyzer(0).name == NOMATCH", 0, 1);
+
+        /*
+         * (A && B) || (C && D)
+         */
+        test_criteria(idmef, "alert.analyzer(0).name == A && alert.classification.text == 'My String' || alert.analyzer(0).name == A && alert.classification.text == NOMATCH", 0, 1);
+        test_criteria(idmef, "alert.analyzer(0).name == A && alert.classification.text == NOMATCH || alert.analyzer(0).name == A && alert.classification.text == 'My String'", 0, 1);
+
+        /*
+         * ((!A) && B) || C
+         */
+        test_criteria(idmef, "! alert.classification.text == A && alert.analyzer(0).name == A || alert.classification.text == NOMATCH", 0, 1);
+        test_criteria(idmef, "!!! alert.classification.text == A && alert.analyzer(0).name == A || alert.classification.text == NOMATCH", 0, 1);
+        test_criteria(idmef, "! alert.classification.text == A && alert.analyzer(0).name == B || alert.classification.text == NOMATCH", 0, 0);
+        test_criteria(idmef, "! alert.classification.text == 'My String' && alert.analyzer(0).name == A || alert.classification.text == 'My String'", 0, 1);
+
 
         /*
          * Regular time operator check
