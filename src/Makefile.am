@@ -14,7 +14,7 @@ lib_LTLIBRARIES = libprelude.la
 BUILT_SOURCES = $(LTDLDEPS) 
 
 AM_YFLAGS = -d
-LEX_OUTPUT_ROOT = lex.yy
+LEX_OUTPUT_ROOT = lex._preludeyy
 
 libprelude_la_SOURCES = 		\
 	common.c			\

@@ -77,6 +77,7 @@ BLANK           [ \t\n]+
 %option nounput
 %option noyywrap
 %option stack
+%option prefix="_preludeyy"
 
 %x IDMEF_VALUE
 
@@ -88,7 +89,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 \!substr\*              { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 
 {IDMEF_PATH}            {
-                                yylval.str = strdup(yytext);
+                                _preludeyylval.str = strdup(yytext);
                                 return TOK_IDMEF_PATH;
                         }
 
@@ -123,7 +124,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 \)                      { return ')'; }
 
 <IDMEF_VALUE>{SQSTRING} {
-                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+                                _preludeyylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
                                 if ( ! inp )
                                         yy_pop_state();
@@ -132,7 +133,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 <IDMEF_VALUE>{DQSTRING} {
-                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+                                _preludeyylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 
                                 if ( ! inp )
                                         yy_pop_state();
@@ -141,7 +142,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 <IDMEF_VALUE>[^ \t\(\)\&\|]+ {
-                                yylval.str = escape_str(strdup(yytext));
+                                _preludeyylval.str = escape_str(strdup(yytext));
 
                                 if ( ! inp )
                                         yy_pop_state();
@@ -179,7 +180,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 
 .                       {
                                 /* invalid token */
-                                yylval.str = strdup(yytext);
+                                _preludeyylval.str = strdup(yytext);
                                 return TOK_ERROR;
                         }
 

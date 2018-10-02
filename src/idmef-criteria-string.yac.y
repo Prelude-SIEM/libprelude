@@ -22,6 +22,8 @@
 *
 *****/
 
+%define api.prefix {_preludeyy}
+
 %{
 #include "libmissing.h"
 %}
@@ -59,11 +61,9 @@ gl_lock_t _criteria_parse_mutex = gl_lock_initializer;
 #define operator_and 2
 
 extern int yylex(void);
-extern void yylex_init(void);
-extern void yylex_destroy(void);
-static void yyerror(char *s);
-extern void *yy_scan_string(const char *);
-extern void yy_delete_buffer(void *);
+static void _preludeyyerror(const char *s);
+extern void *_preludeyy_scan_string(const char *);
+extern void _preludeyy_delete_buffer(void *);
 void _idmef_criteria_string_init_lexer(void);
 
 #define YYERROR_VERBOSE
@@ -309,7 +309,7 @@ operator:       TOK_OPERATOR_AND        { $$ = operator_and; }
 
 %%
 
-static void yyerror(char *s)  /* Called by yyparse on error */
+static void _preludeyyerror(const char *s)  /* Called by yyparse on error */
 {
         real_ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA,
                                               PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
@@ -329,9 +329,9 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
         real_ret = 0;
         processed_criteria = NULL;
 
-        state = yy_scan_string(str);
+        state = _preludeyy_scan_string(str);
         ret = yyparse();
-        yy_delete_buffer(state);
+        _preludeyy_delete_buffer(state);
 
         if ( ret != 0 ) {
                 _idmef_criteria_string_init_lexer();

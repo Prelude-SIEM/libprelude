@@ -30,20 +30,28 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
-# define YY_YY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
+#ifndef YY__PRELUDEYY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
+# define YY__PRELUDEYY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
 /* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
+#ifndef _PRELUDEYYDEBUG
+# if defined YYDEBUG
 #if YYDEBUG
-extern int yydebug;
+#   define _PRELUDEYYDEBUG 1
+#  else
+#   define _PRELUDEYYDEBUG 0
+#  endif
+# else /* ! defined YYDEBUG */
+#  define _PRELUDEYYDEBUG 0
+# endif /* ! defined YYDEBUG */
+#endif  /* ! defined _PRELUDEYYDEBUG */
+#if _PRELUDEYYDEBUG
+extern int _preludeyydebug;
 #endif
 
 /* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
+#ifndef _PRELUDEYYTOKENTYPE
+# define _PRELUDEYYTOKENTYPE
+  enum _preludeyytokentype
   {
     TOK_IDMEF_VALUE = 258,
     TOK_IDMEF_PATH = 259,
@@ -94,9 +102,9 @@ extern int yydebug;
 #define TOK_ERROR 279
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+#if ! defined _PRELUDEYYSTYPE && ! defined _PRELUDEYYSTYPE_IS_DECLARED
 
-union YYSTYPE
+union _PRELUDEYYSTYPE
 {
 #line 94 "idmef-criteria-string.yac.y" /* yacc.c:1909  */
 
@@ -106,17 +114,17 @@ union YYSTYPE
         idmef_criteria_t *criteria;
         idmef_criteria_operator_t relation;
 
-#line 110 "idmef-criteria-string.yac.h" /* yacc.c:1909  */
+#line 118 "idmef-criteria-string.yac.h" /* yacc.c:1909  */
 };
 
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+typedef union _PRELUDEYYSTYPE _PRELUDEYYSTYPE;
+# define _PRELUDEYYSTYPE_IS_TRIVIAL 1
+# define _PRELUDEYYSTYPE_IS_DECLARED 1
 #endif
 
 
-extern YYSTYPE yylval;
+extern _PRELUDEYYSTYPE _preludeyylval;
 
-int yyparse (void);
+int _preludeyyparse (void);
 
-#endif /* !YY_YY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED  */
+#endif /* !YY__PRELUDEYY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED  */
