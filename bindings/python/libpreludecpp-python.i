@@ -409,7 +409,7 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
                 prelude_io_set_buffer_io(io);
                 self->_genericWrite(_getstate_msgbuf_cb, io);
 
-                data = SWIG_FromCharPtrAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
+                data = PyBytes_FromStringAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
 
                 prelude_io_close(io);
                 prelude_io_destroy(io);
@@ -427,8 +427,8 @@ static ssize_t _setstate_read_cb(prelude_io_t *io, void *buf, size_t size)
                 if ( ! data )
                         throw PreludeError("no __idmef_data__ key within state dictionary");
 
-                buf = PyString_AsString(data);
-                len = PyString_Size(data);
+                buf = PyBytes_AsString(data);
+                len = PyBytes_Size(data);
 
                 fd = fmemopen(buf, len, "r");
                 if ( ! fd )

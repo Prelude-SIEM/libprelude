@@ -6672,7 +6672,7 @@ SWIGINTERN SwigPyObjectState *Prelude_IDMEF___getstate__(Prelude::IDMEF *self){
                 prelude_io_set_buffer_io(io);
                 self->_genericWrite(_getstate_msgbuf_cb, io);
 
-                data = SWIG_FromCharPtrAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
+                data = PyBytes_FromStringAndSize((const char *) prelude_io_get_fdptr(io), prelude_io_pending(io));
 
                 prelude_io_close(io);
                 prelude_io_destroy(io);
@@ -6689,8 +6689,8 @@ SWIGINTERN void Prelude_IDMEF___setstate__(Prelude::IDMEF *self,PyObject *state)
                 if ( ! data )
                         throw PreludeError("no __idmef_data__ key within state dictionary");
 
-                buf = PyString_AsString(data);
-                len = PyString_Size(data);
+                buf = PyBytes_AsString(data);
+                len = PyBytes_Size(data);
 
                 fd = fmemopen(buf, len, "r");
                 if ( ! fd )
