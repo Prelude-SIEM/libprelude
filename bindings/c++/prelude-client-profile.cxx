@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2009-2018 CS-SI. All Rights Reserved.
+* Copyright (C) 2009-2019 CS-SI. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann@gmail.com>
 *
 * This file is part of the Prelude library.

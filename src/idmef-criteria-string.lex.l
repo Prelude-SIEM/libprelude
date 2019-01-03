@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003-2018 CS-SI. All Rights Reserved.
+* Copyright (C) 2003-2019 CS-SI. All Rights Reserved.
 * Author: Krzysztof Zaraska
 * Author: Nicolas Delon
 *
