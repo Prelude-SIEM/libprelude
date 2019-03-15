@@ -1,3 +1,15 @@
+* 2019-03-15, libprelude-5.1.0alpha1:
+
+Author: Yoann Vandoorselaere
+
+- Fix py3 pickle error
+
+- Properly implement Criterion NOT operator, fix operator precedence
+
+- More environment variable to ease debugging
+
+
+
 * 2018-09-07, libprelude-5.0.0:
 
 Author: Antoine Luong
