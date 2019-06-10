@@ -8181,6 +8181,41 @@ fail:
 static int _wrap_new_IDMEFValue__SWIG_6(lua_State* L) {
   int SWIG_arg = 0;
   std::string *arg1 = 0 ;
+  Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
+  std::string temp1 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFValue::IDMEFValue",2,2)
+  if(!lua_isstring(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",1,"std::string const &");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",2,"Prelude::IDMEFPath *");
+  temp1.assign(lua_tostring(L,1),lua_rawlen(L,1)); arg1=&temp1;
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("new_IDMEFValue",2,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((std::string const &)*arg1,arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__IDMEFValue,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_IDMEFValue__SWIG_7(lua_State* L) {
+  int SWIG_arg = 0;
+  std::string *arg1 = 0 ;
   std::string temp1 ;
   Prelude::IDMEFValue *result = 0 ;
   
@@ -8206,7 +8241,41 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_7(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_8(lua_State* L) {
+  int SWIG_arg = 0;
+  char *arg1 = (char *) 0 ;
+  Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
+  Prelude::IDMEFValue *result = 0 ;
+  
+  SWIG_check_num_args("Prelude::IDMEFValue::IDMEFValue",2,2)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",1,"char const *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("Prelude::IDMEFValue::IDMEFValue",2,"Prelude::IDMEFPath *");
+  arg1 = (char *)lua_tostring(L, 1);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_Prelude__IDMEFPath,0))){
+    SWIG_fail_ptr("new_IDMEFValue",2,SWIGTYPE_p_Prelude__IDMEFPath);
+  }
+  
+  {
+    try {
+      result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((char const *)arg1,arg2);
+    } catch(Prelude::PreludeError &e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+      SWIG_fail;
+    }
+  }
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_Prelude__IDMEFValue,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_IDMEFValue__SWIG_9(lua_State* L) {
   int SWIG_arg = 0;
   double arg1 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8233,7 +8302,7 @@ fail:
 }
 
 
-static int _wrap_new_IDMEFValue__SWIG_8(lua_State* L) {
+static int _wrap_new_IDMEFValue__SWIG_10(lua_State* L) {
   int SWIG_arg = 0;
   Prelude::IDMEFTime *arg1 = 0 ;
   Prelude::IDMEFValue *result = 0 ;
@@ -8266,8 +8335,8 @@ fail:
 
 static int _wrap_new_IDMEFValue(lua_State* L) {
   int argc;
-  int argv[2]={
-    1,2
+  int argv[3]={
+    1,2,3
   };
   
   argc = lua_gettop(L);
@@ -8355,7 +8424,7 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
       }
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_8(L);
+      return _wrap_new_IDMEFValue__SWIG_10(L);
     }
   }
   if (argc == 1) {
@@ -8364,7 +8433,7 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
       _v = lua_isnumber(L,argv[0]);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_7(L);
+      return _wrap_new_IDMEFValue__SWIG_9(L);
     }
   }
   if (argc == 1) {
@@ -8373,7 +8442,45 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
       _v = lua_isstring(L,argv[0]);
     }
     if (_v) {
-      return _wrap_new_IDMEFValue__SWIG_6(L);
+      return _wrap_new_IDMEFValue__SWIG_7(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      _v = lua_isstring(L,argv[0]);
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_IDMEFValue__SWIG_6(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      _v = SWIG_lua_isnilstring(L,argv[0]);
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_Prelude__IDMEFPath, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_IDMEFValue__SWIG_8(L);
+      }
     }
   }
   
@@ -8385,7 +8492,9 @@ static int _wrap_new_IDMEFValue(lua_State* L) {
     "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEFValue const &)\n"
     "    Prelude::IDMEFValue::IDMEFValue(std::vector< Prelude::IDMEFValue > const &)\n"
     "    Prelude::IDMEFValue::IDMEFValue(idmef_value_t *)\n"
+    "    Prelude::IDMEFValue::IDMEFValue(std::string const &,Prelude::IDMEFPath *)\n"
     "    Prelude::IDMEFValue::IDMEFValue(std::string const &)\n"
+    "    Prelude::IDMEFValue::IDMEFValue(char const *,Prelude::IDMEFPath *)\n"
     "    Prelude::IDMEFValue::IDMEFValue(double)\n"
     "    Prelude::IDMEFValue::IDMEFValue(Prelude::IDMEFTime &)\n");
   lua_error(L);return 0;

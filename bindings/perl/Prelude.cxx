@@ -8541,6 +8541,56 @@ XS(_wrap_new_IDMEFValue__SWIG_5) {
 XS(_wrap_new_IDMEFValue__SWIG_6) {
   {
     std::string *arg1 = 0 ;
+    Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
+    int res1 = SWIG_OLDOBJ ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    Prelude::IDMEFValue *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: new_IDMEFValue(value,path);");
+    }
+    {
+      std::string *ptr = (std::string *)0;
+      res1 = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), &ptr);
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::string const &""'"); 
+      }
+      if (!ptr) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "std::string const &""'"); 
+      }
+      arg1 = ptr;
+    }
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_IDMEFValue" "', argument " "2"" of type '" "Prelude::IDMEFPath *""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEFPath * >(argp2);
+    {
+      try {
+        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((std::string const &)*arg1,arg2);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    if (SWIG_IsNewObj(res1)) delete arg1;
+    
+    XSRETURN(argvi);
+  fail:
+    if (SWIG_IsNewObj(res1)) delete arg1;
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_IDMEFValue__SWIG_7) {
+  {
+    std::string *arg1 = 0 ;
     int res1 = SWIG_OLDOBJ ;
     int argvi = 0;
     Prelude::IDMEFValue *result = 0 ;
@@ -8578,7 +8628,53 @@ XS(_wrap_new_IDMEFValue__SWIG_6) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_7) {
+XS(_wrap_new_IDMEFValue__SWIG_8) {
+  {
+    char *arg1 = (char *) 0 ;
+    Prelude::IDMEFPath *arg2 = (Prelude::IDMEFPath *) 0 ;
+    int res1 ;
+    char *buf1 = 0 ;
+    int alloc1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    Prelude::IDMEFValue *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: new_IDMEFValue(value,path);");
+    }
+    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_IDMEFValue" "', argument " "1"" of type '" "char const *""'");
+    }
+    arg1 = reinterpret_cast< char * >(buf1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_Prelude__IDMEFPath, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_IDMEFValue" "', argument " "2"" of type '" "Prelude::IDMEFPath *""'"); 
+    }
+    arg2 = reinterpret_cast< Prelude::IDMEFPath * >(argp2);
+    {
+      try {
+        result = (Prelude::IDMEFValue *)new Prelude::IDMEFValue((char const *)arg1,arg2);
+      } catch(Prelude::PreludeError &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+        SWIG_fail;
+      }
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Prelude__IDMEFValue, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+    
+    XSRETURN(argvi);
+  fail:
+    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_IDMEFValue__SWIG_9) {
   {
     int32_t arg1 ;
     int val1 ;
@@ -8613,7 +8709,7 @@ XS(_wrap_new_IDMEFValue__SWIG_7) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_8) {
+XS(_wrap_new_IDMEFValue__SWIG_10) {
   {
     int64_t arg1 ;
     long long val1 ;
@@ -8648,7 +8744,7 @@ XS(_wrap_new_IDMEFValue__SWIG_8) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_9) {
+XS(_wrap_new_IDMEFValue__SWIG_11) {
   {
     uint64_t arg1 ;
     unsigned long long val1 ;
@@ -8683,7 +8779,7 @@ XS(_wrap_new_IDMEFValue__SWIG_9) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_10) {
+XS(_wrap_new_IDMEFValue__SWIG_12) {
   {
     float arg1 ;
     float val1 ;
@@ -8718,7 +8814,7 @@ XS(_wrap_new_IDMEFValue__SWIG_10) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_11) {
+XS(_wrap_new_IDMEFValue__SWIG_13) {
   {
     double arg1 ;
     double val1 ;
@@ -8753,7 +8849,7 @@ XS(_wrap_new_IDMEFValue__SWIG_11) {
 }
 
 
-XS(_wrap_new_IDMEFValue__SWIG_12) {
+XS(_wrap_new_IDMEFValue__SWIG_14) {
   {
     Prelude::IDMEFTime *arg1 = 0 ;
     void *argp1 = 0 ;
@@ -9117,6 +9213,64 @@ XS(_wrap_new_IDMEFValue) {
     }
   check_13:
     
+    if (items == 2) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        int res = SWIG_AsPtr_std_string SWIG_PERL_CALL_ARGS_2(ST(0), (std::string**)(0));
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_14;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_14;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 14;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_14:
+    
+    if (items == 2) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        int res = SWIG_AsCharPtrAndSize(ST(0), 0, NULL, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_15;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_Prelude__IDMEFPath, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_15;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 15;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_15:
+    
   dispatch:
     switch(_index) {
     case 1:
@@ -9128,23 +9282,27 @@ XS(_wrap_new_IDMEFValue) {
     case 4:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_5); return;
     case 5:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_12); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_14); return;
     case 6:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_7); return;
-    case 7:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_9); return;
-    case 8:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_8); return;
-    case 9:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_10); return;
-    case 10:
+    case 7:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_11); return;
+    case 8:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_10); return;
+    case 9:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_12); return;
+    case 10:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_13); return;
     case 11:
-      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_6); return;
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_7); return;
     case 12:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_2); return;
     case 13:
       PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_4); return;
+    case 14:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_6); return;
+    case 15:
+      PUSHMARK(MARK); SWIG_CALLXS(_wrap_new_IDMEFValue__SWIG_8); return;
     }
   }
   

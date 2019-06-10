@@ -30,6 +30,7 @@
 namespace Prelude
 {
         class IDMEF;
+        class IDMEFPath;
 }
 
 namespace Prelude {
@@ -73,8 +74,8 @@ namespace Prelude {
                 IDMEFValue(const IDMEFValue &value);
                 IDMEFValue(const std::vector<IDMEFValue> &value);
                 IDMEFValue(idmef_value_t *value);
-                IDMEFValue(const std::string &value);
-                IDMEFValue(const char *value);
+                IDMEFValue(const std::string &value, Prelude::IDMEFPath *path=NULL);
+                IDMEFValue(const char *value, Prelude::IDMEFPath *path=NULL);
                 IDMEFValue(int32_t value);
                 IDMEFValue(int64_t value);
                 IDMEFValue(uint64_t value);

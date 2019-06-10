@@ -26,6 +26,7 @@
 
 #include "prelude-error.hxx"
 #include "idmef.hxx"
+#include "idmef-path.hxx"
 #include "idmef-value.hxx"
 #include "idmef-criteria.hxx"
 
@@ -85,15 +86,33 @@ void IDMEFValue::_InitFromString(const char *value, size_t len)
 }
 
 
-IDMEFValue::IDMEFValue(const char *value)
+
+IDMEFValue::IDMEFValue(const char *value, Prelude::IDMEFPath *path)
 {
-        _InitFromString(value, strlen(value));
+        int ret;
+
+        if ( ! path )
+                _InitFromString(value, strlen(value));
+        else {
+                ret = idmef_value_new_from_path(&_value, (idmef_path_t *) *path, value);
+                if ( ret < 0 )
+                        throw PreludeError(ret);
+        }
 }
 
 
-IDMEFValue::IDMEFValue(const std::string &value)
+
+IDMEFValue::IDMEFValue(const std::string &value, Prelude::IDMEFPath *path)
 {
-        _InitFromString(value.c_str(), value.size());
+        int ret;
+
+        if ( ! path )
+                _InitFromString(value.c_str(), value.size());
+        else {
+                ret = idmef_value_new_from_path(&_value, (idmef_path_t *) *path, value.c_str());
+                if ( ret < 0 )
+                        throw PreludeError(ret);
+        }
 }
 
 
