@@ -5634,11 +5634,12 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 #else
   if (PyUnicode_Check(obj))
 #endif
-#else
+#else  
   if (PyString_Check(obj))
 #endif
   {
     char *cstr; Py_ssize_t len;
+    int ret = SWIG_OK;
 #if PY_VERSION_HEX>=0x03000000
 #if !defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
     if (!alloc && cptr) {
@@ -5649,7 +5650,10 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
         return SWIG_RuntimeError;
     }
     obj = PyUnicode_AsUTF8String(obj);
-    if(alloc) *alloc = SWIG_NEWOBJ;
+    if (!obj)
+      return SWIG_TypeError;
+    if (alloc)
+      *alloc = SWIG_NEWOBJ;
 #endif
     PyBytes_AsStringAndSize(obj, &cstr, &len);
 #else
@@ -5657,36 +5661,24 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 #endif
     if (cptr) {
       if (alloc) {
-    /*
-       In python the user should not be able to modify the inner
-       string representation. To warranty that, if you define
-       SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
-       buffer is always returned.
-
-       The default behavior is just to return the pointer value,
-       so, be careful.
-    */
-#if defined(SWIG_PYTHON_SAFE_CSTRINGS)
-    if (*alloc != SWIG_OLDOBJ)
-#else
-    if (*alloc == SWIG_NEWOBJ)
-#endif
-    {
-      *cptr = reinterpret_cast< char* >(memcpy(new char[len + 1], cstr, sizeof(char)*(len + 1)));
-      *alloc = SWIG_NEWOBJ;
-    } else {
-      *cptr = cstr;
-      *alloc = SWIG_OLDOBJ;
-    }
+	if (*alloc == SWIG_NEWOBJ) {
+	  *cptr = reinterpret_cast< char* >(memcpy(new char[len + 1], cstr, sizeof(char)*(len + 1)));
+	  *alloc = SWIG_NEWOBJ;
+	} else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
       } else {
 #if PY_VERSION_HEX>=0x03000000
 #if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
-    *cptr = PyBytes_AsString(obj);
+	*cptr = PyBytes_AsString(obj);
 #else
-    assert(0); /* Should never reach here with Unicode strings in Python 3 */
+	assert(0); /* Should never reach here with Unicode strings in Python 3 */
 #endif
 #else
-    *cptr = SWIG_Python_str_AsChar(obj);
+	*cptr = SWIG_Python_str_AsChar(obj);
+        if (!*cptr)
+          ret = SWIG_TypeError;
 #endif
       }
     }
@@ -5694,7 +5686,7 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 #if PY_VERSION_HEX>=0x03000000 && !defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
     Py_XDECREF(obj);
 #endif
-    return SWIG_OK;
+    return ret;
   } else {
 #if defined(SWIG_PYTHON_2_UNICODE)
 #if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
@@ -5707,6 +5699,8 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
         return SWIG_RuntimeError;
       }
       obj = PyUnicode_AsUTF8String(obj);
+      if (!obj)
+        return SWIG_TypeError;
       if (PyString_AsStringAndSize(obj, &cstr, &len) != -1) {
         if (cptr) {
           if (alloc) *alloc = SWIG_NEWOBJ;
@@ -5727,10 +5721,10 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
     if (pchar_descriptor) {
       void* vptr = 0;
       if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
-    if (cptr) *cptr = (char *) vptr;
-    if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
-    if (alloc) *alloc = SWIG_OLDOBJ;
-    return SWIG_OK;
+	if (cptr) *cptr = (char *) vptr;
+	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
       }
     }
   }
@@ -5747,18 +5741,14 @@ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
   if (carray) {
     if (size > INT_MAX) {
       swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-      return pchar_descriptor ?
-    SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
+      return pchar_descriptor ? 
+	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
     } else {
 #if PY_VERSION_HEX >= 0x03000000
 #if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
       return PyBytes_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
 #else
-#if PY_VERSION_HEX >= 0x03010000
       return PyUnicode_DecodeUTF8(carray, static_cast< Py_ssize_t >(size), "surrogateescape");
-#else
-      return PyUnicode_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
-#endif
 #endif
 #else
       if ( _PYTHON2_RETURN_UNICODE )
