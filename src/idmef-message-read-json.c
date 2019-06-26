@@ -59,6 +59,22 @@ typedef struct {
 static int idmef_linkage_read_json(idmef_linkage_t *linkage, json_data_t *ctrl);
 
 
+static const char *jsmn_type_to_string(int type)
+{
+        switch(type) {
+            case JSMN_STRING:
+                return "string";
+            case JSMN_PRIMITIVE:
+                return "primitive";
+            case JSMN_OBJECT:
+                return "object";
+            case JSMN_ARRAY:
+                return "array";
+            default:
+                return "unknown";
+        }
+}
+
 
 /*
  * code from http://stackoverflow.com/a/4609989/697313
@@ -101,7 +117,7 @@ static int unicode_to_utf8(unsigned int codepoint, prelude_string_t *out)
           }
 
           else
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode to utf8 conversion failed");
 
           return 1;
 }
@@ -118,7 +134,7 @@ static int hexval(char c)
         else if ( c >= 'A' && c <= 'F' )
                 return c - 'A' + 10;
 
-        else return -1;
+        else return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "hexval failed");
 }
 
 
@@ -228,22 +244,21 @@ static int __get_float(json_data_t *ctrl, float *value)
 
 
 
-static int64_t __get_integer(json_data_t *ctrl)
+static int __get_integer(json_data_t *ctrl, int64_t *out)
 {
-        int64_t ret;
         char *end = NULL;
         jsmntok_t *j = &ctrl->jtok[ctrl->idx];
         size_t len = j->end - j->start;
         const char *str = ctrl->input + j->start;
 
         if ( j->type != JSMN_PRIMITIVE )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "JSON value is not a primitive");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON integer got '%s'", jsmn_type_to_string(j->type));
 
-        ret = strtoll(ctrl->input + j->start, &end, 10);
+        *out = strtoll(ctrl->input + j->start, &end, 10);
         if ( end != (str + len) )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error decoding to integer");
 
-        return ret;
+        return 0;
 }
 
 
@@ -275,7 +290,7 @@ static int __get_string(json_data_t *ctrl, prelude_string_t *out)
         const char *input = ctrl->input + j->start;
 
         if ( j->type != JSMN_STRING )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "JSON value is not string");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "JSON value is not string : %s", jsmn_type_to_string(j->type));
 
         if ( j->end - j->start == 0 )
                 return 0;
@@ -292,7 +307,7 @@ static int jsoneq(json_data_t *data, jsmntok_t *tok, const char *wanted)
     if ( tok->type == JSMN_STRING && strlen(wanted) == size && strncmp(start, wanted, size) == 0)
             return 0;
 
-    return -1;
+    return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "jsoneq failed");
 }
 
 
@@ -306,7 +321,7 @@ static int __get_json_key(json_data_t *ctrl, const char *wanted, unsigned int si
                         return i;
         }
 
-        return -1;
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "failed to get json key '%s'", wanted);
 }
 
 /**
@@ -327,7 +342,7 @@ static int idmef_additional_data_read_json(idmef_additional_data_t *additional_d
                 unsigned int obj_idx = ctrl->idx;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -405,12 +420,14 @@ static int idmef_additional_data_read_json(idmef_additional_data_t *additional_d
 
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BYTE:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
+                                case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
+                                        int ret;
                                         int64_t val;
 
-                                        val = __get_integer(ctrl);
-                                        if ( val < 0 )
-                                                return val;
+                                        ret = __get_integer(ctrl, &val);
+                                        if ( ret < 0 )
+                                                return ret;
 
                                         idmef_data_set_int(data, val);
                                         break;
@@ -435,7 +452,6 @@ static int idmef_additional_data_read_json(idmef_additional_data_t *additional_d
                                 case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER:
-                                case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_XML: {
                                         prelude_string_t *str;
@@ -460,7 +476,8 @@ static int idmef_additional_data_read_json(idmef_additional_data_t *additional_d
                                 }
 
                                 default:
-                                        return -1;
+                                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unhandled IDMEF additional data type");
+;
                         }
 
                 }
@@ -489,7 +506,7 @@ static int idmef_reference_read_json(idmef_reference_t *reference, json_data_t *
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -585,7 +602,7 @@ static int idmef_classification_read_json(idmef_classification_t *classification
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -674,7 +691,7 @@ static int idmef_user_id_read_json(idmef_user_id_t *user_id, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -749,13 +766,14 @@ static int idmef_user_id_read_json(idmef_user_id_t *user_id, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "number") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_user_id_set_number(user_id, ret);
+                        idmef_user_id_set_number(user_id, out);
 
                 }
 
@@ -783,7 +801,7 @@ static int idmef_user_read_json(idmef_user_t *user, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -872,7 +890,7 @@ static int idmef_address_read_json(idmef_address_t *address, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -931,13 +949,14 @@ static int idmef_address_read_json(idmef_address_t *address, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "vlan_num") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_address_set_vlan_num(address, ret);
+                        idmef_address_set_vlan_num(address, out);
 
                 }
 
@@ -997,7 +1016,7 @@ static int idmef_process_read_json(idmef_process_t *process, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1040,13 +1059,14 @@ static int idmef_process_read_json(idmef_process_t *process, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "pid") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_process_set_pid(process, ret);
+                        idmef_process_set_pid(process, out);
 
                 }
 
@@ -1146,7 +1166,7 @@ static int idmef_web_service_read_json(idmef_web_service_t *web_service, json_da
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1254,7 +1274,7 @@ static int idmef_snmp_service_read_json(idmef_snmp_service_t *snmp_service, json
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1281,26 +1301,28 @@ static int idmef_snmp_service_read_json(idmef_snmp_service_t *snmp_service, json
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "message_processing_model") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_snmp_service_set_message_processing_model(snmp_service, ret);
+                        idmef_snmp_service_set_message_processing_model(snmp_service, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "security_model") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_snmp_service_set_security_model(snmp_service, ret);
+                        idmef_snmp_service_set_security_model(snmp_service, out);
 
                 }
 
@@ -1323,13 +1345,14 @@ static int idmef_snmp_service_read_json(idmef_snmp_service_t *snmp_service, json
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "security_level") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_snmp_service_set_security_level(snmp_service, ret);
+                        idmef_snmp_service_set_security_level(snmp_service, out);
 
                 }
 
@@ -1405,7 +1428,7 @@ static int idmef_service_read_json(idmef_service_t *service, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1432,26 +1455,28 @@ static int idmef_service_read_json(idmef_service_t *service, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "ip_version") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_service_set_ip_version(service, ret);
+                        idmef_service_set_ip_version(service, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "iana_protocol_number") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_service_set_iana_protocol_number(service, ret);
+                        idmef_service_set_iana_protocol_number(service, out);
 
                 }
 
@@ -1490,13 +1515,14 @@ static int idmef_service_read_json(idmef_service_t *service, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "port") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_service_set_port(service, ret);
+                        idmef_service_set_port(service, out);
 
                 }
 
@@ -1592,7 +1618,7 @@ static int idmef_node_read_json(idmef_node_t *node, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1713,7 +1739,7 @@ static int idmef_source_read_json(idmef_source_t *source, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1865,7 +1891,7 @@ static int idmef_file_access_read_json(idmef_file_access_t *file_access, json_da
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1943,7 +1969,7 @@ static int idmef_inode_read_json(idmef_inode_t *inode, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -1973,65 +1999,70 @@ static int idmef_inode_read_json(idmef_inode_t *inode, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "number") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_inode_set_number(inode, ret);
+                        idmef_inode_set_number(inode, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "major_device") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_inode_set_major_device(inode, ret);
+                        idmef_inode_set_major_device(inode, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "minor_device") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_inode_set_minor_device(inode, ret);
+                        idmef_inode_set_minor_device(inode, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "c_major_device") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_inode_set_c_major_device(inode, ret);
+                        idmef_inode_set_c_major_device(inode, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "c_minor_device") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_inode_set_c_minor_device(inode, ret);
+                        idmef_inode_set_c_minor_device(inode, out);
 
                 }
 
@@ -2059,7 +2090,7 @@ static int idmef_checksum_read_json(idmef_checksum_t *checksum, json_data_t *ctr
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2139,7 +2170,7 @@ static int idmef_file_read_json(idmef_file_t *file, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2255,26 +2286,28 @@ static int idmef_file_read_json(idmef_file_t *file, json_data_t *ctrl)
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "data_size") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_file_set_data_size(file, ret);
+                        idmef_file_set_data_size(file, out);
 
                 }
 
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "disk_size") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_file_set_disk_size(file, ret);
+                        idmef_file_set_disk_size(file, out);
 
                 }
 
@@ -2443,7 +2476,7 @@ static int idmef_linkage_read_json(idmef_linkage_t *linkage, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2541,7 +2574,7 @@ static int idmef_target_read_json(idmef_target_t *target, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2718,7 +2751,7 @@ static int idmef_analyzer_read_json(idmef_analyzer_t *analyzer, json_data_t *ctr
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2914,7 +2947,7 @@ static int idmef_alertident_read_json(idmef_alertident_t *alertident, json_data_
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -2978,7 +3011,7 @@ static int idmef_impact_read_json(idmef_impact_t *impact, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3074,7 +3107,7 @@ static int idmef_action_read_json(idmef_action_t *action, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3138,7 +3171,7 @@ static int idmef_confidence_read_json(idmef_confidence_t *confidence, json_data_
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3202,7 +3235,7 @@ static int idmef_assessment_read_json(idmef_assessment_t *assessment, json_data_
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3295,7 +3328,7 @@ static int idmef_tool_alert_read_json(idmef_tool_alert_t *tool_alert, json_data_
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3384,7 +3417,7 @@ static int idmef_correlation_alert_read_json(idmef_correlation_alert_t *correlat
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3457,7 +3490,7 @@ static int idmef_overflow_alert_read_json(idmef_overflow_alert_t *overflow_alert
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3484,13 +3517,14 @@ static int idmef_overflow_alert_read_json(idmef_overflow_alert_t *overflow_alert
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "size") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_overflow_alert_set_size(overflow_alert, ret);
+                        idmef_overflow_alert_set_size(overflow_alert, out);
 
                 }
 
@@ -3544,7 +3578,7 @@ static int idmef_alert_read_json(idmef_alert_t *alert, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3839,7 +3873,7 @@ static int idmef_heartbeat_read_json(idmef_heartbeat_t *heartbeat, json_data_t *
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -3929,13 +3963,14 @@ static int idmef_heartbeat_read_json(idmef_heartbeat_t *heartbeat, json_data_t *
                 else if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "heartbeat_interval") == 0 ) {
                         ctrl->idx++;
 
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_heartbeat_set_heartbeat_interval(heartbeat, ret);
+                        idmef_heartbeat_set_heartbeat_interval(heartbeat, out);
 
                 }
 
@@ -3988,7 +4023,7 @@ static int idmef_message_read_json(idmef_message_t *message, json_data_t *ctrl)
         size_t size = ctrl->jtok[ctrl->idx].size;
 
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unexpected JSON object type");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected JSON object got '%s'", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], "_self") == 0 ) {
@@ -4068,7 +4103,7 @@ int idmef_object_new_from_json(idmef_object_t **object, const char *json_message
 
         ret = ctrl.jtoksize = jsmn_parse(&parser, json_message, strlen(json_message), ctrl.jtok, sizeof(ctrl.jtok) / sizeof(*ctrl.jtok));
         if ( ret < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error parsing json message");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "JSON parser error");
 
         selfkey = __get_json_key(&ctrl, "_self", 0);
         if ( selfkey < 0 ) {

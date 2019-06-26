@@ -90,6 +90,22 @@ typedef struct {
 static int idmef_linkage_read_json(idmef_linkage_t *linkage, json_data_t *ctrl);
 
 
+static const char *jsmn_type_to_string(int type)
+{
+        switch(type) {
+            case JSMN_STRING:
+                return \"string\";
+            case JSMN_PRIMITIVE:
+                return \"primitive\";
+            case JSMN_OBJECT:
+                return \"object\";
+            case JSMN_ARRAY:
+                return \"array\";
+            default:
+                return \"unknown\";
+        }
+}
+
 
 /*
  * code from http://stackoverflow.com/a/4609989/697313
@@ -132,7 +148,7 @@ static int unicode_to_utf8(unsigned int codepoint, prelude_string_t *out)
           }
 
           else
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"unicode to utf8 conversion failed\");
 
           return 1;
 }
@@ -149,7 +165,7 @@ static int hexval(char c)
         else if ( c >= 'A' && c <= 'F' )
                 return c - 'A' + 10;
 
-        else return -1;
+        else return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"hexval failed\");
 }
 
 
@@ -259,22 +275,21 @@ static int __get_float(json_data_t *ctrl, float *value)
 
 
 
-static int64_t __get_integer(json_data_t *ctrl)
+static int __get_integer(json_data_t *ctrl, int64_t *out)
 {
-        int64_t ret;
         char *end = NULL;
         jsmntok_t *j = &ctrl->jtok[ctrl->idx];
         size_t len = j->end - j->start;
         const char *str = ctrl->input + j->start;
 
         if ( j->type != JSMN_PRIMITIVE )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"JSON value is not a primitive\");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"expected JSON integer got '%s'\", jsmn_type_to_string(j->type));
 
-        ret = strtoll(ctrl->input + j->start, &end, 10);
+        *out = strtoll(ctrl->input + j->start, &end, 10);
         if ( end != (str + len) )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"error decoding to integer\");
 
-        return ret;
+        return 0;
 \}
 
 
@@ -306,7 +321,7 @@ static int __get_string(json_data_t *ctrl, prelude_string_t *out)
         const char *input = ctrl->input + j->start;
 
         if ( j->type != JSMN_STRING )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"JSON value is not string\");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"JSON value is not string : %s\", jsmn_type_to_string(j->type));
 
         if ( j->end - j->start == 0 )
                 return 0;
@@ -323,7 +338,7 @@ static int jsoneq(json_data_t *data, jsmntok_t *tok, const char *wanted)
     if ( tok->type == JSMN_STRING && strlen(wanted) == size && strncmp(start, wanted, size) == 0)
             return 0;
 
-    return -1;
+    return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"jsoneq failed\");
 \}
 
 
@@ -337,7 +352,7 @@ static int __get_json_key(json_data_t *ctrl, const char *wanted, unsigned int si
                         return i;
         }
 
-        return -1;
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"failed to get json key '%s'\", wanted);
 }
 ");
 }
@@ -366,13 +381,14 @@ sub     struct_field_normal
 ");
         } elsif ( $field->{metatype} & &METATYPE_OPTIONAL_INT ){
                 $self->output("{
-                                        int64_t ret;
+                                        int ret;
+                                        int64_t out;
 
-                                        ret = __get_integer(ctrl);
+                                        ret = __get_integer(ctrl, &out);
                                         if ( ret < 0 )
                                                 return ret;
 
-                                        idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, ret, IDMEF_LIST_APPEND);
+                                        idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, out, IDMEF_LIST_APPEND);
                               \}
 ");
         } else {
@@ -413,13 +429,14 @@ sub     struct_field_normal
 ");
         } elsif ( $field->{metatype} & &METATYPE_OPTIONAL_INT ){
                 $self->output("
-                        int64_t ret;
+                        int ret;
+                        int64_t out;
 
-                        ret = __get_integer(ctrl);
+                        ret = __get_integer(ctrl, &out);
                         if ( ret < 0 )
                                 return ret;
 
-                        idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, ret);
+                        idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, out);
 ");
         } elsif ( $field->{typename} eq "idmef_time_t" ){
                 $self->output("
@@ -499,12 +516,14 @@ sub     struct_field_normal
 
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BYTE:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
+                                case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
+                                        int ret;
                                         int64_t val;
 
-                                        val = __get_integer(ctrl);
-                                        if ( val < 0 )
-                                                return val;
+                                        ret = __get_integer(ctrl, &val);
+                                        if ( ret < 0 )
+                                                return ret;
 
                                         idmef_data_set_int(data, val);
                                         break;
@@ -529,7 +548,6 @@ sub     struct_field_normal
                                 case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER:
-                                case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
                                 case IDMEF_ADDITIONAL_DATA_TYPE_XML: {
                                         prelude_string_t *str;
@@ -554,7 +572,8 @@ sub     struct_field_normal
                                 }
 
                                 default:
-                                        return -1;
+                                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"unhandled IDMEF additional data type\");
+;
                         }
 ");
             }
@@ -693,7 +712,7 @@ if ( $struct->{short_typename} eq "additional_data" ) {
 
 $self->output("
         if ( ctrl->jtok[ctrl->idx].type != JSMN_OBJECT )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"unexpected JSON object type\");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"expected JSON object got '%s'\", jsmn_type_to_string(ctrl->jtok[ctrl->idx].type));
 
         for ( ctrl->idx += 1; i < size && ctrl->idx < ctrl->jtoksize; ctrl->idx++, i++ ) {
                 if ( jsoneq(ctrl, &ctrl->jtok[ctrl->idx], \"_self\") == 0 ) {
@@ -792,7 +811,7 @@ int idmef_object_new_from_json(idmef_object_t **object, const char *json_message
 
         ret = ctrl.jtoksize = jsmn_parse(&parser, json_message, strlen(json_message), ctrl.jtok, sizeof(ctrl.jtok) / sizeof(*ctrl.jtok));
         if ( ret < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"error parsing json message\");
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, \"JSON parser error\");
 
         selfkey = __get_json_key(&ctrl, \"_self\", 0);
         if ( selfkey < 0 ) {
