@@ -1,3 +1,15 @@
+* 2019-07-17, libprelude-5.1.0beta1:
+
+Author: Yoann Vandoorselaere
+
+- Fix various JSON parser errors
+
+- Add optional IDMEFPath argument to IDMEFValue() constructor
+
+- Fix incorrect string export of IDMEFTime microseconds
+
+
+
 * 2019-03-15, libprelude-5.1.0alpha1:
 
 Author: Yoann Vandoorselaere

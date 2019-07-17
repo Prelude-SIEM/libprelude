@@ -1,7 +1,7 @@
 m4_define([libprelude_major_version], [5])
 m4_define([libprelude_minor_version], [1])
 m4_define([libprelude_micro_version], [0])
-m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_ALPHA])
+m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_BETA])
 m4_define([libprelude_serial_version], [1])
 
 m4_define([serial_string], ifelse(libprelude_level_version, LIBPRELUDE_RELEASE_LEVEL_ALPHA, alpha,
@@ -36,9 +36,9 @@ libprelude_revision=1
 libprelude_age=0
 LIBPRELUDE_SONAME=$libprelude_current:$libprelude_revision:$libprelude_age
 
-libpreludecpp_current=11
-libpreludecpp_revision=1
-libpreludecpp_age=3
+libpreludecpp_current=12
+libpreludecpp_revision=0
+libpreludecpp_age=4
 LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
 
 
