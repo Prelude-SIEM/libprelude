@@ -40,7 +40,7 @@
 %feature("python:slot", "tp_repr", functype="reprfunc") *::toString;
 %feature("python:slot", "mp_subscript", functype="binaryfunc") *::get;
 %feature("python:slot", "mp_ass_subscript", functype="objobjargproc") *::set;
-%feature("python:slot", "tp_hash") Prelude::IDMEFValue::getType;
+%feature("python:slot", "tp_hash", functype="hashfunc") Prelude::IDMEFValue::getType;
 
 /*
  * IDMEFClass
