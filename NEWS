@@ -1,3 +1,13 @@
+* 2019-08-16, libprelude-5.1.0beta3:
+
+Author: Yoann Vandoorselaere
+
+- Update to SWIG 4
+
+- Fix possible crash on invalid unicode string
+
+
+
 * 2019-07-17, libprelude-5.1.0beta1:
 
 Author: Yoann Vandoorselaere
