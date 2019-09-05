@@ -793,3 +793,132 @@ uint32_t prelude_crc32(const unsigned char *data, size_t size)
         return crc ^ 0xffffffffL;
 }
 
+
+
+
+static int hexval(char c)
+{
+        if ( c >= '0' && c <= '9' )
+                return c - '0';
+
+        else if ( c >= 'a' && c <= 'f' )
+                return c - 'a' + 10;
+
+        else if ( c >= 'A' && c <= 'F' )
+                return c - 'A' + 10;
+
+        else return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode to utf8 conversion failed: invalid hex value (%d)", c);
+}
+
+
+static int unescape_unicode(const char *in, size_t len, int bits)
+{
+        int ret = 0, i, size = bits / 4;
+
+        if ( size > len )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode sequence must be at least %d characters long", size);
+
+        bits -= 4;
+
+        for ( i = 0; i < size; i++ )
+            ret |= hexval(in[i]) << (bits - (4 * i));
+
+        return ret;
+}
+
+
+/*
+ * code from http://stackoverflow.com/a/4609989/697313
+ */
+static int unicode_to_utf8(unsigned int codepoint, prelude_string_t *out)
+{
+          char val;
+
+          if ( codepoint < 0x80 )
+                prelude_string_ncat(out, (char *) &codepoint, 1);
+
+          else if ( codepoint < 0x800 ) {
+                val = 192 + codepoint / 64;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint % 64;
+                prelude_string_ncat(out, &val, 1);
+          }
+
+          else if ( codepoint - 0xd800u < 0x800 )
+                return 0; // surrogate must have been treated earlier
+
+          else if ( codepoint < 0x10000 ) {
+                val = 224 + codepoint / 4096;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint / 64 % 64;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint % 64;
+                prelude_string_ncat(out, &val, 1);
+          }
+
+          else if ( codepoint < 0x110000 ) {
+                val = 240 + codepoint / 262144;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint / 4096 % 64;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint / 64 % 64;
+                prelude_string_ncat(out, &val, 1);
+                val = 128 + codepoint % 64;
+                prelude_string_ncat(out, &val, 1);
+          }
+
+          else
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode to utf8 conversion failed");
+
+          return 1;
+}
+
+
+
+int prelude_unicode_to_string(prelude_string_t *out, const char *in, size_t len)
+{
+        int size, ret, codepoint;
+
+        if ( *in++ != '\\')
+                goto error;
+
+        if ( *in == 'U' ) {
+                size = 10;
+
+                codepoint = unescape_unicode(++in, len - 2, 32);
+                if ( codepoint < 0 )
+                        return codepoint;
+        }
+
+        else if ( *in == 'u' ) {
+                size = 6;
+
+                codepoint = unescape_unicode(++in, len - 2, 16);
+                if ( codepoint < 0 )
+                        return codepoint;
+
+                if ( (codepoint & 0xfc00) == 0xd800 ) {
+                        size += 6;
+
+                        /*
+                         * high surrogate; need one more unicode to succeed
+                         */
+                        ret = unescape_unicode(in + 6, len - 8, 16);
+                        if ( ret < 0 )
+                                return ret;
+
+                        if ( *(in + 4) != '\\' && *(in + 5) != 'u' )
+                                goto error;
+
+                        codepoint = 0x10000 + ((codepoint - 0xd800) << 10) + (ret - 0xdc00);
+                }
+        }
+
+        else goto error;
+
+        ret = unicode_to_utf8(codepoint, out);
+        return (ret < 0) ? ret : size;
+
+    error:
+        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode sequence should start with \\u or \\U");
+}

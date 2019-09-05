@@ -69,6 +69,86 @@ void _idmef_criteria_string_init_lexer(void);
 #define YYERROR_VERBOSE
 
 
+static int escape_str(prelude_string_t **out, char *str)
+{
+        char c;
+        int ret;
+        size_t i = 0, len = strlen(str);
+
+        ret = prelude_string_new(out);
+        if ( ret < 0 )
+                return ret;
+
+        for ( i = 0; i < len; ) {
+                c = str[i++];
+                if ( ! (c == '\\' && i < len) )
+                        ret = prelude_string_ncat(*out, &c, 1);
+                else {
+                        c = str[i++];
+                        if ( c == '0' )
+                                ret = prelude_string_ncat(*out, "\0", 1);
+
+                        else if ( c == 'a' )
+                                ret = prelude_string_ncat(*out, "\a", 1);
+
+                        else if ( c == 'b' )
+                                ret = prelude_string_ncat(*out, "\b", 1);
+
+                        else if ( c == 'f' )
+                                ret = prelude_string_ncat(*out, "\f", 1);
+
+                        else if ( c == 'n' )
+                                ret = prelude_string_ncat(*out, "\n", 1);
+
+                        else if ( c == 'r' )
+                                ret = prelude_string_ncat(*out, "\r", 1);
+
+                        else if ( c == 't' )
+                                ret = prelude_string_ncat(*out, "\t", 1);
+
+                        else if ( c == 'v' )
+                                ret = prelude_string_ncat(*out, "\v", 1);
+
+                        else if ( c == '\\' )
+                                ret = prelude_string_ncat(*out, "\\", 1);
+
+                        else if ( c == 'u' || c == 'U' ) {
+                                ret = prelude_unicode_to_string(*out, str + (i - 2), len - (i - 2));
+                                if ( ret < 0 )
+                                        return ret;
+
+                                i += ret - 2;
+                        }
+
+                        else if ( c == 'x' ) {
+                                if ( (len - i) < 2 ) {
+                                        ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "truncated \\xXX escape");
+                                        break;
+                                }
+
+                                sscanf(&str[i], "%2hhx", &c);
+                                ret = prelude_string_ncat(*out, &c, 1);
+
+                                i += 2;
+                        }
+
+                        else {
+                                char buf[2] = { '\\', c };
+                                ret = prelude_string_ncat(*out, buf, 2);
+                        }
+                }
+
+                if ( ret < 0 )
+                        break;
+        }
+
+        if ( ret < 0 )
+                prelude_string_destroy(*out);
+
+        return ret;
+}
+
+
 static int create_criteria(idmef_criteria_t **criteria, idmef_path_t *path,
                            idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
 {
@@ -245,9 +325,15 @@ value:
         TOK_IDMEF_VALUE {
                 idmef_criteria_t *criteria;
                 idmef_criterion_value_t *value = NULL;
+                prelude_string_t *out;
 
-                real_ret = idmef_criterion_value_new_from_string(&value, cur_path, $1, cur_operator);
+                real_ret = escape_str(&out, $1);
                 free($1);
+                if ( real_ret < 0 )
+                        YYABORT;
+
+                real_ret = idmef_criterion_value_new_from_string(&value, cur_path, prelude_string_get_string(out), cur_operator);
+                prelude_string_destroy(out);
 
                 if ( real_ret < 0 )
                         YYABORT;

@@ -45,28 +45,6 @@ static void do_pop(void);
 
 static unsigned int inp = 0;
 
-
-static char *escape_str(char *str)
-{
-        size_t w = 0, i = 0;
-        int escape_next = FALSE;
-
-        for ( i = 0; str[i]; i++ ) {
-
-                if ( ! escape_next && str[i] == '\\' ) {
-                        escape_next = TRUE;
-                        continue;
-                }
-
-                str[w++] = str[i];
-                escape_next = FALSE;
-        }
-
-        str[w] = 0;
-        return str;
-}
-
-
 %}
 
 IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(((\-?[0-9\*]+)|(\"[^"]+\")|(\'[^']+\'))\))?\.?)+
@@ -124,7 +102,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 \)                      { return ')'; }
 
 <IDMEF_VALUE>{SQSTRING} {
-                                _preludeyylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+                                _preludeyylval.str = strndup(yytext + 1, yyleng - 2);
 
                                 if ( ! inp )
                                         yy_pop_state();
@@ -133,7 +111,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 <IDMEF_VALUE>{DQSTRING} {
-                                _preludeyylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+                                _preludeyylval.str = strndup(yytext + 1, yyleng - 2);
 
                                 if ( ! inp )
                                         yy_pop_state();
@@ -142,7 +120,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 <IDMEF_VALUE>[^ \t\(\)\&\|]+ {
-                                _preludeyylval.str = escape_str(strdup(yytext));
+                                _preludeyylval.str = strdup(yytext);
 
                                 if ( ! inp )
                                         yy_pop_state();

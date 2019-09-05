@@ -99,6 +99,9 @@ double prelude_simple_strtod(const char *s, char **endptr);
 
 uint32_t prelude_crc32(const unsigned char *data, size_t length);
 
+int prelude_unicode_to_string(prelude_string_t *out, const char *in, size_t len);
+
+
 #ifdef __cplusplus
  }
 #endif

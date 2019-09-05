@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.5"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -116,6 +116,86 @@ void _idmef_criteria_string_init_lexer(void);
 #define YYERROR_VERBOSE
 
 
+static int escape_str(prelude_string_t **out, char *str)
+{
+        char c;
+        int ret;
+        size_t i = 0, len = strlen(str);
+
+        ret = prelude_string_new(out);
+        if ( ret < 0 )
+                return ret;
+
+        for ( i = 0; i < len; ) {
+                c = str[i++];
+                if ( ! (c == '\\' && i < len) )
+                        ret = prelude_string_ncat(*out, &c, 1);
+                else {
+                        c = str[i++];
+                        if ( c == '0' )
+                                ret = prelude_string_ncat(*out, "\0", 1);
+
+                        else if ( c == 'a' )
+                                ret = prelude_string_ncat(*out, "\a", 1);
+
+                        else if ( c == 'b' )
+                                ret = prelude_string_ncat(*out, "\b", 1);
+
+                        else if ( c == 'f' )
+                                ret = prelude_string_ncat(*out, "\f", 1);
+
+                        else if ( c == 'n' )
+                                ret = prelude_string_ncat(*out, "\n", 1);
+
+                        else if ( c == 'r' )
+                                ret = prelude_string_ncat(*out, "\r", 1);
+
+                        else if ( c == 't' )
+                                ret = prelude_string_ncat(*out, "\t", 1);
+
+                        else if ( c == 'v' )
+                                ret = prelude_string_ncat(*out, "\v", 1);
+
+                        else if ( c == '\\' )
+                                ret = prelude_string_ncat(*out, "\\", 1);
+
+                        else if ( c == 'u' || c == 'U' ) {
+                                ret = prelude_unicode_to_string(*out, str + (i - 2), len - (i - 2));
+                                if ( ret < 0 )
+                                        return ret;
+
+                                i += ret - 2;
+                        }
+
+                        else if ( c == 'x' ) {
+                                if ( (len - i) < 2 ) {
+                                        ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "truncated \\xXX escape");
+                                        break;
+                                }
+
+                                sscanf(&str[i], "%2hhx", &c);
+                                ret = prelude_string_ncat(*out, &c, 1);
+
+                                i += 2;
+                        }
+
+                        else {
+                                char buf[2] = {'\\', c };
+                                ret = prelude_string_ncat(*out, buf, 2);
+                        }
+                }
+
+                if ( ret < 0 )
+                        break;
+        }
+
+        if ( ret < 0 )
+                prelude_string_destroy(*out);
+
+        return ret;
+}
+
+
 static int create_criteria(idmef_criteria_t **criteria, idmef_path_t *path,
                            idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
 {
@@ -137,7 +217,7 @@ err:
 
 
 
-#line 141 "idmef-criteria-string.yac.c" /* yacc.c:339  */
+#line 221 "idmef-criteria-string.yac.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -233,7 +313,7 @@ extern int _preludeyydebug;
 
 union _PRELUDEYYSTYPE
 {
-#line 94 "idmef-criteria-string.yac.y" /* yacc.c:355  */
+#line 174 "idmef-criteria-string.yac.y" /* yacc.c:355  */
 
         char *str;
         int operator;
@@ -241,7 +321,7 @@ union _PRELUDEYYSTYPE
         idmef_criteria_t *criteria;
         idmef_criteria_operator_t relation;
 
-#line 245 "idmef-criteria-string.yac.c" /* yacc.c:355  */
+#line 325 "idmef-criteria-string.yac.c" /* yacc.c:355  */
 };
 
 typedef union _PRELUDEYYSTYPE _PRELUDEYYSTYPE;
@@ -258,7 +338,7 @@ int _preludeyyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 262 "idmef-criteria-string.yac.c" /* yacc.c:358  */
+#line 342 "idmef-criteria-string.yac.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -557,10 +637,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   151,   151,   158,   162,   170,   174,   182,   186,   199,
-     203,   210,   214,   218,   231,   245,   266,   275,   279,   286,
-     287,   288,   289,   290,   291,   292,   293,   294,   295,   296,
-     297,   298,   299,   300,   301,   302,   306,   307
+       0,   231,   231,   238,   242,   250,   254,   262,   266,   279,
+     283,   290,   294,   298,   311,   325,   352,   361,   365,   372,
+     373,   374,   375,   376,   377,   378,   379,   380,   381,   382,
+     383,   384,   385,   386,   387,   388,   392,   393
 };
 #endif
 
@@ -1045,6 +1125,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
       case N:                               \
         yyformat = S;                       \
       break
+    default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
       YYCASE_(1, YY_("syntax error, unexpected %s"));
       YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
@@ -1108,21 +1189,21 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
   switch (yytype)
     {
           case 3: /* "<IDMEF-Value>"  */
-#line 107 "idmef-criteria-string.yac.y" /* yacc.c:1257  */
+#line 187 "idmef-criteria-string.yac.y" /* yacc.c:1258  */
       { free(((*yyvaluep).str)); }
-#line 1114 "idmef-criteria-string.yac.c" /* yacc.c:1257  */
+#line 1195 "idmef-criteria-string.yac.c" /* yacc.c:1258  */
         break;
 
     case 4: /* "<IDMEF-Path>"  */
-#line 107 "idmef-criteria-string.yac.y" /* yacc.c:1257  */
+#line 187 "idmef-criteria-string.yac.y" /* yacc.c:1258  */
       { free(((*yyvaluep).str)); }
-#line 1120 "idmef-criteria-string.yac.c" /* yacc.c:1257  */
+#line 1201 "idmef-criteria-string.yac.c" /* yacc.c:1258  */
         break;
 
     case 29: /* criteria  */
-#line 108 "idmef-criteria-string.yac.y" /* yacc.c:1257  */
+#line 188 "idmef-criteria-string.yac.y" /* yacc.c:1258  */
       { idmef_criteria_destroy(((*yyvaluep).criteria)); }
-#line 1126 "idmef-criteria-string.yac.c" /* yacc.c:1257  */
+#line 1207 "idmef-criteria-string.yac.c" /* yacc.c:1258  */
         break;
 
 
@@ -1384,57 +1465,57 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 151 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 231 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 processed_criteria = (yyvsp[0].criteria);
         }
-#line 1392 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1473 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 3:
-#line 158 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 238 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1400 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1481 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 4:
-#line 162 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 242 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                idmef_criteria_or_criteria((yyvsp[-2].criteria), (yyvsp[0].criteria));
                (yyval.criteria) = (yyvsp[-2].criteria);
         }
-#line 1409 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1490 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 5:
-#line 170 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 250 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
             (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1417 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1498 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 6:
-#line 174 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 254 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                idmef_criteria_and_criteria((yyvsp[-2].criteria), (yyvsp[0].criteria));
                (yyval.criteria) = (yyvsp[-2].criteria);
         }
-#line 1426 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1507 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 7:
-#line 182 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 262 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
             (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1434 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1515 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 8:
-#line 186 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 266 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 idmef_criteria_t *criteria;
 
@@ -1444,43 +1525,43 @@ yyreduce:
 
                 (yyval.criteria) = criteria;
         }
-#line 1448 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1529 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 9:
-#line 199 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 279 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1456 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1537 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 10:
-#line 203 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 283 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[-1].criteria);
         }
-#line 1464 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1545 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 11:
-#line 210 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 290 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[-1].criteria);
         }
-#line 1472 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1553 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 12:
-#line 214 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 294 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1480 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1561 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 13:
-#line 218 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 298 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 idmef_criteria_t *criteria;
 
@@ -1490,11 +1571,11 @@ yyreduce:
 
                 (yyval.criteria) = criteria;
         }
-#line 1494 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1575 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 14:
-#line 231 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 311 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 real_ret = idmef_path_new_fast(&cur_path, (yyvsp[0].str));
                 free((yyvsp[0].str));
@@ -1505,17 +1586,23 @@ yyreduce:
                 path_count = 0;
                 (yyval.path) = cur_path;
         }
-#line 1509 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1590 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 15:
-#line 245 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 325 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 idmef_criteria_t *criteria;
                 idmef_criterion_value_t *value = NULL;
+                prelude_string_t *out;
 
-                real_ret = idmef_criterion_value_new_from_string(&value, cur_path, (yyvsp[0].str), cur_operator);
+                real_ret = escape_str(&out, (yyvsp[0].str));
                 free((yyvsp[0].str));
+                if ( real_ret < 0 )
+                        YYABORT;
+
+                real_ret = idmef_criterion_value_new_from_string(&value, cur_path, prelude_string_get_string(out), cur_operator);
+                prelude_string_destroy(out);
 
                 if ( real_ret < 0 )
                         YYABORT;
@@ -1526,11 +1613,11 @@ yyreduce:
 
                 (yyval.criteria) = criteria;
         }
-#line 1530 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1617 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 16:
-#line 266 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 352 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 if ( (yyvsp[-1].operator) == operator_or )
                         idmef_criteria_or_criteria((yyvsp[-2].criteria), (yyvsp[0].criteria));
@@ -1539,142 +1626,142 @@ yyreduce:
 
                 (yyval.criteria) = (yyvsp[-2].criteria);
         }
-#line 1543 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1630 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 17:
-#line 275 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 361 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[-1].criteria);
         }
-#line 1551 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1638 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 18:
-#line 279 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 365 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     {
                 (yyval.criteria) = (yyvsp[0].criteria);
         }
-#line 1559 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1646 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 19:
-#line 286 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 372 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR; }
-#line 1565 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1652 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 20:
-#line 287 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 373 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE; }
-#line 1571 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1658 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 21:
-#line 288 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 374 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOT; }
-#line 1577 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1664 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 22:
-#line 289 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 375 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NOCASE; }
-#line 1583 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1670 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 23:
-#line 290 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 376 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX; }
-#line 1589 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1676 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 24:
-#line 291 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 377 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOCASE; }
-#line 1595 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1682 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 25:
-#line 292 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 378 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOT; }
-#line 1601 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1688 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 26:
-#line 293 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 379 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NOCASE; }
-#line 1607 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1694 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 27:
-#line 294 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 380 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_GREATER; }
-#line 1613 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1700 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 28:
-#line 295 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 381 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL; }
-#line 1619 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1706 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 29:
-#line 296 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 382 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_LESSER; }
-#line 1625 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1712 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 30:
-#line 297 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 383 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL; }
-#line 1631 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1718 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 31:
-#line 298 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 384 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL; }
-#line 1637 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1724 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 32:
-#line 299 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 385 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE; }
-#line 1643 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1730 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 33:
-#line 300 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 386 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
-#line 1649 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1736 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 34:
-#line 301 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 387 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { cur_operator = (yyval.relation) = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
-#line 1655 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1742 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 35:
-#line 302 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 388 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
                                                                        "Criteria parser reported: Invalid operator found"); YYERROR; }
-#line 1662 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1749 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 36:
-#line 306 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 392 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { (yyval.operator) = operator_and; }
-#line 1668 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1755 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
   case 37:
-#line 307 "idmef-criteria-string.yac.y" /* yacc.c:1646  */
+#line 393 "idmef-criteria-string.yac.y" /* yacc.c:1648  */
     { (yyval.operator) = operator_or; }
-#line 1674 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1761 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
     break;
 
 
-#line 1678 "idmef-criteria-string.yac.c" /* yacc.c:1646  */
+#line 1765 "idmef-criteria-string.yac.c" /* yacc.c:1648  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1902,7 +1989,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 310 "idmef-criteria-string.yac.y" /* yacc.c:1906  */
+#line 396 "idmef-criteria-string.yac.y" /* yacc.c:1907  */
 
 
 static void _preludeyyerror(const char *s)  /* Called by yyparse on error */

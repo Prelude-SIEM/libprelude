@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ extern int _preludeyydebug;
 
 union _PRELUDEYYSTYPE
 {
-#line 94 "idmef-criteria-string.yac.y" /* yacc.c:1909  */
+#line 174 "idmef-criteria-string.yac.y" /* yacc.c:1910  */
 
         char *str;
         int operator;
@@ -114,7 +114,7 @@ union _PRELUDEYYSTYPE
         idmef_criteria_t *criteria;
         idmef_criteria_operator_t relation;
 
-#line 118 "idmef-criteria-string.yac.h" /* yacc.c:1909  */
+#line 118 "idmef-criteria-string.yac.h" /* yacc.c:1910  */
 };
 
 typedef union _PRELUDEYYSTYPE _PRELUDEYYSTYPE;

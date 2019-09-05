@@ -38,6 +38,7 @@
 #include "idmef-message-id.h"
 #include "idmef.h"
 #include "idmef-tree-wrap.h"
+#include "common.h"
 
 #define JSMN_PARENT_LINKS
 
@@ -73,82 +74,6 @@ static const char *jsmn_type_to_string(int type)
             default:
                 return "unknown";
         }
-}
-
-
-/*
- * code from http://stackoverflow.com/a/4609989/697313
- */
-static int unicode_to_utf8(unsigned int codepoint, prelude_string_t *out)
-{
-          char val;
-
-          if ( codepoint < 0x80 )
-                prelude_string_ncat(out, (char *) &codepoint, 1);
-
-          else if ( codepoint < 0x800 ) {
-                val = 192 + codepoint / 64;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint % 64;
-                prelude_string_ncat(out, &val, 1);
-          }
-
-          else if ( codepoint - 0xd800u < 0x800 )
-                return 0; // surrogate must have been treated earlier
-
-          else if ( codepoint < 0x10000 ) {
-                val = 224 + codepoint / 4096;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint /64 % 64;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint % 64;
-                prelude_string_ncat(out, &val, 1);
-          }
-
-          else if ( codepoint < 0x110000 ) {
-                val = 240 + codepoint / 262144;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint / 4096 % 64;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint / 64 % 64;
-                prelude_string_ncat(out, &val, 1);
-                val = 128 + codepoint % 64;
-                prelude_string_ncat(out, &val, 1);
-          }
-
-          else
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode to utf8 conversion failed");
-
-          return 1;
-}
-
-
-static int hexval(char c)
-{
-        if ( c >= '0' && c <= '9' )
-                return c - '0';
-
-        else if ( c >= 'a' && c <= 'f' )
-                return c - 'a' + 10;
-
-        else if ( c >= 'A' && c <= 'F' )
-                return c - 'A' + 10;
-
-        else return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "hexval failed");
-}
-
-
-static int unescape_unicode(const char *in, const char *end)
-{
-        int h1, h2, h3, h4;
-
-        if ( in + 4 > end )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "unicode sequence must be at least 4 characters long");;
-
-        if ( (h1 = hexval(in[0])) < 0 || (h2 = hexval(in[1])) < 0 || (h3 = hexval(in[2])) < 0 || (h4 = hexval(in[3])) < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "invalid unicode escape: '%.6s'", in - 2);
-
-        return h1 << 12 | h2 << 8 | h3 << 4 | h4;
 }
 
 
@@ -188,30 +113,11 @@ static int unescape_string(prelude_string_t *out, const char *in, size_t size)
                                 break;
 
                         case 'u': {
-                                int codepoint;
-
-                                codepoint = unescape_unicode(in + 1, end);
-                                if ( codepoint < 0 )
-                                        return codepoint;
-
-                                if ( (codepoint & 0xfc00) == 0xd800 ) {
-                                        /*
-                                         * high surrogate; need one more unicode to succeed
-                                         */
-                                        in += 7;
-
-                                        ret = unescape_unicode(in, end);
-                                        if ( ret < 0 )
-                                                return ret;
-
-                                        codepoint = 0x10000 + ((codepoint - 0xd800) << 10) + (ret - 0xdc00);
-                                }
-
-                                ret = unicode_to_utf8(codepoint, out);
+                                ret = prelude_unicode_to_string(out, in - 2, end - (in - 2));
                                 if ( ret < 0 )
                                         return ret;
 
-                                in += 4;
+                                in += ret - 1;
                                 break;
                         }
 
