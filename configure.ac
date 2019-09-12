@@ -257,6 +257,26 @@ LIBPRELUDE_LIBS="$LIBPRELUDE_LIBS $LIBGNUTLS_LIBS"
 
 
 dnl **************************************************
+dnl * Check for PCRE                                 *
+dnl **************************************************
+
+AC_PATH_PROG(PCRE_CONFIG, pcre-config, no)
+
+if test x$PCRE_CONFIG != xno; then
+   AC_DEFINE_UNQUOTED(HAVE_PCRE, , Define whether PCRE is available)
+fi
+
+PCRE_LIBS=`$PCRE_CONFIG --libs`
+PCRE_CFLAGS=`$PCRE_CONFIG --cflags`
+
+AC_SUBST(PCRE_LIBS)
+AC_SUBST(PCRE_CFLAGS)
+
+LIBPRELUDE_CFLAGS="$LIBPRELUDE_CFLAGS $PCRE_CFLAGS"
+LIBPRELUDE_LIBS="$LIBPRELUDE_LIBS $PCRE_LIBS"
+
+
+dnl **************************************************
 dnl * Check for Ipv6.                                *
 dnl **************************************************
 

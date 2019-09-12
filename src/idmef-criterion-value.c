@@ -34,6 +34,10 @@
 #include <stdarg.h>
 #include <errno.h>
 
+#ifdef HAVE_PCRE
+# include <pcre.h>
+#endif
+
 #include "common.h"
 #include "prelude-log.h"
 #include "prelude-error.h"
@@ -54,7 +58,11 @@ struct match_cb {
 
 
 struct regex_value {
+#ifdef HAVE_PCRE
+        pcre *regex;
+#else
         regex_t regex;
+#endif
         char *regex_string;
 };
 
@@ -361,7 +369,11 @@ static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operat
         if ( ! str )
                 return 0;
 
+#ifdef HAVE_PCRE
+        ret = pcre_exec(rv->regex, NULL, str, strlen(str), 0, 0, NULL, 0);
+#else
         ret = regexec(&rv->regex, str, 0, NULL, 0);
+#endif
         if ( operator & IDMEF_CRITERION_OPERATOR_NOT )
                 return (ret == REG_NOMATCH) ? 1 : 0;
         else
@@ -410,7 +422,11 @@ static void regex_destroy(idmef_criterion_value_t *cv)
         rv = cv->value;
 
         free(rv->regex_string);
+#ifdef HAVE_PCRE
+        pcre_free(rv->regex);
+#else
         regfree(&rv->regex);
+#endif
         free(rv);
 }
 
@@ -705,6 +721,8 @@ int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, con
 int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex, idmef_criterion_operator_t op)
 {
         int ret;
+        char errbuf[1024];
+        const char *errptr = errbuf;
         struct regex_value *rv;
         int flags = REG_EXTENDED|REG_NOSUB;
 
@@ -728,18 +746,22 @@ int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *re
         if ( op & IDMEF_CRITERION_OPERATOR_NOCASE )
                 flags |= REG_ICASE;
 
+#ifdef HAVE_PCRE
+        int erroffset;
+
+        rv->regex = pcre_compile(rv->regex_string, 0, &errptr, &erroffset, NULL);
+        if ( ! rv->regex ) {
+#else
         ret = regcomp(&rv->regex, rv->regex_string, flags);
         if ( ret != 0 ) {
-                char errbuf[1024];
-
                 regerror(ret, &rv->regex, errbuf, sizeof(errbuf));
-
+#endif
                 free(rv->regex_string);
                 free(rv);
                 free(*cv);
 
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX,
-                                             "error compiling regex: %s", errbuf);
+                                             "error compiling regex: %s", errptr);
         }
 
         (*cv)->match = regex_match;

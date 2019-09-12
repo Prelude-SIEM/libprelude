@@ -54,6 +54,7 @@ Dependencies
        Python 3 Bindings  :    python34-devel
        LUA Binding        :    lua lua-devel
        Ruby Binding       :    ruby ruby-devel
+       PCRE support       :    pcre-devel
 
    For Debian systems
        Minimal            :    build-essential libtool autoconf
@@ -66,6 +67,7 @@ Dependencies
        Ruby Binding       :    ruby ruby-dev
        LUA 5.1 Binding    :    lua5.1 liblua5.1-dev
        LUA 5.2 Binding    :    lua5.2 liblua5.2-dev
+       PCRE support       :    libpcre3-dev
 
 
 
