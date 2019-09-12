@@ -28,6 +28,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <fnmatch.h>
 
 #include "common.h"
 #include "prelude-inttypes.h"
@@ -159,10 +160,10 @@ static int charstring_compare(const char *s1, const char *s2, idmef_criterion_op
         else if ( op == IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
                 return 0;
 
-        else if ( op == (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasestr(s1, s2) )
+        else if ( op == (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE) && fnmatch(s2, s1, FNM_CASEFOLD) == 0 )
                 return 0;
 
-        else if ( op == IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
+        else if ( op == IDMEF_CRITERION_OPERATOR_SUBSTR && fnmatch(s2, s1, 0) == 0 )
                 return 0;
 
         return -1;
