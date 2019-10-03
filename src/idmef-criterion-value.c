@@ -342,6 +342,9 @@ static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operat
         idmef_class_id_t class;
         struct regex_value *rv = cv->value;
 
+        if ( ! value )
+                return 0;
+
         if ( idmef_value_get_type(value) == IDMEF_VALUE_TYPE_STRING )
                 str = prelude_string_get_string(idmef_value_get_string(value));
 
