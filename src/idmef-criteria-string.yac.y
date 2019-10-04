@@ -181,10 +181,11 @@ err:
 
 /* BISON Declarations */
 
+%token <str> TOK_IDMEF_RAW_VALUE "<IDMEF-RValue>"
 %token <str> TOK_IDMEF_VALUE "<IDMEF-Value>"
 %token <str> TOK_IDMEF_PATH "<IDMEF-Path>"
 
-%destructor { free($$); } TOK_IDMEF_VALUE TOK_IDMEF_PATH
+%destructor { free($$); } TOK_IDMEF_RAW_VALUE TOK_IDMEF_VALUE TOK_IDMEF_PATH
 %destructor { idmef_criteria_destroy($$); } criteria
 
 %token TOK_RELATION_SUBSTRING "<>"
@@ -322,6 +323,25 @@ path:
 
 
 value:
+        TOK_IDMEF_RAW_VALUE {
+                idmef_criteria_t *criteria;
+                idmef_criterion_value_t *value = NULL;
+                prelude_string_t *out;
+
+                real_ret = idmef_criterion_value_new_from_string(&value, cur_path, $1, cur_operator);
+                free($1);
+
+                if ( real_ret < 0 )
+                        YYABORT;
+
+                real_ret = create_criteria(&criteria, cur_path, value, cur_operator);
+                if ( real_ret < 0 )
+                        YYABORT;
+
+                $$ = criteria;
+
+        } |
+
         TOK_IDMEF_VALUE {
                 idmef_criteria_t *criteria;
                 idmef_criterion_value_t *value = NULL;

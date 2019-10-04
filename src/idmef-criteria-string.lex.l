@@ -50,6 +50,8 @@ static unsigned int inp = 0;
 IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(((\-?[0-9\*]+)|(\"[^"]+\")|(\'[^']+\'))\))?\.?)+
 SQSTRING        \'([^\\\']|\\.)*\'
 DQSTRING        \"([^\\\"]|\\.)*\"
+RSQSTRING        r\'([^\\\']|\\.)*\'
+RDQSTRING        r\"([^\\\"]|\\.)*\"
 BLANK           [ \t\n]+
 
 %option nounput
@@ -100,6 +102,24 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 
 \(                      { return '('; }
 \)                      { return ')'; }
+
+<IDMEF_VALUE>{RSQSTRING} {
+                                _preludeyylval.str = strndup(yytext + 2, yyleng - 3);
+
+                                if ( ! inp )
+                                        yy_pop_state();
+
+                                return TOK_IDMEF_RAW_VALUE;
+                        }
+
+<IDMEF_VALUE>{RDQSTRING} {
+                                _preludeyylval.str = strndup(yytext + 2, yyleng - 3);
+
+                                if ( ! inp )
+                                        yy_pop_state();
+
+                                return TOK_IDMEF_RAW_VALUE;
+                        }
 
 <IDMEF_VALUE>{SQSTRING} {
                                 _preludeyylval.str = strndup(yytext + 1, yyleng - 2);
