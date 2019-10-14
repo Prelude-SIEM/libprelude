@@ -38,7 +38,7 @@ LIBPRELUDE_SONAME=$libprelude_current:$libprelude_revision:$libprelude_age
 
 libpreludecpp_current=12
 libpreludecpp_revision=0
-libpreludecpp_age=4
+libpreludecpp_age=0
 LIBPRELUDECPP_SONAME=$libpreludecpp_current:$libpreludecpp_revision:$libpreludecpp_age
 
 
