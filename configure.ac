@@ -1,6 +1,6 @@
 m4_define([libprelude_major_version], [5])
 m4_define([libprelude_minor_version], [1])
-m4_define([libprelude_micro_version], [0])
+m4_define([libprelude_micro_version], [1])
 m4_define([libprelude_level_version], [LIBPRELUDE_RELEASE_LEVEL_FINAL])
 m4_define([libprelude_serial_version], [0])
 

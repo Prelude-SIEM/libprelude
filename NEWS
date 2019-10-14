@@ -1,3 +1,15 @@
+* 2019-10-14, libprelude-5.1.1:
+
+Author: Antoine Luong
+
+- Fix LIBPRELUDECPP_SONAME
+
+Author: Yoann Vandoorselaere
+
+- Fix regexp comparison with NULL idmef value
+
+
+
 * 2019-09-13, libprelude-5.1.0:
 * 2019-09-04, libprelude-5.1.0rc1:
 
