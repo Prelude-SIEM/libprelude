@@ -509,7 +509,7 @@ AC_ARG_WITH(python3, AC_HELP_STRING(--with-python3@<:@=PATH@:>@, Enable support 
             [python3_required=true; if test x$withval = xyes; then with_python3="python3"; fi], with_python3="python3")
 
 if test x$with_python3 != xno; then
-   AC_PATH_PROGS(PYTHON3, $with_python3 "python3.6" "python3.5" "python3.4" "python3.3" "python3.2" "python3.1" "python3.0", no, `dirname $with_python3`:$PATH)
+   AC_PATH_PROGS(PYTHON3, $with_python3 "python3.8" "python3.7" "python3.6" "python3.5" "python3.4" "python3.3" "python3.2" "python3.1" "python3.0", no, `dirname $with_python3`:$PATH)
    if test x$PYTHON3 = xno; then
       if test x$python3_required = xtrue; then
          AC_MSG_ERROR([Could not find $with_python3 binary])
