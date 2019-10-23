@@ -65,9 +65,9 @@ int main(void)
         test_criteria(idmef, "alert.classification.text != 'random'", 0, 1);
 
         test_criteria(idmef, "alert.classification.text == 'My String'", 0, 1);
-        test_criteria(idmef, "alert.classification.text <> 'My'", 0, 1);
-        test_criteria(idmef, "alert.classification.text <> 'my'", 0, 0);
-        test_criteria(idmef, "alert.classification.text <>* 'my'", 0, 1);
+        test_criteria(idmef, "alert.classification.text <> 'My*'", 0, 1);
+        test_criteria(idmef, "alert.classification.text <> 'my*'", 0, 0);
+        test_criteria(idmef, "alert.classification.text <>* 'my*'", 0, 1);
 
         test_criteria(idmef, "alert.classification.text ~ 'My String'", 0, 1);
         test_criteria(idmef, "alert.classification.text ~ 'My (String|Check)'", 0, 1);
