@@ -34,10 +34,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#ifdef HAVE_PCRE
-# include <pcre.h>
-#endif
-
 #include "common.h"
 #include "prelude-log.h"
 #include "prelude-error.h"
@@ -47,6 +43,15 @@
 #include "idmef-criterion-value.h"
 
 
+
+#ifdef HAVE_PCRE
+# include <pcre.h>
+# define _CRITERION_REGEX_FLAGS 0
+# define _CRITERION_REGEX_FLAGS_CASELESS PCRE_CASELESS
+#else
+# define _CRITERION_REGEX_FLAGS REG_EXTENDED|REG_NOSUB
+# define _CRITERION_REGEX_FLAGS_CASELESS REG_ICASE
+#endif
 
 
 struct match_cb {
@@ -373,14 +378,12 @@ static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operat
                 return 0;
 
 #ifdef HAVE_PCRE
-        ret = pcre_exec(rv->regex, NULL, str, strlen(str), 0, 0, NULL, 0);
+        ret = (pcre_exec(rv->regex, NULL, str, strlen(str), 0, 0, NULL, 0) < 0) ? 0 : 1;
 #else
-        ret = regexec(&rv->regex, str, 0, NULL, 0);
+        ret = (regexec(&rv->regex, str, 0, NULL, 0) == REG_NOMATCH) ? 0 : 1;
 #endif
-        if ( operator & IDMEF_CRITERION_OPERATOR_NOT )
-                return (ret == REG_NOMATCH) ? 1 : 0;
-        else
-                return (ret != REG_NOMATCH) ? 1 : 0;
+
+        return (operator & IDMEF_CRITERION_OPERATOR_NOT) ? !ret : ret;
 }
 
 
@@ -719,15 +722,13 @@ int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, con
 }
 
 
-
-
 int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex, idmef_criterion_operator_t op)
 {
         int ret;
         char errbuf[1024];
         const char *errptr = errbuf;
         struct regex_value *rv;
-        int flags = REG_EXTENDED|REG_NOSUB;
+        int flags = _CRITERION_REGEX_FLAGS;
 
         ret = idmef_criterion_value_new(cv);
         if ( ret < 0 )
@@ -747,12 +748,12 @@ int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *re
         }
 
         if ( op & IDMEF_CRITERION_OPERATOR_NOCASE )
-                flags |= REG_ICASE;
+                flags |= _CRITERION_REGEX_FLAGS_CASELESS;
 
 #ifdef HAVE_PCRE
         int erroffset;
 
-        rv->regex = pcre_compile(rv->regex_string, 0, &errptr, &erroffset, NULL);
+        rv->regex = pcre_compile(rv->regex_string, flags, &errptr, &erroffset, NULL);
         if ( ! rv->regex ) {
 #else
         ret = regcomp(&rv->regex, rv->regex_string, flags);
