@@ -36,4 +36,11 @@
 #include "minmax.h"
 #include "pathmax.h"
 
+/*
+ * GNULib pathmax module does not cover system which have no limit on filename length (like GNU Hurd).
+ */
+#ifndef PATH_MAX
+# define PATH_MAX 8192
+#endif
+
 #endif /* _LIBPRELUDE_LIBMISSING_H */
