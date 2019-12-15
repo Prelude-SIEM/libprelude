@@ -53,7 +53,7 @@ code-from-errno.h: mkerrcodes Makefile
 
 errnos-sym.h: Makefile mkstrtable.awk errnos.in
 	LANG="" $(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=2 -v nogettext=1 \
-	-v prefix=PRELUDE_ERROR_ -v namespace=errnos_ \
+	-v prefix=PRELUDE_ERROR_ -v pkg_namespace=errnos_ \
 	$(srcdir)/errnos.in >$@
 
 prelude-error.h: Makefile mkheader.awk err-sources.h.in err-codes.h.in errnos.in prelude-error.h.in
