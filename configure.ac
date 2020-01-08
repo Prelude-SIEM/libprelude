@@ -16,8 +16,8 @@ m4_append([serial_string], ifelse(serial_string, [],
                                   ifelse(libprelude_serial_version, 0, , .libprelude_serial_version),
                                   libprelude_serial_version))
 
-AC_INIT(libprelude, m4_join([.], [libprelude_major_version],
-                                 [libprelude_minor_version],
+AC_INIT(libprelude, m4_join([.], libprelude_major_version,
+                                 libprelude_minor_version,
                                  m4_join([], libprelude_micro_version, serial_string)))
 
 LIBPRELUDE_MAJOR_VERSION=libprelude_major_version
