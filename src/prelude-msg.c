@@ -1029,3 +1029,20 @@ const unsigned char *prelude_msg_get_message_data(prelude_msg_t *msg)
         return msg->payload + msg->fd_write_index;
 }
 
+
+
+int prelude_msg_clone(prelude_msg_t **dst, const prelude_msg_t *src)
+{
+        size_t size = sizeof(*src) + src->hdr.datalen;
+
+        *dst = malloc(size);
+        if ( ! *dst )
+                return prelude_error_from_errno(errno);
+
+        memcpy(*dst, src, size);
+
+        if ( src->payload )
+                (*dst)->payload = (unsigned char *) (*dst) + sizeof(**dst);
+
+        return 0;
+}

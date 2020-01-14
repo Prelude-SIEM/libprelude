@@ -61,6 +61,8 @@ int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg
 
 int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, prelude_msg_priority_t priority);
 
+int prelude_msg_clone(prelude_msg_t **dst, const prelude_msg_t *src);
+
 int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
