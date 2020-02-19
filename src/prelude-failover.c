@@ -484,7 +484,7 @@ int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 
         do {
                 ret = prelude_msg_write(msg, failover->wfd);
-        } while ( ret < 0 && errno == EINTR );
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EINTR );
 
         if ( ret < 0 )
                 goto error;
