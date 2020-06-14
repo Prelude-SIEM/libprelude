@@ -109,7 +109,7 @@ static int escape_str(prelude_string_t **out, char *str)
                         else if ( c == 'v' )
                                 ret = prelude_string_ncat(*out, "\v", 1);
 
-                        else if ( c == '\\' )
+                        else if ( !(cur_operator & (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_REGEX)) && c == '\\' )
                                 ret = prelude_string_ncat(*out, "\\", 1);
 
                         else if ( c == 'u' || c == 'U' ) {

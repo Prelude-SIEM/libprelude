@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.5.  */
+/* A Bison parser, made by GNU Bison 3.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY__PRELUDEYY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
 # define YY__PRELUDEYY_IDMEF_CRITERIA_STRING_YAC_H_INCLUDED
@@ -105,10 +109,9 @@ extern int _preludeyydebug;
 
 /* Value type.  */
 #if ! defined _PRELUDEYYSTYPE && ! defined _PRELUDEYYSTYPE_IS_DECLARED
-
 union _PRELUDEYYSTYPE
 {
-#line 174 "idmef-criteria-string.yac.y" /* yacc.c:1910  */
+#line 174 "idmef-criteria-string.yac.y"
 
         char *str;
         int operator;
@@ -116,9 +119,9 @@ union _PRELUDEYYSTYPE
         idmef_criteria_t *criteria;
         idmef_criteria_operator_t relation;
 
-#line 120 "idmef-criteria-string.yac.h" /* yacc.c:1910  */
-};
+#line 123 "idmef-criteria-string.yac.h"
 
+};
 typedef union _PRELUDEYYSTYPE _PRELUDEYYSTYPE;
 # define _PRELUDEYYSTYPE_IS_TRIVIAL 1
 # define _PRELUDEYYSTYPE_IS_DECLARED 1
