@@ -1,3 +1,42 @@
+* 2020-06-19, libprelude-5.2.0beta1:
+
+Author: Antoine Luong
+
+- Switch license to LGPL
+
+- Add Python 3.7/3.8 support
+
+- Update to SWIG 4.0.1
+
+- Fix LIBPRELUDECPP_SONAME
+
+Author: Yoann Vandoorselaere
+
+- Implement prelude_msg_clone()
+
+- Properly check for EINTR
+
+- Update libprelude-error for GAWK 5.0
+
+- Fix for system that does not implement PATH_MAX
+
+- Various IDMEF criteria improvements
+
+    - Fix substring unit tests
+    - Raw string support
+    - Fix regexp comparison with NULL IDMEF value
+    - Proper escaping of IDMEF criteria
+    - Use PCRE when available for criteria matching
+    - Substring match is now handled using fnmatch
+
+- Prefix Flex/Yacc public symbol
+
+Author: Francois Poirotte
+
+- Remove superfluous brackets in AC_INIT
+
+
+
 * 2019-09-13, libprelude-5.1.0:
 * 2019-09-04, libprelude-5.1.0rc1:
 
