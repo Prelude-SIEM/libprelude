@@ -819,7 +819,7 @@ char *yytext;
 #line 1 "idmef-criteria-string.lex.l"
 /*****
 *
-* Copyright (C) 2003-2020 CS-SI. All Rights Reserved.
+* Copyright (C) 2003-2020 CS GROUP - France. All Rights Reserved.
 * Author: Krzysztof Zaraska
 * Author: Nicolas Delon
 *

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2020 CS-SI. All Rights Reserved.
+* Copyright (C) 2002-2020 CS GROUP - France. All Rights Reserved.
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
 * This file is part of the Prelude library.
